@@ -1,6 +1,6 @@
-# sednexapp
+# Sednex App
 
-A new Flutter project.
+A new Flutter project built with GetX and Poppins font.
 
 ## Getting Started
 

@@ -1,14 +1,12 @@
 import 'package:get/get.dart';
-import '../../../routes/app_pages.dart';
 
+class TermsandconditionController extends GetxController {
+  //TODO: Implement TermsandconditionController
 
-class SplashController extends GetxController {
+  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
-    Future.delayed(const Duration(seconds: 3), () {
-      Get.offAllNamed(Routes.ONBOARD);
-    });
   }
 
   @override
@@ -20,4 +18,6 @@ class SplashController extends GetxController {
   void onClose() {
     super.onClose();
   }
+
+  void increment() => count.value++;
 }

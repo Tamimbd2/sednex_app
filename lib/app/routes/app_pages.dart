@@ -1,11 +1,23 @@
 import 'package:get/get.dart';
-
+import '../modules/auth/resetpassword/bindings/resetpassword_binding.dart';
+import '../modules/auth/resetpassword/views/resetpassword_view.dart';
+import '../modules/auth/signin/bindings/signin_binding.dart';
+import '../modules/auth/signin/views/signin_view.dart';
+import '../modules/auth/signup/bindings/signup_binding.dart';
+import '../modules/auth/signup/views/signup_view.dart';
+import '../modules/auth/verifyotp/bindings/verifyotp_binding.dart';
+import '../modules/auth/verifyotp/views/verifyotp_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/onboard/bindings/onboard_binding.dart';
 import '../modules/onboard/views/onboard_view.dart';
+import '../modules/sendotp/bindings/sendotp_binding.dart';
+import '../modules/sendotp/views/sendotp_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/termsandcondition/bindings/termsandcondition_binding.dart';
+import '../modules/termsandcondition/views/termsandcondition_view.dart';
+
 
 part 'app_routes.dart';
 
@@ -29,6 +41,36 @@ class AppPages {
       name: _Paths.ONBOARD,
       page: () => const OnboardView(),
       binding: OnboardBinding(),
+    ),
+    GetPage(
+      name: _Paths.TERMSANDCONDITION,
+      page: () => const TermsandconditionView(),
+      binding: TermsandconditionBinding(),
+    ),
+    GetPage(
+      name: _Paths.SIGNIN,
+      page: () => const SigninView(),
+      binding: SigninBinding(),
+    ),
+    GetPage(
+      name: _Paths.SIGNUP,
+      page: () => const SignupView(),
+      binding: SignupBinding(),
+    ),
+    GetPage(
+      name: _Paths.SENDOTP,
+      page: () => const SendotpView(),
+      binding: SendotpBinding(),
+    ),
+    GetPage(
+      name: _Paths.VERIFYOTP,
+      page: () => const VerifyotpView(),
+      binding: VerifyotpBinding(),
+    ),
+    GetPage(
+      name: _Paths.RESETPASSWORD,
+      page: () => const ResetpasswordView(),
+      binding: ResetpasswordBinding(),
     ),
   ];
 }

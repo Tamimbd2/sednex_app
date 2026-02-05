@@ -1,23 +1,35 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../routes/app_pages.dart';
+
 class ResetpasswordController extends GetxController {
-  //TODO: Implement ResetpasswordController
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
-  }
+  final isPasswordVisible = false.obs;
+  final isConfirmPasswordVisible = false.obs;
 
-  @override
-  void onReady() {
-    super.onReady();
+  void resetPassword() {
+    if (formKey.currentState!.validate()) {
+      // Proced with password reset logic
+      Get.snackbar(
+        'Success',
+        'Password reset successfully',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green.withOpacity(0.1),
+        colorText: Colors.green,
+      );
+      Get.offAllNamed(Routes.SIGNIN);
+    }
   }
 
   @override
   void onClose() {
+    passwordController.dispose();
+    confirmPasswordController.dispose();
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

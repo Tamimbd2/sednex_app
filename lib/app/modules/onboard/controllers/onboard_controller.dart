@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/animation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import '../../../routes/app_pages.dart';
 
 class OnboardController extends GetxController {
   final PageController pageController = PageController();
@@ -12,8 +14,7 @@ class OnboardController extends GetxController {
         curve: Curves.easeInOut,
       );
     } else {
-      // Navigate to Login or Home
-      // Get.offAllNamed(Routes.LOGIN);
+      Get.offAllNamed(Routes.SIGNIN);
     }
   }
 

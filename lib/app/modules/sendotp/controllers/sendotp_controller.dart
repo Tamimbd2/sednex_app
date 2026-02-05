@@ -1,23 +1,28 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../routes/app_pages.dart';
 
 class SendotpController extends GetxController {
-  //TODO: Implement SendotpController
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
+  void sendCode() {
+    if (formKey.currentState!.validate()) {
+      // Logic to send OTP
+      Get.snackbar(
+        'Success',
+        'OTP sent to ${emailController.text}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green.withOpacity(0.1),
+        colorText: Colors.green,
+      );
+      Get.toNamed(Routes.VERIFYOTP);
+    }
   }
 
   @override
   void onClose() {
+    emailController.dispose();
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

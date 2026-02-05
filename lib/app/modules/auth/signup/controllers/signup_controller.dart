@@ -1,23 +1,43 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SignupController extends GetxController {
-  //TODO: Implement SignupController
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  
+  final countries = [
+    'Lebanon',
+    'Bangladesh',
+    'India',
+    'Pakistan',
+    'United Arab Emirates',
+    'United States',
+  ];
+  
+  final selectedCountry = 'Lebanon'.obs;
+  final isPasswordVisible = false.obs;
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
+  void signup() {
+    if (formKey.currentState!.validate()) {
+      // Proceed with signup logic
+      Get.snackbar(
+        'Success',
+        'Account created for ${nameController.text}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green.withOpacity(0.1),
+        colorText: Colors.green,
+      );
+    }
   }
 
   @override
   void onClose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

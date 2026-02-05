@@ -1,23 +1,28 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SigninController extends GetxController {
-  //TODO: Implement SigninController
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
+  void login() {
+    if (formKey.currentState!.validate()) {
+      // Form is valid, proceed with login
+      Get.snackbar(
+        'Success',
+        'Logging in as ${emailController.text}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green.withOpacity(0.1),
+        colorText: Colors.green,
+      );
+    }
   }
 
   @override
   void onClose() {
+    emailController.dispose();
+    passwordController.dispose();
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

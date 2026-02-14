@@ -1,0 +1,165 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class TouristSpotDetailsView extends StatelessWidget {
+  const TouristSpotDetailsView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Get the data passed from previous screen
+    final String title = Get.arguments['title'] ?? 'Baalbek: Ancient Roman Ruins and Temple Complex';
+    final String description = Get.arguments['description'] ?? '';
+    final String image = Get.arguments['image'] ?? '';
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
+        title: Text(
+          'Tourist Spots',
+          style: GoogleFonts.inter(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Main Image
+            Container(
+              margin: const EdgeInsets.all(16),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.asset(
+                  image,
+                  width: double.infinity,
+                  height: 240,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: double.infinity,
+                      height: 240,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Icon(
+                        Icons.image,
+                        size: 60,
+                        color: Colors.grey,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            // Title
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                title,
+                style: GoogleFonts.inter(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                  height: 1.3,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // About Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF5F5F5),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'About',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Baalbek is home to the Baalbek temple complex which is located in the Beqaa Valley of Lebanon. The complex consists of three temples: Jupiter, Bacchus and Venus. The Temple of Bacchus is one of the best preserved Roman temple ruins, while the nearby Temple of Jupiter is known for its massive foundation stones and towering columns. The site represents the peak of Roman imperial architecture and remains one of the finest examples of Imperial Roman architecture in the world.',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: Colors.grey[700],
+                        height: 1.6,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // How to Get There Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF5F5F5),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'How to Get There',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Beqaa Valley, Lebanon',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'You can reach this destination by car, taxi, or public transportation. The site is well-connected and accessible from major cities in Lebanon. GPS coordinates are available for navigation.',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: Colors.grey[700],
+                        height: 1.6,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+          ],
+        ),
+      ),
+    );
+  }
+}

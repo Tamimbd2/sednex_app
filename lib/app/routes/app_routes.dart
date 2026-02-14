@@ -16,6 +16,9 @@ abstract class Routes {
   static const ESSENTIAL_SERVICE = _Paths.ESSENTIAL_SERVICE;
   static const COMMUNITY = _Paths.COMMUNITY;
   static const LEARNARABIC = _Paths.LEARNARABIC;
+  static const TOURIST_SPOT = _Paths.TOURIST_SPOT;
+  static const BUSFLIGHT = _Paths.BUSFLIGHT;
+  static const LOCALTOUR = _Paths.LOCALTOUR;
 }
 
 abstract class _Paths {
@@ -33,4 +36,7 @@ abstract class _Paths {
   static const ESSENTIAL_SERVICE = '/essential-service';
   static const COMMUNITY = '/community';
   static const LEARNARABIC = '/learnarabic';
+  static const TOURIST_SPOT = '/tourist-spot';
+  static const BUSFLIGHT = '/busflight';
+  static const LOCALTOUR = '/localtour';
 }

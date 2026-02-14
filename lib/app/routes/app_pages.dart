@@ -8,6 +8,8 @@ import '../modules/auth/signup/bindings/signup_binding.dart';
 import '../modules/auth/signup/views/signup_view.dart';
 import '../modules/auth/verifyotp/bindings/verifyotp_binding.dart';
 import '../modules/auth/verifyotp/views/verifyotp_view.dart';
+import '../modules/busflight/bindings/busflight_binding.dart';
+import '../modules/busflight/views/busflight_view.dart';
 import '../modules/community/bindings/community_binding.dart';
 import '../modules/community/views/community_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
@@ -18,6 +20,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/learnarabic/bindings/learnarabic_binding.dart';
 import '../modules/learnarabic/views/learnarabic_view.dart';
+import '../modules/localtour/bindings/localtour_binding.dart';
+import '../modules/localtour/views/localtour_view.dart';
 import '../modules/onboard/bindings/onboard_binding.dart';
 import '../modules/onboard/views/onboard_view.dart';
 import '../modules/sendotp/bindings/sendotp_binding.dart';
@@ -26,6 +30,8 @@ import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/termsandcondition/bindings/termsandcondition_binding.dart';
 import '../modules/termsandcondition/views/termsandcondition_view.dart';
+import '../modules/touristSpot/bindings/tourist_spot_binding.dart';
+import '../modules/touristSpot/views/tourist_spot_view.dart';
 
 part 'app_routes.dart';
 
@@ -99,6 +105,21 @@ class AppPages {
       name: _Paths.LEARNARABIC,
       page: () => const LearnarabicView(),
       binding: LearnarabicBinding(),
+    ),
+    GetPage(
+      name: _Paths.TOURIST_SPOT,
+      page: () => const TouristSpotView(),
+      binding: TouristSpotBinding(),
+    ),
+    GetPage(
+      name: _Paths.BUSFLIGHT,
+      page: () => const BusflightView(),
+      binding: BusflightBinding(),
+    ),
+    GetPage(
+      name: _Paths.LOCALTOUR,
+      page: () => const LocaltourView(),
+      binding: LocaltourBinding(),
     ),
   ];
 }

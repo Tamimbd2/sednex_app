@@ -75,7 +75,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Tourist spot',
               'assets/essentialService/touristspot.png',
               const Color(0xFFFFA500),
-              () => _onServiceTap('Tourist spot'),
+              () => Get.toNamed('/tourist-spot'),
             ),
             _buildServiceCard(
               'Learn Arabic',
@@ -166,6 +166,18 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'assets/essentialService/NGO.png',
               const Color(0xFFDC143C),
               () => _onServiceTap('NGO'),
+            ),
+            _buildServiceCard(
+              'Bus & Flight Booking',
+              'assets/essentialService/Bus.png',
+              const Color(0xFF20B2AA),
+              () => Get.toNamed('/busflight'),
+            ),
+            _buildServiceCard(
+              'Local Tour',
+              'assets/essentialService/localTour.png',
+              const Color(0xFF4169E1),
+              () => Get.toNamed('/localtour'),
             ),
           ],
         ),

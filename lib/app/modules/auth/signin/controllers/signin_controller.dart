@@ -8,14 +8,8 @@ class SigninController extends GetxController {
 
   void login() {
     if (formKey.currentState!.validate()) {
-      // Form is valid, proceed with login
-      Get.snackbar(
-        'Success',
-        'Logging in as ${emailController.text}',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withOpacity(0.1),
-        colorText: Colors.green,
-      );
+      // Form is valid, proceed with login and navigate to dashboard
+      Get.offAllNamed('/dashboard');
     }
   }
 

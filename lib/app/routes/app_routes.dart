@@ -12,6 +12,10 @@ abstract class Routes {
   static const SENDOTP = _Paths.SENDOTP;
   static const VERIFYOTP = _Paths.VERIFYOTP;
   static const RESETPASSWORD = _Paths.RESETPASSWORD;
+  static const DASHBOARD = _Paths.DASHBOARD;
+  static const ESSENTIAL_SERVICE = _Paths.ESSENTIAL_SERVICE;
+  static const COMMUNITY = _Paths.COMMUNITY;
+  static const LEARNARABIC = _Paths.LEARNARABIC;
 }
 
 abstract class _Paths {
@@ -25,4 +29,8 @@ abstract class _Paths {
   static const SENDOTP = '/sendotp';
   static const VERIFYOTP = '/verifyotp';
   static const RESETPASSWORD = '/resetpassword';
+  static const DASHBOARD = '/dashboard';
+  static const ESSENTIAL_SERVICE = '/essential-service';
+  static const COMMUNITY = '/community';
+  static const LEARNARABIC = '/learnarabic';
 }

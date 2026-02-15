@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../controllers/dashboard_controller.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import '../../profile/views/profile_view.dart';
 
 class DashboardView extends GetView<DashboardController> {
   const DashboardView({super.key});
@@ -12,11 +13,15 @@ class DashboardView extends GetView<DashboardController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        toolbarHeight: 70,
-        backgroundColor: const Color(0xFFC62828), // Deep Red matching CreatePost
-        elevation: 0,
-        leadingWidth: 0,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Obx(() {
+          if (controller.currentIndex.value == 1 || controller.currentIndex.value == 3) return const SizedBox.shrink();
+          return AppBar(
+            toolbarHeight: 70,
+            backgroundColor: const Color(0xFFC62828), // Deep Red matching CreatePost
+            elevation: 0,
+            leadingWidth: 0,
         titleSpacing: 16,
         title: Image.asset(
           'assets/logo/logowithtext.png',
@@ -64,14 +69,18 @@ class DashboardView extends GetView<DashboardController> {
           // Profile Picture
           Padding(
             padding: const EdgeInsets.only(right: 16),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.grey[200],
-              child: const Icon(Icons.person, color: Colors.grey),
-              // backgroundImage: const NetworkImage('https://i.pravatar.cc/150?img=11'), // Use this if online
+            child: GestureDetector(
+              onTap: () => controller.changePage(3), // Navigate to Profile Tab
+              child: CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.grey[200],
+                child: const Icon(Icons.person, color: Colors.grey),
+              ),
             ),
           ),
         ],
+          );
+        }),
       ),
       body: Obx(() => _getPage(controller.currentIndex.value)),
       bottomNavigationBar: _buildBottomNavigationBar(),
@@ -160,12 +169,7 @@ class DashboardView extends GetView<DashboardController> {
   }
 
   Widget _buildProfilePage() {
-    return const Center(
-      child: Text(
-        'Profile',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    );
+    return const ProfileView();
   }
 
   Widget _buildFloatingActionButton() {

@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/aboutus/bindings/aboutus_binding.dart';
+import '../modules/aboutus/views/aboutus_view.dart';
 import '../modules/articles/bindings/articles_binding.dart';
 import '../modules/articles/views/articles_view.dart';
 import '../modules/auth/resetpassword/bindings/resetpassword_binding.dart';
@@ -14,22 +16,30 @@ import '../modules/basicgoods/bindings/basicgoods_binding.dart';
 import '../modules/basicgoods/views/basicgoods_view.dart';
 import '../modules/busflight/bindings/busflight_binding.dart';
 import '../modules/busflight/views/busflight_view.dart';
+import '../modules/changePassword/bindings/change_password_binding.dart';
+import '../modules/changePassword/views/change_password_view.dart';
 import '../modules/community/bindings/community_binding.dart';
 import '../modules/community/views/community_view.dart';
 import '../modules/createpost/bindings/createpost_binding.dart';
 import '../modules/createpost/views/createpost_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
 import '../modules/dashboard/views/dashboard_view.dart';
+import '../modules/editprofile/bindings/editprofile_binding.dart';
+import '../modules/editprofile/views/editprofile_view.dart';
 import '../modules/embassy/bindings/embassy_binding.dart';
 import '../modules/embassy/views/embassy_view.dart';
 import '../modules/essentialService/bindings/essential_service_binding.dart';
 import '../modules/essentialService/views/essential_service_view.dart';
+import '../modules/help/bindings/help_binding.dart';
+import '../modules/help/views/help_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/hospitals/bindings/hospitals_binding.dart';
 import '../modules/hospitals/views/hospitals_view.dart';
 import '../modules/informations/bindings/informations_binding.dart';
 import '../modules/informations/views/informations_view.dart';
+import '../modules/language/bindings/language_binding.dart';
+import '../modules/language/views/language_view.dart';
 import '../modules/learnarabic/bindings/learnarabic_binding.dart';
 import '../modules/learnarabic/views/learnarabic_view.dart';
 import '../modules/localtour/bindings/localtour_binding.dart';
@@ -46,6 +56,8 @@ import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/termsandcondition/bindings/termsandcondition_binding.dart';
 import '../modules/termsandcondition/views/termsandcondition_view.dart';
+import '../modules/termsandconditions/bindings/termsandconditions_binding.dart';
+import '../modules/termsandconditions/views/termsandconditions_view.dart';
 import '../modules/touristSpot/bindings/tourist_spot_binding.dart';
 import '../modules/touristSpot/views/tourist_spot_view.dart';
 
@@ -176,6 +188,36 @@ class AppPages {
       name: _Paths.CREATEPOST,
       page: () => const CreatepostView(),
       binding: CreatepostBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDITPROFILE,
+      page: () => const EditprofileView(),
+      binding: EditprofileBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHANGE_PASSWORD,
+      page: () => const ChangePasswordView(),
+      binding: ChangePasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.TERMSANDCONDITIONS,
+      page: () => const TermsandconditionsView(),
+      binding: TermsandconditionsBinding(),
+    ),
+    GetPage(
+      name: _Paths.HELP,
+      page: () => const HelpView(),
+      binding: HelpBinding(),
+    ),
+    GetPage(
+      name: _Paths.ABOUTUS,
+      page: () => const AboutusView(),
+      binding: AboutusBinding(),
+    ),
+    GetPage(
+      name: _Paths.LANGUAGE,
+      page: () => const LanguageView(),
+      binding: LanguageBinding(),
     ),
   ];
 }

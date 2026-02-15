@@ -27,6 +27,12 @@ abstract class Routes {
   static const ARTICLES = _Paths.ARTICLES;
   static const PROFILE = _Paths.PROFILE;
   static const CREATEPOST = _Paths.CREATEPOST;
+  static const EDITPROFILE = _Paths.EDITPROFILE;
+  static const CHANGE_PASSWORD = _Paths.CHANGE_PASSWORD;
+  static const TERMSANDCONDITIONS = _Paths.TERMSANDCONDITIONS;
+  static const HELP = _Paths.HELP;
+  static const ABOUTUS = _Paths.ABOUTUS;
+  static const LANGUAGE = _Paths.LANGUAGE;
 }
 
 abstract class _Paths {
@@ -55,4 +61,10 @@ abstract class _Paths {
   static const ARTICLES = '/articles';
   static const PROFILE = '/profile';
   static const CREATEPOST = '/createpost';
+  static const EDITPROFILE = '/editprofile';
+  static const CHANGE_PASSWORD = '/change-password';
+  static const TERMSANDCONDITIONS = '/termsandconditions';
+  static const HELP = '/help';
+  static const ABOUTUS = '/aboutus';
+  static const LANGUAGE = '/language';
 }

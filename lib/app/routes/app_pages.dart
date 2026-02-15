@@ -8,6 +8,8 @@ import '../modules/auth/signup/bindings/signup_binding.dart';
 import '../modules/auth/signup/views/signup_view.dart';
 import '../modules/auth/verifyotp/bindings/verifyotp_binding.dart';
 import '../modules/auth/verifyotp/views/verifyotp_view.dart';
+import '../modules/basicgoods/bindings/basicgoods_binding.dart';
+import '../modules/basicgoods/views/basicgoods_view.dart';
 import '../modules/busflight/bindings/busflight_binding.dart';
 import '../modules/busflight/views/busflight_view.dart';
 import '../modules/community/bindings/community_binding.dart';
@@ -18,6 +20,8 @@ import '../modules/essentialService/bindings/essential_service_binding.dart';
 import '../modules/essentialService/views/essential_service_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/informations/bindings/informations_binding.dart';
+import '../modules/informations/views/informations_view.dart';
 import '../modules/learnarabic/bindings/learnarabic_binding.dart';
 import '../modules/learnarabic/views/learnarabic_view.dart';
 import '../modules/localtour/bindings/localtour_binding.dart';
@@ -120,6 +124,16 @@ class AppPages {
       name: _Paths.LOCALTOUR,
       page: () => const LocaltourView(),
       binding: LocaltourBinding(),
+    ),
+    GetPage(
+      name: _Paths.BASICGOODS,
+      page: () => const BasicgoodsView(),
+      binding: BasicgoodsBinding(),
+    ),
+    GetPage(
+      name: _Paths.INFORMATIONS,
+      page: () => const InformationsView(),
+      binding: InformationsBinding(),
     ),
   ];
 }

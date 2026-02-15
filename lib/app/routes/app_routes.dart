@@ -19,6 +19,8 @@ abstract class Routes {
   static const TOURIST_SPOT = _Paths.TOURIST_SPOT;
   static const BUSFLIGHT = _Paths.BUSFLIGHT;
   static const LOCALTOUR = _Paths.LOCALTOUR;
+  static const BASICGOODS = _Paths.BASICGOODS;
+  static const INFORMATIONS = _Paths.INFORMATIONS;
 }
 
 abstract class _Paths {
@@ -39,4 +41,6 @@ abstract class _Paths {
   static const TOURIST_SPOT = '/tourist-spot';
   static const BUSFLIGHT = '/busflight';
   static const LOCALTOUR = '/localtour';
+  static const BASICGOODS = '/basicgoods';
+  static const INFORMATIONS = '/informations';
 }

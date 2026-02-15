@@ -57,7 +57,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Basic Gods',
               'assets/essentialService/basicgoods.png',
               const Color(0xFF20B2AA),
-              () => _onServiceTap('Basic Goods'),
+              () => Get.toNamed('/basicgoods'),
             ),
             _buildServiceCard(
               'Community',

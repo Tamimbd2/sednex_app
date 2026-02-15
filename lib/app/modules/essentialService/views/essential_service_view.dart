@@ -39,19 +39,19 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Informations',
               'assets/essentialService/informations.png',
               const Color(0xFF4169E1),
-              () => _onServiceTap('Informations'),
+              () => Get.toNamed('/informations'),
             ),
             _buildServiceCard(
               'Embassy',
               'assets/essentialService/embassy.png',
               const Color(0xFFDC143C),
-              () => _onServiceTap('Embassy'),
+              () => Get.toNamed('/embassy'),
             ),
             _buildServiceCard(
               'Article',
               'assets/essentialService/article.png',
               const Color(0xFFFFA500),
-              () => _onServiceTap('Article'),
+              () => Get.toNamed('/articles'),
             ),
             _buildServiceCard(
               'Basic Gods',
@@ -69,7 +69,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Grocery Store',
               'assets/essentialService/store.png',
               const Color(0xFFDC143C),
-              () => _onServiceTap('Grocery Store'),
+              () => _showComingSoonDialog(context, 'Grocery Store'),
             ),
             _buildServiceCard(
               'Tourist spot',
@@ -87,85 +87,80 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Restaurants',
               'assets/essentialService/restaurent.png',
               const Color(0xFF4169E1),
-              () => _onServiceTap('Restaurants'),
+              () => Get.toNamed('/restaurents'),
             ),
             _buildServiceCard(
               'Hospitals',
               'assets/essentialService/hospital.png',
               const Color(0xFFDC143C),
-              () => _onServiceTap('Hospitals'),
+              () => Get.toNamed('/hospitals'),
             ),
             _buildServiceCard(
               'Local Business',
               'assets/essentialService/Business.png',
               const Color(0xFFFFA500),
-              () => _onServiceTap('Local Business'),
+              () => _showComingSoonDialog(context, 'Local Business'),
             ),
             _buildServiceCard(
               'Jewellery shop',
               'assets/essentialService/Jeweller.png',
               const Color(0xFF20B2AA),
-              () => _onServiceTap('Jewellery shop'),
+              () => _showComingSoonDialog(context, 'Jewellery shop'),
             ),
             _buildServiceCard(
               'Clothing shop',
               'assets/essentialService/clothshop.png',
               const Color(0xFF4169E1),
-              () => _onServiceTap('Clothing shop'),
+              () => _showComingSoonDialog(context, 'Clothing shop'),
             ),
             _buildServiceCard(
               'Organization',
               'assets/essentialService/Organization.png',
               const Color(0xFFDC143C),
-              () => _onServiceTap('Organization'),
+              () => _showComingSoonDialog(context, 'Organization'),
             ),
             _buildServiceCard(
               'Sports team',
               'assets/essentialService/sports.png',
               const Color(0xFFFFA500),
-              () => _onServiceTap('Sports team'),
+              () => _showComingSoonDialog(context, 'Sports team'),
             ),
             _buildServiceCard(
               'Taxi Drivers',
               'assets/essentialService/texidriver.png',
               const Color(0xFF20B2AA),
-              () => _onServiceTap('Taxi Drivers'),
+              () => _showComingSoonDialog(context, 'Taxi Drivers'),
             ),
             _buildServiceCard(
               'Businessman',
               'assets/essentialService/businessman.png',
               const Color(0xFFFFA500),
-              () => _onServiceTap('Businessman'),
+              () => _showComingSoonDialog(context, 'Businessman'),
             ),
             _buildServiceCard(
               'Influencer',
               'assets/essentialService/Influencer.png',
               const Color(0xFFDC143C),
-              () => _onServiceTap('Influencer'),
+              () => _showComingSoonDialog(context, 'Influencer'),
             ),
             _buildServiceCard(
               'Local Market',
               'assets/essentialService/Local Market.png',
               const Color(0xFFFFA500),
-              () => _onServiceTap('Local Market'),
+              () => _showComingSoonDialog(context, 'Local Market'),
             ),
             _buildServiceCard(
               'Pharmacist',
               'assets/essentialService/Pharmacist.png',
               const Color(0xFF20B2AA),
-              () => _onServiceTap('Pharmacist'),
+              () => _showComingSoonDialog(context, 'Pharmacist'),
             ),
-            _buildServiceCard(
-              'Clothing shop',
-              'assets/essentialService/T-Shirt.png',
-              const Color(0xFF4169E1),
-              () => _onServiceTap('Clothing shop'),
-            ),
+
             _buildServiceCard(
               'NGO',
               'assets/essentialService/NGO.png',
               const Color(0xFFDC143C),
-              () => _onServiceTap('NGO'),
+              () => _showComingSoonDialog(context, 'NGO'),
             ),
             _buildServiceCard(
               'Bus & Flight Booking',
@@ -244,14 +239,83 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
     );
   }
 
-  void _onServiceTap(String serviceName) {
-    Get.snackbar(
-      serviceName,
-      'Opening $serviceName...',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: const Color(0xFFDC143C).withOpacity(0.1),
-      colorText: const Color(0xFFDC143C),
-      duration: const Duration(seconds: 1),
+  void _showComingSoonDialog(BuildContext context, String serviceName) {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TweenAnimationBuilder<double>(
+                tween: Tween<double>(begin: 0.0, end: 1.0),
+                duration: const Duration(milliseconds: 800),
+                curve: Curves.elasticOut,
+                builder: (context, value, child) {
+                  return Transform.scale(
+                    scale: value,
+                    child: child,
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFDC143C).withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.rocket_launch,
+                    size: 50,
+                    color: Color(0xFFDC143C),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Coming Soon!',
+                style: GoogleFonts.inter(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                '$serviceName feature is currently under development and will be available shortly.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Get.back(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFDC143C),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    'Got it',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

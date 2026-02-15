@@ -21,6 +21,12 @@ abstract class Routes {
   static const LOCALTOUR = _Paths.LOCALTOUR;
   static const BASICGOODS = _Paths.BASICGOODS;
   static const INFORMATIONS = _Paths.INFORMATIONS;
+  static const EMBASSY = _Paths.EMBASSY;
+  static const HOSPITALS = _Paths.HOSPITALS;
+  static const RESTAURENTS = _Paths.RESTAURENTS;
+  static const ARTICLES = _Paths.ARTICLES;
+  static const PROFILE = _Paths.PROFILE;
+  static const CREATEPOST = _Paths.CREATEPOST;
 }
 
 abstract class _Paths {
@@ -43,4 +49,10 @@ abstract class _Paths {
   static const LOCALTOUR = '/localtour';
   static const BASICGOODS = '/basicgoods';
   static const INFORMATIONS = '/informations';
+  static const EMBASSY = '/embassy';
+  static const HOSPITALS = '/hospitals';
+  static const RESTAURENTS = '/restaurents';
+  static const ARTICLES = '/articles';
+  static const PROFILE = '/profile';
+  static const CREATEPOST = '/createpost';
 }

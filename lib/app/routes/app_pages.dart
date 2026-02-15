@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/articles/bindings/articles_binding.dart';
+import '../modules/articles/views/articles_view.dart';
 import '../modules/auth/resetpassword/bindings/resetpassword_binding.dart';
 import '../modules/auth/resetpassword/views/resetpassword_view.dart';
 import '../modules/auth/signin/bindings/signin_binding.dart';
@@ -14,12 +16,18 @@ import '../modules/busflight/bindings/busflight_binding.dart';
 import '../modules/busflight/views/busflight_view.dart';
 import '../modules/community/bindings/community_binding.dart';
 import '../modules/community/views/community_view.dart';
+import '../modules/createpost/bindings/createpost_binding.dart';
+import '../modules/createpost/views/createpost_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
 import '../modules/dashboard/views/dashboard_view.dart';
+import '../modules/embassy/bindings/embassy_binding.dart';
+import '../modules/embassy/views/embassy_view.dart';
 import '../modules/essentialService/bindings/essential_service_binding.dart';
 import '../modules/essentialService/views/essential_service_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/hospitals/bindings/hospitals_binding.dart';
+import '../modules/hospitals/views/hospitals_view.dart';
 import '../modules/informations/bindings/informations_binding.dart';
 import '../modules/informations/views/informations_view.dart';
 import '../modules/learnarabic/bindings/learnarabic_binding.dart';
@@ -28,6 +36,10 @@ import '../modules/localtour/bindings/localtour_binding.dart';
 import '../modules/localtour/views/localtour_view.dart';
 import '../modules/onboard/bindings/onboard_binding.dart';
 import '../modules/onboard/views/onboard_view.dart';
+import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/views/profile_view.dart';
+import '../modules/restaurents/bindings/restaurents_binding.dart';
+import '../modules/restaurents/views/restaurents_view.dart';
 import '../modules/sendotp/bindings/sendotp_binding.dart';
 import '../modules/sendotp/views/sendotp_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
@@ -42,7 +54,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.ESSENTIAL_SERVICE;
+  static const INITIAL = Routes.DASHBOARD;
 
   static final routes = [
     GetPage(
@@ -134,6 +146,36 @@ class AppPages {
       name: _Paths.INFORMATIONS,
       page: () => const InformationsView(),
       binding: InformationsBinding(),
+    ),
+    GetPage(
+      name: _Paths.EMBASSY,
+      page: () => const EmbassyView(),
+      binding: EmbassyBinding(),
+    ),
+    GetPage(
+      name: _Paths.HOSPITALS,
+      page: () => const HospitalsView(),
+      binding: HospitalsBinding(),
+    ),
+    GetPage(
+      name: _Paths.RESTAURENTS,
+      page: () => const RestaurentsView(),
+      binding: RestaurentsBinding(),
+    ),
+    GetPage(
+      name: _Paths.ARTICLES,
+      page: () => const ArticlesView(),
+      binding: ArticlesBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.CREATEPOST,
+      page: () => const CreatepostView(),
+      binding: CreatepostBinding(),
     ),
   ];
 }

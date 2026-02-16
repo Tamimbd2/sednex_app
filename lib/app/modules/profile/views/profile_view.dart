@@ -13,36 +13,6 @@ class ProfileView extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
-      appBar: AppBar(
-        title: Text(
-          'Profile',
-          style: GoogleFonts.arimo(
-            color: const Color(0xFF101727),
-            fontSize: 20,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: const Color(0xFFF2F4F6),
-            height: 1.0,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF101727)),
-          onPressed: () {
-            try {
-              Get.find<DashboardController>().changePage(0);
-            } catch (e) {
-              Get.back();
-            }
-          },
-        ),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
@@ -144,6 +114,11 @@ class ProfileView extends GetView<ProfileController> {
 
             // Settings Group 1
             _buildSettingsGroup([
+              _buildSettingsItem(
+                'Shop',
+                'assets/profile/shop.svg',
+                onTap: () => Get.toNamed('/shop'),
+              ),
               _buildSettingsItem('My Post', 'assets/profile/post.svg'),
               _buildSettingsItem('Cart', 'assets/profile/cart.svg'),
               _buildSettingsItem(

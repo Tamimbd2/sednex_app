@@ -5,6 +5,7 @@ import '../controllers/dashboard_controller.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import '../../profile/views/profile_view.dart';
+import 'HomePagecontent.dart';
 
 class DashboardView extends GetView<DashboardController> {
   const DashboardView({super.key});
@@ -16,7 +17,8 @@ class DashboardView extends GetView<DashboardController> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: Obx(() {
-          if (controller.currentIndex.value == 1 || controller.currentIndex.value == 3) return const SizedBox.shrink();
+          // Hide AppBar only for Cart (index 2). Show for Home (0), Search (1), and Profile (3).
+          if (controller.currentIndex.value == 2) return const SizedBox.shrink();
           return AppBar(
             toolbarHeight: 70,
             backgroundColor: const Color(0xFFC62828), // Deep Red matching CreatePost
@@ -74,6 +76,8 @@ class DashboardView extends GetView<DashboardController> {
               child: CircleAvatar(
                 radius: 18,
                 backgroundColor: Colors.grey[200],
+                // Load profile image from ProfileView controller or consistent source
+                backgroundImage: const NetworkImage("https://placehold.co/80x84"), 
                 child: const Icon(Icons.person, color: Colors.grey),
               ),
             ),
@@ -105,12 +109,7 @@ class DashboardView extends GetView<DashboardController> {
   }
 
   Widget _buildHomePage() {
-    return const Center(
-      child: Text(
-        'Home',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    );
+    return const HomePageContent();
   }
 
   Widget _buildSearchPage() {

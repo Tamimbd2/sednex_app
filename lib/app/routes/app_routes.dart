@@ -33,6 +33,12 @@ abstract class Routes {
   static const HELP = _Paths.HELP;
   static const ABOUTUS = _Paths.ABOUTUS;
   static const LANGUAGE = _Paths.LANGUAGE;
+  static const SHOP = _Paths.SHOP;
+  static const PRODUCT_DETAILS = _Paths.PRODUCT_DETAILS;
+  static const ALL_PRODUCTS = _Paths.ALL_PRODUCTS;
+  static const ALL_CATEGORIES = _Paths.ALL_CATEGORIES;
+  static const COMMUNITY_FEED = _Paths.COMMUNITY_FEED;
+  static const NAMAJ = _Paths.NAMAJ;
 }
 
 abstract class _Paths {
@@ -67,4 +73,10 @@ abstract class _Paths {
   static const HELP = '/help';
   static const ABOUTUS = '/aboutus';
   static const LANGUAGE = '/language';
+  static const SHOP = '/shop';
+  static const PRODUCT_DETAILS = '/product-details';
+  static const ALL_PRODUCTS = '/all-products';
+  static const ALL_CATEGORIES = '/all-categories';
+  static const COMMUNITY_FEED = '/community-feed';
+  static const NAMAJ = '/namaj';
 }

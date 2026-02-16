@@ -1,5 +1,10 @@
 import 'package:get/get.dart';
 
+import '../modules/Shop/bindings/shop_binding.dart';
+import '../modules/Shop/views/allCategory.dart';
+import '../modules/Shop/views/allproducts.dart';
+import '../modules/Shop/views/productsDetails.dart';
+import '../modules/Shop/views/shop_view.dart';
 import '../modules/aboutus/bindings/aboutus_binding.dart';
 import '../modules/aboutus/views/aboutus_view.dart';
 import '../modules/articles/bindings/articles_binding.dart';
@@ -20,6 +25,8 @@ import '../modules/changePassword/bindings/change_password_binding.dart';
 import '../modules/changePassword/views/change_password_view.dart';
 import '../modules/community/bindings/community_binding.dart';
 import '../modules/community/views/community_view.dart';
+import '../modules/communityFeed/bindings/community_feed_binding.dart';
+import '../modules/communityFeed/views/community_feed_view.dart';
 import '../modules/createpost/bindings/createpost_binding.dart';
 import '../modules/createpost/views/createpost_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
@@ -44,6 +51,8 @@ import '../modules/learnarabic/bindings/learnarabic_binding.dart';
 import '../modules/learnarabic/views/learnarabic_view.dart';
 import '../modules/localtour/bindings/localtour_binding.dart';
 import '../modules/localtour/views/localtour_view.dart';
+import '../modules/namaj/bindings/namaj_binding.dart';
+import '../modules/namaj/views/namaj_view.dart';
 import '../modules/onboard/bindings/onboard_binding.dart';
 import '../modules/onboard/views/onboard_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
@@ -218,6 +227,35 @@ class AppPages {
       name: _Paths.LANGUAGE,
       page: () => const LanguageView(),
       binding: LanguageBinding(),
+    ),
+    GetPage(
+      name: _Paths.SHOP,
+      page: () => const ShopView(),
+      binding: ShopBinding(),
+    ),
+    GetPage(
+      name: _Paths.PRODUCT_DETAILS,
+      page: () => const ProductDetailsView(),
+    ),
+    GetPage(
+      name: _Paths.ALL_PRODUCTS,
+      page: () => const AllProductsView(),
+      binding: ShopBinding(), // Reusing ShopBinding
+    ),
+    GetPage(
+      name: _Paths.ALL_CATEGORIES,
+      page: () => const AllCategoriesView(),
+      binding: ShopBinding(), // Reusing ShopBinding for categories data
+    ),
+    GetPage(
+      name: _Paths.COMMUNITY_FEED,
+      page: () => const CommunityFeedView(),
+      binding: CommunityFeedBinding(),
+    ),
+    GetPage(
+      name: _Paths.NAMAJ,
+      page: () => const NamajView(),
+      binding: NamajBinding(),
     ),
   ];
 }

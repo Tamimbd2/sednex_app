@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_svg: ^2.2.3
   image_picker: ^1.2.1
+  marquee: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -62,12 +63,14 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/
+    - assets/nav/
+    - assets/post/
     - assets/logo/
     - assets/images/
-    - assets/icons/
-    - assets/nav/
     - assets/essentialService/
     - assets/profile/
+    - assets/post/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -19,6 +19,8 @@ import '../modules/auth/verifyotp/bindings/verifyotp_binding.dart';
 import '../modules/auth/verifyotp/views/verifyotp_view.dart';
 import '../modules/basicgoods/bindings/basicgoods_binding.dart';
 import '../modules/basicgoods/views/basicgoods_view.dart';
+import '../modules/bkashRate/bindings/bkash_rate_binding.dart';
+import '../modules/bkashRate/views/bkash_rate_view.dart';
 import '../modules/busflight/bindings/busflight_binding.dart';
 import '../modules/busflight/views/busflight_view.dart';
 import '../modules/changePassword/bindings/change_password_binding.dart';
@@ -37,6 +39,8 @@ import '../modules/embassy/bindings/embassy_binding.dart';
 import '../modules/embassy/views/embassy_view.dart';
 import '../modules/essentialService/bindings/essential_service_binding.dart';
 import '../modules/essentialService/views/essential_service_view.dart';
+import '../modules/goldRate/bindings/gold_rate_binding.dart';
+import '../modules/goldRate/views/gold_rate_view.dart';
 import '../modules/help/bindings/help_binding.dart';
 import '../modules/help/views/help_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -57,6 +61,8 @@ import '../modules/onboard/bindings/onboard_binding.dart';
 import '../modules/onboard/views/onboard_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/ramadancalander/bindings/ramadancalander_binding.dart';
+import '../modules/ramadancalander/views/ramadancalander_view.dart';
 import '../modules/restaurents/bindings/restaurents_binding.dart';
 import '../modules/restaurents/views/restaurents_view.dart';
 import '../modules/sendotp/bindings/sendotp_binding.dart';
@@ -256,6 +262,21 @@ class AppPages {
       name: _Paths.NAMAJ,
       page: () => const NamajView(),
       binding: NamajBinding(),
+    ),
+    GetPage(
+      name: _Paths.BKASH_RATE,
+      page: () => const BkashRateView(),
+      binding: BkashRateBinding(),
+    ),
+    GetPage(
+      name: _Paths.GOLD_RATE,
+      page: () => const GoldRateView(),
+      binding: GoldRateBinding(),
+    ),
+    GetPage(
+      name: _Paths.RAMADANCALANDER,
+      page: () => const RamadancalanderView(),
+      binding: RamadancalanderBinding(),
     ),
   ];
 }

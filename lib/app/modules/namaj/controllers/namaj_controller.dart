@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NamajController extends GetxController {
@@ -18,46 +19,42 @@ class NamajController extends GetxController {
   }.obs;
 
   // Prayer Learning Sections
+  // Prayer Learning Sections
   final prayerSections = [
     {
       'title': 'ফজর',
       'rakat': '২ রাকাত',
-      'icon': 'assets/namaj/fajr.png',
+      'icon': Icons.nights_stay_rounded, // Night Vibe
       'color': 0xFFFFF8E1, // Light Yellow
       'textColor': 0xFFF57F17,
-      'isCloudy': false,
     },
     {
       'title': 'যোহর',
       'rakat': '৪ রাকাত',
-      'icon': 'assets/namaj/dhuhr.png',
+      'icon': Icons.wb_sunny_rounded, // Day Vibe
       'color': 0xFFFFF1F1, // Light Pink
       'textColor': 0xFFFFAB91,
-      'isCloudy': false,
     },
     {
       'title': 'আছর',
       'rakat': '৪ রাকাত',
-      'icon': 'assets/namaj/asr.png',
+      'icon': Icons.wb_cloudy_rounded, // Day Vibe (Cloudy/Soft)
       'color': 0xFFE3F2FD, // Light Blue
       'textColor': 0xFF64B5F6,
-      'isCloudy': true,
     },
     {
       'title': 'মাগরিব',
       'rakat': '৩ রাকাত',
-      'icon': 'assets/namaj/maghrib.png',
+      'icon': Icons.wb_twilight_rounded, // Evening Vibe
       'color': 0xFFFCE4EC, // Very Light Pink
       'textColor': 0xFFF06292,
-      'isCloudy': false,
     },
     {
       'title': 'ঈশা',
       'rakat': '৪ রাকাত',
-      'icon': 'assets/namaj/isha.png',
+      'icon': Icons.bedtime_rounded, // Night Vibe
       'color': 0xFFE8EAF6, // Indigo Light
       'textColor': 0xFF7986CB,
-      'isCloudy': true, // Moon
     },
   ].obs;
 

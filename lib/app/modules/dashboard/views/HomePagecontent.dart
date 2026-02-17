@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../communityFeed/controllers/community_feed_controller.dart';
 import '../../communityFeed/views/community_feed_view.dart';
+import '../../../routes/app_pages.dart';
 
 class HomePageContent extends StatelessWidget {
   const HomePageContent({super.key});
@@ -81,13 +82,20 @@ class HomePageContent extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // Service Cards Row
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
+          // Service Cards Row (Scrollable)
+          SizedBox(
+            height: 180, // Reduced from 200 as requested
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
+                // Sehri & Iftar Card
+                _buildSehriIftarCompactCard(),
+                const SizedBox(width: 12),
+                
                 // Fazar Card (Mosque)
-                Expanded(
+                SizedBox(
+                  width: 120,
                   child: _buildServiceCard(
                     title: 'Fazar',
                     subtitle: '05:45 AM',
@@ -102,7 +110,8 @@ class HomePageContent extends StatelessWidget {
                 const SizedBox(width: 12),
                 
                 // Bkash Rate Card
-                Expanded(
+                SizedBox(
+                  width: 120,
                   child: _buildServiceCard(
                     title: 'Bkash Rate',
                     subtitle: '125.5৳',
@@ -111,12 +120,14 @@ class HomePageContent extends StatelessWidget {
                     imagePath: 'assets/logo/bkash.png', 
                     bgColor: const Color(0xFFFCE4EC), // Light Pink
                     iconSize: 50,
+                    onTap: () => Get.toNamed(Routes.BKASH_RATE),
                   ),
                 ),
                 const SizedBox(width: 12),
 
                 // Gold Rate Card
-                Expanded(
+                SizedBox(
+                  width: 120,
                   child: _buildServiceCard(
                     title: 'Gold Rate',
                     subtitle: '56,536£',
@@ -125,8 +136,11 @@ class HomePageContent extends StatelessWidget {
                     imagePath: 'assets/logo/gold.png',
                     bgColor: const Color(0xFFFFF3E0), // Light Orange
                     iconSize: 60,
+                    onTap: () => Get.toNamed(Routes.GOLD_RATE),
                   ),
                 ),
+                // Removed duplicate Sehri & Iftar Card from here
+
               ],
             ),
           ),
@@ -627,6 +641,147 @@ class HomePageContent extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSehriIftarCompactCard() {
+    return GestureDetector(
+      onTap: () => Get.toNamed(Routes.RAMADANCALANDER),
+      child: Container(
+        width: 120, // Increased width slightly to fit header text
+        height: 175, // Reduced height as requested
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: const Color(0xFFD4F3D8),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+          // Date and Location Header
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.history, size: 8, color: Colors.black),
+                    const SizedBox(width: 2),
+                    Text(
+                      '5 Jan Sun',
+                      style: GoogleFonts.poppins(fontSize: 7, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                 decoration: BoxDecoration(
+                   color: Colors.white,
+                   borderRadius: BorderRadius.circular(8),
+                 ),
+                 child: Row(
+                   children: [
+                     const Icon(Icons.location_on_outlined, size: 8, color: Colors.black),
+                     const SizedBox(width: 2),
+                     Text(
+                       'Dhaka',
+                       style: GoogleFonts.poppins(fontSize: 7, fontWeight: FontWeight.w500),
+                     ),
+                   ],
+                 ),
+               ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          // Sehri Card
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                       // Using Icon as fallback since SVG has unsupported embedded bitmap
+                       Image.asset('assets/images/sheheri.png', width: 22, height: 22),
+                       const SizedBox(width: 4),
+                       Text(
+                         'Seheri',
+                         style: GoogleFonts.poppins(
+                           fontSize: 10,
+                           fontWeight: FontWeight.w600,
+                           color: Colors.black87,
+                         ),
+                       ),
+                     ],
+                   ),
+                   const SizedBox(height: 2),
+                   Text(
+                     '4:45 AM',
+                     style: GoogleFonts.poppins(
+                       fontSize: 13,
+                       fontWeight: FontWeight.bold,
+                       color: const Color(0xFF2E7D32),
+                     ),
+                   ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Iftar Card
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                       // Using Icon as fallback since SVG has unsupported embedded bitmap
+                       Image.asset('assets/images/ifter.png', width: 22, height: 22),
+                       const SizedBox(width: 4),
+                       Text(
+                         'Ifter',
+                         style: GoogleFonts.poppins(
+                           fontSize: 10,
+                           fontWeight: FontWeight.w600,
+                           color: Colors.black87,
+                         ),
+                       ),
+                     ],
+                   ),
+                   const SizedBox(height: 2),
+                   Text(
+                     '6:15 PM',
+                     style: GoogleFonts.poppins(
+                       fontSize: 13,
+                       fontWeight: FontWeight.bold,
+                       color: const Color(0xFF2E7D32),
+                     ),
+                   ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
     );
   }
 }

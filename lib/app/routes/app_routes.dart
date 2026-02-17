@@ -39,6 +39,9 @@ abstract class Routes {
   static const ALL_CATEGORIES = _Paths.ALL_CATEGORIES;
   static const COMMUNITY_FEED = _Paths.COMMUNITY_FEED;
   static const NAMAJ = _Paths.NAMAJ;
+  static const BKASH_RATE = _Paths.BKASH_RATE;
+  static const GOLD_RATE = _Paths.GOLD_RATE;
+  static const RAMADANCALANDER = _Paths.RAMADANCALANDER;
 }
 
 abstract class _Paths {
@@ -79,4 +82,7 @@ abstract class _Paths {
   static const ALL_CATEGORIES = '/all-categories';
   static const COMMUNITY_FEED = '/community-feed';
   static const NAMAJ = '/namaj';
+  static const BKASH_RATE = '/bkash-rate';
+  static const GOLD_RATE = '/gold-rate';
+  static const RAMADANCALANDER = '/ramadancalander';
 }

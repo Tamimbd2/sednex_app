@@ -4,7 +4,10 @@ import 'package:marquee/marquee.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../communityFeed/controllers/community_feed_controller.dart';
+import '../controllers/dashboard_controller.dart';
 import '../../communityFeed/views/community_feed_view.dart';
+import '../../namaj/controllers/namaj_controller.dart';
+import '../../ramadancalander/controllers/ramadancalander_controller.dart';
 import '../../../routes/app_pages.dart';
 
 class HomePageContent extends StatelessWidget {
@@ -26,44 +29,96 @@ class HomePageContent extends StatelessWidget {
             height: 36, // Constrained height for marquee
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             color: const Color(0xFFFFF0F0), // Light red background
-            child: Marquee(
-              text: 'Notice: lated. bKash rate: ৳128.50 • Bank rate: ৳12 lated. bKash rate: ৳128.50 • Bank rate: ৳12   ',
-              style: GoogleFonts.inter(
-                color: const Color(0xFFDC143C),
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-              scrollAxis: Axis.horizontal,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              blankSpace: 20.0,
-              velocity: 50.0,
-              pauseAfterRound: const Duration(seconds: 1),
-              startPadding: 10.0,
-              accelerationDuration: const Duration(seconds: 1),
-              accelerationCurve: Curves.linear,
-              decelerationDuration: const Duration(milliseconds: 500),
-              decelerationCurve: Curves.easeOut,
-            ),
+            child: Obx(() {
+              final controller = Get.find<DashboardController>();
+              final text = controller.marqueeText.value;
+              
+              if (text.isEmpty) return const SizedBox();
+
+              return Marquee(
+                text: text, 
+                style: GoogleFonts.inter(
+                  color: const Color(0xFFDC143C),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+                scrollAxis: Axis.horizontal,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                blankSpace: 20.0,
+                velocity: 50.0,
+                pauseAfterRound: const Duration(seconds: 1),
+                startPadding: 10.0,
+                accelerationDuration: const Duration(seconds: 1),
+                accelerationCurve: Curves.linear,
+                decelerationDuration: const Duration(milliseconds: 500),
+                decelerationCurve: Curves.easeOut,
+              );
+            }),
           ),
 
           // Hero Banner Frame
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              height: 180,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/Container(2).png'),
-                  fit: BoxFit.cover,
+          // Hero Banner Frame
+          Obx(() {
+             final controller = Get.find<DashboardController>();
+             final banners = controller.bannerList;
+             
+             if (banners.isEmpty) return const SizedBox.shrink();
+
+             return Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: SizedBox(
+                   height: 150,
+                   child: Stack(
+                     children: [
+                       PageView.builder(
+                         controller: controller.bannerPageController,
+                         onPageChanged: (index) => controller.currentBannerIndex.value = index,
+                         itemCount: banners.length,
+                         itemBuilder: (context, index) {
+                           return Container(
+                             margin: const EdgeInsets.symmetric(horizontal: 0),
+                             decoration: BoxDecoration(
+                               borderRadius: BorderRadius.circular(16),
+                               image: DecorationImage(
+                                 image: NetworkImage(banners[index]),
+                                 fit: BoxFit.cover,
+                               ),
+                             ),
+                           );
+                         },
+                       ),
+                       // Indicators
+                       if (banners.length > 1)
+                         Positioned(
+                           bottom: 10,
+                           left: 0, 
+                           right: 0,
+                           child: Obx(() => Row(
+                             mainAxisAlignment: MainAxisAlignment.center,
+                             children: List.generate(banners.length, (index) {
+                                 final isActive = controller.currentBannerIndex.value == index;
+                                 return AnimatedContainer(
+                                   duration: const Duration(milliseconds: 300),
+                                   margin: const EdgeInsets.symmetric(horizontal: 4),
+                                   width: isActive ? 20 : 8,
+                                   height: 8,
+                                   decoration: BoxDecoration(
+                                     color: isActive ? Colors.white : Colors.white.withOpacity(0.5),
+                                     borderRadius: BorderRadius.circular(4),
+                                   ),
+                                 );
+                             }),
+                           )),
+                         ),
+                     ],
+                   ),
                 ),
-              ),
-            ),
-          ),
+             );
+          }),
 
           // Information & Services Header
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Row(
               children: [
                 Text(
@@ -80,69 +135,112 @@ class HomePageContent extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
           // Service Cards Row (Scrollable)
           SizedBox(
-            height: 180, // Reduced from 200 as requested
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                // Sehri & Iftar Card
-                _buildSehriIftarCompactCard(),
-                const SizedBox(width: 12),
-                
-                // Fazar Card (Mosque)
-                SizedBox(
-                  width: 120,
-                  child: _buildServiceCard(
-                    title: 'Fazar',
-                    subtitle: '05:45 AM',
-                    subtitleColor: const Color(0xFF2E7D32), // Green
-                    footerText: 'today',
-                    imagePath: 'assets/logo/mosque.png',
-                    bgColor: const Color(0xFFE0F2F1), // Light Teal
-                    iconSize: 60,
-                    onTap: () => Get.toNamed('/namaj'),
+            height: 170, // Reduced from 200 as requested
+            child: Obx(() {
+               final dController = Get.find<DashboardController>();
+               final services = dController.servicesList;
+               
+               return ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                children: [
+                  // Sehri & Iftar Card
+                  _buildSehriIftarCompactCard(),
+                  const SizedBox(width: 12),
+                  
+                  // Fazar Card (Mosque)
+                  SizedBox(
+                    width: 120,
+                    child: Obx(() {
+                      NamajController? controller;
+                      try {
+                        controller = Get.find<NamajController>();
+                      } catch (e) {}
+                      
+                      final nextPrayer = controller?.nextPrayerDisplay ?? {'name': 'Fazar', 'time': '05:45 AM'};
+                      
+                      return _buildServiceCard(
+                        title: nextPrayer['name']!,
+                        subtitle: nextPrayer['time']!,
+                        subtitleColor: const Color(0xFF2E7D32), // Green
+                        footerText: 'today',
+                        imagePath: 'assets/logo/mosque.png',
+                        bgColor: const Color(0xFFE0F2F1), // Light Teal
+                        iconSize: 60,
+                        onTap: () => Get.toNamed('/namaj'),
+                      );
+                    }),
                   ),
-                ),
-                const SizedBox(width: 12),
-                
-                // Bkash Rate Card
-                SizedBox(
-                  width: 120,
-                  child: _buildServiceCard(
-                    title: 'Bkash Rate',
-                    subtitle: '125.5৳',
-                    subtitleColor: const Color(0xFFC2185B), // Pink
-                    footerText: 'today',
-                    imagePath: 'assets/logo/bkash.png', 
-                    bgColor: const Color(0xFFFCE4EC), // Light Pink
-                    iconSize: 50,
-                    onTap: () => Get.toNamed(Routes.BKASH_RATE),
-                  ),
-                ),
-                const SizedBox(width: 12),
+                  const SizedBox(width: 12),
+                  
+                  // Dynamic Services from API
+                  ...services.map((service) {
+                      String name = service['name']?.toString() ?? 'Service';
+                      
+                      // Handle price/rate with currency
+                      String subtitle = '';
+                      if (service['price'] != null) {
+                         subtitle = '${service['price']}';
+                      } else if (service['rate'] != null) {
+                         subtitle = '${service['rate']}';
+                      } else {
+                         subtitle = service['value']?.toString() ?? '0';
+                      }
+                      
+                      // Append currency symbol based on type
+                      if (name.toLowerCase().contains('bkash')) {
+                         subtitle += '৳';
+                      } else if (name.toLowerCase().contains('gold')) {
+                         subtitle += '£'; 
+                      }
 
-                // Gold Rate Card
-                SizedBox(
-                  width: 120,
-                  child: _buildServiceCard(
-                    title: 'Gold Rate',
-                    subtitle: '56,536£',
-                    subtitleColor: const Color(0xFF101727), // Dark text
-                    footerText: 'today',
-                    imagePath: 'assets/logo/gold.png',
-                    bgColor: const Color(0xFFFFF3E0), // Light Orange
-                    iconSize: 60,
-                    onTap: () => Get.toNamed(Routes.GOLD_RATE),
-                  ),
-                ),
-                // Removed duplicate Sehri & Iftar Card from here
+                      String image = service['icon']?.toString() ?? service['image']?.toString() ?? '';
+                      
+                      // Dynamic Styling
+                      Color bgColor = const Color(0xFFE3F2FD); // Default Light Blue
+                      Color subColor = const Color(0xFF1565C0);
+                      
+                      if (name.toLowerCase().contains('bkash')) {
+                         bgColor = const Color(0xFFFCE4EC); // Light Pink
+                         subColor = const Color(0xFFC2185B); // Pink
+                      } else if (name.toLowerCase().contains('gold')) {
+                         bgColor = const Color(0xFFFFF3E0); // Light Orange
+                         subColor = const Color(0xFF101727); // Dark
+                      }
 
-              ],
-            ),
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                           SizedBox(
+                             width: 120,
+                             child: _buildServiceCard(
+                               title: name,
+                               subtitle: subtitle,
+                               subtitleColor: subColor,
+                               footerText: 'today',
+                               imagePath: image,
+                               bgColor: bgColor,
+                               iconSize: 50,
+                               onTap: () {
+                                  if (name.toLowerCase().contains('bkash')) {
+                                     Get.toNamed(Routes.BKASH_RATE);
+                                  } else if (name.toLowerCase().contains('gold')) {
+                                     Get.toNamed(Routes.GOLD_RATE);
+                                  }
+                               },
+                             ),
+                           ),
+                           const SizedBox(width: 12),
+                        ],
+                      );
+                  }).toList(),
+                ],
+              );
+            }),
           ),
           const SizedBox(height: 16),
           // Essential Services Header
@@ -596,11 +694,21 @@ class HomePageContent extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              imagePath,
-              height: iconSize,
-              fit: BoxFit.contain,
-            ),
+
+            if (imagePath.startsWith('http'))
+              Image.network(
+                imagePath,
+                height: iconSize,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, size: iconSize, color: Colors.grey),
+              )
+            else
+              Image.asset(
+                imagePath,
+                height: iconSize,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => Icon(Icons.image_not_supported, size: iconSize, color: Colors.grey),
+              ),
             const SizedBox(height: 12),
             Text(
               title,
@@ -655,7 +763,20 @@ class HomePageContent extends StatelessWidget {
           color: const Color(0xFFD4F3D8),
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Column(
+        child: Obx(() {
+          RamadancalanderController? rController;
+          try {
+            rController = Get.find<RamadancalanderController>();
+          } catch(e) {}
+          
+          final data = rController?.todayRamadanData ?? {
+            'date': '18 Feb',
+            'seheri': '04:55 AM',
+            'iftar': '5:26 PM',
+            'location': 'Beirut'
+          };
+          
+          return Column(
           children: [
           // Date and Location Header
           Row(
@@ -672,7 +793,7 @@ class HomePageContent extends StatelessWidget {
                     const Icon(Icons.history, size: 8, color: Colors.black),
                     const SizedBox(width: 2),
                     Text(
-                      '5 Jan Sun',
+                      data['date']!.split(' 2026')[0], // Shorten date if needed
                       style: GoogleFonts.poppins(fontSize: 7, fontWeight: FontWeight.w500),
                     ),
                   ],
@@ -689,7 +810,7 @@ class HomePageContent extends StatelessWidget {
                      const Icon(Icons.location_on_outlined, size: 8, color: Colors.black),
                      const SizedBox(width: 2),
                      Text(
-                       'Dhaka',
+                       data['location']!,
                        style: GoogleFonts.poppins(fontSize: 7, fontWeight: FontWeight.w500),
                      ),
                    ],
@@ -727,7 +848,7 @@ class HomePageContent extends StatelessWidget {
                    ),
                    const SizedBox(height: 2),
                    Text(
-                     '4:45 AM',
+                     data['seheri']!,
                      style: GoogleFonts.poppins(
                        fontSize: 13,
                        fontWeight: FontWeight.bold,
@@ -768,7 +889,7 @@ class HomePageContent extends StatelessWidget {
                    ),
                    const SizedBox(height: 2),
                    Text(
-                     '6:15 PM',
+                     data['iftar']!,
                      style: GoogleFonts.poppins(
                        fontSize: 13,
                        fontWeight: FontWeight.bold,
@@ -780,7 +901,8 @@ class HomePageContent extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      );
+      }),
     ),
     );
   }

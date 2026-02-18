@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app/routes/app_pages.dart';
+import 'app/bindings/initial_binding.dart';
 
 void main() {
   runApp(
     GetMaterialApp(
       title: "Sednex App",
       initialRoute: AppPages.INITIAL,
+      initialBinding: InitialBinding(),
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

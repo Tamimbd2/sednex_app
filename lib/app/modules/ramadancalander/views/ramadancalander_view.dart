@@ -70,7 +70,7 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
                       const Icon(Icons.location_on_outlined, size: 20, color: Colors.black87),
                       const SizedBox(width: 8),
                       Text(
-                        'Dhaka, Bangladesh',
+                        'Beirut, Lebanon',
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -161,7 +161,11 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
             const SizedBox(height: 12),
 
             // Calendar List
-            ListView.separated(
+            Obx(() {
+               if (controller.isLoading.value) {
+                 return const Center(child: CircularProgressIndicator());
+               }
+               return ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -174,9 +178,9 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
                 return Container(
                   padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
                   decoration: BoxDecoration(
-                    color: isToday ? const Color(0xFFFFFDE7) : Colors.white, // Highlight with soft yellow if today
+                    color: isToday ? const Color(0xFFE8F5E9) : Colors.white, // Highlight with soft green if today
                     borderRadius: BorderRadius.circular(12),
-                    border: isToday ? Border.all(color: const Color(0xFFFFEE58), width: 1.5) : null,
+                    border: isToday ? Border.all(color: const Color(0xFF4CAF50), width: 1.5) : null,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.03),
@@ -282,7 +286,8 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
                   ),
                 );
               },
-            ),
+            );
+            }),
             const SizedBox(height: 20),
           ],
         ),

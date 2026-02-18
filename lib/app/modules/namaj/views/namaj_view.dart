@@ -10,6 +10,7 @@ import 'achar.dart';
 import 'achar.dart';
 import 'magrib.dart';
 import 'esha.dart';
+import 'quran.dart';
 
 class NamajView extends GetView<NamajController> {
   const NamajView({super.key});
@@ -215,47 +216,50 @@ class NamajView extends GetView<NamajController> {
           // Times Table
           Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildScheduleColumnHeader('ফজর'),
-                    _buildScheduleColumnHeader('যোহর'),
-                    _buildScheduleColumnHeader('আছর', isHighlight: true),
-                    _buildScheduleColumnHeader('মাগরিব'),
-                    _buildScheduleColumnHeader('ঈশা'),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Container(height: 1, color: Colors.grey.shade100),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                     ...List.generate(5, (index) {
-                       final times = controller.schedule['prayers'] as List;
-                       final isHighlight = index == 2; // Demo highlight for Asr
-                       return Container(
-                         padding: isHighlight ? const EdgeInsets.symmetric(horizontal: 8, vertical: 4) : null,
-                         decoration: isHighlight ? BoxDecoration(
-                           color: const Color(0xFFDC143C).withOpacity(0.1),
-                           borderRadius: BorderRadius.circular(8),
-                         ) : null,
-                         child: Text(
-                           times[index]['time'],
-                           style: GoogleFonts.poppins(
-                             fontSize: 14,
-                             fontWeight: isHighlight ? FontWeight.w700 : FontWeight.w500,
-                             color: isHighlight ? const Color(0xFFDC143C) : const Color(0xFF333333),
+            child: Obx(() {
+              final currentIndex = controller.currentPrayerIndex.value;
+              return Column(
+                children: [
+                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildScheduleColumnHeader('ফজর', isHighlight: currentIndex == 0),
+                      _buildScheduleColumnHeader('যোহর', isHighlight: currentIndex == 1),
+                      _buildScheduleColumnHeader('আছর', isHighlight: currentIndex == 2),
+                      _buildScheduleColumnHeader('মাগরিব', isHighlight: currentIndex == 3),
+                      _buildScheduleColumnHeader('ঈশা', isHighlight: currentIndex == 4),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Container(height: 1, color: Colors.grey.shade100),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                       ...List.generate(5, (index) {
+                         final times = controller.schedule['prayers'] as List;
+                         final isHighlight = index == currentIndex; 
+                         return Container(
+                           padding: isHighlight ? const EdgeInsets.symmetric(horizontal: 8, vertical: 4) : null,
+                           decoration: isHighlight ? BoxDecoration(
+                             color: const Color(0xFFDC143C).withOpacity(0.1),
+                             borderRadius: BorderRadius.circular(8),
+                           ) : null,
+                           child: Text(
+                             times[index]['time'],
+                             style: GoogleFonts.poppins(
+                               fontSize: 14,
+                               fontWeight: isHighlight ? FontWeight.w700 : FontWeight.w500,
+                               color: isHighlight ? const Color(0xFFDC143C) : const Color(0xFF333333),
+                             ),
                            ),
-                         ),
-                       );
-                     })
-                  ]
-                )
-              ],
-            ),
+                         );
+                       })
+                    ]
+                  )
+                ],
+              );
+            }),
           ),
         ],
       ),
@@ -316,6 +320,8 @@ class NamajView extends GetView<NamajController> {
                    Get.to(() => const MagribView()); 
                 } else if (title == 'ঈশা') {
                   Get.to(() => const EshaView());
+                } else if (title == 'কুরআন') {
+                  Get.to(() => const QuranView());
                 }
               },
               borderRadius: BorderRadius.circular(20),

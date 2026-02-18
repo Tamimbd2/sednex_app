@@ -57,6 +57,8 @@ import '../modules/localtour/bindings/localtour_binding.dart';
 import '../modules/localtour/views/localtour_view.dart';
 import '../modules/namaj/bindings/namaj_binding.dart';
 import '../modules/namaj/views/namaj_view.dart';
+import '../modules/notifications/bindings/notifications_binding.dart';
+import '../modules/notifications/views/notifications_view.dart';
 import '../modules/onboard/bindings/onboard_binding.dart';
 import '../modules/onboard/views/onboard_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
@@ -277,6 +279,11 @@ class AppPages {
       name: _Paths.RAMADANCALANDER,
       page: () => const RamadancalanderView(),
       binding: RamadancalanderBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOTIFICATIONS,
+      page: () => const NotificationsView(),
+      binding: NotificationsBinding(),
     ),
   ];
 }

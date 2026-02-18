@@ -42,6 +42,7 @@ abstract class Routes {
   static const BKASH_RATE = _Paths.BKASH_RATE;
   static const GOLD_RATE = _Paths.GOLD_RATE;
   static const RAMADANCALANDER = _Paths.RAMADANCALANDER;
+  static const NOTIFICATIONS = _Paths.NOTIFICATIONS;
 }
 
 abstract class _Paths {
@@ -85,4 +86,5 @@ abstract class _Paths {
   static const BKASH_RATE = '/bkash-rate';
   static const GOLD_RATE = '/gold-rate';
   static const RAMADANCALANDER = '/ramadancalander';
+  static const NOTIFICATIONS = '/notifications';
 }

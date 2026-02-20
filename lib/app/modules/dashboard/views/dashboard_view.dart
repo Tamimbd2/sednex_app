@@ -21,7 +21,7 @@ class DashboardView extends GetView<DashboardController> {
           if (controller.currentIndex.value == 2) return const SizedBox.shrink();
           return AppBar(
             toolbarHeight: 70,
-            backgroundColor: const Color(0xFFC62828), // Deep Red matching CreatePost
+            backgroundColor: const Color(0xFFDC143C), // Crimson #dc143c
             elevation: 0,
             leadingWidth: 0,
         titleSpacing: 16,

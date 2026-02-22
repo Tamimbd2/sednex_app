@@ -1,21 +1,27 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Article {
+  final String id;
   final String title;
   final String description;
-  final String imageUrl; // Keeping this if needed for details, though list view doesn't show it in the new design
+  final String imageUrl;
   final DateTime date;
   final String content;
   final String category;
+  final String? authorName;
   var isSaved = false.obs;
 
   Article({
+    required this.id,
     required this.title,
     required this.description,
     required this.imageUrl,
     required this.date,
     required this.content,
     required this.category,
+    this.authorName,
     bool isSaved = false,
   }) {
     this.isSaved.value = isSaved;
@@ -23,94 +29,97 @@ class Article {
 }
 
 class ArticlesController extends GetxController {
-  final categories = [
-    'All',
-    'Immigration',
-    'Visa Issues',
-    'Family Law',
-    'Employment',
-    'Citizenship',
-    'Housing',
-    'Legal Documents'
-  ];
-
+  final categories = <String>['All'].obs;
   final selectedCategory = 'All'.obs;
+  final articles = <Article>[].obs;
+  final isLoading = true.obs;
 
-  final List<Article> articles = [
-    Article(
-      category: 'Immigration',
-      title: 'Work Permit Extension Process',
-      description: 'What documents are required for extending a work permit in the USA? I need to renew mine in the next 2 months and want to make sure I have everything ready.',
-      imageUrl: 'assets/essentialService/article.png',
-      date: DateTime(2023, 10, 15),
-      content: 'Detailed content about work permit extension...',
-    ),
-    Article(
-      category: 'Visa Issues',
-      title: 'Student Visa to Work Visa Conversion',
-      description: 'Can I convert my F-1 student visa to an H-1B work visa while staying in the country? What are the steps and timeline involved?',
-      imageUrl: 'assets/essentialService/article.png',
-      date: DateTime(2023, 11, 20),
-      content: 'Detailed content about visa conversion...',
-      isSaved: true,
-    ),
-    Article(
-      category: 'Family Law',
-      title: 'Sponsoring Family Members',
-      description: 'I\'m a permanent resident and want to sponsor my parents. What is the current processing time and what documents do I need to prepare?',
-      imageUrl: 'assets/essentialService/article.png',
-      date: DateTime(2023, 12, 05),
-      content: 'Detailed content about sponsoring family...',
-    ),
-    Article(
-      category: 'Employment',
-      title: 'Workplace Rights for Immigrants',
-      description: 'What are my rights as an immigrant worker? My employer is threatening to report me to immigration if I complain about unpaid overtime.',
-      imageUrl: 'assets/essentialService/article.png',
-      date: DateTime(2024, 01, 10),
-      content: 'Detailed content about workplace rights...',
-      isSaved: true,
-    ),
-    Article(
-      category: 'Citizenship',
-      title: 'Naturalization Application Timeline',
-      description: 'I\'ve been a green card holder for 5 years. How long does the naturalization process typically take, and what are the interview questions like?',
-      imageUrl: 'assets/essentialService/article.png',
-      date: DateTime(2024, 02, 12),
-      content: 'Detailed content about naturalization...',
-    ),
-    Article(
-      category: 'Immigration',
-      title: 'Travel Restrictions and Re-entry',
-      description: 'I have a pending green card application. Can I travel outside the US and return safely? What documents should I carry?',
-      imageUrl: 'assets/essentialService/article.png',
-      date: DateTime(2024, 03, 15),
-      content: 'Detailed content about travel restrictions...',
-    ),
-    Article(
-      category: 'Legal Documents',
-      title: 'Apostille Services for Bangladesh Documents',
-      description: 'Where can I get my Bangladeshi birth certificate and educational documents apostilled for US immigration purposes?',
-      imageUrl: 'assets/essentialService/article.png',
-      date: DateTime(2024, 04, 20),
-      content: 'Detailed content about apostille services...',
-      isSaved: true,
-    ),
-    Article(
-      category: 'Housing',
-      title: 'Tenant Rights Without SSN',
-      description: 'Can I rent an apartment without a Social Security Number? What alternative documents do landlords accept?',
-      imageUrl: 'assets/essentialService/article.png',
-      date: DateTime(2024, 05, 01),
-      content: 'Detailed content about tenant rights...',
-    ),
-  ];
+  final selectedFilterCategories = <String>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchArticles();
+  }
+
+  Future<void> fetchArticles() async {
+    isLoading.value = true;
+    try {
+      final connect = GetConnect();
+      final response = await connect.get('https://sednex-zvk1.onrender.com/api/article/');
+
+      if (response.statusCode == 200) {
+        var body = response.body;
+        if (body is String) {
+          try {
+            body = jsonDecode(body);
+          } catch (e) {
+            print('Articles JSON error: $e');
+            return;
+          }
+        }
+
+        if (body is Map && body['articles'] is List) {
+          final List rawArticles = body['articles'];
+
+          // Map API data to Article objects
+          final List<Article> mappedArticles = rawArticles.map<Article>((item) {
+            final author = item['author'];
+            final createdAt = item['createdAt'] ?? '';
+            DateTime parsedDate;
+            try {
+              parsedDate = DateTime.parse(createdAt).toLocal();
+            } catch (_) {
+              parsedDate = DateTime.now();
+            }
+
+            return Article(
+              id: item['_id'] ?? '',
+              title: item['title'] ?? 'Untitled',
+              description: item['description'] ?? '',
+              imageUrl: 'assets/essentialService/article.png',
+              date: parsedDate,
+              content: item['description'] ?? '',
+              category: item['category'] ?? 'General',
+              authorName: author != null ? author['name'] : null,
+            );
+          }).toList();
+
+          articles.assignAll(mappedArticles);
+
+          // Extract unique categories from API data and build chips
+          final Set<String> uniqueCategories = {};
+          for (var article in mappedArticles) {
+            if (article.category.isNotEmpty) {
+              uniqueCategories.add(article.category);
+            }
+          }
+
+          // Build categories list: "All" + unique categories from API
+          categories.assignAll(['All', ...uniqueCategories.toList()..sort()]);
+
+          print('Articles loaded: ${mappedArticles.length}');
+          print('Categories found: ${uniqueCategories.toList()}');
+        }
+      } else {
+        print('Failed to fetch articles: ${response.statusCode} ${response.statusText}');
+      }
+    } catch (e) {
+      debugPrint("Error fetching articles: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> refreshArticles() async {
+    await fetchArticles();
+  }
 
   void selectCategory(String category) {
     selectedCategory.value = category;
+    // Clear filter mode when selecting a chip
+    selectedFilterCategories.clear();
   }
-
-  final selectedFilterCategories = <String>[].obs;
 
   void toggleFilterCategory(String category) {
     if (selectedFilterCategories.contains(category)) {
@@ -129,22 +138,10 @@ class ArticlesController extends GetxController {
   }
 
   void applyFilters() {
-    // If filters are applied, loop through articles and show only those matching selected categories
-    // If no categories selected, show all (or handle as 'All')
-    // For this example, if the user clicks Apply, we can just update the main view to show articles from ANY of the selected categories
-    // If list is empty, maybe revert to 'All' or show nothing. 
-    // Let's assume 'All' logic if empty, otherwise filter by list.
     if (selectedFilterCategories.isEmpty) {
       selectedCategory.value = 'All';
-    } else {
-      // This is a bit tricky since previous logic used single `selectedCategory`.
-      // We might need to update the view to support multiple categories or just use this for the single selection list.
-      // For simplicity matching the UI request, let's say the dialog updates the horizontal list or just filters the content directly.
-      // Let's make `selectedCategory` flexible or add a `filterMode` flag.
-      // But re-reading the prompt, it seems like a standard filter.
-      // Let's just use `selectedFilterCategories` to filter the displayed list in the view.
     }
-    Get.back(); // Close dialog
+    Get.back();
   }
 
   void toggleSaved(Article article) {

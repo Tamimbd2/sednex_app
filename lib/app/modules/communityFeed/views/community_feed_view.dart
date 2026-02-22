@@ -8,8 +8,18 @@ import '../controllers/community_feed_controller.dart';
 class CommunityFeedView extends GetView<CommunityFeedController> {
   const CommunityFeedView({super.key});
 
+  static final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
+    // Set up scroll listener for pagination
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        controller.loadMorePosts();
+      }
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -29,32 +39,86 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
           onPressed: () => Get.back(),
         ),
       ),
-      body: CustomScrollView(
-        slivers: [
-          // Filter Chips (Sliver)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: _buildFilterChips(),
-            ),
-          ),
-          
-          // Posts List (Sliver)
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            sliver: Obx(() => SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: _buildPostCard(context, index),
-                  );
-                },
-                childCount: controller.posts.length,
+      body: RefreshIndicator(
+        color: const Color(0xFFDC143C),
+        onRefresh: () => controller.refreshPosts(),
+        child: Obx(() {
+          if (controller.isLoading.value && controller.posts.isEmpty) {
+            return const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
               ),
-            )),
-          ),
-        ],
+            );
+          }
+
+          if (!controller.isLoading.value && controller.posts.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.article_outlined, size: 64, color: Colors.grey[300]),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No posts found',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Colors.grey[400],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              // Filter Chips (Sliver)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: _buildFilterChips(),
+                ),
+              ),
+              
+              // Posts List (Sliver)
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: _buildPostCard(context, index),
+                      );
+                    },
+                    childCount: controller.posts.length,
+                  ),
+                ),
+              ),
+
+              // Loading more indicator
+              if (controller.isLoadingMore.value)
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
+                        strokeWidth: 2,
+                      ),
+                    ),
+                  ),
+                ),
+
+              // Bottom spacing
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 16),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
@@ -163,16 +227,61 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
           
           const SizedBox(height: 12),
           
-          // Content
-          Text(
-            post['content'],
-            style: GoogleFonts.poppins(
-              color: const Color(0xFF354152),
-              fontSize: 14,
-              height: 1.5,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
+          // Content with See more / See less
+          Obx(() {
+            final isExpanded = controller.expandedPosts.contains(index);
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  post['content'],
+                  maxLines: isExpanded ? null : 5,
+                  overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(
+                    color: const Color(0xFF354152),
+                    fontSize: 14,
+                    height: 1.5,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final textSpan = TextSpan(
+                      text: post['content'],
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        height: 1.5,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    );
+                    final tp = TextPainter(
+                      text: textSpan,
+                      maxLines: 5,
+                      textDirection: TextDirection.ltr,
+                    );
+                    tp.layout(maxWidth: constraints.maxWidth);
+                    if (tp.didExceedMaxLines) {
+                      return GestureDetector(
+                        onTap: () => controller.toggleExpand(index),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            isExpanded ? 'See less' : 'See more',
+                            style: GoogleFonts.poppins(
+                              color: const Color(0xFF697282),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ],
+            );
+          }),
           
           const SizedBox(height: 12),
 

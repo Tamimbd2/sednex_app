@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ApiService extends GetConnect {
   @override
@@ -6,9 +7,13 @@ class ApiService extends GetConnect {
     httpClient.baseUrl = 'https://sednex-zvk1.onrender.com/';
     httpClient.timeout = const Duration(seconds: 30);
     
-    // Optional: Add interceptors for headers like Authorization
+    // Attach token to all requests automatically
     httpClient.addRequestModifier<dynamic>((request) {
-      // request.headers['Authorization'] = 'Bearer token';
+      final box = GetStorage();
+      final token = box.read('token') ?? '';
+      if (token.toString().isNotEmpty) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
       return request;
     });
 

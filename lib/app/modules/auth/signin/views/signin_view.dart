@@ -98,11 +98,18 @@ class SigninView extends GetView<SigninController> {
                 ),
                 const SizedBox(height: 30),
                 // Login Button
-                PrimaryButton(
-                  title: 'Login',
-                  onTap: () => controller.login(),
-                  width: double.infinity,
-                  height: 56,
+                Obx(() => controller.isLoading.value
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
+                        ),
+                      )
+                    : PrimaryButton(
+                        title: 'Login',
+                        onTap: () => controller.login(),
+                        width: double.infinity,
+                        height: 56,
+                      ),
                 ),
                 const SizedBox(height: 25),
                 // Or sign in with

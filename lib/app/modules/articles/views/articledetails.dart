@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ArticleDetailsView extends StatelessWidget {
   const ArticleDetailsView({super.key});
@@ -10,190 +12,182 @@ class ArticleDetailsView extends StatelessWidget {
     final args = Get.arguments as Map<String, dynamic>? ?? {};
     final String title = args['title'] ?? 'Article Title';
     final String description = args['description'] ?? '';
-    final String imageUrl = args['imageUrl'] ?? '';
+    final String category = args['category'] ?? 'General';
     final DateTime date = args['date'] ?? DateTime.now();
-    final String content = args['content'] ?? '';
+
+    final String formattedDate = _formatDate(date);
+    final String shareText = '$title\n\n$description';
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 250.0,
-            floating: false,
-            pinned: true,
-            backgroundColor: Colors.white,
-            elevation: 0,
-            leading: Container(
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Get.back(),
-              ),
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[200],
-                    child: const Icon(Icons.image, size: 50, color: Colors.grey),
-                  );
-                },
-              ),
-            ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF101727)),
+          onPressed: () => Get.back(),
+        ),
+        title: Text(
+          'Article',
+          style: GoogleFonts.inter(
+            color: const Color(0xFF101727),
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE3F2FD),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          'Lifestyle', // Placeholder category
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Category & Date
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFEBEE),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    category,
+                    style: GoogleFonts.inter(
+                      color: const Color(0xFFDC143C),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]),
+                const SizedBox(width: 4),
+                Text(
+                  formattedDate,
+                  style: GoogleFonts.inter(
+                    color: Colors.grey[600],
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            // Title
+            Text(
+              title,
+              style: GoogleFonts.inter(
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                color: Colors.black,
+                height: 1.3,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+            const Divider(height: 1),
+            const SizedBox(height: 16),
+
+            // Description
+            Text(
+              description,
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                height: 1.8,
+                color: Colors.grey[800],
+              ),
+            ),
+
+            const SizedBox(height: 40),
+
+            // Copy & Share buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Copy button
+                GestureDetector(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: shareText));
+                    Get.snackbar(
+                      'Copied!',
+                      'Article text copied to clipboard',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: const Color(0xFF101727),
+                      colorText: Colors.white,
+                      duration: const Duration(seconds: 2),
+                      margin: const EdgeInsets.all(16),
+                      borderRadius: 12,
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.copy, size: 20, color: Colors.grey[700]),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Copy',
                           style: GoogleFonts.inter(
-                            color: const Color(0xFF1976D2),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey[700],
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${date.day} ${date.month} ${date.year}',
-                        style: GoogleFonts.inter(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                      ),
-                      const Spacer(),
-                      Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
-                      const SizedBox(width: 4),
-                      Text(
-                        '5 min read',
-                        style: GoogleFonts.inter(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    title,
-                    style: GoogleFonts.inter(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.black,
-                      height: 1.3,
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  
-                  // Author info (placeholder)
-                  Row(
-                    children: [
-                      const CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.grey,
-                        child: Icon(Icons.person, color: Colors.white),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Sarah Johnson',
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                            ),
+                ),
+
+                const SizedBox(width: 16),
+
+                // Share button
+                GestureDetector(
+                  onTap: () {
+                    Share.share(shareText);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFDC143C).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.share, size: 20, color: Color(0xFFDC143C)),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Share',
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFFDC143C),
                           ),
-                          Text(
-                            'Travel Blogger',
-                            style: GoogleFonts.inter(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  const Divider(height: 1),
-                  const SizedBox(height: 24),
-                  
-                  // Content Body
-                  Text(
-                    description,
-                    style: GoogleFonts.inter(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                      height: 1.6,
-                      fontStyle: FontStyle.italic,
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  Text(
-                    content,
-                    style: GoogleFonts.inter(
-                      fontSize: 16,
-                      height: 1.8,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 40),
-                  
-                  // Social Share buttons (Visual only)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildSocialButton(Icons.facebook, const Color(0xFF1877F2)),
-                      const SizedBox(width: 16),
-                      _buildSocialButton(Icons.link, Colors.grey),
-                      const SizedBox(width: 16),
-                      _buildSocialButton(Icons.share, const Color(0xFF00C853)),
-                    ],
-                  ),
-                  const SizedBox(height: 40),
-                ],
-              ),
+                ),
+              ],
             ),
-          ),
-        ],
+
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildSocialButton(IconData icon, Color color) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(icon, color: color, size: 20),
-    );
+  String _formatDate(DateTime date) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]} ${date.year}';
   }
 }

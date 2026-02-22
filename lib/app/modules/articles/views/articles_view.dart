@@ -66,111 +66,140 @@ class ArticlesView extends GetView<ArticlesController> {
 
           // Categories & List
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Categories Header with Filter Icon
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.filter_list, size: 20, color: Colors.grey),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Categories',
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                      InkWell(
-                        onTap: () => _showFilterDialog(context),
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Icon(Icons.tune, size: 20, color: Color(0xFFDC143C)),
-                        ),
-                      ),
-                    ],
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
                   ),
-                ),
-                
-                // Categories List (Horizontal)
-                SizedBox(
-                  height: 36,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: controller.categories.length,
-                    separatorBuilder: (context, index) => const SizedBox(width: 8),
-                    itemBuilder: (context, index) {
-                      final category = controller.categories[index];
-                      return Obx(() {
-                        final isSelected = controller.selectedCategory.value == category;
-                        return GestureDetector(
-                          onTap: () => controller.selectCategory(category),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: isSelected ? const Color(0xFFDC143C) : Colors.grey[200],
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              category,
+                );
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Categories Header with Filter Icon
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.filter_list, size: 20, color: Colors.grey),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Categories',
                               style: GoogleFonts.inter(
-                                color: isSelected ? Colors.white : Colors.black,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
                               ),
                             ),
+                          ],
+                        ),
+                        InkWell(
+                          onTap: () => _showFilterDialog(context),
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Icon(Icons.tune, size: 20, color: Color(0xFFDC143C)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Categories List (Horizontal) - Dynamic from API
+                  SizedBox(
+                    height: 36,
+                    child: Obx(() => ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.categories.length,
+                      separatorBuilder: (context, index) => const SizedBox(width: 8),
+                      itemBuilder: (context, index) {
+                        final category = controller.categories[index];
+                        return Obx(() {
+                          final isSelected = controller.selectedCategory.value == category;
+                          return GestureDetector(
+                            onTap: () => controller.selectCategory(category),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: isSelected ? const Color(0xFFDC143C) : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                category,
+                                style: GoogleFonts.inter(
+                                  color: isSelected ? Colors.white : Colors.black,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          );
+                        });
+                      },
+                    )),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Articles List
+                  Expanded(
+                    child: Obx(() {
+                      final isFilterMode = controller.selectedFilterCategories.isNotEmpty;
+                      
+                      final filteredArticles = controller.articles.where((a) {
+                        if (isFilterMode) {
+                          return controller.selectedFilterCategories.contains(a.category);
+                        }
+                        if (controller.selectedCategory.value == 'All') return true;
+                        return a.category == controller.selectedCategory.value;
+                      }).toList();
+
+                      if (filteredArticles.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.article_outlined, size: 64, color: Colors.grey[300]),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No articles found',
+                                style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  color: Colors.grey[400],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                         );
-                      });
-                    },
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Articles List
-                Expanded(
-                  child: Obx(() {
-                    // Filter Logic:
-                    // If selectedCategory is 'All' AND selectedFilterCategories is empty -> Show All
-                    // If selectedFilterCategories has items -> Show match any of those
-                    // Else show selectedCategory match
-                    
-                    final isFilterMode = controller.selectedFilterCategories.isNotEmpty;
-                    
-                    final filteredArticles = controller.articles.where((a) {
-                      if (isFilterMode) {
-                        return controller.selectedFilterCategories.contains(a.category);
                       }
-                      if (controller.selectedCategory.value == 'All') return true;
-                      return a.category == controller.selectedCategory.value;
-                    }).toList();
 
-                    return ListView.separated(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: filteredArticles.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 16),
-                      itemBuilder: (context, index) {
-                        return _buildArticleCard(filteredArticles[index]);
-                      },
-                    );
-                  }),
-                ),
-              ],
-            ),
+                      return RefreshIndicator(
+                        color: const Color(0xFFDC143C),
+                        onRefresh: () => controller.refreshArticles(),
+                        child: ListView.separated(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: filteredArticles.length,
+                          separatorBuilder: (context, index) => const SizedBox(height: 16),
+                          itemBuilder: (context, index) {
+                            return _buildArticleCard(filteredArticles[index]);
+                          },
+                        ),
+                      );
+                    }),
+                  ),
+                ],
+              );
+            }),
           ),
         ],
       ),
@@ -314,6 +343,7 @@ class ArticlesView extends GetView<ArticlesController> {
             'date': article.date,
             'content': article.content,
             'category': article.category,
+            'authorName': article.authorName,
           },
         );
       },

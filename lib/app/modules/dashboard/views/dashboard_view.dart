@@ -19,77 +19,121 @@ class DashboardView extends GetView<DashboardController> {
         child: Obx(() {
           // Hide AppBar only for Cart (index 2). Show for Home (0), Search (1), and Profile (3).
           if (controller.currentIndex.value == 2) return const SizedBox.shrink();
-          return AppBar(
-            toolbarHeight: 70,
-            backgroundColor: const Color(0xFFDC143C), // Crimson #dc143c
-            elevation: 0,
-            leadingWidth: 0,
-        titleSpacing: 16,
-        title: Image.asset(
-          'assets/logo/logowithtext.png',
-          height: 32,
-          fit: BoxFit.contain,
-        ),
-        actions: [
-          // Notification Icon with Badge
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: SvgPicture.asset(
-                    'assets/icons/Icon.svg',
-                    width: 24,
-                    height: 24,
-                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.06),
+                  blurRadius: 12,
+                  spreadRadius: 0,
+                  offset: const Offset(0, 4),
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 4,
+                  spreadRadius: 0,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: AppBar(
+              toolbarHeight: 70,
+              backgroundColor: Colors.white,
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              surfaceTintColor: Colors.transparent,
+              leadingWidth: 0,
+              titleSpacing: 16,
+              title: Image.asset(
+                'assets/logo/textlogoblack.png',
+                height: 32,
+                fit: BoxFit.contain,
+              ),
+              actions: [
+                // Notification Icon with Badge
+                Padding(
+                  padding: const EdgeInsets.only(right: 4),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: SvgPicture.asset(
+                          'assets/icons/Icon.svg',
+                          width: 22,
+                          height: 22,
+                          colorFilter: const ColorFilter.mode(
+                            Color(0xFF6B7280), // Gray color
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        right: 6,
+                        top: 6,
+                        child: Container(
+                          width: 18,
+                          height: 18,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFDC143C),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 1.5),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFFDC143C).withOpacity(0.3),
+                                blurRadius: 4,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            '3',
+                            style: GoogleFonts.inter(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Positioned(
-                  right: 8,
-                  top: 8,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFFFD700), // Gold/Yellow badge
-                      shape: BoxShape.circle,
-                    ),
-                    child: Text(
-                      '3',
-                      style: GoogleFonts.inter(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
+                // Profile Picture
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: GestureDetector(
+                    onTap: () => controller.changePage(3), // Navigate to Profile Tab
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.08),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.grey[200],
+                        backgroundImage: const NetworkImage("https://placehold.co/80x84"),
+                        child: const Icon(Icons.person, color: Colors.grey),
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-          ),
-          // Profile Picture
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: GestureDetector(
-              onTap: () => controller.changePage(3), // Navigate to Profile Tab
-              child: CircleAvatar(
-                radius: 18,
-                backgroundColor: Colors.grey[200],
-                // Load profile image from ProfileView controller or consistent source
-                backgroundImage: const NetworkImage("https://placehold.co/80x84"), 
-                child: const Icon(Icons.person, color: Colors.grey),
-              ),
-            ),
-          ),
-        ],
           );
         }),
       ),
       body: Obx(() => _getPage(controller.currentIndex.value)),
       bottomNavigationBar: _buildBottomNavigationBar(),
-      floatingActionButton: _buildFloatingActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -171,34 +215,7 @@ class DashboardView extends GetView<DashboardController> {
     return const ProfileView();
   }
 
-  Widget _buildFloatingActionButton() {
-    return Container(
-      width: 64,
-      height: 64,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFDC143C).withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: FloatingActionButton(
-        onPressed: () {
-          Get.toNamed('/createpost');
-        },
-        backgroundColor: const Color(0xFFDC143C),
-        elevation: 0,
-        child: const Icon(
-          Icons.add,
-          size: 32,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildBottomNavigationBar() {
     return Obx(() => Container(
@@ -226,7 +243,30 @@ class DashboardView extends GetView<DashboardController> {
             index: 1,
             isActive: controller.currentIndex.value == 1,
           ),
-          const SizedBox(width: 64), // Space for FAB
+          // Center + button
+          GestureDetector(
+            onTap: () => Get.toNamed('/createpost'),
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: const Color(0xFFDC143C),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFDC143C).withOpacity(0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.add,
+                size: 28,
+                color: Colors.white,
+              ),
+            ),
+          ),
           _buildNavItem(
             iconPath: 'assets/nav/cart.svg',
             index: 2,

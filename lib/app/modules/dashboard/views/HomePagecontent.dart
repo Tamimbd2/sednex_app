@@ -38,7 +38,7 @@ class HomePageContent extends StatelessWidget {
               return Marquee(
                 text: text, 
                 style: GoogleFonts.inter(
-                  color: const Color(0xFFDC143C),
+                  color: Colors.black,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),

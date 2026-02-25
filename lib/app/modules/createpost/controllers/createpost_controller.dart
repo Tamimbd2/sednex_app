@@ -2,16 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../services/api_service.dart';
 
 class CreatepostController extends GetxController {
+  final apiService = Get.find<ApiService>();
+  
   final textController = TextEditingController();
-  final selectedCategory = 'General'.obs;
+  final selectedCategory = 'general'.obs;
+  final isLoading = false.obs;
   
   final categories = [
-    'General',
-    'Job',
-    'Question',
-    'Announcement',
+    'general',
+    'help',
+    'sell',
+    'job',
+    'question',
+    'announcement',
+    'information',
+    'rentals',
   ];
 
   final RxList<XFile> selectedImages = <XFile>[].obs;
@@ -33,8 +41,51 @@ class CreatepostController extends GetxController {
     selectedImages.removeAt(index);
   }
 
-  void createPost() {
-    // Show Success Dialog
+  Future<void> createPost() async {
+    if (textController.text.trim().isEmpty && selectedImages.isEmpty) {
+      Get.snackbar('Error', 'Please enter some text or select an image');
+      return;
+    }
+
+    try {
+      isLoading.value = true;
+
+      // Prepare Multipart Data
+      final Map<String, dynamic> body = {
+        'description': textController.text.trim(),
+        'category': selectedCategory.value,
+      };
+
+      // Add Images
+      if (selectedImages.isNotEmpty) {
+        final List<MultipartFile> files = [];
+        for (var image in selectedImages) {
+          // Using the path directly often works better with GetConnect for multi-part files
+          files.add(MultipartFile(image.path, filename: image.name));
+        }
+        // Send as 'images' key. If the server expects repeated keys, 
+        // GetConnect usually handles List<MultipartFile> by repeating the key or using images[]
+        body['images'] = files;
+      }
+
+      final formData = FormData(body);
+
+      final response = await apiService.postMultipartData('api/post/', formData);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        _showSuccessDialog();
+      } else {
+        Get.snackbar('Error', 'Failed to create post: ${response.statusText}');
+      }
+    } catch (e) {
+      debugPrint('Create Post Error: $e');
+      Get.snackbar('Error', 'An unexpected error occurred');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void _showSuccessDialog() {
     Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -45,25 +96,22 @@ class CreatepostController extends GetxController {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 10),
-              // Success Icon
               Container(
                 width: 80,
                 height: 80,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFEECEF), // Light pink background
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFEECEF),
                   shape: BoxShape.circle,
                 ),
                 child: const Center(
                   child: Icon(
-                    Icons.check_circle_outline_rounded, // Best fit for the design
+                    Icons.check_circle_outline_rounded,
                     size: 40,
                     color: Color(0xFFDC143C),
                   ),
                 ),
               ),
               const SizedBox(height: 24),
-              
-              // Title
               Text(
                 'Post Create\nSuccessful',
                 textAlign: TextAlign.center,
@@ -75,26 +123,22 @@ class CreatepostController extends GetxController {
                 ),
               ),
               const SizedBox(height: 12),
-              
-              // Description
               Text(
                 'Your post has been successfully created and is now visible to the community.',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: 14,
-                  color: Colors.grey[600],
+                  color: Color(0xFF4B5563),
                   height: 1.5,
                 ),
               ),
               const SizedBox(height: 30),
-              
-              // Go to Home Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.deleteAll(); // Clean up controllers
-                    Get.offAllNamed('/dashboard'); // Navigate to Dashboard/Home
+                    Get.back(); // Close dialog
+                    Get.back(); // Back to Feed
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFDC143C),
@@ -105,7 +149,7 @@ class CreatepostController extends GetxController {
                     elevation: 0,
                   ),
                   child: Text(
-                    'Go to Home',
+                    'Done',
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -119,7 +163,7 @@ class CreatepostController extends GetxController {
           ),
         ),
       ),
-      barrierDismissible: false, // User must click button
+      barrierDismissible: false,
     );
   }
 

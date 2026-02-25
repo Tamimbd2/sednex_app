@@ -1,99 +1,57 @@
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
+import '../../../services/api_service.dart';
 
 class CommunityController extends GetxController {
-  // List of all members
-  final members = <Map<String, String>>[
-    {
-      'name': 'Mohammad Rahim',
-      'location': 'Dhaka, Bangladesh',
-      'image': '',
-    },
-    {
-      'name': 'Fatema Khanam',
-      'location': 'Chittagong, Bangladesh',
-      'image': '',
-    },
-    {
-      'name': 'Ahmed Hassan',
-      'location': 'Sylhet, Bangladesh',
-      'image': '',
-    },
-    {
-      'name': 'Ayesha Rahman',
-      'location': 'Dhaka, Bangladesh',
-      'image': '',
-    },
-    {
-      'name': 'Karim Islam',
-      'location': 'Rajshahi, Bangladesh',
-      'image': '',
-    },
-    {
-      'name': 'Nusrat Jahan',
-      'location': 'Khulna, Bangladesh',
-      'image': '',
-    },
-    {
-      'name': 'Rafiq Ahmed',
-      'location': 'Barisal, Bangladesh',
-      'image': '',
-    },
-    {
-      'name': 'Sabina Akter',
-      'location': 'Dhaka, Bangladesh',
-      'image': '',
-    },
-    {
-      'name': 'Jahangir Alam',
-      'location': 'Sylhet, Bangladesh',
-      'image': '',
-    },
-    {
-      'name': 'Ruksana Begum',
-      'location': 'Chittagong, Bangladesh',
-      'image': '',
-    },
-    {
-      'name': 'Nasir Uddin',
-      'location': 'Dhaka, Bangladesh',
-      'image': '',
-    },
-    {
-      'name': 'Shamima Sultana',
-      'location': 'Mymensingh, Bangladesh',
-      'image': '',
-    },
-  ].obs;
+  final apiService = Get.find<ApiService>();
 
+  // List of all members from API
+  final members = <dynamic>[].obs;
+  
   // Filtered members based on search
-  final filteredMembers = <Map<String, String>>[].obs;
+  final filteredMembers = <dynamic>[].obs;
+  
+  final isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    // Initially show all members
-    filteredMembers.value = members;
+    fetchUsers();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
+  Future<void> fetchUsers() async {
+    try {
+      isLoading.value = true;
+      final response = await apiService.getData('api/users/');
+      
+      if (response.statusCode == 200) {
+        final data = response.body;
+        if (data != null && data['success'] == true) {
+          final List usersList = data['users'] ?? [];
+          members.assignAll(usersList);
+          filteredMembers.assignAll(usersList);
+        }
+      } else {
+        debugPrint('Error fetching users: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Exception fetching users: $e');
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   // Search members by name
   void searchMembers(String query) {
     if (query.isEmpty) {
-      filteredMembers.value = members;
+      filteredMembers.assignAll(members);
     } else {
-      filteredMembers.value = members
-          .where((member) =>
-              member['name']!.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      filteredMembers.assignAll(
+        members.where((member) {
+          final name = (member['name'] ?? '').toString().toLowerCase();
+          return name.contains(query.toLowerCase());
+        }).toList()
+      );
     }
   }
 }

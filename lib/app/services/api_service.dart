@@ -5,7 +5,7 @@ class ApiService extends GetConnect {
   @override
   void onInit() {
     httpClient.baseUrl = 'https://sednex-zvk1.onrender.com/';
-    httpClient.timeout = const Duration(seconds: 30);
+    httpClient.timeout = const Duration(seconds: 60);
     
     // Attach token to all requests automatically
     httpClient.addRequestModifier<dynamic>((request) {
@@ -32,6 +32,32 @@ class ApiService extends GetConnect {
   Future<Response> postData(String uri, dynamic body) async {
     try {
       final response = await post(uri, body);
+      return response;
+    } catch (e) {
+      return Response(statusCode: 500, statusText: e.toString());
+    }
+  }
+
+  Future<Response> postMultipartData(String uri, FormData formData) async {
+    try {
+      final response = await post(uri, formData);
+      return response;
+    } catch (e) {
+      return Response(statusCode: 500, statusText: e.toString());
+    }
+  }
+  Future<Response> patchData(String uri, dynamic body) async {
+    try {
+      final response = await patch(uri, body);
+      return response;
+    } catch (e) {
+      return Response(statusCode: 500, statusText: e.toString());
+    }
+  }
+
+  Future<Response> deleteData(String uri) async {
+    try {
+      final response = await delete(uri);
       return response;
     } catch (e) {
       return Response(statusCode: 500, statusText: e.toString());

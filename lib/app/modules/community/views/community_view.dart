@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../controllers/community_controller.dart';
+import 'communityprofiledetails.dart';
 
 class CommunityView extends GetView<CommunityController> {
   const CommunityView({super.key});
@@ -109,33 +110,60 @@ class CommunityView extends GetView<CommunityController> {
           ),
           // Members List
           Expanded(
-            child: Obx(() => ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: controller.filteredMembers.length,
-              itemBuilder: (context, index) {
-                final member = controller.filteredMembers[index];
-                return _buildMemberCard(member);
-              },
-            )),
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFFDC143C),
+                  ),
+                );
+              }
+              
+              if (controller.filteredMembers.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.people_outline, size: 64, color: Colors.grey[300]),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No members found',
+                        style: GoogleFonts.inter(
+                          fontSize: 16,
+                          color: Colors.grey[500],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: controller.filteredMembers.length,
+                itemBuilder: (context, index) {
+                  final member = controller.filteredMembers[index];
+                  return _buildMemberCard(member);
+                },
+              );
+            }),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMemberCard(Map<String, String> member) {
+  Widget _buildMemberCard(dynamic member) {
+    final name = (member['name'] ?? 'Unknown').toString();
+    final location = (member['country'] ?? 'Unknown').toString();
+    final image = (member['profileImage'] ?? '').toString();
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         onTap: () {
-          Get.snackbar(
-            member['name']!,
-            'Opening ${member['name']} profile...',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: const Color(0xFFDC143C).withOpacity(0.1),
-            colorText: const Color(0xFFDC143C),
-            duration: const Duration(seconds: 1),
-          );
+          Get.to(() => CommunityProfileDetailsView(member: member));
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -146,12 +174,12 @@ class CommunityView extends GetView<CommunityController> {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: Colors.grey[300],
-                backgroundImage: member['image'] != null && member['image']!.isNotEmpty
-                    ? NetworkImage(member['image']!)
+                backgroundImage: image.isNotEmpty
+                    ? NetworkImage(image)
                     : null,
-                child: member['image'] == null || member['image']!.isEmpty
+                child: image.isEmpty
                     ? Text(
-                        member['name']![0].toUpperCase(),
+                        name.isNotEmpty ? name[0].toUpperCase() : '?',
                         style: GoogleFonts.inter(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
@@ -167,7 +195,7 @@ class CommunityView extends GetView<CommunityController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      member['name']!,
+                      name,
                       style: GoogleFonts.inter(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
@@ -176,7 +204,7 @@ class CommunityView extends GetView<CommunityController> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      member['location']!,
+                      location,
                       style: GoogleFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.w400,

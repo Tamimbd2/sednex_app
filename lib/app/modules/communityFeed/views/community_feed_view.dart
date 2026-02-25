@@ -221,7 +221,7 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
                   ],
                 ),
               ),
-              _buildMoreOptionsButton(),
+              _buildMoreOptionsButton(post, index),
             ],
           ),
           
@@ -393,169 +393,217 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
       ),
     );
   }
-  
-  Widget _buildMoreOptionsButton() {
-     return GestureDetector(
-        onTap: () {
-          Get.bottomSheet(
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Save Post Option
-                  InkWell(
-                    onTap: () {
-                      Get.back(); // Close bottom sheet
-                      // Add save logic here
-                    },
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/post/saves.svg',
-                          width: 24,
-                          height: 24,
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          'Save post',
-                          style: GoogleFonts.poppins(
-                            color: const Color(0xFF354152),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
+  Widget _buildMoreOptionsButton(Map<String, dynamic> post, int index) {
+    bool isOwnPost = controller.userId != null && post['authorId'] == controller.userId;
 
-                  // Report Option
-                  InkWell(
-                    onTap: () {
-                      Get.back(); // Close bottom sheet
-                      // Add report logic here
-                    },
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/post/report.svg',
-                          width: 24,
-                          height: 24,
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          'Report',
-                          style: GoogleFonts.poppins(
-                            color: const Color(0xFFEF4444), // Red color for report
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  
-                  const Divider(color: Color(0xFFF3F4F6), thickness: 1),
-                  const SizedBox(height: 24),
-                  
-                  // Edit Post Option
-                  InkWell(
-                    onTap: () {
-                      Get.back(); // Close bottom sheet
-                      // Add edit logic here
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.edit_outlined,
-                          size: 24,
-                          color: Color(0xFF354152),
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          'Edit Post',
-                          style: GoogleFonts.poppins(
-                            color: const Color(0xFF354152),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  
-                  // Completed Option
-                  InkWell(
-                    onTap: () {
-                      Get.back(); // Close bottom sheet
-                      // Add completed logic here
-                    },
-                    child: Row(
-                      children: [
-                       const Icon(
-                          Icons.check_circle_outline,
-                          size: 24,
-                          color: Color(0xFF00C853),
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          'Completed',
-                          style: GoogleFonts.poppins(
-                            color: const Color(0xFF00C853), // Green for completed
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  
-                  // Delete Post Option
-                  InkWell(
-                    onTap: () {
-                      Get.back(); // Close bottom sheet
-                      // Add delete logic here
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.delete_outline,
-                          size: 24,
-                          color: Color(0xFFEF4444),
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          'Delete Post',
-                          style: GoogleFonts.poppins(
-                            color: const Color(0xFFEF4444), // Red used for delete action
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                ],
+    return GestureDetector(
+      onTap: () {
+        Get.bottomSheet(
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(24),
+                topRight: Radius.circular(24),
               ),
             ),
-            backgroundColor: Colors.transparent,
-            isScrollControlled: true,
-          );
-        },
-        child: const Icon(Icons.more_vert, color: Color(0xFF697282), size: 20),
-      );
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isOwnPost) ...[
+                  // Edit Post
+                  _buildOptionItem(
+                    icon: Icons.edit_outlined,
+                    label: 'Edit post',
+                    onTap: () {
+                      Get.back(); // Close bottom sheet
+                      _showEditPostDialog(post, index);
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  // Completed
+                  _buildOptionItem(
+                    icon: Icons.check_circle_outline,
+                    label: 'Completed',
+                    color: const Color(0xFF00C853),
+                    onTap: () {
+                      Get.back();
+                      // Mark as completed logic
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  // Delete Post
+                  _buildOptionItem(
+                    icon: Icons.delete_outline,
+                    label: 'Delete post',
+                    color: const Color(0xFFEF4444),
+                    onTap: () {
+                      Get.back(); // Close bottom sheet
+                      _showDeleteConfirmation(index);
+                    },
+                  ),
+                ] else ...[
+                  // Save Post
+                  _buildOptionItem(
+                    label: 'Save post',
+                    iconSrc: 'assets/post/saves.svg',
+                    onTap: () {
+                      Get.back(); // Close bottom sheet
+                      controller.savePost(index);
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  // Report
+                  _buildOptionItem(
+                    label: 'Report',
+                    iconSrc: 'assets/post/report.svg',
+                    color: const Color(0xFFEF4444),
+                    onTap: () {
+                      Get.back();
+                      // Report logic
+                    },
+                  ),
+                ],
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+        );
+      },
+      child: const Icon(Icons.more_vert, color: Color(0xFF697282), size: 20),
+    );
+  }
+
+  void _showEditPostDialog(Map<String, dynamic> post, int index) {
+    final TextEditingController editController = TextEditingController(text: post['content']);
+    
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Edit Post',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
+        content: TextField(
+          controller: editController,
+          maxLines: 5,
+          style: GoogleFonts.poppins(fontSize: 14),
+          decoration: InputDecoration(
+            hintText: 'Enter post content...',
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFDC143C)),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.poppins(color: const Color(0xFF697282)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (editController.text.trim().isNotEmpty) {
+                Get.back();
+                controller.updatePost(index, editController.text.trim());
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFDC143C),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Text(
+              'Save Changes',
+              style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(int index) {
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Delete Post?',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
+        content: Text(
+          'Are you sure you want to delete this post? This action cannot be undone.',
+          style: GoogleFonts.poppins(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.poppins(color: const Color(0xFF697282)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+              controller.deletePost(index);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFEF4444),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Text(
+              'Delete',
+              style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOptionItem({
+    required String label,
+    String? iconSrc,
+    IconData? icon,
+    required VoidCallback onTap,
+    Color color = const Color(0xFF354152),
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Row(
+        children: [
+          if (iconSrc != null)
+            SvgPicture.asset(
+              iconSrc,
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+            )
+          else if (icon != null)
+            Icon(icon, size: 24, color: color),
+          
+          const SizedBox(width: 16),
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              color: color,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildActionItem(String iconPath, String count, Color color, {double size = 18}) {
@@ -582,6 +630,7 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
 
   void _showCommentsBottomSheet(BuildContext context, int index) {
     TextEditingController commentController = TextEditingController();
+    controller.fetchComments(index); // Trigger fetch when opened
     
     Get.bottomSheet(
       Container(
@@ -624,6 +673,14 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
             // Comments List
             Expanded(
               child: Obx(() {
+                if (controller.isLoadingComments.value) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Color(0xFFDC143C),
+                    ),
+                  );
+                }
+
                 final comments = controller.posts[index]["commentsList"] as List<dynamic>? ?? [];
                 
                 if (comments.isEmpty) {
@@ -680,6 +737,20 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
                                   fontSize: 14,
                                 ),
                               ),
+                              const SizedBox(height: 6),
+                              GestureDetector(
+                                onTap: () {
+                                  controller.setReplyTarget(comment['_id'], comment['name']);
+                                },
+                                child: Text(
+                                  'Reply',
+                                  style: GoogleFonts.poppins(
+                                    color: const Color(0xFF101727),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -690,6 +761,33 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
               }),
             ),
             
+            // Reply Target Indicator
+            Obx(() {
+              if (controller.replyTargetCommentId.value == null) return const SizedBox.shrink();
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                color: Colors.grey[100],
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Replying to ${controller.replyTargetName.value}',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: const Color(0xFF697282),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => controller.clearReplyTarget(),
+                      child: const Icon(Icons.close, size: 16, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              );
+            }),
+
             // Input Area
             Container(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
@@ -707,17 +805,19 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
                           color: const Color(0xFFF9FAFB),
                           borderRadius: BorderRadius.circular(24),
                         ),
-                        child: TextField(
+                        child: Obx(() => TextField(
                           controller: commentController,
                           decoration: InputDecoration(
-                            hintText: 'Add a comment...',
+                            hintText: controller.replyTargetCommentId.value != null 
+                              ? 'Write a reply...' 
+                              : 'Add a comment...',
                             hintStyle: GoogleFonts.poppins(
                               color: const Color(0xFF9CA3AF),
                               fontSize: 14,
                             ),
                             border: InputBorder.none,
                           ),
-                        ),
+                        )),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -747,7 +847,7 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
       ),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-    );
+    ).then((_) => controller.clearReplyTarget()); // Clear target on close
   }
 
   Widget _buildPostImages(List<dynamic> images) {
@@ -765,26 +865,26 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
 
   Widget _buildLayout(List<dynamic> images, int count) {
     if (count == 1) {
-      return _buildImage(images[0]);
+      return _buildImage(images[0], images, 0);
     } else if (count == 2) {
       return Row(
         children: [
-          Expanded(child: _buildImage(images[0])),
+          Expanded(child: _buildImage(images[0], images, 0)),
           const SizedBox(width: 4),
-          Expanded(child: _buildImage(images[1])),
+          Expanded(child: _buildImage(images[1], images, 1)),
         ],
       );
     } else if (count == 3) {
       return Row(
         children: [
-          Expanded(child: _buildImage(images[0])),
+          Expanded(child: _buildImage(images[0], images, 0)),
           const SizedBox(width: 4),
           Expanded(
             child: Column(
               children: [
-                Expanded(child: _buildImage(images[1])),
+                Expanded(child: _buildImage(images[1], images, 1)),
                 const SizedBox(height: 4),
-                Expanded(child: _buildImage(images[2])),
+                Expanded(child: _buildImage(images[2], images, 2)),
               ],
             ),
           ),
@@ -797,9 +897,9 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
           Expanded(
             child: Row(
               children: [
-                 Expanded(child: _buildImage(images[0])),
+                 Expanded(child: _buildImage(images[0], images, 0)),
                  const SizedBox(width: 4),
-                 Expanded(child: _buildImage(images[1])),
+                 Expanded(child: _buildImage(images[1], images, 1)),
               ],
             ),
           ),
@@ -807,29 +907,32 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
            Expanded(
             child: Row(
               children: [
-                 Expanded(child: _buildImage(images[2])),
+                 Expanded(child: _buildImage(images[2], images, 2)),
                  const SizedBox(width: 4),
                  Expanded(
                    child: count > 4 
                      ? Stack(
                          fit: StackFit.expand,
                          children: [
-                           _buildImage(images[3]),
-                           Container(
-                             color: Colors.black54,
-                             alignment: Alignment.center,
-                             child: Text(
-                               "+${count - 4}",
-                               style: GoogleFonts.poppins(
-                                 color: Colors.white,
-                                 fontSize: 24,
-                                 fontWeight: FontWeight.w600,
+                           _buildImage(images[3], images, 3),
+                           GestureDetector(
+                             onTap: () => _openFullScreenImage(images, 3),
+                             child: Container(
+                               color: Colors.black54,
+                               alignment: Alignment.center,
+                               child: Text(
+                                 "+${count - 4}",
+                                 style: GoogleFonts.poppins(
+                                   color: Colors.white,
+                                   fontSize: 24,
+                                   fontWeight: FontWeight.w600,
+                                 ),
                                ),
                              ),
                            )
                          ],
                        )
-                     : _buildImage(images[3]),
+                     : _buildImage(images[3], images, 3),
                  ),
               ],
             ),
@@ -839,27 +942,120 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
     }
   }
 
-  Widget _buildImage(String url) {
-    return Image.network(
-      url,
-      fit: BoxFit.cover,
-      width: double.infinity,
-      height: double.infinity,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Center(
-          child: CircularProgressIndicator(
-            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
-            value: loadingProgress.expectedTotalBytes != null
-                ? loadingProgress.cumulativeBytesLoaded /
-                    loadingProgress.expectedTotalBytes!
-                : null,
+  void _openFullScreenImage(List<dynamic> images, int initialIndex) {
+    Get.to(
+      () => FullScreenImageViewer(images: images, initialIndex: initialIndex),
+      opaque: false,
+      fullscreenDialog: true,
+    );
+  }
+
+  Widget _buildImage(String url, List<dynamic> allImages, int index) {
+    return GestureDetector(
+      onTap: () => _openFullScreenImage(allImages, index),
+      child: Image.network(
+        url,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) => Container(
+          color: Colors.grey[200],
+          child: const Icon(Icons.broken_image, color: Colors.grey),
+        ),
+      ),
+    );
+  }
+}
+
+class FullScreenImageViewer extends StatelessWidget {
+  final List<dynamic> images;
+  final int initialIndex;
+
+  const FullScreenImageViewer({
+    super.key,
+    required this.images,
+    required this.initialIndex,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final PageController pageController = PageController(initialPage: initialIndex);
+    
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          // Background dismiss area
+          GestureDetector(
+            onTap: () => Get.back(),
+            child: Container(color: Colors.black),
           ),
-        );
-      },
-      errorBuilder: (context, error, stackTrace) => Container(
-        color: Colors.grey[200],
-        child: const Icon(Icons.broken_image, color: Colors.grey),
+          
+          // Image PageView
+          PageView.builder(
+            controller: pageController,
+            itemCount: images.length,
+            itemBuilder: (context, index) {
+              return InteractiveViewer(
+                minScale: 0.5,
+                maxScale: 4.0,
+                child: Center(
+                  child: Image.network(
+                    images[index],
+                    fit: BoxFit.contain,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                      Icons.broken_image,
+                      color: Colors.white54,
+                      size: 50,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          
+          // Header with back button
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Get.back(),
+                    ),
+                  ),
+                  const Spacer(),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

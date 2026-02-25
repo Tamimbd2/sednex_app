@@ -59,7 +59,7 @@ class CreatepostView extends GetView<CreatepostController> {
                       ),
                       child: Center(
                         child: Text(
-                          category,
+                          category.capitalizeFirst!,
                           style: GoogleFonts.inter(
                             color: isSelected ? Colors.white : Colors.black87,
                             fontWeight: FontWeight.w500,
@@ -124,8 +124,8 @@ class CreatepostView extends GetView<CreatepostController> {
                   height: 45,
                   width: 100,
                   child: Obx(() {
-                    final isEnabled = controller.postText.value.isNotEmpty || 
-                                      controller.selectedImages.isNotEmpty;
+                    final isEnabled = (controller.postText.value.isNotEmpty || 
+                                      controller.selectedImages.isNotEmpty) && !controller.isLoading.value;
                     return ElevatedButton(
                       onPressed: isEnabled ? controller.createPost : null,
                       style: ElevatedButton.styleFrom(
@@ -136,13 +136,19 @@ class CreatepostView extends GetView<CreatepostController> {
                           borderRadius: BorderRadius.circular(25),
                         ),
                       ),
-                      child: Text(
-                        'Post',
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      child: controller.isLoading.value 
+                        ? const SizedBox(
+                            height: 20, 
+                            width: 20, 
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                        : Text(
+                            'Post',
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                     );
                   }),
                 ),

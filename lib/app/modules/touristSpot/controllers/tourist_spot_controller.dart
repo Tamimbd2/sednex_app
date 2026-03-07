@@ -1,48 +1,69 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TouristSpot {
+  final String id;
   final String image;
   final String title;
   final String description;
 
   TouristSpot({
+    required this.id,
     required this.image,
     required this.title,
     required this.description,
   });
+
+  factory TouristSpot.fromJson(Map<String, dynamic> json) {
+    return TouristSpot(
+      id: json['_id'] ?? '',
+      image: json['image'] ?? '',
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+    );
+  }
 }
 
 class TouristSpotController extends GetxController {
-  final List<TouristSpot> touristSpots = [
-    TouristSpot(
-      image: 'assets/images/tourist1.jpg',
-      title: 'Baalbek: Ancient Roman Ruins and Temple Complex',
-      description: 'Best-preserved Roman ruins in Lebanon with magnificent Temple of Bacchus and Jupiter.',
-    ),
-    TouristSpot(
-      image: 'assets/images/tourist2.jpg',
-      title: 'Jeita Grotto: Stunning Underground Caves',
-      description: 'Spectacular limestone caves with stunning formations and boat exploration.',
-    ),
-    TouristSpot(
-      image: 'assets/images/tourist3.jpg',
-      title: 'Cedars of God: Ancient Cedar Forest',
-      description: 'UNESCO World Heritage site featuring ancient cedar trees and mountain scenery.',
-    ),
-  ];
+  final _connect = GetConnect();
+  final RxList<TouristSpot> touristSpots = <TouristSpot>[].obs;
+  final isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
+    fetchTouristSpots();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
+  Future<void> fetchTouristSpots() async {
+    try {
+      isLoading.value = true;
+      final response = await _connect.get('https://sednex-zvk1.onrender.com/api/tourist/');
+      
+      if (response.status.hasError) {
+        debugPrint('API Error: ${response.statusText}');
+        return;
+      }
 
-  @override
-  void onClose() {
-    super.onClose();
+      var body = response.body;
+      if (body is String) {
+        try {
+          body = jsonDecode(body);
+        } catch (e) {
+          debugPrint('TouristSpot JSON parsing failed: $e');
+          return;
+        }
+      }
+
+      final List<dynamic> data = body['spots'] ?? [];
+      touristSpots.value = data.map((e) => TouristSpot.fromJson(e)).toList();
+      debugPrint('Loaded ${touristSpots.length} tourist spots');
+    } catch (e) {
+      debugPrint('Error fetching tourist spots: $e');
+    } finally {
+      isLoading.value = false;
+    }
   }
 }
+

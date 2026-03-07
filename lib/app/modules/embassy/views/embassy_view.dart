@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../core/theme/app_colors.dart';
 import '../controllers/embassy_controller.dart';
 import 'embassydetails.dart';
 
@@ -47,31 +48,36 @@ class EmbassyView extends GetView<EmbassyController> {
           // Search Bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(
-                  color: Colors.grey[300]!,
-                  width: 1,
+            child: TextField(
+              onChanged: (val) => controller.searchQuery.value = val,
+              decoration: InputDecoration(
+                hintText: 'Search embassy...',
+                hintStyle: GoogleFonts.inter(
+                  color: Colors.grey[400],
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                ),
+                prefixIcon: Icon(Icons.search, color: Colors.grey[400], size: 24),
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide(color: AppColors.primary, width: 1.5),
                 ),
               ),
-              child: Row(
-                children: [
-                  Icon(Icons.search, color: Colors.grey[400], size: 24),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Search embassy, phar...',
-                      style: GoogleFonts.inter(
-                        color: Colors.grey[400],
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ],
+              style: GoogleFonts.inter(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -93,18 +99,46 @@ class EmbassyView extends GetView<EmbassyController> {
 
           // Embassy Grid
           Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 0.85,
-              ),
-              itemCount: controller.embassies.length,
-              itemBuilder: (context, index) {
-                final embassy = controller.embassies[index];
-                return _buildEmbassyCard(embassy);
+            child: Obx(
+              () {
+                if (controller.isLoading.value && controller.embassies.isEmpty) {
+                  return Center(child: CircularProgressIndicator(color: AppColors.primary));
+                }
+
+                if (controller.filteredEmbassies.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.search_off_rounded, size: 60, color: Colors.grey[300]),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No embassies found',
+                          style: GoogleFonts.inter(
+                            fontSize: 15,
+                            color: Colors.grey[500],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return GridView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 0.85,
+                  ),
+                  itemCount: controller.filteredEmbassies.length,
+                  itemBuilder: (context, index) {
+                    final embassy = controller.filteredEmbassies[index];
+                    return _buildEmbassyCard(embassy);
+                  },
+                );
               },
             ),
           ),
@@ -119,8 +153,7 @@ class EmbassyView extends GetView<EmbassyController> {
         Get.to(
           () => const EmbassyDetailsView(),
           arguments: {
-            'name': embassy.name,
-            'logoPath': embassy.logoPath,
+            'embassy': embassy,
           },
         );
       },
@@ -151,33 +184,46 @@ class EmbassyView extends GetView<EmbassyController> {
                 ),
               ),
               child: ClipOval(
-                child: Image.asset(
-                  embassy.logoPath,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[200],
-                      child: const Icon(
-                        Icons.flag,
-                        color: Colors.grey,
-                        size: 32,
+                child: embassy.icon.isNotEmpty
+                    ? Image.network(
+                        embassy.icon,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[200],
+                            child: const Icon(
+                              Icons.flag,
+                              color: Colors.grey,
+                              size: 32,
+                            ),
+                          );
+                        },
+                      )
+                    : Container(
+                        color: Colors.grey[200],
+                        child: const Icon(
+                          Icons.flag,
+                          color: Colors.grey,
+                          size: 32,
+                        ),
                       ),
-                    );
-                  },
-                ),
               ),
             ),
             const SizedBox(height: 12),
             // Embassy Name
-            Text(
-              embassy.name,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Text(
+                embassy.name,
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
             ),
           ],
         ),

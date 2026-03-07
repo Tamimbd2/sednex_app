@@ -332,6 +332,8 @@ class ArticlesView extends GetView<ArticlesController> {
   }
 
   Widget _buildArticleCard(Article article) {
+    bool isNetworkImage = article.imageUrl.startsWith('http');
+
     return GestureDetector(
       onTap: () {
         Get.to(
@@ -348,7 +350,7 @@ class ArticlesView extends GetView<ArticlesController> {
         );
       },
       child: Container(
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -364,84 +366,122 @@ class ArticlesView extends GetView<ArticlesController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Category Badge
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFEBEE),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                article.category,
-                style: GoogleFonts.inter(
-                  color: const Color(0xFFDC143C),
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                ),
+            // Article Image
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              child: SizedBox(
+                height: 160,
+                width: double.infinity,
+                child: isNetworkImage
+                    ? Image.network(
+                        article.imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[100],
+                            child: const Icon(Icons.image_not_supported, color: Colors.grey, size: 40),
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        article.imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[100],
+                            child: const Icon(Icons.image_not_supported, color: Colors.grey, size: 40),
+                          );
+                        },
+                      ),
               ),
             ),
-            const SizedBox(height: 12),
             
-            // Title
-            Text(
-              article.title,
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Colors.black,
-                height: 1.3,
-              ),
-            ),
-            const SizedBox(height: 8),
-            
-            // Description
-            Text(
-              article.description,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                color: Colors.grey[600],
-                height: 1.5,
-              ),
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 16),
-            
-            // Save Button
-            Align(
-              alignment: Alignment.centerRight,
-              child: Obx(() {
-                final isSaved = article.isSaved.value;
-                return GestureDetector(
-                  onTap: () => controller.toggleSaved(article),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Category Badge
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: isSaved ? const Color(0xFFDC143C) : Colors.grey[100],
+                      color: const Color(0xFFFFEBEE),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          isSaved ? Icons.bookmark : Icons.bookmark_outline,
-                          size: 16,
-                          color: isSaved ? Colors.white : Colors.grey[600],
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          isSaved ? 'Saved' : 'Save',
-                          style: GoogleFonts.inter(
-                            color: isSaved ? Colors.white : Colors.grey[600],
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      article.category,
+                      style: GoogleFonts.inter(
+                        color: const Color(0xFFDC143C),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                );
-              }),
+                  const SizedBox(height: 12),
+                  
+                  // Title
+                  Text(
+                    article.title,
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                      height: 1.3,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  
+                  // Description
+                  Text(
+                    article.description,
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      color: Colors.grey[600],
+                      height: 1.5,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // Save Button
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Obx(() {
+                      final isSaved = article.isSaved.value;
+                      return GestureDetector(
+                        onTap: () => controller.toggleSaved(article),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: isSaved ? const Color(0xFFDC143C) : Colors.grey[100],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                isSaved ? Icons.bookmark : Icons.bookmark_outline,
+                                size: 16,
+                                color: isSaved ? Colors.white : Colors.grey[600],
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                isSaved ? 'Saved' : 'Save',
+                                style: GoogleFonts.inter(
+                                  color: isSaved ? Colors.white : Colors.grey[600],
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

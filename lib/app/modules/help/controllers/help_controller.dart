@@ -1,57 +1,66 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class HelpController extends GetxController {
-  //TODO: Implement HelpController
+  final _connect = GetConnect();
+  final _box = GetStorage();
 
-  final faqs = <Map<String, dynamic>>[
-    {
-      'question': 'How do I create an account?',
-      'answer': 'To create an account, click on the \'Sign Up\' button on the home page. Fill in your email, create a password, and verify your email address. Once verified, you can start using all features.',
-      'isExpanded': true.obs,
-    },
-    {
-      'question': 'How can I reset my password?',
-      'answer': 'Go to the login page and click "Forgot Password". Follow the instructions sent to your email to reset it.',
-      'isExpanded': false.obs,
-    },
-    {
-      'question': 'Is my data secure?',
-      'answer': 'Yes, we use industry-standard encryption to protect your personal data and ensure your privacy.',
-      'isExpanded': false.obs,
-    },
-    {
-      'question': 'How do I contact customer support?',
-      'answer': 'You can contact us via the "Contact Support" button below or email us directly at support@sednex.com.',
-      'isExpanded': false.obs,
-    },
-    {
-      'question': 'Can I use the app offline?',
-      'answer': 'Some features are available offline, but you will need an internet connection for most functionalities.',
-      'isExpanded': false.obs,
-    },
-    {
-      'question': 'How do I delete my account?',
-      'answer': 'Please contact our support team to request account deletion. We will process your request within 48 hours.',
-      'isExpanded': false.obs,
-    },
-    {
-      'question': 'What payment methods do you accept?',
-      'answer': 'We accept major credit cards, debit cards, and secure online payment gateways.',
-      'isExpanded': false.obs,
-    },
-    {
-      'question': 'How can I update my profile information?',
-      'answer': 'Go to your Profile page and click "Edit Profile" to update your personal details.',
-      'isExpanded': false.obs,
-    },
-  ].obs;
+  final isLoading = false.obs;
+  final faqs = <Map<String, dynamic>>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchFaqs();
+  }
+
+  Future<void> fetchFaqs() async {
+    try {
+      isLoading.value = true;
+      final token =
+          _box.read('token') ??
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTk5MzhmYjViNWJjMmM1YjEyMzYyY2QiLCJlbWFpbCI6ImFmc2FyQHNlZG5leC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc3Mjg2MTYzMiwiZXhwIjoxNzczNDY2NDMyfQ.PuRUjybyM9EzP2ICL0X_SXoSx8PwDOlJh0XrSi5fiwU';
+      final response = await _connect.get(
+        'https://sednex-zvk1.onrender.com/api/about/faq/',
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.status.hasError) {
+        debugPrint('Error fetching FAQs: ${response.statusText}');
+        return;
+      }
+
+      var body = response.body;
+      if (body is String) {
+        body = jsonDecode(body);
+      }
+
+      if (body['success'] == true && body['faqs'] != null) {
+        final List<dynamic> faqData = body['faqs'];
+        faqs.value = faqData.map((item) {
+          return {
+            'id': item['id'],
+            'question': item['question'] ?? 'No Question',
+            'answer': item['answer'] ?? 'No Answer',
+            'isExpanded': false.obs,
+          };
+        }).toList();
+
+        if (faqs.isNotEmpty) {
+          faqs[0]['isExpanded'].value = true;
+        }
+      }
+    } catch (e) {
+      debugPrint('Exception while fetching FAQs: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   void toggleFaq(int index) {
     faqs[index]['isExpanded'].value = !faqs[index]['isExpanded'].value;
   }
 
-  void contactSupport() {
-    // Implement contact support logic
-    print("Contact Support Clicked");
-  }
 }

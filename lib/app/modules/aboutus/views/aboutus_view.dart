@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_colors.dart';
 
 import '../controllers/aboutus_controller.dart';
 
@@ -29,10 +30,7 @@ class AboutusView extends GetView<AboutusController> {
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: const Color(0xFFF2F4F6),
-            height: 1.0,
-          ),
+          child: Container(color: const Color(0xFFF2F4F6), height: 1.0),
         ),
       ),
       body: SafeArea(
@@ -43,137 +41,186 @@ class AboutusView extends GetView<AboutusController> {
             children: [
               _buildSectionTitle('Our Team'),
               const SizedBox(height: 16),
-              
-              // Team Card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
+
+              Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: CircularProgressIndicator(
+                        color: Color(0xFFE7000A),
+                      ),
                     ),
-                  ],
-                ),
-                child: Column(
-                  children: List.generate(controller.teamMembers.length, (index) {
-                    final member = controller.teamMembers[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 24.0),
-                      child: Row(
-                        children: [
-                          // Avatar with Red Border
-                          Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                colors: [Color(0xFFFF6366), Color(0xFFE7000A)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                            ),
-                            child: Container(
-                              width: 60,
-                              height: 60,
+                  );
+                }
+
+                if (controller.teamMembers.isEmpty) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: Text('No team members found.'),
+                    ),
+                  );
+                }
+
+                return Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: List.generate(controller.teamMembers.length, (
+                      index,
+                    ) {
+                      final member = controller.teamMembers[index];
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          bottom: index == controller.teamMembers.length - 1
+                              ? 0
+                              : 24.0,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Avatar with Red Border
+                            Container(
+                              padding: const EdgeInsets.all(2),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.white,
-                                border: Border.all(color: Colors.white, width: 2),
-                                image: DecorationImage(
-                                  image: NetworkImage(member['image']!),
-                                  fit: BoxFit.cover,
+                                color: AppColors.primary,
+                              ),
+                              child: Container(
+                                width: 60,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                  image: member.image.isNotEmpty
+                                      ? DecorationImage(
+                                          image: NetworkImage(member.image),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
                                 ),
+                                child: member.image.isEmpty
+                                    ? const Icon(
+                                        Icons.person,
+                                        color: Colors.grey,
+                                      )
+                                    : null,
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  member['name']!,
-                                  style: GoogleFonts.arimo(
-                                    color: const Color(0xFF101727),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    member.name,
+                                    style: GoogleFonts.arimo(
+                                      color: const Color(0xFF101727),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  member['role']!,
-                                  style: GoogleFonts.arimo(
-                                    color: const Color(0xFF495565),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    member.designation,
+                                    style: GoogleFonts.arimo(
+                                      color: const Color(0xFF495565),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  member['bio']!,
-                                  style: GoogleFonts.arimo(
-                                    color: const Color(0xFF9CA3AF),
-                                    fontSize: 12,
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    member.about,
+                                    style: GoogleFonts.arimo(
+                                      color: const Color(0xFF9CA3AF),
+                                      fontSize: 12,
+                                    ),
+                                    maxLines: 4,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
+                );
+              }),
+
+              Obx(() {
+                final contact = controller.contactData;
+                if (contact.isEmpty) return const SizedBox.shrink();
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 32),
+                    _buildSectionTitle('Contact Us'),
+                    const SizedBox(height: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
+                          if (contact['email'] != null)
+                            _buildContactItem(
+                              Icons.email_outlined,
+                              contact['email'],
+                            ),
+                          if (contact['email'] != null &&
+                              contact['mobile'] != null)
+                            const Divider(
+                              height: 1,
+                              indent: 20,
+                              endIndent: 20,
+                              color: Color(0xFFF2F4F6),
+                            ),
+                          if (contact['mobile'] != null)
+                            _buildContactItem(
+                              Icons.phone_outlined,
+                              contact['mobile'],
+                              subtitle: 'WhatsApp',
+                            ),
+                          if (contact['mobile'] != null &&
+                              contact['website'] != null)
+                            const Divider(
+                              height: 1,
+                              indent: 20,
+                              endIndent: 20,
+                              color: Color(0xFFF2F4F6),
+                            ),
+                          if (contact['website'] != null)
+                            _buildContactItem(
+                              Icons.language,
+                              contact['website'],
+                            ),
                         ],
                       ),
-                    );
-                  }),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-              _buildSectionTitle('Contact Us'),
-              const SizedBox(height: 16),
-
-              // Contact Card
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  children: [
-                    _buildContactItem(Icons.email_outlined, 'support@sednex.com'),
-                    const Divider(height: 1, indent: 20, endIndent: 20, color: Color(0xFFF2F4F6)),
-                    _buildContactItem(Icons.phone_outlined, '8801787819588', subtitle: 'WhatsApp'),
-                    const Divider(height: 1, indent: 20, endIndent: 20, color: Color(0xFFF2F4F6)),
-                    _buildContactItem(Icons.language, 'https://sednex.com'),
+                    ),
                   ],
-                ),
-              ),
-
-              const SizedBox(height: 32),
-              _buildSectionTitle('Follow Us'),
-              const SizedBox(height: 16),
-
-              // Social Card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildSocialIcon(Icons.facebook, const Color(0xFF1877F2)),
-                    _buildSocialIcon(Icons.flutter_dash, const Color(0xFF1DA1F2)), // Mock Twitter
-                    _buildSocialIcon(Icons.camera_alt, const Color(0xFFE1306C)), // Mock Instagram
-                    _buildSocialIcon(Icons.business, const Color(0xFF0077B5)), // Mock LinkedIn
-                  ],
-                ),
-              ),
+                );
+              }),
 
               const SizedBox(height: 48),
               Center(
@@ -236,18 +283,6 @@ class AboutusView extends GetView<AboutusController> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildSocialIcon(IconData icon, Color color) {
-    return Container(
-      width: 48,
-      height: 48,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      child: Icon(icon, color: Colors.white, size: 24),
     );
   }
 }

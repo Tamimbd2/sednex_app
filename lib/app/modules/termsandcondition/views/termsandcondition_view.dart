@@ -29,67 +29,63 @@ class TermsandconditionView extends GetView<TermsandconditionController> {
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: const Color(0xFFF2F4F6),
-            height: 1.0,
-          ),
+          child: Container(color: const Color(0xFFF2F4F6), height: 1.0),
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Last updated: December 13, 2025',
-                style: GoogleFonts.arimo(
-                  color: const Color(0xFF9CA3AF),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
+        child: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xFFE7000A)),
+            );
+          }
+
+          if (controller.terms.isEmpty) {
+            return Center(
+              child: Text(
+                'No terms and conditions found.',
+                style: GoogleFonts.arimo(color: const Color(0xFF697282)),
+              ),
+            );
+          }
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (controller.lastUpdated.value != null)
+                  Text(
+                    'Last updated: ${controller.lastUpdated.value!.day} ${_getMonthName(controller.lastUpdated.value!.month)}, ${controller.lastUpdated.value!.year}',
+                    style: GoogleFonts.arimo(
+                      color: const Color(0xFF9CA3AF),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                const SizedBox(height: 16),
+                Text(
+                  'Please read these terms and conditions carefully before using our mobile application.',
+                  style: GoogleFonts.arimo(
+                    color: const Color(0xFF495565),
+                    fontSize: 16,
+                    height: 1.5,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Please read these terms and conditions carefully before using our mobile application.',
-                style: GoogleFonts.arimo(
-                  color: const Color(0xFF495565),
-                  fontSize: 16,
-                  height: 1.5,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              const SizedBox(height: 24),
-              
-              _buildSection(
-                '1. Acceptance of Terms',
-                'By accessing and using this application, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.',
-              ),
-              
-              _buildSection(
-                '2. User Account',
-                'You are responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all activities that occur under your account or password.\n\nYou must notify us immediately of any unauthorized use of your account or any other breach of security.',
-              ),
-
-              _buildSection(
-                '3. Privacy Policy',
-                'Your use of this application is also governed by our Privacy Policy. We collect, use, and protect your personal information in accordance with applicable data protection laws.\n\nBy using this application, you consent to our collection and use of personal data as outlined in our Privacy Policy.',
-              ),
-
-              _buildSection(
-                '4. User Content',
-                'Users may post, upload, or submit content to the application. You retain ownership of any content you submit, however you grant us a worldwide, non-exclusive, royalty-free license to use, reproduce, and distribute your content.\n\nYou are solely responsible for the content you post and agree not to post content that is illegal, offensive, or infringes on the rights of others.',
-              ),
-
-              _buildSection(
-                '5. Prohibited Activities',
-                'You agree not to engage in any of the following prohibited activities:',
-              ),
-              
-              const SizedBox(height: 40),
-            ],
-          ),
-        ),
+                const SizedBox(height: 24),
+                ...List.generate(controller.terms.length, (index) {
+                  final term = controller.terms[index];
+                  return _buildSection(
+                    '${index + 1}. ${term.title}',
+                    term.content,
+                  );
+                }),
+                const SizedBox(height: 40),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }
@@ -111,7 +107,7 @@ class TermsandconditionView extends GetView<TermsandconditionController> {
           const SizedBox(height: 12),
           Text(
             content,
-            style: GoogleFonts.arimo(
+            style: GoogleFonts.hindSiliguri(
               color: const Color(0xFF495565),
               fontSize: 16,
               height: 1.5,
@@ -121,5 +117,23 @@ class TermsandconditionView extends GetView<TermsandconditionController> {
         ],
       ),
     );
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1];
   }
 }

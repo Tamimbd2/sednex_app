@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../core/theme/app_colors.dart';
 import '../controllers/localtour_controller.dart';
 import 'toursdetails.dart';
 
@@ -13,7 +14,7 @@ class LocaltourView extends GetView<LocaltourController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFDC143C),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -29,7 +30,19 @@ class LocaltourView extends GetView<LocaltourController> {
         ),
         centerTitle: true,
       ),
-      body: ListView.builder(
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+        }
+        if (controller.tours.isEmpty) {
+          return Center(
+            child: Text(
+              'No tours found',
+              style: GoogleFonts.inter(color: Colors.grey),
+            ),
+          );
+        }
+        return ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: controller.tours.length,
           itemBuilder: (context, index) {
@@ -41,11 +54,18 @@ class LocaltourView extends GetView<LocaltourController> {
                   () => const LocalTourDetailsView(),
                   arguments: {
                     'title': tour.title,
-                    'description': 'Experience the beauty of Lebanon with our guided tour.',
                     'image': tour.image,
-                    'location': tour.location,
-                    'date': tour.date,
-                    'time': tour.time,
+                    'locationDetails': tour.locationDetails,
+                    'includedWithTickets': tour.includedWithTickets,
+                    'info': {
+                      'date': tour.info.date,
+                      'distance': tour.info.distance,
+                      'duration': tour.info.duration,
+                      'ticketPrice': tour.info.ticketPrice,
+                      'ticketPriceTag': tour.info.ticketPriceTag,
+                      'begins': tour.info.begins,
+                      'returnTime': tour.info.returnTime,
+                    },
                   },
                 );
               },
@@ -71,24 +91,35 @@ class LocaltourView extends GetView<LocaltourController> {
                         topLeft: Radius.circular(16),
                         topRight: Radius.circular(16),
                       ),
-                      child: Image.asset(
-                        tour.image,
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            width: double.infinity,
-                            height: 200,
-                            color: Colors.grey[300],
-                            child: const Icon(
-                              Icons.image,
-                              size: 60,
-                              color: Colors.grey,
+                      child: tour.image.isNotEmpty
+                          ? Image.network(
+                              tour.image,
+                              width: double.infinity,
+                              height: 200,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  width: double.infinity,
+                                  height: 200,
+                                  color: Colors.grey[300],
+                                  child: const Icon(
+                                    Icons.image,
+                                    size: 60,
+                                    color: Colors.grey,
+                                  ),
+                                );
+                              },
+                            )
+                          : Container(
+                              width: double.infinity,
+                              height: 200,
+                              color: Colors.grey[300],
+                              child: const Icon(
+                                Icons.image,
+                                size: 60,
+                                color: Colors.grey,
+                              ),
                             ),
-                          );
-                        },
-                      ),
                     ),
                     
                     // Tour Details
@@ -119,7 +150,7 @@ class LocaltourView extends GetView<LocaltourController> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  '${tour.date} · ${tour.time}',
+                                  '${tour.info.date} · ${tour.info.begins} - ${tour.info.returnTime}',
                                   style: GoogleFonts.inter(
                                     fontSize: 14,
                                     color: Colors.grey[700],
@@ -141,11 +172,13 @@ class LocaltourView extends GetView<LocaltourController> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  tour.location,
+                                  tour.locationDetails,
                                   style: GoogleFonts.inter(
                                     fontSize: 14,
                                     color: Colors.grey[700],
                                   ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
@@ -158,7 +191,8 @@ class LocaltourView extends GetView<LocaltourController> {
               ),
             );
           },
-        ),
+        );
+      }),
     );
   }
 }

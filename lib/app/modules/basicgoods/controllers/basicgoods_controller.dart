@@ -1,148 +1,44 @@
 import 'package:get/get.dart';
 
 class BasicGood {
+  final String id;
   final String name;
-  final String unit;
   final int price;
-  final String updatedTime;
-  final String emoji;
+  final String icon;
   final String category;
+  final DateTime updatedAt;
+  final String? pricetag;
 
   BasicGood({
+    required this.id,
     required this.name,
-    required this.unit,
     required this.price,
-    required this.updatedTime,
-    required this.emoji,
+    required this.icon,
     required this.category,
+    required this.updatedAt,
+    this.pricetag,
   });
+
+  factory BasicGood.fromJson(Map<String, dynamic> json) {
+    return BasicGood(
+      id: json['_id'] ?? '',
+      name: json['name'] ?? '',
+      price: json['price'] ?? 0,
+      icon: json['icon'] ?? '',
+      category: json['category'] ?? 'Others',
+      updatedAt: DateTime.parse(json['updatedAt'] ?? DateTime.now().toIso8601String()),
+      pricetag: json['pricetag'],
+    );
+  }
 }
 
 class BasicgoodsController extends GetxController {
+  final _connect = GetConnect();
+  final isLoading = false.obs;
   final selectedCategory = 'All'.obs;
-
-  final List<String> categories = [
-    'All',
-    'Vegetables',
-    'Rice',
-    'Oil',
-    'Fish',
-  ];
-
-  final List<BasicGood> allGoods = [
-    BasicGood(
-      name: 'Onion',
-      unit: 'per kg',
-      price: 55,
-      updatedTime: '2 hours ago',
-      emoji: '🧅',
-      category: 'Vegetables',
-    ),
-    BasicGood(
-      name: 'Potato',
-      unit: 'per kg',
-      price: 40,
-      updatedTime: '2 hours ago',
-      emoji: '🥔',
-      category: 'Vegetables',
-    ),
-    BasicGood(
-      name: 'Rice (Miniket)',
-      unit: 'per kg',
-      price: 68,
-      updatedTime: '3 hours ago',
-      emoji: '🍚',
-      category: 'Rice',
-    ),
-    BasicGood(
-      name: 'Rice (Nazirshail)',
-      unit: 'per kg',
-      price: 75,
-      updatedTime: '3 hours ago',
-      emoji: '🍚',
-      category: 'Rice',
-    ),
-    BasicGood(
-      name: 'Soybean Oil',
-      unit: 'per litre',
-      price: 190,
-      updatedTime: '1 hour ago',
-      emoji: '🛢️',
-      category: 'Oil',
-    ),
-    BasicGood(
-      name: 'Mustard Oil',
-      unit: 'per litre',
-      price: 220,
-      updatedTime: '1 hour ago',
-      emoji: '🛢️',
-      category: 'Oil',
-    ),
-    BasicGood(
-      name: 'Hilsa Fish',
-      unit: 'per kg',
-      price: 1200,
-      updatedTime: '4 hours ago',
-      emoji: '🐟',
-      category: 'Fish',
-    ),
-    BasicGood(
-      name: 'Rui Fish',
-      unit: 'per kg',
-      price: 350,
-      updatedTime: '4 hours ago',
-      emoji: '🐟',
-      category: 'Fish',
-    ),
-    BasicGood(
-      name: 'Egg',
-      unit: 'per pcs',
-      price: 12,
-      updatedTime: '5 hours ago',
-      emoji: '🥚',
-      category: 'Vegetables',
-    ),
-    BasicGood(
-      name: 'Bread',
-      unit: 'per pcs',
-      price: 45,
-      updatedTime: '6 hours ago',
-      emoji: '🍞',
-      category: 'Vegetables',
-    ),
-    BasicGood(
-      name: 'Milk',
-      unit: 'per litre',
-      price: 75,
-      updatedTime: '3 hours ago',
-      emoji: '🥛',
-      category: 'Vegetables',
-    ),
-    BasicGood(
-      name: 'Green Chili',
-      unit: 'per kg',
-      price: 120,
-      updatedTime: '2 hours ago',
-      emoji: '🌶️',
-      category: 'Vegetables',
-    ),
-    BasicGood(
-      name: 'Tomato',
-      unit: 'per kg',
-      price: 80,
-      updatedTime: '2 hours ago',
-      emoji: '🍅',
-      category: 'Vegetables',
-    ),
-    BasicGood(
-      name: 'Carrot',
-      unit: 'per kg',
-      price: 60,
-      updatedTime: '2 hours ago',
-      emoji: '🥕',
-      category: 'Vegetables',
-    ),
-  ];
+  
+  final RxList<BasicGood> allGoods = <BasicGood>[].obs;
+  final RxList<String> categories = ['All'].obs;
 
   List<BasicGood> get filteredGoods {
     if (selectedCategory.value == 'All') {
@@ -153,21 +49,66 @@ class BasicgoodsController extends GetxController {
 
   void selectCategory(String category) {
     selectedCategory.value = category;
-    update(); // Trigger GetBuilder rebuild
+  }
+
+  Future<void> fetchGoods() async {
+    try {
+      isLoading.value = true;
+      final response = await _connect.get('https://sednex-zvk1.onrender.com/api/goods/');
+      
+      if (response.status.hasError) {
+        Get.snackbar('Error', 'Failed to fetch goods: ${response.statusText}');
+        return;
+      }
+
+      final List<dynamic> goodsData = response.body['goods'] ?? [];
+      allGoods.value = goodsData.map((e) => BasicGood.fromJson(e)).toList();
+      
+      // Update categories dynamically from data
+      final Set<String> categoriesSet = {'All'};
+      for (var good in allGoods) {
+        categoriesSet.add(good.category);
+      }
+      categories.value = categoriesSet.toList();
+      
+    } catch (e) {
+      Get.snackbar('Error', 'An unexpected error occurred: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  String getCurrencySymbol(String? tag) {
+    if (tag == null) return '৳';
+    switch (tag.toLowerCase()) {
+      case 'bdt':
+        return '৳';
+      case 'usd':
+        return '\$';
+      case 'lbp':
+        return 'ل.ل';
+      case 'eur':
+        return '€';
+      default:
+        return tag.toUpperCase();
+    }
+  }
+
+  String getTimeAgo(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inHours < 1) {
+      return '${difference.inMinutes} minutes ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} hours ago';
+    } else {
+      return '${difference.inDays} days ago';
+    }
   }
 
   @override
   void onInit() {
     super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
+    fetchGoods();
   }
 }
+

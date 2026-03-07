@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../../core/theme/app_colors.dart';
 
 class LocalTourDetailsView extends StatelessWidget {
   const LocalTourDetailsView({super.key});
@@ -8,79 +11,75 @@ class LocalTourDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get the data passed from previous screen
-    final String title = Get.arguments['title'] ?? 'Tourist Spot';
-    final String description = Get.arguments['description'] ?? '';
+    final String title = Get.arguments['title'] ?? 'Local Tour';
     final String image = Get.arguments['image'] ?? '';
-    final String location = Get.arguments['location'] ?? 'Beirut - Tripoli';
+    final String locationDetails = Get.arguments['locationDetails'] ?? '';
+    final List<String> includedWithTickets = Get.arguments['includedWithTickets'] ?? [];
+    final Map<String, dynamic> info = Get.arguments['info'] ?? {};
+
+    final date = info['date'] ?? 'N/A';
+    final distance = info['distance'] ?? 'N/A';
+    final duration = info['duration'] ?? 'N/A';
+    final ticketPrice = info['ticketPrice']?.toString() ?? '0';
+    final ticketPriceTag = info['ticketPriceTag'] ?? '';
+    final begins = info['begins'] ?? 'N/A';
+    final returnTime = info['returnTime'] ?? 'N/A';
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: AppColors.primary,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Get.back(),
+        ),
+        title: Text(
+          'Local Tour',
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header with image
-            Stack(
-              children: [
-                // Main image
-                Container(
-                  width: double.infinity,
-                  height: 250,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFDC143C),
-                  ),
-                  child: Image.asset(
-                    image,
-                    width: double.infinity,
-                    height: 250,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey[300],
-                        child: const Icon(
-                          Icons.image,
-                          size: 60,
-                          color: Colors.grey,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                // App bar overlay
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).padding.top,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFDC143C),
-                    ),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back, color: Colors.white),
-                          onPressed: () => Get.back(),
-                        ),
-                        Expanded(
-                          child: Text(
-                            'Local Tour',
-                            style: GoogleFonts.inter(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            textAlign: TextAlign.center,
+            // Main image
+            Container(
+              width: double.infinity,
+              height: 250,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.05),
+              ),
+              child: image.isNotEmpty
+                  ? Image.network(
+                      image,
+                      width: double.infinity,
+                      height: 250,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Icon(
+                            Icons.image,
+                            size: 60,
+                            color: Colors.grey,
                           ),
-                        ),
-                        const SizedBox(width: 48), // Balance the back button
-                      ],
+                        );
+                      },
+                    )
+                  : Container(
+                      color: Colors.grey[300],
+                      child: const Icon(
+                        Icons.image,
+                        size: 60,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
-                ),
-              ],
             ),
 
             // Content
@@ -100,11 +99,13 @@ class LocalTourDetailsView extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    location,
+                    locationDetails,
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       color: Colors.grey[600],
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 24),
 
@@ -126,7 +127,7 @@ class LocalTourDetailsView extends StatelessWidget {
                         child: _buildInfoCard(
                           Icons.calendar_today,
                           'Date',
-                          '5-2-2026',
+                          date,
                           const Color(0xFF4169E1),
                         ),
                       ),
@@ -135,7 +136,7 @@ class LocalTourDetailsView extends StatelessWidget {
                         child: _buildInfoCard(
                           Icons.location_on,
                           'Distance',
-                          '78 km',
+                          distance,
                           const Color(0xFF00C853),
                         ),
                       ),
@@ -148,7 +149,7 @@ class LocalTourDetailsView extends StatelessWidget {
                         child: _buildInfoCard(
                           Icons.access_time,
                           'Duration',
-                          '2h',
+                          duration,
                           const Color(0xFF9C27B0),
                         ),
                       ),
@@ -157,7 +158,7 @@ class LocalTourDetailsView extends StatelessWidget {
                         child: _buildInfoCard(
                           Icons.attach_money,
                           'Ticket Price',
-                          '\$20',
+                          '$ticketPrice $ticketPriceTag',
                           const Color(0xFFFFA500),
                         ),
                       ),
@@ -170,7 +171,7 @@ class LocalTourDetailsView extends StatelessWidget {
                         child: _buildInfoCard(
                           Icons.wb_sunny,
                           'Tour Begins',
-                          '7:00 AM',
+                          begins,
                           const Color(0xFF00BCD4),
                         ),
                       ),
@@ -179,7 +180,7 @@ class LocalTourDetailsView extends StatelessWidget {
                         child: _buildInfoCard(
                           Icons.nightlight_round,
                           'Return',
-                          '7:00 PM',
+                          returnTime,
                           const Color(0xFFFF5722),
                         ),
                       ),
@@ -206,13 +207,22 @@ class LocalTourDetailsView extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        _buildIncludedItem(Icons.card_giftcard, 'উপহার - পিকনিক', const Color(0xFF00C853)),
-                        const SizedBox(height: 8),
-                        _buildIncludedItem(Icons.restaurant, 'রেস্তোরাঁ ও খাবা', const Color(0xFFFFA500)),
-                        const SizedBox(height: 8),
-                        _buildIncludedItem(Icons.person, 'গাইড', const Color(0xFF4169E1)),
-                        const SizedBox(height: 8),
-                        _buildIncludedItem(Icons.music_note, 'সাংস্কৃতিক ও গান', const Color(0xFF9C27B0)),
+                        if (includedWithTickets.isNotEmpty)
+                          ...includedWithTickets.map((item) => Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: _buildIncludedItem(
+                                  Icons.check_circle,
+                                  item,
+                                  const Color(0xFF00C853),
+                                ),
+                              ))
+                        else
+                          Text(
+                            "No details available.",
+                            style: GoogleFonts.inter(
+                              color: Colors.grey[700],
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -239,38 +249,14 @@ class LocalTourDetailsView extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Our tour starts from the beautiful coastal city of Beirut and takes you through scenic Lebanese landscapes to the historic city of Tripoli.',
+                    locationDetails,
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       color: Colors.grey[700],
                       height: 1.5,
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Key Stops Along the Route:',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  _buildRouteStop('Beirut Downtown - Martyrs\' Square (Starting Point)'),
-                  _buildRouteStop('Jounieh Bay - Scenic coastal waves'),
-                  _buildRouteStop('Byblos Ancient Harbor - Photo opportunity'),
-                  _buildRouteStop('Batroun Old Souk - Traditional market visit'),
-                  _buildRouteStop('Tripoli Citadel - Final destination'),
                   const SizedBox(height: 12),
-                  Text(
-                    'Meeting point: Martyrs\' Square, Beirut Central District. Please arrive 15 minutes before departure time (Beirut Riyad Solh).',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                      fontStyle: FontStyle.italic,
-                      height: 1.5,
-                    ),
-                  ),
                   const SizedBox(height: 16),
                   GestureDetector(
                     onTap: () {
@@ -292,15 +278,24 @@ class LocalTourDetailsView extends StatelessWidget {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Handle WhatsApp join
-                        Get.snackbar(
-                          'WhatsApp',
-                          'Opening WhatsApp...',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: const Color(0xFF25D366).withOpacity(0.1),
-                          colorText: const Color(0xFF25D366),
-                        );
+                      onPressed: () async {
+                        const contactNumber = "+8801787819588";
+                        final formattedPhone = contactNumber.replaceAll('+', '');
+                        final message = "Hello, I am interested in joining this local tour:\n\n*Tour Name:* $title\n*Date:* $date\n*Price:* $ticketPrice $ticketPriceTag\n\nPlease let me know the process.";
+                        final encodedMessage = Uri.encodeComponent(message);
+                        final uri = Uri.parse("https://wa.me/$formattedPhone?text=$encodedMessage");
+
+                        try {
+                          await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        } catch (e) {
+                          Get.snackbar(
+                            'Error',
+                            'Could not open WhatsApp',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red.withOpacity(0.1),
+                            colorText: Colors.red,
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF25D366),

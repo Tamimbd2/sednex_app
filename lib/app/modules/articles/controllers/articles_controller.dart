@@ -77,7 +77,7 @@ class ArticlesController extends GetxController {
               id: item['_id'] ?? '',
               title: item['title'] ?? 'Untitled',
               description: item['description'] ?? '',
-              imageUrl: 'assets/essentialService/article.png',
+              imageUrl: item['image'] ?? item['thumbnail'] ?? 'assets/essentialService/article.png',
               date: parsedDate,
               content: item['description'] ?? '',
               category: item['category'] ?? 'General',

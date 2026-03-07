@@ -8,9 +8,10 @@ class TouristSpotDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get the data passed from previous screen
-    final String title = Get.arguments['title'] ?? 'Baalbek: Ancient Roman Ruins and Temple Complex';
-    final String description = Get.arguments['description'] ?? '';
+    final String title = Get.arguments['title'] ?? 'Tourist Spot';
+    final String description = Get.arguments['description'] ?? 'No description available.';
     final String image = Get.arguments['image'] ?? '';
+    final String location = Get.arguments['location'] ?? 'Unknown location';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -40,13 +41,14 @@ class TouristSpotDetailsView extends StatelessWidget {
               margin: const EdgeInsets.all(16),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.asset(
-                  image,
-                  width: double.infinity,
-                  height: 240,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
+                child: image.isNotEmpty
+                    ? Image.network(
+                        image,
+                        width: double.infinity,
+                        height: 240,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
                       width: double.infinity,
                       height: 240,
                       decoration: BoxDecoration(
@@ -60,7 +62,20 @@ class TouristSpotDetailsView extends StatelessWidget {
                       ),
                     );
                   },
-                ),
+                )
+                  : Container(
+                      width: double.infinity,
+                      height: 240,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Icon(
+                        Icons.image,
+                        size: 60,
+                        color: Colors.grey,
+                      ),
+                    ),
               ),
             ),
 
@@ -92,16 +107,7 @@ class TouristSpotDetailsView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'About',
-                      style: GoogleFonts.inter(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Baalbek is home to the Baalbek temple complex which is located in the Beqaa Valley of Lebanon. The complex consists of three temples: Jupiter, Bacchus and Venus. The Temple of Bacchus is one of the best preserved Roman temple ruins, while the nearby Temple of Jupiter is known for its massive foundation stones and towering columns. The site represents the peak of Roman imperial architecture and remains one of the finest examples of Imperial Roman architecture in the world.',
+                      description,
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         color: Colors.grey[700],
@@ -114,48 +120,6 @@ class TouristSpotDetailsView extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // How to Get There Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F5),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'How to Get There',
-                      style: GoogleFonts.inter(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Beqaa Valley, Lebanon',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'You can reach this destination by car, taxi, or public transportation. The site is well-connected and accessible from major cities in Lebanon. GPS coordinates are available for navigation.',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: Colors.grey[700],
-                        height: 1.6,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
             const SizedBox(height: 32),
           ],
         ),

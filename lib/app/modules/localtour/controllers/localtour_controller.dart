@@ -1,58 +1,96 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LocalTour {
-  final String image;
-  final String title;
+class LocalTourInfo {
   final String date;
-  final String time;
-  final String location;
+  final String distance;
+  final String duration;
+  final int ticketPrice;
+  final String ticketPriceTag;
+  final String begins;
+  final String returnTime;
+
+  LocalTourInfo({
+    required this.date,
+    required this.distance,
+    required this.duration,
+    required this.ticketPrice,
+    required this.ticketPriceTag,
+    required this.begins,
+    required this.returnTime,
+  });
+
+  factory LocalTourInfo.fromJson(Map<String, dynamic> json) {
+    return LocalTourInfo(
+     date: json['date'] ?? '',
+     distance: json['distance'] ?? '',
+     duration: json['duration'] ?? '',
+     ticketPrice: json['ticketPrice'] ?? 0,
+     ticketPriceTag: json['ticketPriceTag'] ?? '',
+     begins: json['begins'] ?? '',
+     returnTime: json['returnTime'] ?? '',
+    );
+  }
+}
+
+class LocalTour {
+  final String id;
+  final String title;
+  final String image;
+  final List<String> includedWithTickets;
+  final String locationDetails;
+  final LocalTourInfo info;
 
   LocalTour({
-    required this.image,
+    required this.id,
     required this.title,
-    required this.date,
-    required this.time,
-    required this.location,
+    required this.image,
+    required this.includedWithTickets,
+    required this.locationDetails,
+    required this.info,
   });
+
+  factory LocalTour.fromJson(Map<String, dynamic> json) {
+    return LocalTour(
+      id: json['_id'] ?? '',
+      title: json['title'] ?? '',
+      image: json['image'] ?? '',
+      includedWithTickets: List<String>.from(json['includedWithTickets'] ?? []),
+      locationDetails: json['locationDetails'] ?? '',
+      info: LocalTourInfo.fromJson(json['info'] ?? {}),
+    );
+  }
 }
 
 class LocaltourController extends GetxController {
-  final List<LocalTour> tours = [
-    LocalTour(
-      image: 'assets/images/tour1.jpg',
-      title: 'Beirut to Tripoli Tour',
-      date: '5 Feb 2026',
-      time: '7:00 AM – 7:00 PM',
-      location: 'Beirut → Tripoli',
-    ),
-    LocalTour(
-      image: 'assets/images/tour2.jpg',
-      title: 'Scenic Mountain Bus Tour',
-      date: '8 Feb 2026',
-      time: '6:00 AM – 8:00 PM',
-      location: 'Beirut → Byblos → Cedars',
-    ),
-    LocalTour(
-      image: 'assets/images/tour3.jpg',
-      title: 'Coastal Exploration Tour',
-      date: '12 Feb 2026',
-      time: '8:00 AM – 6:00 PM',
-      location: 'Beirut → Sidon → Tyre',
-    ),
-  ];
+  final _connect = GetConnect();
+  final RxList<LocalTour> tours = <LocalTour>[].obs;
+  final isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
+    fetchTours();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
+  Future<void> fetchTours() async {
+    try {
+      isLoading.value = true;
+      final response = await _connect.get('https://sednex-zvk1.onrender.com/api/local-tour/');
+      if (response.status.hasError) return;
 
-  @override
-  void onClose() {
-    super.onClose();
+      var body = response.body;
+      if (body is String) {
+        body = jsonDecode(body);
+      }
+
+      final List<dynamic> data = body['tours'] ?? [];
+      tours.value = data.map((e) => LocalTour.fromJson(e)).toList();
+    } catch (e) {
+      debugPrint('Error fetching local tours: $e');
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

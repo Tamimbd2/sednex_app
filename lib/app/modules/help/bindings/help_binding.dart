@@ -5,8 +5,6 @@ import '../controllers/help_controller.dart';
 class HelpBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<HelpController>(
-      () => HelpController(),
-    );
+    Get.lazyPut<HelpController>(() => HelpController());
   }
 }

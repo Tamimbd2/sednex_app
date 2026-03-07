@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../controllers/community_feed_controller.dart';
 
 class CommunityFeedView extends GetView<CommunityFeedController> {

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:marquee/marquee.dart';
 import 'package:get/get.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../../communityFeed/controllers/community_feed_controller.dart';
 import '../controllers/dashboard_controller.dart';
 import '../../namaj/controllers/namaj_controller.dart';
 import '../../ramadancalander/controllers/ramadancalander_controller.dart';
 import '../../../routes/app_pages.dart';
+import '../../communityFeed/widgets/community_post_card.dart';
 
 class HomePageContent extends StatelessWidget {
   const HomePageContent({super.key});
@@ -55,7 +55,6 @@ class HomePageContent extends StatelessWidget {
             }),
           ),
 
-          // Hero Banner Frame
           // Hero Banner Frame
           Obx(() {
              final controller = Get.find<DashboardController>();
@@ -368,106 +367,12 @@ class HomePageContent extends StatelessWidget {
               itemCount: displayPosts.length,
               separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
-                // We need to pass the methods from CommunityFeedView or reimplement them.
-                // Reimplementing simplified version for Dashboard.
                 final post = displayPosts[index];
-                return Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF9FAFB),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: const [
-                       BoxShadow(
-                        color: Color(0x19000000),
-                        blurRadius: 3,
-                        offset: Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 20,
-                            backgroundImage: NetworkImage(post['avatar']),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  post['name'],
-                                  style: GoogleFonts.poppins(
-                                    color: const Color(0xFF101727),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Row(
-                                  children: [
-                                    Text(
-                                      post['time'],
-                                      style: GoogleFonts.poppins(
-                                        color: const Color(0xFF697282),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    if (post['category'] != null) ...[
-                                      const SizedBox(width: 8),
-                                      _buildCategoryTag(post['category']),
-                                    ],
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      
-                      const SizedBox(height: 12),
-                      
-                      // Content
-                      Text(
-                        post['content'],
-                        style: GoogleFonts.poppins(
-                          color: const Color(0xFF354152),
-                          fontSize: 14,
-                          height: 1.5,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      
-                      const SizedBox(height: 12),
-                      
-                      // Images
-                      if (post['images'] != null && (post['images'] as List).isNotEmpty)
-                        _buildPostImages(post['images']),
-                        
-                      const SizedBox(height: 12),
-                      
-                      // Footer (Stats only)
-                      Row(
-                        children: [
-                          const Icon(Icons.favorite, size: 16, color: Color(0xFFDC143C)),
-                          const SizedBox(width: 4),
-                          Text('${post['likes']}', style: GoogleFonts.poppins(fontSize: 12, color: const Color(0xFFDC143C))),
-                          const SizedBox(width: 16),
-                          SvgPicture.asset('assets/post/comment.svg', width: 14, height: 14, colorFilter: const ColorFilter.mode(Color(0xFF495565), BlendMode.srcIn)),
-                          const SizedBox(width: 4),
-                          Text('${post['comments']}', style: GoogleFonts.poppins(fontSize: 12, color: const Color(0xFF495565))),
-                        ],
-                      ),
-                    ],
-                  ),
+                return CommunityPostCard(
+                  post: post,
+                  index: index,
+                  controller: feedController,
+                  isDashboard: true,
                 );
               },
             );
@@ -527,147 +432,6 @@ class HomePageContent extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryTag(String category) {
-    Color bgColor;
-    switch (category) {
-      case 'Question':
-        bgColor = const Color(0xFFFF7F00); // Orange
-        break;
-      case 'Sell':
-        bgColor = const Color(0xFF22C55E); // Green
-        break;
-      case 'Info':
-        bgColor = const Color(0xFFA855F7); // Purple
-        break;
-      case 'Jobs':
-        bgColor = Colors.blue;
-        break;
-      case 'Rentals':
-        bgColor = Colors.teal;
-        break;
-      default:
-        bgColor = Colors.grey;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        category,
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 10,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPostImages(List<dynamic> images) {
-    int count = images.length;
-    if (count == 0) return const SizedBox.shrink();
-    
-    return ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: SizedBox(
-          height: 200, // Reduced height for dashboard preview
-          child: _buildLayout(images, count),
-        ),
-    );
-  }
-
-  Widget _buildLayout(List<dynamic> images, int count) {
-    if (count == 1) {
-      return _buildImage(images[0]);
-    } else if (count == 2) {
-      return Row(
-        children: [
-          Expanded(child: _buildImage(images[0])),
-          const SizedBox(width: 4),
-          Expanded(child: _buildImage(images[1])),
-        ],
-      );
-    } else if (count == 3) {
-      return Row(
-        children: [
-          Expanded(child: _buildImage(images[0])),
-          const SizedBox(width: 4),
-          Expanded(
-            child: Column(
-              children: [
-                Expanded(child: _buildImage(images[1])),
-                const SizedBox(height: 4),
-                Expanded(child: _buildImage(images[2])),
-              ],
-            ),
-          ),
-        ],
-      );
-    } else {
-      // 4 or more
-      return Column(
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                 Expanded(child: _buildImage(images[0])),
-                 const SizedBox(width: 4),
-                 Expanded(child: _buildImage(images[1])),
-              ],
-            ),
-          ),
-          const SizedBox(height: 4),
-           Expanded(
-            child: Row(
-              children: [
-                 Expanded(child: _buildImage(images[2])),
-                 const SizedBox(width: 4),
-                 Expanded(
-                   child: count > 4 
-                     ? Stack(
-                         fit: StackFit.expand,
-                         children: [
-                           _buildImage(images[3]),
-                           Container(
-                             color: Colors.black54,
-                             alignment: Alignment.center,
-                             child: Text(
-                               "+${count - 4}",
-                               style: GoogleFonts.poppins(
-                                 color: Colors.white,
-                                 fontSize: 24,
-                                 fontWeight: FontWeight.w600,
-                               ),
-                             ),
-                           )
-                         ],
-                       )
-                     : _buildImage(images[3]),
-                 ),
-              ],
-            ),
-          ),
-        ],
-      );
-    }
-  }
-
-  Widget _buildImage(String url) {
-    return Image.network(
-      url,
-      fit: BoxFit.cover,
-      width: double.infinity,
-      height: double.infinity,
-      errorBuilder: (context, error, stackTrace) => Container(
-        color: Colors.grey[200],
-        child: const Icon(Icons.broken_image, color: Colors.grey),
       ),
     );
   }
@@ -832,8 +596,7 @@ class HomePageContent extends StatelessWidget {
                    Row(
                      mainAxisAlignment: MainAxisAlignment.center,
                      children: [
-                       // Using Icon as fallback since SVG has unsupported embedded bitmap
-                       Image.asset('assets/images/sheheri.png', width: 22, height: 22),
+                       Image.asset('assets/images/sheheri.png', width: 22, height: 22, errorBuilder: (_, __, ___) => const Icon(Icons.wb_sunny_outlined, size: 14)),
                        const SizedBox(width: 4),
                        Text(
                          'Seheri',
@@ -873,8 +636,7 @@ class HomePageContent extends StatelessWidget {
                    Row(
                      mainAxisAlignment: MainAxisAlignment.center,
                      children: [
-                       // Using Icon as fallback since SVG has unsupported embedded bitmap
-                       Image.asset('assets/images/ifter.png', width: 22, height: 22),
+                       Image.asset('assets/images/ifter.png', width: 22, height: 22, errorBuilder: (_, __, ___) => const Icon(Icons.nights_stay_outlined, size: 14)),
                        const SizedBox(width: 4),
                        Text(
                          'Ifter',

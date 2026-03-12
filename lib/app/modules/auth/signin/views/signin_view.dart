@@ -67,20 +67,79 @@ class SigninView extends GetView<SigninController> {
                 ),
                 const SizedBox(height: 20),
                 // Password Field
-                _buildInputField(
-                  label: 'Password',
-                  hintText: 'Enter password',
-                  controller: controller.passwordController,
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
-                    return null;
-                  },
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Password',
+                      style: GoogleFonts.arimo(
+                        color: const Color(0xFF697282),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        height: 1.43,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Obx(() => TextFormField(
+                      controller: controller.passwordController,
+                      obscureText: controller.obscurePassword.value,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        color: const Color(0xFF1D2838),
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Enter password',
+                        hintStyle: GoogleFonts.poppins(
+                          color: AppColors.hintText,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        filled: true,
+                        fillColor: AppColors.inputField.withOpacity(0.5),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            controller.obscurePassword.value
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: const Color(0xFF697282),
+                            size: 22,
+                          ),
+                          onPressed: controller.togglePasswordVisibility,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: AppColors.inputField, width: 1.15),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: AppColors.inputField, width: 1.15),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey, width: 1.15),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.red, width: 1.15),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.red, width: 1.15),
+                        ),
+                        errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    )),
+                  ],
                 ),
                 Align(
                   alignment: Alignment.centerRight,

@@ -8,6 +8,11 @@ class SigninController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final isLoading = false.obs;
+  final obscurePassword = true.obs;
+
+  void togglePasswordVisibility() {
+    obscurePassword.value = !obscurePassword.value;
+  }
 
   Future<void> login() async {
     if (!formKey.currentState!.validate()) return;

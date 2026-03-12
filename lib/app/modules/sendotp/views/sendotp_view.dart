@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../../../routes/app_pages.dart';
 import '../../../widgets/primary_button.dart';
 import '../controllers/sendotp_controller.dart';
 

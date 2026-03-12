@@ -87,7 +87,7 @@ class CommunityFeedController extends GetxController {
       // Add pagination params
       url += '?page=${currentPage.value}&limit=10';
 
-      print('Fetching posts from: $url');
+      debugPrint('Fetching posts from: $url');
       final response = await apiService.getData(url);
 
       if (response.statusCode == 200) {
@@ -96,7 +96,7 @@ class CommunityFeedController extends GetxController {
           try {
             body = jsonDecode(body);
           } catch (e) {
-            print('Posts JSON error: $e');
+            debugPrint('Posts JSON error: $e');
             return;
           }
         }
@@ -141,7 +141,7 @@ class CommunityFeedController extends GetxController {
           }
         }
       } else {
-        print('Failed to fetch posts: ${response.statusCode} - ${response.statusText}');
+        debugPrint('Failed to fetch posts: ${response.statusCode} - ${response.statusText}');
       }
     } catch (e) {
       debugPrint("Error fetching posts: $e");
@@ -414,15 +414,7 @@ class CommunityFeedController extends GetxController {
     }
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   void increment() => count.value++;
 }

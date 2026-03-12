@@ -20,18 +20,6 @@ class HospitalsController extends GetxController {
     Hospital(name: 'Rafik Hariri\nHospital', logoPath: 'assets/hospital/hariri.png'),
   ];
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

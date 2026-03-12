@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/connect.dart';
 
 class NamajController extends GetxController with WidgetsBindingObserver {
   //TODO: Implement NamajController

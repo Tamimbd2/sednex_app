@@ -1,3 +1,4 @@
 {
-    "emulator.emulatorPath": "C:\\Users\\PC\\AppData\\Local\\Android\\Sdk\\emulator"
+    "emulator.emulatorPath": "C:\\Users\\PC\\AppData\\Local\\Android\\Sdk\\emulator",
+    "debug.enableStatusBarColor": false
 }

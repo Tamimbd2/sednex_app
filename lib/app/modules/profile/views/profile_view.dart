@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/profile_controller.dart';
-import '../../dashboard/controllers/dashboard_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
   const ProfileView({super.key});
@@ -47,53 +46,59 @@ class ProfileView extends GetView<ProfileController> {
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        border: Border.all(color: Colors.white, width: 2), // Inner white space
-                        image: const DecorationImage(
-                          image: NetworkImage("https://placehold.co/80x84"), // Use placeholder or asset
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      // Fallback icon if network fails (optional)
-                      child: const ClipOval(
-                        child: Icon(Icons.person, size: 50, color: Colors.grey),
-                      ),
-                    ),
+                    child: Obx(() {
+                      final imgUrl = controller.userProfileImage.value;
+                      return CircleAvatar(
+                        radius: 42,
+                        backgroundColor: Colors.grey[200],
+                        backgroundImage: imgUrl != null
+                            ? NetworkImage(imgUrl)
+                            : null,
+                        child: imgUrl == null
+                            ? const Icon(
+                                Icons.person,
+                                size: 40,
+                                color: Colors.grey,
+                              )
+                            : null,
+                      );
+                    }),
                   ),
                   const SizedBox(height: 12),
                   // Name
-                  Text(
-                    'Shamim',
+                  Obx(() => Text(
+                    controller.userName.value.isNotEmpty
+                        ? controller.userName.value
+                        : 'User',
                     style: GoogleFonts.arimo(
                       fontSize: 20,
                       fontWeight: FontWeight.w400,
                       color: const Color(0xFF101727),
                     ),
-                  ),
+                  )),
                   const SizedBox(height: 4),
                   // Handle
-                  Text(
-                    '@shamim',
+                  Obx(() => Text(
+                    controller.userHandle.value.isNotEmpty
+                        ? controller.userHandle.value
+                        : '',
                     style: GoogleFonts.arimo(
                       fontSize: 14,
                       color: const Color(0xFF697282),
                     ),
-                  ),
+                  )),
                   const SizedBox(height: 12),
-                  // Bio
-                  Text(
-                    'Living a healthy life, one pill at a time 💊',
+                  // Email as bio fallback until real bio field is added
+                  Obx(() => Text(
+                    controller.userEmail.value.isNotEmpty
+                        ? controller.userEmail.value
+                        : '',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.arimo(
                       fontSize: 14,
                       color: const Color(0xFF495565),
                     ),
-                  ),
+                  )),
                 ],
               ),
             ),
@@ -174,9 +179,8 @@ class ProfileView extends GetView<ProfileController> {
                     buttonColor: const Color(0xFFFA2B36),
                     cancelTextColor: const Color(0xFF101727),
                     onConfirm: () {
-                      Get.back(); // Close dialog
-                      // Get.offAllNamed('/signin'); // TODO: Add navigation to sign in
-                      Get.snackbar('Logged Out', 'You have been logged out successfully.', snackPosition: SnackPosition.BOTTOM);
+                      Get.back(); // Close dialog first
+                      controller.logout();
                     },
                     onCancel: () => Get.back(),
                     titlePadding: const EdgeInsets.only(top: 24, bottom: 12),

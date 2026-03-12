@@ -13,6 +13,9 @@ class AppColors {
   /// Accent Golden Yellow
   static const Color accent = Color(0xFFFFD700);
 
+  /// Crimson Red – used for active nav, FAB, badges, like icons
+  static const Color crimson = Color(0xFFDC143C);
+
   // ── Blue Shades ──────────────────────────────────────────────────────
   static const Color blue1 = Color(0xFF1E63FF); // Primary
   static const Color blue2 = Color(0xFF3575FF);

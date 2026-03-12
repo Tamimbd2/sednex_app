@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../communityFeed/controllers/community_feed_controller.dart';
 import '../controllers/dashboard_controller.dart';
-import '../../communityFeed/views/community_feed_view.dart';
 import '../../namaj/controllers/namaj_controller.dart';
 import '../../ramadancalander/controllers/ramadancalander_controller.dart';
 import '../../../routes/app_pages.dart';
@@ -237,7 +236,7 @@ class HomePageContent extends StatelessWidget {
                            const SizedBox(width: 12),
                         ],
                       );
-                  }).toList(),
+                  }),
                 ],
               );
             }),

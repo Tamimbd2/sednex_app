@@ -263,7 +263,7 @@ class SignupView extends GetView<SignupController> {
         ),
         const SizedBox(height: 8),
         Obx(() => DropdownButtonFormField<String>(
-          value: controller.selectedCountry.value,
+          initialValue: controller.selectedCountry.value,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,

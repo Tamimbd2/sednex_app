@@ -34,8 +34,7 @@ class DashboardController extends GetxController {
 
   void fetchServices() async {
     try {
-      final connect = GetConnect();
-      final response = await connect.get('https://sednex-zvk1.onrender.com/api/homepage/services');
+      final response = await apiService.getData('api/homepage/services');
       
       if (response.statusCode == 200) {
         var body = response.body;
@@ -43,7 +42,7 @@ class DashboardController extends GetxController {
           try {
              body = jsonDecode(body);
           } catch(e) {
-             print('Services JSON error: $e');
+             debugPrint('Services JSON error: $e');
              return;
           }
         }
@@ -61,8 +60,6 @@ class DashboardController extends GetxController {
            }
         }
         
-        print('Services found: ${items.length}');
-        
         if (items.isNotEmpty) {
           servicesList.assignAll(items);
         }
@@ -74,8 +71,7 @@ class DashboardController extends GetxController {
 
   void fetchBanner() async {
     try {
-      final connect = GetConnect();
-      final response = await connect.get('https://sednex-zvk1.onrender.com/api/homepage/sliders');
+      final response = await apiService.getData('api/homepage/sliders');
       
       if (response.statusCode == 200) {
         var body = response.body;
@@ -131,11 +127,7 @@ class DashboardController extends GetxController {
 
   void fetchMarqueeText() async {
     try {
-      final connect = GetConnect();
-      print('Fetching Marquee from: https://sednex-zvk1.onrender.com/api/homepage/marquees');
-      final response = await connect.get('https://sednex-zvk1.onrender.com/api/homepage/marquees');
-      
-      print('Marquee Response: ${response.statusCode}');
+      final response = await apiService.getData('api/homepage/marquees');
       
       if (response.statusCode == 200) {
         var body = response.body;
@@ -145,7 +137,7 @@ class DashboardController extends GetxController {
           try {
             body = jsonDecode(body);
           } catch (e) {
-            print('JSON Decode error: $e');
+            debugPrint('Marquee JSON Decode error: $e');
             return;
           }
         }
@@ -160,34 +152,22 @@ class DashboardController extends GetxController {
              items = body['data'];
            }
         }
-
-        print('Marquee Items found: ${items.length}');
         
         // Map text directly as response might not have status/order
         final activeTexts = items
             .map((item) => item['text']?.toString() ?? '')
             .where((text) => text.isNotEmpty)
             .toList();
-            
-        print('Active texts: $activeTexts');
 
         if (activeTexts.isNotEmpty) {
           marqueeText.value = activeTexts.join('  •  ');
-        } else {
-             print('No valid text found in items.');
         }
-      } else {
-        print('Marquee fetch failed: ${response.statusText}');
       }
     } catch (e) {
       debugPrint("Error fetching marquee: $e");
     }
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {

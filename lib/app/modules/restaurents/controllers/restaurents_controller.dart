@@ -20,18 +20,6 @@ class RestaurentsController extends GetxController {
     Restaurant(name: 'Barbar\nRestaurant', logoPath: 'assets/restaurant/barbar.png'),
   ];
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

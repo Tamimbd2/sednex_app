@@ -132,18 +132,6 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
     }
   }
 
-  Future<void> _makeCall(String phone) async {
-    if (phone.isEmpty) return;
-    final Uri uri = Uri(scheme: 'tel', path: phone);
-    try {
-      if (!await launchUrl(uri)) {
-        Get.snackbar('Error', 'Could not open dialer');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Invalid phone number');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -207,7 +195,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.06),
+            color: AppColors.primary.withValues(alpha: 0.06),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -227,7 +215,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.accent.withOpacity(0.35),
+                      color: AppColors.accent.withValues(alpha: 0.35),
                       blurRadius: 10,
                     ),
                   ],
@@ -243,7 +231,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                       child: _imageUrl.isNotEmpty
                           ? Image.network(_imageUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => _avatarFallback())
+                              errorBuilder: (context, error, stackTrace) => _avatarFallback())
                           : _avatarFallback(),
                     ),
                   ),
@@ -288,7 +276,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.08),
+                        color: AppColors.primary.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -305,10 +293,10 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: AppColors.accent.withOpacity(0.12),
+                        color: AppColors.accent.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
-                            color: AppColors.accent.withOpacity(0.35)),
+                            color: AppColors.accent.withValues(alpha: 0.35)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -359,7 +347,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.08),
+                color: AppColors.primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(Icons.location_on_rounded,
@@ -393,7 +381,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.06),
+            color: AppColors.primary.withValues(alpha: 0.06),
             blurRadius: 20,
             offset: const Offset(0, 6),
           ),
@@ -416,7 +404,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                 borderRadius: BorderRadius.circular(9),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.12),
+                    color: AppColors.primary.withValues(alpha: 0.12),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -522,10 +510,10 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 7),
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.06),
+                          color: AppColors.primary.withValues(alpha: 0.06),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                              color: AppColors.primary.withOpacity(0.15)),
+                              color: AppColors.primary.withValues(alpha: 0.15)),
                         ),
                         child: Text(d,
                             style: GoogleFonts.inter(
@@ -571,7 +559,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
       itemCount: items.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
       itemBuilder: (_, i) {
         final item = items[i];
         final hasValue = item.value.isNotEmpty;
@@ -592,7 +580,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                     color: hasValue
-                        ? item.color.withOpacity(0.15)
+                        ? item.color.withValues(alpha: 0.15)
                         : const Color(0xFFE5EAF5)),
               ),
               child: Row(
@@ -601,7 +589,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                     width: 42,
                     height: 42,
                     decoration: BoxDecoration(
-                      color: item.color.withOpacity(0.10),
+                      color: item.color.withValues(alpha: 0.10),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(item.icon, color: item.color, size: 20),
@@ -702,21 +690,5 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-// ── Dot Pattern Painter ──────────────────────────────────────────────
-class _DotPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white.withOpacity(0.07)
-      ..style = PaintingStyle.fill;
-    const spacing = 22.0;
-    for (double x = 0; x < size.width; x += spacing) {
-      for (double y = 0; y < size.height; y += spacing) {
-        canvas.drawCircle(Offset(x, y), 1.5, paint);
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(_DotPainter _) => false;
-}
+// ── Dot Pattern Painter (reserved for future use) ──────────────────
+// _DotPainter removed — currently unused

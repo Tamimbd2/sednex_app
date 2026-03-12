@@ -15,13 +15,17 @@ class SplashController extends GetxController {
     final box = GetStorage();
     final isLoggedIn = box.read('isLoggedIn') ?? false;
     final token = box.read('token') ?? '';
+    final isFirstTime = box.read('isFirstTime') ?? true;
 
     if (isLoggedIn && token.toString().isNotEmpty) {
       // User is already logged in, go to dashboard
       Get.offAllNamed(Routes.DASHBOARD);
-    } else {
-      // User is not logged in, go to onboard
+    } else if (isFirstTime) {
+      // First time user, show onboarding
       Get.offAllNamed(Routes.ONBOARD);
+    } else {
+      // Not first time, go directly to sign in
+      Get.offAllNamed(Routes.SIGNIN);
     }
   }
 }

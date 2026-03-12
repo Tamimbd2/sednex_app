@@ -1,6 +1,7 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '../../../routes/app_pages.dart';
 
 class OnboardController extends GetxController {
@@ -14,6 +15,9 @@ class OnboardController extends GetxController {
         curve: Curves.easeInOut,
       );
     } else {
+      // Mark onboarding as completed
+      final box = GetStorage();
+      box.write('isFirstTime', false);
       Get.offAllNamed(Routes.SIGNIN);
     }
   }

@@ -1,4 +1,5 @@
 {
     "emulator.emulatorPath": "C:\\Users\\PC\\AppData\\Local\\Android\\Sdk\\emulator",
-    "debug.enableStatusBarColor": false
+    "debug.enableStatusBarColor": false,
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

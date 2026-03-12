@@ -121,8 +121,7 @@ class DashboardView extends GetView<DashboardController> {
                       child: CircleAvatar(
                         radius: 18,
                         backgroundColor: Colors.grey[200],
-                        backgroundImage: const NetworkImage("https://placehold.co/80x84"),
-                        child: const Icon(Icons.person, color: Colors.grey),
+                        child: const Icon(Icons.person, size: 20, color: Colors.grey),
                       ),
                     ),
                   ),

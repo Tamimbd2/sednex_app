@@ -11,21 +11,21 @@ class ShopController extends GetxController {
       "subtitle": "Up to 40%",
       "description": "All Services Available | T&C Applied",
       "gradientColors": [Color(0xFF101727), Color(0xFF354152)],
-      "image": "https://placehold.co/344x160",
+      "image": "https://via.placeholder.com/344x160.png",
     },
     {
       "title": "Flash Sale",
       "subtitle": "Up to 50%",
       "description": "Electronics Only | While Stocks Last",
       "gradientColors": [Color(0xFF59168B), Color(0xFF8200DA)],
-      "image": "https://placehold.co/344x160",
+      "image": "https://via.placeholder.com/344x160.png",
     },
     {
       "title": "Weekend Deal",
       "subtitle": "Up to 35%",
       "description": "Fashion & Accessories | Free Shipping",
       "gradientColors": [Color(0xFF811719), Color(0xFFC10007)],
-      "image": "https://placehold.co/344x160",
+      "image": "https://via.placeholder.com/344x160.png",
     },
   ];
 
@@ -62,7 +62,7 @@ class ShopController extends GetxController {
       "category": "Shoes",
       "price": "৳89.99",
       "originalPrice": "৳129.99",
-      "image": "https://placehold.co/164x164",
+      "image": "https://via.placeholder.com/164x164.png",
       "isSale": true,
       "saleText": "Sale",
       "saleColor": Color(0xFFDC143C),
@@ -76,7 +76,7 @@ class ShopController extends GetxController {
       "category": "Electronics",
       "price": "৳199.99",
       "originalPrice": "",
-      "image": "https://placehold.co/164x164",
+      "image": "https://via.placeholder.com/164x164.png",
       "isSale": true,
       "saleText": "New",
       "saleColor": Color(0xFF00C853), // Green for New
@@ -84,9 +84,9 @@ class ShopController extends GetxController {
       "reviews": 85,
       "description": "Experience premium sound quality with active noise cancellation. 30-hour battery life, comfortable over-ear design, and premium build quality. Perfect for music lovers and professionals.",
       "images": [
-        "https://placehold.co/344x344",
-        "https://placehold.co/344x344", 
-        "https://placehold.co/344x344"
+        "https://via.placeholder.com/344x344.png",
+        "https://via.placeholder.com/344x344.png", 
+        "https://via.placeholder.com/344x344.png"
       ],
       "colors": [Color(0xFF000000), Color(0xFFC0C0C0), Color(0xFF1A237E)],
       "specifications": {
@@ -106,7 +106,7 @@ class ShopController extends GetxController {
       "category": "Watch",
       "price": "৳299.99",
       "originalPrice": "৳399.00",
-      "image": "https://placehold.co/164x164",
+      "image": "https://via.placeholder.com/164x164.png",
       "isSale": true,
       "saleText": "-25%",
       "saleColor": Color(0xFFFFAB00), // Amber for discount percentage
@@ -120,7 +120,7 @@ class ShopController extends GetxController {
       "category": "Accessories",
       "price": "৳59.99",
       "originalPrice": "৳79.99",
-      "image": "https://placehold.co/164x164",
+      "image": "https://via.placeholder.com/164x164.png",
       "isSale": true,
       "saleText": "-25%",
       "saleColor": Color(0xFFFFAB00),
@@ -134,7 +134,7 @@ class ShopController extends GetxController {
       "category": "Accessories",
       "price": "৳149.99",
       "originalPrice": "",
-      "image": "https://placehold.co/164x164",
+      "image": "https://via.placeholder.com/164x164.png",
       "isSale": true,
       "saleText": "New",
       "saleColor": Color(0xFF00C853),
@@ -148,7 +148,7 @@ class ShopController extends GetxController {
       "category": "Electronics",
       "price": "৳999.99",
       "originalPrice": "৳1199.99",
-      "image": "https://placehold.co/164x164",
+      "image": "https://via.placeholder.com/164x164.png",
       "isSale": true,
       "saleText": "-17%",
       "saleColor": Color(0xFFFFAB00),

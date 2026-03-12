@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '../../../services/api_service.dart';
 
 class DashboardController extends GetxController {
@@ -9,12 +10,15 @@ class DashboardController extends GetxController {
   final currentIndex = 0.obs;
   
   final apiService = Get.find<ApiService>();
+  final _box = GetStorage();
+  
   var marqueeText = 'Welcome to SedNex!'.obs; // Default text
   var bannerList = <String>[].obs; // Hero Banner URLs
   var currentBannerIndex = 0.obs;
   final bannerPageController = PageController();
   
   var servicesList = <dynamic>[].obs; // Dynamic Services List
+  var userProfileImage = RxnString(); // Observable profile image
 
   var isMarqueeLoading = false.obs;
   Timer? _marqueeTimer;
@@ -23,6 +27,7 @@ class DashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    loadUserData();
     fetchMarqueeText();
     fetchBanner();
     fetchServices();
@@ -30,6 +35,19 @@ class DashboardController extends GetxController {
     _marqueeTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       fetchMarqueeText();
     });
+  }
+
+  void loadUserData() {
+    final rawUser = _box.read('user');
+    if (rawUser != null) {
+      try {
+        final user = rawUser is String ? jsonDecode(rawUser) : rawUser;
+        final img = user['profileImage']?.toString();
+        userProfileImage.value = (img != null && img.isNotEmpty) ? img : null;
+      } catch (e) {
+        debugPrint('Dashboard user data error: $e');
+      }
+    }
   }
 
   void fetchServices() async {

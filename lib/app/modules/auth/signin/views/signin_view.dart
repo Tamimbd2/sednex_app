@@ -36,7 +36,7 @@ class SigninView extends GetView<SigninController> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 60),
+                const SizedBox(height: 40),
                 // Title
                 Text(
                   'Login to your Account',
@@ -104,7 +104,7 @@ class SigninView extends GetView<SigninController> {
                           fontWeight: FontWeight.w400,
                         ),
                         filled: true,
-                        fillColor: AppColors.inputField.withOpacity(0.5),
+                        fillColor: AppColors.inputField.withAlpha(128),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -271,7 +271,7 @@ class SigninView extends GetView<SigninController> {
               fontWeight: FontWeight.w400,
             ),
             filled: true,
-            fillColor: AppColors.inputField.withOpacity(0.5),
+            fillColor: AppColors.inputField.withAlpha(128),
             contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -315,12 +315,12 @@ class SigninView extends GetView<SigninController> {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withAlpha(128),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withAlpha(128),
               blurRadius: 6,
               offset: const Offset(0, 4),
             ),

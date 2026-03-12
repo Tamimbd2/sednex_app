@@ -26,7 +26,7 @@ class HomePageContent extends StatelessWidget {
           Container(
             width: double.infinity,
             height: 36, // Constrained height for marquee
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
             color: const Color(0xFFFFF0F0), // Light red background
             child: Obx(() {
               final controller = Get.find<DashboardController>();
@@ -46,7 +46,7 @@ class HomePageContent extends StatelessWidget {
                 blankSpace: 20.0,
                 velocity: 50.0,
                 pauseAfterRound: const Duration(seconds: 1),
-                startPadding: 10.0,
+                startPadding: 0.0,
                 accelerationDuration: const Duration(seconds: 1),
                 accelerationCurve: Curves.linear,
                 decelerationDuration: const Duration(milliseconds: 500),
@@ -685,7 +685,7 @@ class HomePageContent extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 160,
+        height: 170,
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(16),
@@ -755,8 +755,8 @@ class HomePageContent extends StatelessWidget {
     return GestureDetector(
       onTap: () => Get.toNamed(Routes.RAMADANCALANDER),
       child: Container(
-        width: 120, // Increased width slightly to fit header text
-        height: 175, // Reduced height as requested
+        width: 120, 
+        height: 170, 
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: const Color(0xFFD4F3D8),

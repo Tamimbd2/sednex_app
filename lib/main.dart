@@ -9,7 +9,7 @@ void main() async {
   await GetStorage.init();
   runApp(
     GetMaterialApp(
-      title: "Sednex App",
+      title: "SEDNEX",
       initialRoute: AppPages.INITIAL,
       initialBinding: InitialBinding(),
       getPages: AppPages.routes,

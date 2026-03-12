@@ -61,13 +61,10 @@ class EditprofileView extends GetView<EditprofileController> {
                         height: 100,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white,
+                          color: Colors.grey[200],
                           border: Border.all(color: Colors.white, width: 2),
-                          image: const DecorationImage(
-                            image: NetworkImage("https://placehold.co/100x100"), // Placeholder
-                            fit: BoxFit.cover,
-                          ),
                         ),
+                        child: const Icon(Icons.person, size: 50, color: Colors.grey),
                       ),
                     ),
                     Positioned(

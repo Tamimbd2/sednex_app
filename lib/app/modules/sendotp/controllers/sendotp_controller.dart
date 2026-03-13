@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_pages.dart';
 
@@ -13,7 +13,7 @@ class SendotpController extends GetxController {
         'Success',
         'OTP sent to ${emailController.text}',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withOpacity(0.1),
+        backgroundColor: Colors.green.withValues(alpha: 0.1),
         colorText: Colors.green,
       );
       Get.toNamed(Routes.VERIFYOTP);
@@ -26,3 +26,4 @@ class SendotpController extends GetxController {
     super.onClose();
   }
 }
+

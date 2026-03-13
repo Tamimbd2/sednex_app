@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -64,7 +64,7 @@ class GoldRateView extends GetView<GoldRateController> {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.orange.withOpacity(0.15),
+                          color: Colors.orange.withValues(alpha: 0.15),
                           blurRadius: 15,
                           offset: const Offset(0, 6),
                         )
@@ -108,7 +108,7 @@ class GoldRateView extends GetView<GoldRateController> {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFD32F2F).withOpacity(0.08),
+                    color: const Color(0xFFD32F2F).withValues(alpha: 0.08),
                     blurRadius: 24,
                     offset: const Offset(0, 10),
                   ),
@@ -155,13 +155,13 @@ class GoldRateView extends GetView<GoldRateController> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Column(
                       children: [
-                        _buildPremiumRateRow('1 Vori 22 Carat', '1,12,000 ৳', isHighlight: true),
+                        _buildPremiumRateRow('1 Vori 22 Carat', '1,12,000 à§³', isHighlight: true),
                         _buildDivider(),
-                        _buildPremiumRateRow('1 Vori 21 Carat', '1,07,000 ৳'),
+                        _buildPremiumRateRow('1 Vori 21 Carat', '1,07,000 à§³'),
                         _buildDivider(),
-                        _buildPremiumRateRow('1 Vori 18 Carat', '92,000 ৳'),
+                        _buildPremiumRateRow('1 Vori 18 Carat', '92,000 à§³'),
                         _buildDivider(),
-                        _buildPremiumRateRow('Traditional Method', '76,000 ৳'),
+                        _buildPremiumRateRow('Traditional Method', '76,000 à§³'),
                       ],
                     ),
                   ),
@@ -193,7 +193,7 @@ class GoldRateView extends GetView<GoldRateController> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                    BoxShadow(
-                    color: Colors.grey.withOpacity(0.05),
+                    color: Colors.grey.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -219,12 +219,12 @@ class GoldRateView extends GetView<GoldRateController> {
                 borderRadius: BorderRadius.circular(20),
                  boxShadow: [
                   BoxShadow(
-                    color: Colors.blueGrey.withOpacity(0.06),
+                    color: Colors.blueGrey.withValues(alpha: 0.06),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
                 ],
-                border: Border.all(color: Colors.grey.withOpacity(0.05)),
+                border: Border.all(color: Colors.grey.withValues(alpha: 0.05)),
               ),
               padding: const EdgeInsets.all(24),
               child: Column(
@@ -298,7 +298,7 @@ class GoldRateView extends GetView<GoldRateController> {
   Widget _buildDivider() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Divider(height: 1, thickness: 1, color: Colors.grey.withOpacity(0.1)),
+      child: Divider(height: 1, thickness: 1, color: Colors.grey.withValues(alpha: 0.1)),
     );
   }
 
@@ -329,7 +329,7 @@ class GoldRateView extends GetView<GoldRateController> {
           Container( // Price Tag
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: isHighlight ? const Color(0xFFD32F2F).withOpacity(0.08) : Colors.transparent,
+              color: isHighlight ? const Color(0xFFD32F2F).withValues(alpha: 0.08) : Colors.transparent,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -363,7 +363,7 @@ class GoldRateView extends GetView<GoldRateController> {
               boxShadow: isSelected 
                 ? [
                     BoxShadow(
-                      color: const Color(0xFFD32F2F).withOpacity(0.3),
+                      color: const Color(0xFFD32F2F).withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     )
@@ -392,7 +392,7 @@ class GoldRateView extends GetView<GoldRateController> {
       decoration: BoxDecoration(
         color: const Color(0xFFFAFAFA),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -425,3 +425,4 @@ class GoldRateView extends GetView<GoldRateController> {
     );
   }
 }
+

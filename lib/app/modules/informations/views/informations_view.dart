@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -183,7 +183,7 @@ class InformationsView extends GetView<InformationsController> {
             title,
             'Opening $title...',
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: color.withOpacity(0.1),
+            backgroundColor: color.withValues(alpha: 0.1),
             colorText: color,
           );
         }
@@ -199,7 +199,7 @@ class InformationsView extends GetView<InformationsController> {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.3),
+                  color: color.withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -246,7 +246,7 @@ class InformationsView extends GetView<InformationsController> {
         border: Border.all(color: Colors.grey[200]!),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -294,3 +294,4 @@ class InformationsView extends GetView<InformationsController> {
     );
   }
 }
+

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -83,7 +83,7 @@ class SendotpView extends GetView<SendotpController> {
                         ),
                         prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF6E6E6E), size: 20),
                         filled: true,
-                        fillColor: AppColors.inputField.withOpacity(0.5),
+                        fillColor: AppColors.inputField.withValues(alpha: 0.5),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -144,3 +144,4 @@ class SendotpView extends GetView<SendotpController> {
     );
   }
 }
+

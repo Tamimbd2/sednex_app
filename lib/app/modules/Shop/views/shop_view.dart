@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -223,7 +223,7 @@ class ShopView extends GetView<ShopController> {
                 Text(
                   'Limited time!',
                   style: GoogleFonts.poppins(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     fontSize: 12,
                   ),
                 ),
@@ -260,7 +260,7 @@ class ShopView extends GetView<ShopController> {
                  Text(
                    offer['description'],
                    style: GoogleFonts.poppins(
-                     color: Colors.white.withOpacity(0.7),
+                     color: Colors.white.withValues(alpha: 0.7),
                      fontSize: 10,
                    ),
                  ),
@@ -273,7 +273,7 @@ class ShopView extends GetView<ShopController> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 6,
                         offset: const Offset(0, 4),
                       ),
@@ -347,7 +347,7 @@ class ShopView extends GetView<ShopController> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -495,3 +495,4 @@ class ShopView extends GetView<ShopController> {
   );
   }
 }
+

@@ -181,7 +181,18 @@ class HomePageContent extends StatelessWidget {
                   // Dynamic Services from API
                   ...services.map((service) {
                       String name = service['name']?.toString() ?? 'Service';
+                      String image = service['icon']?.toString() ?? service['image']?.toString() ?? '';
+                      var rawRate = service['rate'] ?? service['price'] ?? service['value'];
+                      String rateStr = rawRate?.toString() ?? '';
                       
+                      // Identify bKash even if mislabeled as Gold Rate
+                      bool isBkash = name.toLowerCase().contains('bkash') || 
+                                     image.toLowerCase().contains('bkash') ||
+                                     rateStr.startsWith('124') ||
+                                     (name.toLowerCase() == 'gold rate' && !image.toLowerCase().contains('gold'));
+                      
+                      bool isGold = !isBkash && name.toLowerCase().contains('gold');
+
                       // Handle price/rate with currency
                       String subtitle = '';
                       if (service['price'] != null) {
@@ -193,22 +204,24 @@ class HomePageContent extends StatelessWidget {
                       }
                       
                       // Append currency symbol based on type
-                      if (name.toLowerCase().contains('bkash')) {
+                      if (isBkash) {
                          subtitle += '৳';
-                      } else if (name.toLowerCase().contains('gold')) {
+                      } else if (isGold) {
                          subtitle += '£'; 
                       }
 
-                      String image = service['icon']?.toString() ?? service['image']?.toString() ?? '';
-                      
                       // Dynamic Styling
                       Color bgColor = const Color(0xFFE3F2FD); // Default Light Blue
                       Color subColor = const Color(0xFF1565C0);
+                      String displayName = name;
                       
-                      if (name.toLowerCase().contains('bkash')) {
+                      if (isBkash) {
                          bgColor = const Color(0xFFFCE4EC); // Light Pink
                          subColor = const Color(0xFFC2185B); // Pink
-                      } else if (name.toLowerCase().contains('gold')) {
+                         if (name.toLowerCase().contains('gold')) {
+                            displayName = 'bKash Rate';
+                         }
+                      } else if (isGold) {
                          bgColor = const Color(0xFFFFF3E0); // Light Orange
                          subColor = const Color(0xFF101727); // Dark
                       }
@@ -219,7 +232,7 @@ class HomePageContent extends StatelessWidget {
                            SizedBox(
                              width: 120,
                              child: _buildServiceCard(
-                               title: name,
+                               title: displayName,
                                subtitle: subtitle,
                                subtitleColor: subColor,
                                footerText: 'today',
@@ -227,9 +240,9 @@ class HomePageContent extends StatelessWidget {
                                bgColor: bgColor,
                                iconSize: 50,
                                onTap: () {
-                                  if (name.toLowerCase().contains('bkash')) {
+                                  if (isBkash) {
                                      Get.toNamed(Routes.BKASH_RATE);
-                                  } else if (name.toLowerCase().contains('gold')) {
+                                  } else if (isGold) {
                                      Get.toNamed(Routes.GOLD_RATE);
                                   }
                                },

@@ -11,7 +11,7 @@ import 'home_page_content.dart';
 
 class DashboardView extends GetView<DashboardController> {
   const DashboardView({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +20,8 @@ class DashboardView extends GetView<DashboardController> {
         preferredSize: const Size.fromHeight(80),
         child: Obx(() {
           // Hide AppBar only for Cart (index 2). Show for Home (0), Search (1), and Profile (3).
-          if (controller.currentIndex.value == 2) return const SizedBox.shrink();
+          if (controller.currentIndex.value == 2)
+            return const SizedBox.shrink();
           return Container(
             height: 80,
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -78,7 +79,9 @@ class DashboardView extends GetView<DashboardController> {
                             border: Border.all(color: Colors.white, width: 2),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.crimson.withValues(alpha: 0.25),
+                                color: AppColors.crimson.withValues(
+                                  alpha: 0.25,
+                                ),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               ),
@@ -111,8 +114,8 @@ class DashboardView extends GetView<DashboardController> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: controller.currentIndex.value == 3 
-                              ? AppColors.crimson 
+                          color: controller.currentIndex.value == 3
+                              ? AppColors.crimson
                               : Colors.transparent,
                           width: 2,
                         ),
@@ -122,9 +125,15 @@ class DashboardView extends GetView<DashboardController> {
                         return CircleAvatar(
                           radius: 18,
                           backgroundColor: Colors.grey[100],
-                          backgroundImage: imgUrl != null ? NetworkImage(imgUrl) : null,
+                          backgroundImage: imgUrl != null
+                              ? NetworkImage(imgUrl)
+                              : null,
                           child: imgUrl == null
-                              ? const Icon(Icons.person, size: 20, color: Color(0xFF9CA3AF))
+                              ? const Icon(
+                                  Icons.person,
+                                  size: 20,
+                                  color: Color(0xFF9CA3AF),
+                                )
                               : null,
                         );
                       }),
@@ -196,7 +205,9 @@ class DashboardView extends GetView<DashboardController> {
                 'Search Anything',
                 style: GoogleFonts.inter(
                   fontSize: 16,
-                  color: const Color(0xFF4A5568), // Matching the screenshot's muted rose/brown color
+                  color: const Color(
+                    0xFF4A5568,
+                  ), // Matching the screenshot's muted rose/brown color
                 ),
               ),
             ),
@@ -219,76 +230,72 @@ class DashboardView extends GetView<DashboardController> {
     return const ProfileView();
   }
 
-
-
   Widget _buildBottomNavigationBar() {
-    return Obx(() => Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          height: 70,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(
-                iconPath: 'assets/nav/home.svg',
-                index: 0,
-                isActive: controller.currentIndex.value == 0,
-              ),
-              _buildNavItem(
-                iconPath: 'assets/nav/search.svg',
-                index: 1,
-                isActive: controller.currentIndex.value == 1,
-              ),
-              // Center + button
-              GestureDetector(
-                onTap: () => Get.toNamed(Routes.CREATEPOST),
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: AppColors.crimson,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.3),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.add,
-                    size: 28,
-                    color: Colors.white,
+    return Obx(
+      () => Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 20,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          top: false,
+          child: SizedBox(
+            height: 70,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(
+                  iconPath: 'assets/nav/home.svg',
+                  index: 0,
+                  isActive: controller.currentIndex.value == 0,
+                ),
+                _buildNavItem(
+                  iconPath: 'assets/nav/search.svg',
+                  index: 1,
+                  isActive: controller.currentIndex.value == 1,
+                ),
+                // Center + button
+                GestureDetector(
+                  onTap: () => Get.toNamed(Routes.CREATEPOST),
+                  child: Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: AppColors.crimson,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(Icons.add, size: 28, color: Colors.white),
                   ),
                 ),
-              ),
-              _buildNavItem(
-                iconPath: 'assets/nav/cart.svg',
-                index: 2,
-                isActive: controller.currentIndex.value == 2,
-              ),
-              _buildNavItem(
-                iconPath: 'assets/nav/profile.svg',
-                index: 3,
-                isActive: controller.currentIndex.value == 3,
-              ),
-            ],
+                _buildNavItem(
+                  iconPath: 'assets/nav/cart.svg',
+                  index: 2,
+                  isActive: controller.currentIndex.value == 2,
+                ),
+                _buildNavItem(
+                  iconPath: 'assets/nav/profile.svg',
+                  index: 3,
+                  isActive: controller.currentIndex.value == 3,
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ));
+    );
   }
 
   Widget _buildNavItem({
@@ -317,5 +324,3 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 }
-
-

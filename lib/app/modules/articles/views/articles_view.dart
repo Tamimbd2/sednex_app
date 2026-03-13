@@ -17,9 +17,7 @@ class ArticlesView extends GetView<ArticlesController> {
           // Red Header Section
           Container(
             padding: const EdgeInsets.fromLTRB(16, 40, 16, 20),
-            decoration: const BoxDecoration(
-              color: Color(0xFF1E63FF),
-            ),
+            decoration: const BoxDecoration(color: Color(0xFF1E63FF)),
             child: Column(
               children: [
                 Row(
@@ -70,7 +68,9 @@ class ArticlesView extends GetView<ArticlesController> {
               if (controller.isLoading.value) {
                 return const Center(
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Color(0xFF1E63FF),
+                    ),
                   ),
                 );
               }
@@ -86,7 +86,11 @@ class ArticlesView extends GetView<ArticlesController> {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.filter_list, size: 20, color: Colors.grey),
+                            const Icon(
+                              Icons.filter_list,
+                              size: 20,
+                              color: Colors.grey,
+                            ),
                             const SizedBox(width: 8),
                             Text(
                               'Categories',
@@ -106,46 +110,61 @@ class ArticlesView extends GetView<ArticlesController> {
                               color: Colors.grey[100],
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: const Icon(Icons.tune, size: 20, color: Color(0xFF1E63FF)),
+                            child: const Icon(
+                              Icons.tune,
+                              size: 20,
+                              color: Color(0xFF1E63FF),
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  
+
                   // Categories List (Horizontal) - Dynamic from API
                   SizedBox(
                     height: 36,
-                    child: Obx(() => ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: controller.categories.length,
-                      separatorBuilder: (context, index) => const SizedBox(width: 8),
-                      itemBuilder: (context, index) {
-                        final category = controller.categories[index];
-                        return Obx(() {
-                          final isSelected = controller.selectedCategory.value == category;
-                          return GestureDetector(
-                            onTap: () => controller.selectCategory(category),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: isSelected ? const Color(0xFF1E63FF) : Colors.grey[200],
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                category,
-                                style: GoogleFonts.inter(
-                                  color: isSelected ? Colors.white : Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
+                    child: Obx(
+                      () => ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: controller.categories.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(width: 8),
+                        itemBuilder: (context, index) {
+                          final category = controller.categories[index];
+                          return Obx(() {
+                            final isSelected =
+                                controller.selectedCategory.value == category;
+                            return GestureDetector(
+                              onTap: () => controller.selectCategory(category),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? const Color(0xFF1E63FF)
+                                      : Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  category,
+                                  style: GoogleFonts.inter(
+                                    color: isSelected
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        });
-                      },
-                    )),
+                            );
+                          });
+                        },
+                      ),
+                    ),
                   ),
 
                   const SizedBox(height: 16),
@@ -153,13 +172,17 @@ class ArticlesView extends GetView<ArticlesController> {
                   // Articles List
                   Expanded(
                     child: Obx(() {
-                      final isFilterMode = controller.selectedFilterCategories.isNotEmpty;
-                      
+                      final isFilterMode =
+                          controller.selectedFilterCategories.isNotEmpty;
+
                       final filteredArticles = controller.articles.where((a) {
                         if (isFilterMode) {
-                          return controller.selectedFilterCategories.contains(a.category);
+                          return controller.selectedFilterCategories.contains(
+                            a.category,
+                          );
                         }
-                        if (controller.selectedCategory.value == 'All') return true;
+                        if (controller.selectedCategory.value == 'All')
+                          return true;
                         return a.category == controller.selectedCategory.value;
                       }).toList();
 
@@ -168,7 +191,11 @@ class ArticlesView extends GetView<ArticlesController> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.article_outlined, size: 64, color: Colors.grey[300]),
+                              Icon(
+                                Icons.article_outlined,
+                                size: 64,
+                                color: Colors.grey[300],
+                              ),
                               const SizedBox(height: 16),
                               Text(
                                 'No articles found',
@@ -189,7 +216,8 @@ class ArticlesView extends GetView<ArticlesController> {
                         child: ListView.separated(
                           padding: const EdgeInsets.all(16),
                           itemCount: filteredArticles.length,
-                          separatorBuilder: (context, index) => const SizedBox(height: 16),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 16),
                           itemBuilder: (context, index) {
                             return _buildArticleCard(filteredArticles[index]);
                           },
@@ -266,38 +294,53 @@ class ArticlesView extends GetView<ArticlesController> {
                   child: Column(
                     children: controller.categories
                         .where((c) => c != 'All')
-                        .map((category) => Obx(() {
-                              final isSelected = controller.selectedFilterCategories.contains(category);
-                              return InkWell(
-                                onTap: () => controller.toggleFilterCategory(category),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 24,
-                                        height: 24,
-                                        decoration: BoxDecoration(
-                                          color: isSelected ? const Color(0xFFFF8A80) : const Color(0xFFFFCDD2), // Light red shades
-                                          borderRadius: BorderRadius.circular(4),
-                                        ),
-                                        child: isSelected
-                                            ? const Icon(Icons.check, size: 16, color: Colors.white)
-                                            : null,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Text(
-                                        category,
-                                        style: GoogleFonts.inter(
-                                          fontSize: 16,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                        .map(
+                          (category) => Obx(() {
+                            final isSelected = controller
+                                .selectedFilterCategories
+                                .contains(category);
+                            return InkWell(
+                              onTap: () =>
+                                  controller.toggleFilterCategory(category),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
                                 ),
-                              );
-                            }))
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? const Color(0xFFFF8A80)
+                                            : const Color(
+                                                0xFFFFCDD2,
+                                              ), // Light red shades
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: isSelected
+                                          ? const Icon(
+                                              Icons.check,
+                                              size: 16,
+                                              color: Colors.white,
+                                            )
+                                          : null,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      category,
+                                      style: GoogleFonts.inter(
+                                        fontSize: 16,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                        )
                         .toList(),
                   ),
                 ),
@@ -306,16 +349,22 @@ class ArticlesView extends GetView<ArticlesController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Obx(() => Text(
-                        '${controller.selectedFilterCategories.length} selected',
-                        style: GoogleFonts.inter(color: Colors.grey),
-                      )),
+                  Obx(
+                    () => Text(
+                      '${controller.selectedFilterCategories.length} selected',
+                      style: GoogleFonts.inter(color: Colors.grey),
+                    ),
+                  ),
                   ElevatedButton(
-                    onPressed: () => Get.back(), // Apply logic handled by Obx in view
+                    onPressed: () =>
+                        Get.back(), // Apply logic handled by Obx in view
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF1E63FF),
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -368,7 +417,9 @@ class ArticlesView extends GetView<ArticlesController> {
           children: [
             // Article Image
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
               child: SizedBox(
                 height: 160,
                 width: double.infinity,
@@ -379,7 +430,11 @@ class ArticlesView extends GetView<ArticlesController> {
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
                             color: Colors.grey[100],
-                            child: const Icon(Icons.image_not_supported, color: Colors.grey, size: 40),
+                            child: const Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey,
+                              size: 40,
+                            ),
                           );
                         },
                       )
@@ -389,13 +444,17 @@ class ArticlesView extends GetView<ArticlesController> {
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
                             color: Colors.grey[100],
-                            child: const Icon(Icons.image_not_supported, color: Colors.grey, size: 40),
+                            child: const Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey,
+                              size: 40,
+                            ),
                           );
                         },
                       ),
               ),
             ),
-            
+
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -403,7 +462,10 @@ class ArticlesView extends GetView<ArticlesController> {
                 children: [
                   // Category Badge
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFEBEE),
                       borderRadius: BorderRadius.circular(8),
@@ -418,7 +480,7 @@ class ArticlesView extends GetView<ArticlesController> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  
+
                   // Title
                   Text(
                     article.title,
@@ -430,7 +492,7 @@ class ArticlesView extends GetView<ArticlesController> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  
+
                   // Description
                   Text(
                     article.description,
@@ -443,7 +505,7 @@ class ArticlesView extends GetView<ArticlesController> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Save Button
                   Align(
                     alignment: Alignment.centerRight,
@@ -452,24 +514,35 @@ class ArticlesView extends GetView<ArticlesController> {
                       return GestureDetector(
                         onTap: () => controller.toggleSaved(article),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
-                            color: isSaved ? const Color(0xFF1E63FF) : Colors.grey[100],
+                            color: isSaved
+                                ? const Color(0xFF1E63FF)
+                                : Colors.grey[100],
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                isSaved ? Icons.bookmark : Icons.bookmark_outline,
+                                isSaved
+                                    ? Icons.bookmark
+                                    : Icons.bookmark_outline,
                                 size: 16,
-                                color: isSaved ? Colors.white : Colors.grey[600],
+                                color: isSaved
+                                    ? Colors.white
+                                    : Colors.grey[600],
                               ),
                               const SizedBox(width: 8),
                               Text(
                                 isSaved ? 'Saved' : 'Save',
                                 style: GoogleFonts.inter(
-                                  color: isSaved ? Colors.white : Colors.grey[600],
+                                  color: isSaved
+                                      ? Colors.white
+                                      : Colors.grey[600],
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -489,4 +562,3 @@ class ArticlesView extends GetView<ArticlesController> {
     );
   }
 }
-

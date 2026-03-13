@@ -17,7 +17,7 @@ class CommunityProfileDetailsView extends StatelessWidget {
     final image = (member['profileImage'] ?? '').toString();
 
     // Primary Crimson Color used in the app
-    const primaryColor = Color(0xFF1E63FF); 
+    const primaryColor = Color(0xFF1E63FF);
     const textColor = Color(0xFF1F2937);
     const subTextColor = Color(0xFF6B7280);
 
@@ -36,7 +36,11 @@ class CommunityProfileDetailsView extends StatelessWidget {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: textColor, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: textColor,
+            size: 20,
+          ),
           onPressed: () => Get.back(),
         ),
       ),
@@ -52,12 +56,17 @@ class CommunityProfileDetailsView extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: primaryColor.withValues(alpha: 0.1), width: 4),
+                      border: Border.all(
+                        color: primaryColor.withValues(alpha: 0.1),
+                        width: 4,
+                      ),
                     ),
                     child: CircleAvatar(
                       radius: 60,
                       backgroundColor: Colors.grey[100],
-                      backgroundImage: image.isNotEmpty ? NetworkImage(image) : null,
+                      backgroundImage: image.isNotEmpty
+                          ? NetworkImage(image)
+                          : null,
                       child: image.isEmpty
                           ? Text(
                               name.isNotEmpty ? name[0].toUpperCase() : '?',
@@ -109,13 +118,13 @@ class CommunityProfileDetailsView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            
+
             // Info Sections
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                   // About Section
+                  // About Section
                   _buildSectionHeader('Biography'),
                   const SizedBox(height: 12),
                   Container(
@@ -139,10 +148,25 @@ class CommunityProfileDetailsView extends StatelessWidget {
                   // Details List
                   _buildSectionHeader('Contact Information'),
                   const SizedBox(height: 12),
-                  _buildInfoTile(Icons.email_outlined, 'Email', email, primaryColor),
-                  _buildInfoTile(Icons.phone_outlined, 'Phone', phone, primaryColor),
-                  _buildInfoTile(Icons.location_on_outlined, 'Country', country, primaryColor),
-                  
+                  _buildInfoTile(
+                    Icons.email_outlined,
+                    'Email',
+                    email,
+                    primaryColor,
+                  ),
+                  _buildInfoTile(
+                    Icons.phone_outlined,
+                    'Phone',
+                    phone,
+                    primaryColor,
+                  ),
+                  _buildInfoTile(
+                    Icons.location_on_outlined,
+                    'Country',
+                    country,
+                    primaryColor,
+                  ),
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -167,7 +191,12 @@ class CommunityProfileDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoTile(IconData icon, String label, String value, Color iconColor) {
+  Widget _buildInfoTile(
+    IconData icon,
+    String label,
+    String value,
+    Color iconColor,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -209,4 +238,3 @@ class CommunityProfileDetailsView extends StatelessWidget {
     );
   }
 }
-

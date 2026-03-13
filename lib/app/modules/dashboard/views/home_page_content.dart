@@ -13,11 +13,12 @@ import '../../../core/theme/app_colors.dart';
 class HomePageContent extends StatelessWidget {
   const HomePageContent({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     // Ensure controller is available
-    final CommunityFeedController feedController = Get.put(CommunityFeedController());
+    final CommunityFeedController feedController = Get.put(
+      CommunityFeedController(),
+    );
 
     return SingleChildScrollView(
       child: Column(
@@ -32,11 +33,11 @@ class HomePageContent extends StatelessWidget {
             child: Obx(() {
               final controller = Get.find<DashboardController>();
               final text = controller.marqueeText.value;
-              
+
               if (text.isEmpty) return const SizedBox();
 
               return Marquee(
-                text: text, 
+                text: text,
                 style: GoogleFonts.inter(
                   color: Colors.black,
                   fontSize: 14,
@@ -58,61 +59,72 @@ class HomePageContent extends StatelessWidget {
 
           // Hero Banner Frame
           Obx(() {
-             final controller = Get.find<DashboardController>();
-             final banners = controller.bannerList;
-             
-             if (banners.isEmpty) return const SizedBox.shrink();
+            final controller = Get.find<DashboardController>();
+            final banners = controller.bannerList;
 
-             return Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: SizedBox(
-                   height: 150,
-                   child: Stack(
-                     children: [
-                       PageView.builder(
-                         controller: controller.bannerPageController,
-                         onPageChanged: (index) => controller.currentBannerIndex.value = index,
-                         itemCount: banners.length,
-                         itemBuilder: (context, index) {
-                           return Container(
-                             margin: const EdgeInsets.symmetric(horizontal: 0),
-                             decoration: BoxDecoration(
-                               borderRadius: BorderRadius.circular(16),
-                               image: DecorationImage(
-                                 image: NetworkImage(banners[index]),
-                                 fit: BoxFit.cover,
-                               ),
-                             ),
-                           );
-                         },
-                       ),
-                       // Indicators
-                       if (banners.length > 1)
-                         Positioned(
-                           bottom: 10,
-                           left: 0, 
-                           right: 0,
-                           child: Obx(() => Row(
-                             mainAxisAlignment: MainAxisAlignment.center,
-                             children: List.generate(banners.length, (index) {
-                                 final isActive = controller.currentBannerIndex.value == index;
-                                 return AnimatedContainer(
-                                   duration: const Duration(milliseconds: 300),
-                                   margin: const EdgeInsets.symmetric(horizontal: 4),
-                                   width: isActive ? 20 : 8,
-                                   height: 8,
-                                   decoration: BoxDecoration(
-                                     color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.5),
-                                     borderRadius: BorderRadius.circular(4),
-                                   ),
-                                 );
-                             }),
-                           )),
-                         ),
-                     ],
-                   ),
+            if (banners.isEmpty) return const SizedBox.shrink();
+
+            return Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: SizedBox(
+                height: 150,
+                child: Stack(
+                  children: [
+                    PageView.builder(
+                      controller: controller.bannerPageController,
+                      onPageChanged: (index) =>
+                          controller.currentBannerIndex.value = index,
+                      itemCount: 10000,
+                      itemBuilder: (context, index) {
+                        final actualIndex = index % banners.length;
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            image: DecorationImage(
+                              image: NetworkImage(banners[actualIndex]),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    // Indicators
+                    if (banners.length > 1)
+                      Positioned(
+                        bottom: 10,
+                        left: 0,
+                        right: 0,
+                        child: Obx(
+                          () => Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(banners.length, (index) {
+                              final isActive =
+                                  (controller.currentBannerIndex.value %
+                                      banners.length) ==
+                                  index;
+                              return AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
+                                width: isActive ? 20 : 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: isActive
+                                      ? Colors.white
+                                      : Colors.white.withValues(alpha: 0.5),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-             );
+              ),
+            );
           }),
 
           // Information & Services Header
@@ -129,132 +141,130 @@ class HomePageContent extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFF101727))
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Color(0xFF101727),
+                ),
               ],
             ),
           ),
 
           const SizedBox(height: 12),
 
-          // Service Cards Row (Scrollable)
-          SizedBox(
-            height: 170, // Reduced from 200 as requested
-            child: Obx(() {
-               final dController = Get.find<DashboardController>();
-               final services = dController.servicesList;
-               
-               return ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  // Sehri & Iftar Card
-                  _buildSehriIftarCompactCard(),
-                  const SizedBox(width: 12),
-                  
-                  // Fazar Card (Mosque)
-                  SizedBox(
-                    width: 120,
-                    child: Obx(() {
-                      NamajController? controller;
-                      try {
-                        controller = Get.find<NamajController>();
-                      } catch (e) {
-                        // NamajController not yet registered; use default values
-                      }
-                      
-                      final nextPrayer = controller?.nextPrayerDisplay ?? {'name': 'Fazar', 'time': '05:45 AM'};
-                      
-                      return _buildServiceCard(
-                        title: nextPrayer['name']!,
-                        subtitle: nextPrayer['time']!,
-                        subtitleColor: const Color(0xFF2E7D32), // Green
-                        footerText: 'today',
-                        imagePath: 'assets/logo/mosque.png',
-                        bgColor: const Color(0xFFE0F2F1), // Light Teal
-                        iconSize: 60,
-                        onTap: () => Get.toNamed('/namaj'),
+          // Information & Services Carousel
+          Column(
+            children: [
+              SizedBox(
+                height: 170,
+                child: Obx(() {
+                  final dController = Get.find<DashboardController>();
+                  final services = dController.servicesList;
+
+                  // Construct static + dynamic items
+                  final List<Widget> items = [
+                    _buildSehriIftarCompactCard(),
+
+                    // Namaj Card
+                    SizedBox(
+                      width: 120,
+                      child: Obx(() {
+                        NamajController? controller;
+                        try {
+                          controller = Get.find<NamajController>();
+                        } catch (e) {}
+                        final nextPrayer =
+                            controller?.nextPrayerDisplay ??
+                            {'name': 'Fazar', 'time': '05:45 AM'};
+                        return _buildServiceCard(
+                          title: nextPrayer['name']!,
+                          subtitle: nextPrayer['time']!,
+                          subtitleColor: const Color(0xFF2E7D32),
+                          footerText: 'today',
+                          imagePath: 'assets/logo/mosque.png',
+                          bgColor: const Color(0xFFE0F2F1),
+                          iconSize: 60,
+                          onTap: () => Get.toNamed('/namaj'),
+                        );
+                      }),
+                    ),
+
+                    ...services.map((service) {
+                      String name = service['name']?.toString() ?? 'Service';
+                      String image =
+                          service['icon']?.toString() ??
+                          service['image']?.toString() ??
+                          '';
+                      var rawRate =
+                          service['rate'] ??
+                          service['price'] ??
+                          service['value'];
+                      String rateStr = rawRate?.toString() ?? '';
+                      bool isBkash =
+                          name.toLowerCase().contains('bkash') ||
+                          image.toLowerCase().contains('bkash') ||
+                          rateStr.startsWith('124') ||
+                          (name.toLowerCase() == 'gold rate' &&
+                              !image.toLowerCase().contains('gold'));
+                      bool isGold =
+                          !isBkash && name.toLowerCase().contains('gold');
+                      String subtitle =
+                          (service['price'] ??
+                                  service['rate'] ??
+                                  service['value'] ??
+                                  '0')
+                              .toString();
+                      if (isBkash)
+                        subtitle += '৳';
+                      else if (isGold)
+                        subtitle += '£';
+                      Color bgColor = isBkash
+                          ? const Color(0xFFFCE4EC)
+                          : (isGold
+                                ? const Color(0xFFFFF3E0)
+                                : const Color(0xFFE3F2FD));
+                      Color subColor = isBkash
+                          ? const Color(0xFFC2185B)
+                          : (isGold
+                                ? const Color(0xFF101727)
+                                : const Color(0xFF1565C0));
+                      String displayName =
+                          isBkash && name.toLowerCase().contains('gold')
+                          ? 'bKash Rate'
+                          : name;
+                      return SizedBox(
+                        width: 120,
+                        child: _buildServiceCard(
+                          title: displayName,
+                          subtitle: subtitle,
+                          subtitleColor: subColor,
+                          footerText: 'today',
+                          imagePath: image,
+                          bgColor: bgColor,
+                          iconSize: 50,
+                          onTap: () => Get.toNamed(
+                            isBkash ? Routes.BKASH_RATE : Routes.GOLD_RATE,
+                          ),
+                        ),
                       );
                     }),
-                  ),
-                  const SizedBox(width: 12),
-                  
-                  // Dynamic Services from API
-                  ...services.map((service) {
-                      String name = service['name']?.toString() ?? 'Service';
-                      String image = service['icon']?.toString() ?? service['image']?.toString() ?? '';
-                      var rawRate = service['rate'] ?? service['price'] ?? service['value'];
-                      String rateStr = rawRate?.toString() ?? '';
-                      
-                      // Identify bKash even if mislabeled as Gold Rate
-                      bool isBkash = name.toLowerCase().contains('bkash') || 
-                                     image.toLowerCase().contains('bkash') ||
-                                     rateStr.startsWith('124') ||
-                                     (name.toLowerCase() == 'gold rate' && !image.toLowerCase().contains('gold'));
-                      
-                      bool isGold = !isBkash && name.toLowerCase().contains('gold');
+                  ];
 
-                      // Handle price/rate with currency
-                      String subtitle = '';
-                      if (service['price'] != null) {
-                         subtitle = '${service['price']}';
-                      } else if (service['rate'] != null) {
-                         subtitle = '${service['rate']}';
-                      } else {
-                         subtitle = service['value']?.toString() ?? '0';
-                      }
-                      
-                      // Append currency symbol based on type
-                      if (isBkash) {
-                         subtitle += '৳';
-                      } else if (isGold) {
-                         subtitle += '£'; 
-                      }
-
-                      // Dynamic Styling
-                      Color bgColor = const Color(0xFFE3F2FD); // Default Light Blue
-                      Color subColor = const Color(0xFF1565C0);
-                      String displayName = name;
-                      
-                      if (isBkash) {
-                         bgColor = const Color(0xFFFCE4EC); // Light Pink
-                         subColor = const Color(0xFFC2185B); // Pink
-                         if (name.toLowerCase().contains('gold')) {
-                            displayName = 'bKash Rate';
-                         }
-                      } else if (isGold) {
-                         bgColor = const Color(0xFFFFF3E0); // Light Orange
-                         subColor = const Color(0xFF101727); // Dark
-                      }
-
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                           SizedBox(
-                             width: 120,
-                             child: _buildServiceCard(
-                               title: displayName,
-                               subtitle: subtitle,
-                               subtitleColor: subColor,
-                               footerText: 'today',
-                               imagePath: image,
-                               bgColor: bgColor,
-                               iconSize: 50,
-                               onTap: () {
-                                  if (isBkash) {
-                                     Get.toNamed(Routes.BKASH_RATE);
-                                  } else if (isGold) {
-                                     Get.toNamed(Routes.GOLD_RATE);
-                                  }
-                               },
-                             ),
-                           ),
-                           const SizedBox(width: 12),
-                        ],
-                      );
-                  }),
-                ],
-              );
-            }),
+                  return ListView.separated(
+                    controller: dController.infoScrollController,
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: 10000,
+                    separatorBuilder: (_, __) => const SizedBox(width: 12),
+                    itemBuilder: (context, index) {
+                      if (items.isEmpty) return const SizedBox();
+                      return items[index % items.length];
+                    },
+                  );
+                }),
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           // Essential Services Header
@@ -288,51 +298,61 @@ class HomePageContent extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // Essential Services Horizontal List
+          // Essential Services Carousel
           SizedBox(
-            height: 110, // Height for icon + text
-            child: ListView(
+            height: 120,
+            child: ListView.separated(
+              controller:
+                  Get.find<DashboardController>().essentialScrollController,
               scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                _buildEssentialServiceItem(
-                  'Informations',
-                  'assets/essentialService/informations.png',
-                  const Color(0xFF4169E1),
-                  () => Get.toNamed('/informations'),
-                ),
-                const SizedBox(width: 16),
-                _buildEssentialServiceItem(
-                  'Embassy',
-                  'assets/essentialService/embassy.png',
-                  AppColors.primary,
-                  () => Get.toNamed('/embassy'),
-                ),
-                const SizedBox(width: 16),
-                _buildEssentialServiceItem(
-                  'Article',
-                  'assets/essentialService/article.png',
-                  const Color(0xFFFFD700),
-                  () => Get.toNamed('/articles'),
-                ),
-                const SizedBox(width: 16),
-                _buildEssentialServiceItem(
-                  'Basic Goods',
-                  'assets/essentialService/basicgoods.png',
-                  const Color(0xFF20B2AA),
-                  () => Get.toNamed('/basicgoods'),
-                ),
-                const SizedBox(width: 16),
-                _buildEssentialServiceItem(
-                  'Community',
-                  'assets/essentialService/community.png',
-                  const Color(0xFF4169E1),
-                  () => Get.toNamed('/community'),
-                ),
-              ],
+              itemCount: 10000,
+              separatorBuilder: (_, __) => const SizedBox(width: 16),
+              itemBuilder: (context, index) {
+                final services = [
+                  {
+                    'title': 'Informations',
+                    'icon': 'assets/essentialService/informations.png',
+                    'color': const Color(0xFF4169E1),
+                    'route': '/informations',
+                  },
+                  {
+                    'title': 'Embassy',
+                    'icon': 'assets/essentialService/embassy.png',
+                    'color': AppColors.primary,
+                    'route': '/embassy',
+                  },
+                  {
+                    'title': 'Article',
+                    'icon': 'assets/essentialService/article.png',
+                    'color': const Color(0xFFFFD700),
+                    'route': '/articles',
+                  },
+                  {
+                    'title': 'Basic Goods',
+                    'icon': 'assets/essentialService/basicgoods.png',
+                    'color': const Color(0xFF20B2AA),
+                    'route': '/basicgoods',
+                  },
+                  {
+                    'title': 'Community',
+                    'icon': 'assets/essentialService/community.png',
+                    'color': const Color(0xFF4169E1),
+                    'route': '/community',
+                  },
+                ];
+                final item = services[index % services.length];
+                return _buildEssentialServiceItem(
+                  item['title'] as String,
+                  item['icon'] as String,
+                  item['color'] as Color,
+                  () => Get.toNamed(item['route'] as String),
+                );
+              },
             ),
           ),
-          
+
           // Community Feed Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -361,9 +381,9 @@ class HomePageContent extends StatelessWidget {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Community Feeds List
           Obx(() {
             if (feedController.posts.isEmpty) {
@@ -372,10 +392,10 @@ class HomePageContent extends StatelessWidget {
                 child: Center(child: Text('No posts available')),
               );
             }
-            
+
             // Show only first 3 posts
             final displayPosts = feedController.posts.take(3).toList();
-            
+
             return ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -393,7 +413,7 @@ class HomePageContent extends StatelessWidget {
               },
             );
           }),
-          
+
           const SizedBox(height: 24),
         ],
       ),
@@ -430,11 +450,8 @@ class HomePageContent extends StatelessWidget {
                 width: 36,
                 height: 36,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => const Icon(
-                  Icons.image,
-                  color: Colors.white,
-                  size: 32,
-                ),
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.image, color: Colors.white, size: 32),
               ),
             ),
           ),
@@ -473,20 +490,27 @@ class HomePageContent extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             if (imagePath.startsWith('http'))
               Image.network(
                 imagePath,
                 height: iconSize,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, size: iconSize, color: Colors.grey),
+                errorBuilder: (context, error, stackTrace) => Icon(
+                  Icons.broken_image,
+                  size: iconSize,
+                  color: Colors.grey,
+                ),
               )
             else
               Image.asset(
                 imagePath,
                 height: iconSize,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => Icon(Icons.image_not_supported, size: iconSize, color: Colors.grey),
+                errorBuilder: (context, error, stackTrace) => Icon(
+                  Icons.image_not_supported,
+                  size: iconSize,
+                  color: Colors.grey,
+                ),
               ),
             const SizedBox(height: 12),
             Text(
@@ -513,7 +537,11 @@ class HomePageContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.access_time, size: 12, color: AppColors.primary),
+                const Icon(
+                  Icons.access_time,
+                  size: 12,
+                  color: AppColors.primary,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   footerText,
@@ -535,8 +563,8 @@ class HomePageContent extends StatelessWidget {
     return GestureDetector(
       onTap: () => Get.toNamed(Routes.RAMADANCALANDER),
       child: Container(
-        width: 120, 
-        height: 170, 
+        width: 120,
+        height: 170,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: const Color(0xFFD4F3D8),
@@ -549,141 +577,180 @@ class HomePageContent extends StatelessWidget {
           } catch (e) {
             // RamadancalanderController not yet registered; use default values
           }
-          
-          final data = rController?.todayRamadanData ?? {
-            'date': '18 Feb',
-            'seheri': '04:55 AM',
-            'iftar': '5:26 PM',
-            'location': 'Beirut'
-          };
-          
+
+          final data =
+              rController?.todayRamadanData ??
+              {
+                'date': '18 Feb',
+                'seheri': '04:55 AM',
+                'iftar': '5:26 PM',
+                'location': 'Beirut',
+              };
+
           return Column(
-          children: [
-          // Date and Location Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.history, size: 8, color: Colors.black),
-                    const SizedBox(width: 2),
-                    Text(
-                      data['date']!.split(' 2026')[0], // Shorten date if needed
-                      style: GoogleFonts.poppins(fontSize: 7, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                 decoration: BoxDecoration(
-                   color: Colors.white,
-                   borderRadius: BorderRadius.circular(8),
-                 ),
-                 child: Row(
-                   children: [
-                     const Icon(Icons.location_on_outlined, size: 8, color: Colors.black),
-                     const SizedBox(width: 2),
-                     Text(
-                       data['location']!,
-                       style: GoogleFonts.poppins(fontSize: 7, fontWeight: FontWeight.w500),
-                     ),
-                   ],
-                 ),
-               ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          // Sehri Card
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              // Date and Location Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.center,
-                     children: [
-                       Image.asset('assets/images/sheheri.png', width: 22, height: 22, errorBuilder: (_, _, _) => const Icon(Icons.wb_sunny_outlined, size: 14)),
-                       const SizedBox(width: 4),
-                       Text(
-                         'Seheri',
-                         style: GoogleFonts.poppins(
-                           fontSize: 10,
-                           fontWeight: FontWeight.w600,
-                           color: Colors.black87,
-                         ),
-                       ),
-                     ],
-                   ),
-                   const SizedBox(height: 2),
-                   Text(
-                     data['seheri']!,
-                     style: GoogleFonts.poppins(
-                       fontSize: 13,
-                       fontWeight: FontWeight.bold,
-                       color: const Color(0xFF2E7D32),
-                     ),
-                   ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.history, size: 8, color: Colors.black),
+                        const SizedBox(width: 2),
+                        Text(
+                          data['date']!.split(
+                            ' 2026',
+                          )[0], // Shorten date if needed
+                          style: GoogleFonts.poppins(
+                            fontSize: 7,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on_outlined,
+                          size: 8,
+                          color: Colors.black,
+                        ),
+                        const SizedBox(width: 2),
+                        Text(
+                          data['location']!,
+                          style: GoogleFonts.poppins(
+                            fontSize: 7,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          // Iftar Card
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+              const SizedBox(height: 6),
+              // Sehri Card
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/sheheri.png',
+                            width: 22,
+                            height: 22,
+                            errorBuilder: (_, _, _) =>
+                                const Icon(Icons.wb_sunny_outlined, size: 14),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Seheri',
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        data['seheri']!,
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF2E7D32),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              child: Column(
-                 mainAxisAlignment: MainAxisAlignment.center,
-                 children: [
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.center,
-                     children: [
-                       Image.asset('assets/images/ifter.png', width: 22, height: 22, errorBuilder: (_, _, _) => const Icon(Icons.nights_stay_outlined, size: 14)),
-                       const SizedBox(width: 4),
-                       Text(
-                         'Ifter',
-                         style: GoogleFonts.poppins(
-                           fontSize: 10,
-                           fontWeight: FontWeight.w600,
-                           color: Colors.black87,
-                         ),
-                       ),
-                     ],
-                   ),
-                   const SizedBox(height: 2),
-                   Text(
-                     data['iftar']!,
-                     style: GoogleFonts.poppins(
-                       fontSize: 13,
-                       fontWeight: FontWeight.bold,
-                       color: const Color(0xFF2E7D32),
-                     ),
-                   ),
-                ],
+              const SizedBox(height: 8),
+              // Iftar Card
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/ifter.png',
+                            width: 22,
+                            height: 22,
+                            errorBuilder: (_, _, _) => const Icon(
+                              Icons.nights_stay_outlined,
+                              size: 14,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Ifter',
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        data['iftar']!,
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF2E7D32),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
-      );
-      }),
-    ),
+            ],
+          );
+        }),
+      ),
     );
   }
 }
-

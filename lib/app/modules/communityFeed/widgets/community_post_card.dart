@@ -81,21 +81,27 @@ class CommunityPostCard extends StatelessWidget {
               _buildMoreOptionsButton(context),
             ],
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // Content
           Obx(() {
             final isExpanded = controller.expandedPosts.contains(index);
             final content = post['content'] ?? '';
-            
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   content,
-                  maxLines: isExpanded || isDashboard ? (isDashboard ? 3 : null) : 5,
-                  overflow: isExpanded || isDashboard ? (isDashboard ? TextOverflow.ellipsis : TextOverflow.visible) : TextOverflow.ellipsis,
+                  maxLines: isExpanded || isDashboard
+                      ? (isDashboard ? 3 : null)
+                      : 5,
+                  overflow: isExpanded || isDashboard
+                      ? (isDashboard
+                            ? TextOverflow.ellipsis
+                            : TextOverflow.visible)
+                      : TextOverflow.ellipsis,
                   style: GoogleFonts.poppins(
                     color: const Color(0xFF354152),
                     fontSize: 14,
@@ -151,7 +157,7 @@ class CommunityPostCard extends StatelessWidget {
             ),
 
           const SizedBox(height: 4),
-          
+
           // Footer
           Row(
             children: [
@@ -160,19 +166,26 @@ class CommunityPostCard extends StatelessWidget {
                 onTap: () => controller.toggleLike(index),
                 child: Container(
                   color: Colors.transparent,
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 4,
+                  ),
                   child: Row(
                     children: [
                       Icon(
                         Icons.favorite,
                         size: 24,
-                        color: post['isLiked'] ?? false ? const Color(0xFF1E63FF) : Colors.grey[400], 
+                        color: post['isLiked'] ?? false
+                            ? const Color(0xFF1E63FF)
+                            : Colors.grey[400],
                       ),
                       const SizedBox(width: 6),
                       Text(
                         '${post['likes'] ?? 0}',
                         style: GoogleFonts.poppins(
-                          color: post['isLiked'] ?? false ? const Color(0xFF1E63FF) : Colors.grey[600],
+                          color: post['isLiked'] ?? false
+                              ? const Color(0xFF1E63FF)
+                              : Colors.grey[600],
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -182,20 +195,26 @@ class CommunityPostCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              
+
               // Comment
               GestureDetector(
                 onTap: () => _showCommentsBottomSheet(context),
                 child: Container(
                   color: Colors.transparent,
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 4,
+                  ),
                   child: Row(
                     children: [
                       SvgPicture.asset(
                         'assets/post/comment.svg',
-                        width: 22, 
+                        width: 22,
                         height: 22,
-                        colorFilter: const ColorFilter.mode(Color(0xFF495565), BlendMode.srcIn),
+                        colorFilter: const ColorFilter.mode(
+                          Color(0xFF495565),
+                          BlendMode.srcIn,
+                        ),
                       ),
                       const SizedBox(width: 6),
                       Text(
@@ -210,7 +229,7 @@ class CommunityPostCard extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               const Spacer(),
 
               // Speaker
@@ -266,7 +285,8 @@ class CommunityPostCard extends StatelessWidget {
   }
 
   Widget _buildMoreOptionsButton(BuildContext context) {
-    bool isOwnPost = controller.userId != null && post['authorId'] == controller.userId;
+    bool isOwnPost =
+        controller.userId != null && post['authorId'] == controller.userId;
 
     return GestureDetector(
       onTap: () {
@@ -362,7 +382,7 @@ class CommunityPostCard extends StatelessWidget {
             )
           else if (icon != null)
             Icon(icon, size: 24, color: color),
-          
+
           const SizedBox(width: 16),
           Text(
             label,
@@ -378,11 +398,16 @@ class CommunityPostCard extends StatelessWidget {
   }
 
   void _showEditPostDialog() {
-    final TextEditingController editController = TextEditingController(text: post['content']);
+    final TextEditingController editController = TextEditingController(
+      text: post['content'],
+    );
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Edit Post', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+        title: Text(
+          'Edit Post',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
         content: TextField(
           controller: editController,
           maxLines: 5,
@@ -429,10 +454,11 @@ class CommunityPostCard extends StatelessWidget {
   void _showCommentsBottomSheet(BuildContext context) {
     TextEditingController commentController = TextEditingController();
     controller.fetchComments(index); // Trigger fetch when opened
-    
+
     Get.bottomSheet(
       Container(
-        height: MediaQuery.of(context).size.height * 0.75, // Take up 75% of screen
+        height:
+            MediaQuery.of(context).size.height * 0.75, // Take up 75% of screen
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -452,35 +478,37 @@ class CommunityPostCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            
+
             // Header
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Obx(() => Text(
-                'Comments (${controller.posts[index]["comments"]})',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF101727),
+              child: Obx(
+                () => Text(
+                  'Comments (${controller.posts[index]["comments"]})',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF101727),
+                  ),
                 ),
-              )),
+              ),
             ),
-            
+
             const Divider(height: 1),
-            
+
             // Comments List
             Expanded(
               child: Obx(() {
                 if (controller.isLoadingComments.value) {
                   return const Center(
-                    child: CircularProgressIndicator(
-                      color: Color(0xFF1E63FF),
-                    ),
+                    child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
                   );
                 }
 
-                final comments = controller.posts[index]["commentsList"] as List<dynamic>? ?? [];
-                
+                final comments =
+                    controller.posts[index]["commentsList"] as List<dynamic>? ??
+                    [];
+
                 if (comments.isEmpty) {
                   return Center(
                     child: Text(
@@ -489,7 +517,7 @@ class CommunityPostCard extends StatelessWidget {
                     ),
                   );
                 }
-                
+
                 return ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: comments.length,
@@ -538,7 +566,10 @@ class CommunityPostCard extends StatelessWidget {
                               const SizedBox(height: 6),
                               GestureDetector(
                                 onTap: () {
-                                  controller.setReplyTarget(comment['_id'], comment['name']);
+                                  controller.setReplyTarget(
+                                    comment['_id'],
+                                    comment['name'],
+                                  );
                                 },
                                 child: Text(
                                   'Reply',
@@ -558,12 +589,16 @@ class CommunityPostCard extends StatelessWidget {
                 );
               }),
             ),
-            
+
             // Reply Target Indicator
             Obx(() {
-              if (controller.replyTargetCommentId.value == null) return const SizedBox.shrink();
+              if (controller.replyTargetCommentId.value == null)
+                return const SizedBox.shrink();
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 color: Colors.grey[100],
                 child: Row(
                   children: [
@@ -579,7 +614,11 @@ class CommunityPostCard extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () => controller.clearReplyTarget(),
-                      child: const Icon(Icons.close, size: 16, color: Colors.grey),
+                      child: const Icon(
+                        Icons.close,
+                        size: 16,
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
                 ),
@@ -603,28 +642,31 @@ class CommunityPostCard extends StatelessWidget {
                           color: const Color(0xFFF9FAFB),
                           borderRadius: BorderRadius.circular(24),
                         ),
-                        child: Obx(() => TextField(
-                          controller: commentController,
-                          decoration: InputDecoration(
-                            hintText: controller.replyTargetCommentId.value != null 
-                              ? 'Write a reply...' 
-                              : 'Add a comment...',
-                            hintStyle: GoogleFonts.poppins(
-                              color: const Color(0xFF9CA3AF),
-                              fontSize: 14,
+                        child: Obx(
+                          () => TextField(
+                            controller: commentController,
+                            decoration: InputDecoration(
+                              hintText:
+                                  controller.replyTargetCommentId.value != null
+                                  ? 'Write a reply...'
+                                  : 'Add a comment...',
+                              hintStyle: GoogleFonts.poppins(
+                                color: const Color(0xFF9CA3AF),
+                                fontSize: 14,
+                              ),
+                              border: InputBorder.none,
                             ),
-                            border: InputBorder.none,
                           ),
-                        )),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
                     GestureDetector(
                       onTap: () {
-                         if (commentController.text.isNotEmpty) {
-                            controller.addComment(index, commentController.text);
-                            commentController.clear();
-                         }
+                        if (commentController.text.isNotEmpty) {
+                          controller.addComment(index, commentController.text);
+                          commentController.clear();
+                        }
                       },
                       child: Container(
                         width: 40,
@@ -633,7 +675,11 @@ class CommunityPostCard extends StatelessWidget {
                           color: AppColors.primary,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
+                        child: const Icon(
+                          Icons.send_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                       ),
                     ),
                   ],
@@ -694,43 +740,43 @@ class CommunityPostCard extends StatelessWidget {
           Expanded(
             child: Row(
               children: [
-                 Expanded(child: _buildImage(images[0], images, 0)),
-                 const SizedBox(width: 4),
-                 Expanded(child: _buildImage(images[1], images, 1)),
+                Expanded(child: _buildImage(images[0], images, 0)),
+                const SizedBox(width: 4),
+                Expanded(child: _buildImage(images[1], images, 1)),
               ],
             ),
           ),
           const SizedBox(height: 4),
-           Expanded(
+          Expanded(
             child: Row(
               children: [
-                 Expanded(child: _buildImage(images[2], images, 2)),
-                 const SizedBox(width: 4),
-                 Expanded(
-                   child: count > 4 
-                     ? Stack(
-                         fit: StackFit.expand,
-                         children: [
-                           _buildImage(images[3], images, 3),
-                           GestureDetector(
-                             onTap: () => _openFullScreenImage(images, 3),
-                             child: Container(
-                               color: Colors.black54,
-                               alignment: Alignment.center,
-                               child: Text(
-                                 "+${count - 4}",
-                                 style: GoogleFonts.poppins(
-                                   color: Colors.white,
-                                   fontSize: 24,
-                                   fontWeight: FontWeight.w600,
-                                 ),
-                               ),
-                             ),
-                           )
-                         ],
-                       )
-                     : _buildImage(images[3], images, 3),
-                 ),
+                Expanded(child: _buildImage(images[2], images, 2)),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: count > 4
+                      ? Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            _buildImage(images[3], images, 3),
+                            GestureDetector(
+                              onTap: () => _openFullScreenImage(images, 3),
+                              child: Container(
+                                color: Colors.black54,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "+${count - 4}",
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : _buildImage(images[3], images, 3),
+                ),
               ],
             ),
           ),
@@ -759,10 +805,12 @@ class CommunityPostCard extends StatelessWidget {
           if (loadingProgress == null) return child;
           return Center(
             child: CircularProgressIndicator(
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                Color(0xFF1E63FF),
+              ),
               value: loadingProgress.expectedTotalBytes != null
                   ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!
+                        loadingProgress.expectedTotalBytes!
                   : null,
             ),
           );
@@ -788,8 +836,10 @@ class FullScreenImageViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PageController pageController = PageController(initialPage: initialIndex);
-    
+    final PageController pageController = PageController(
+      initialPage: initialIndex,
+    );
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -813,7 +863,9 @@ class FullScreenImageViewer extends StatelessWidget {
                       if (loadingProgress == null) return child;
                       return const Center(
                         child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Color(0xFF1E63FF),
+                          ),
                         ),
                       );
                     },
@@ -852,4 +904,3 @@ class FullScreenImageViewer extends StatelessWidget {
     );
   }
 }
-

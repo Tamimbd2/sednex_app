@@ -19,7 +19,7 @@ class ResetpasswordController extends GetxController {
         'Success',
         'Password reset successfully',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withOpacity(0.1),
+        backgroundColor: Colors.green.withValues(alpha: 0.1),
         colorText: Colors.green,
       );
       Get.offAllNamed(Routes.SIGNIN);

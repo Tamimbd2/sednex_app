@@ -52,7 +52,7 @@ class CommunityProfileDetailsView extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: primaryColor.withOpacity(0.1), width: 4),
+                      border: Border.all(color: primaryColor.withValues(alpha: 0.1), width: 4),
                     ),
                     child: CircleAvatar(
                       radius: 60,
@@ -175,7 +175,7 @@ class CommunityProfileDetailsView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.1),
+              color: iconColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: iconColor, size: 20),

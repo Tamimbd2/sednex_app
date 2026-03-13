@@ -54,7 +54,7 @@ class ArticlesController extends GetxController {
           try {
             body = jsonDecode(body);
           } catch (e) {
-            print('Articles JSON error: $e');
+            debugPrint('Articles JSON error: $e');
             return;
           }
         }
@@ -98,11 +98,11 @@ class ArticlesController extends GetxController {
           // Build categories list: "All" + unique categories from API
           categories.assignAll(['All', ...uniqueCategories.toList()..sort()]);
 
-          print('Articles loaded: ${mappedArticles.length}');
-          print('Categories found: ${uniqueCategories.toList()}');
+          debugPrint('Articles loaded: ${mappedArticles.length}');
+          debugPrint('Categories found: ${uniqueCategories.toList()}');
         }
       } else {
-        print('Failed to fetch articles: ${response.statusCode} ${response.statusText}');
+        debugPrint('Failed to fetch articles: ${response.statusCode} ${response.statusText}');
       }
     } catch (e) {
       debugPrint("Error fetching articles: $e");

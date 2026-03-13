@@ -53,7 +53,7 @@ class LocalTourDetailsView extends StatelessWidget {
               width: double.infinity,
               height: 250,
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.05),
+                color: AppColors.primary.withValues(alpha: 0.05),
               ),
               child: image.isNotEmpty
                   ? Image.network(
@@ -292,7 +292,7 @@ class LocalTourDetailsView extends StatelessWidget {
                             'Error',
                             'Could not open WhatsApp',
                             snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.red.withOpacity(0.1),
+                            backgroundColor: Colors.red.withValues(alpha: 0.1),
                             colorText: Colors.red,
                           );
                         }
@@ -337,7 +337,7 @@ class LocalTourDetailsView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -376,7 +376,7 @@ class LocalTourDetailsView extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: color, size: 18),
@@ -393,31 +393,5 @@ class LocalTourDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildRouteStop(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '• ',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: Colors.grey[700],
-            ),
-          ),
-          Expanded(
-            child: Text(
-              text,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                color: Colors.grey[700],
-                height: 1.4,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 }

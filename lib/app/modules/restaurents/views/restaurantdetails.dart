@@ -27,7 +27,6 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
   @override
   Widget build(BuildContext context) {
     final args = Get.arguments as Map<String, dynamic>? ?? {};
-    final String restaurantName = args['name'] ?? 'Restaurant';
     final String logoPath = args['logoPath'] ?? '';
 
     return Scaffold(
@@ -53,7 +52,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
                           child: IconButton(
@@ -142,7 +141,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.3),
+                                  color: Colors.black.withValues(alpha: 0.3),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Row(
@@ -291,7 +290,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: color, size: 24),
@@ -509,7 +508,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(Icons.restaurant_menu, color: color, size: 24),

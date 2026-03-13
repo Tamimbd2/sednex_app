@@ -219,7 +219,7 @@ class SignupView extends GetView<SignupController> {
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
             filled: true,
-            fillColor: AppColors.inputField.withOpacity(0.5),
+            fillColor: AppColors.inputField.withValues(alpha: 0.5),
             contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -320,12 +320,12 @@ class SignupView extends GetView<SignupController> {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 6,
               offset: const Offset(0, 4),
             ),

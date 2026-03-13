@@ -6,7 +6,7 @@ import 'communityprofiledetails.dart';
 
 class CommunityView extends GetView<CommunityController> {
   const CommunityView({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +33,10 @@ class CommunityView extends GetView<CommunityController> {
                     Row(
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
                           onPressed: () => Get.back(),
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
@@ -91,20 +94,18 @@ class CommunityView extends GetView<CommunityController> {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                Icon(
-                  Icons.people_outline,
-                  size: 18,
-                  color: Colors.grey[600],
-                ),
+                Icon(Icons.people_outline, size: 18, color: Colors.grey[600]),
                 const SizedBox(width: 8),
-                Obx(() => Text(
-                  '${controller.filteredMembers.length} members found',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w400,
+                Obx(
+                  () => Text(
+                    '${controller.filteredMembers.length} members found',
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                )),
+                ),
               ],
             ),
           ),
@@ -113,18 +114,20 @@ class CommunityView extends GetView<CommunityController> {
             child: Obx(() {
               if (controller.isLoading.value) {
                 return const Center(
-                  child: CircularProgressIndicator(
-                    color: Color(0xFF1E63FF),
-                  ),
+                  child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
                 );
               }
-              
+
               if (controller.filteredMembers.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.people_outline, size: 64, color: Colors.grey[300]),
+                      Icon(
+                        Icons.people_outline,
+                        size: 64,
+                        color: Colors.grey[300],
+                      ),
                       const SizedBox(height: 16),
                       Text(
                         'No members found',
@@ -174,9 +177,7 @@ class CommunityView extends GetView<CommunityController> {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: Colors.grey[300],
-                backgroundImage: image.isNotEmpty
-                    ? NetworkImage(image)
-                    : null,
+                backgroundImage: image.isNotEmpty ? NetworkImage(image) : null,
                 child: image.isEmpty
                     ? Text(
                         name.isNotEmpty ? name[0].toUpperCase() : '?',
@@ -215,11 +216,7 @@ class CommunityView extends GetView<CommunityController> {
                 ),
               ),
               // Arrow Icon
-              Icon(
-                Icons.chevron_right,
-                color: Colors.grey[400],
-                size: 20,
-              ),
+              Icon(Icons.chevron_right, color: Colors.grey[400], size: 20),
             ],
           ),
         ),
@@ -227,4 +224,3 @@ class CommunityView extends GetView<CommunityController> {
     );
   }
 }
-

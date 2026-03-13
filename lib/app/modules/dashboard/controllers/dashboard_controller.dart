@@ -15,14 +15,20 @@ class DashboardController extends GetxController {
   var marqueeText = 'Welcome to SedNex!'.obs; // Default text
   var bannerList = <String>[].obs; // Hero Banner URLs
   var currentBannerIndex = 0.obs;
-  final bannerPageController = PageController();
+  final bannerPageController = PageController(initialPage: 5000);
   
   var servicesList = <dynamic>[].obs; // Dynamic Services List
   var userProfileImage = RxnString(); // Observable profile image
 
+  // Controllers for auto-scrolling
+  final infoScrollController = ScrollController();
+  final essentialScrollController = ScrollController();
+  
   var isMarqueeLoading = false.obs;
   Timer? _marqueeTimer;
   Timer? _bannerTimer;
+  Timer? _infoAutoScrollTimer;
+  Timer? _essentialAutoScrollTimer;
 
   @override
   void onInit() {
@@ -34,6 +40,29 @@ class DashboardController extends GetxController {
     // Poll every 30 seconds for real-time updates
     _marqueeTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       fetchMarqueeText();
+    });
+    
+    // Start auto-scrolls
+    startAutoScrolls();
+  }
+  
+  void startAutoScrolls() {
+    // Info Carousel Auto-scroll (Circular feel)
+    _infoAutoScrollTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (infoScrollController.hasClients) {
+        double currentScroll = infoScrollController.offset;
+        double nextScroll = currentScroll + 132; // item width 120 + 12 spacing
+        infoScrollController.animateTo(nextScroll, duration: const Duration(milliseconds: 800), curve: Curves.easeOutCubic);
+      }
+    });
+
+    // Essential Services Auto-scroll (Circular feel)
+    _essentialAutoScrollTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      if (essentialScrollController.hasClients) {
+        double currentScroll = essentialScrollController.offset;
+        double nextScroll = currentScroll + 100; // rough width of one icon + text + padding
+        essentialScrollController.animateTo(nextScroll, duration: const Duration(milliseconds: 800), curve: Curves.easeOutCubic);
+      }
     });
   }
 
@@ -124,21 +153,14 @@ class DashboardController extends GetxController {
 
   void startBannerSlider() {
     _bannerTimer?.cancel();
-    _bannerTimer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+    _bannerTimer = Timer.periodic(const Duration(seconds: 4), (Timer timer) {
       if (bannerList.isEmpty) return;
       
-      int nextPage = currentBannerIndex.value + 1;
-      if (nextPage >= bannerList.length) {
-        nextPage = 0;
-      }
-      
       if (bannerPageController.hasClients) {
-        bannerPageController.animateToPage(
-          nextPage,
-          duration: const Duration(milliseconds: 350),
-          curve: Curves.easeIn,
+        bannerPageController.nextPage(
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeInOut,
         );
-        currentBannerIndex.value = nextPage;
       }
     });
   }
@@ -191,7 +213,11 @@ class DashboardController extends GetxController {
   void onClose() {
     _marqueeTimer?.cancel();
     _bannerTimer?.cancel();
+    _infoAutoScrollTimer?.cancel();
+    _essentialAutoScrollTimer?.cancel();
     bannerPageController.dispose();
+    infoScrollController.dispose();
+    essentialScrollController.dispose();
     super.onClose();
   }
 

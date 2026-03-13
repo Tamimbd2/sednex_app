@@ -19,178 +19,194 @@ class ProfileView extends GetView<ProfileController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            // Profile Card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  // Avatar with Gradient Border
-                  Container(
-                    padding: const EdgeInsets.all(3), // Border width
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: AppColors.primaryGradient,
+              // Profile Card
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
                     ),
-                    child: Obx(() {
-                      final imgUrl = controller.userProfileImage.value;
-                      return CircleAvatar(
-                        radius: 42,
-                        backgroundColor: Colors.grey[200],
-                        backgroundImage: imgUrl != null
-                            ? NetworkImage(imgUrl)
-                            : null,
-                        child: imgUrl == null
-                            ? const Icon(
-                                Icons.person,
-                                size: 40,
-                                color: Colors.grey,
-                              )
-                            : null,
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 12),
-                  // Name
-                  Obx(() => Text(
-                    controller.userName.value.isNotEmpty
-                        ? controller.userName.value
-                        : 'User',
-                    style: GoogleFonts.arimo(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xFF101727),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    // Avatar with Gradient Border
+                    Container(
+                      padding: const EdgeInsets.all(3), // Border width
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: AppColors.primaryGradient,
+                      ),
+                      child: Obx(() {
+                        final imgUrl = controller.userProfileImage.value;
+                        return CircleAvatar(
+                          radius: 42,
+                          backgroundColor: Colors.grey[200],
+                          backgroundImage: imgUrl != null
+                              ? NetworkImage(imgUrl)
+                              : null,
+                          child: imgUrl == null
+                              ? const Icon(
+                                  Icons.person,
+                                  size: 40,
+                                  color: Colors.grey,
+                                )
+                              : null,
+                        );
+                      }),
                     ),
-                  )),
-                  const SizedBox(height: 4),
-                  // Handle
-                  Obx(() => Text(
-                    controller.userHandle.value.isNotEmpty
-                        ? controller.userHandle.value
-                        : '',
-                    style: GoogleFonts.arimo(
-                      fontSize: 14,
-                      color: const Color(0xFF697282),
+                    const SizedBox(height: 12),
+                    // Name
+                    Obx(
+                      () => Text(
+                        controller.userName.value.isNotEmpty
+                            ? controller.userName.value
+                            : 'User',
+                        style: GoogleFonts.arimo(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xFF101727),
+                        ),
+                      ),
                     ),
-                  )),
-                  const SizedBox(height: 12),
-                  // Email as bio fallback until real bio field is added
-                  Obx(() => Text(
-                    controller.userEmail.value.isNotEmpty
-                        ? controller.userEmail.value
-                        : '',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.arimo(
-                      fontSize: 14,
-                      color: const Color(0xFF495565),
+                    const SizedBox(height: 4),
+                    // Handle
+                    Obx(
+                      () => Text(
+                        controller.userHandle.value.isNotEmpty
+                            ? controller.userHandle.value
+                            : '',
+                        style: GoogleFonts.arimo(
+                          fontSize: 14,
+                          color: const Color(0xFF697282),
+                        ),
+                      ),
                     ),
-                  )),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            
-            // "Other settings" Label
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                'Other settings',
-                style: GoogleFonts.arimo(
-                  fontSize: 14,
-                  color: const Color(0xFF495565),
+                    const SizedBox(height: 12),
+                    // Email as bio fallback until real bio field is added
+                    Obx(
+                      () => Text(
+                        controller.userEmail.value.isNotEmpty
+                            ? controller.userEmail.value
+                            : '',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.arimo(
+                          fontSize: 14,
+                          color: const Color(0xFF495565),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            const SizedBox(height: 12),
+              const SizedBox(height: 24),
 
-            // Settings Group 1
-            _buildSettingsGroup([
-              _buildSettingsItem(
-                'Shop',
-                'assets/profile/shop.svg',
-                onTap: () => Get.toNamed('/shop'),
+              // "Other settings" Label
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  'Other settings',
+                  style: GoogleFonts.arimo(
+                    fontSize: 14,
+                    color: const Color(0xFF495565),
+                  ),
+                ),
               ),
-              _buildSettingsItem('My Post', 'assets/profile/post.svg'),
-              _buildSettingsItem('Cart', 'assets/profile/cart.svg'),
-              _buildSettingsItem(
-                'Edit Profile', 
-                'assets/profile/editprofile.svg',
-                onTap: () => Get.toNamed('/editprofile'),
-              ),
-              _buildSettingsItem(
-                'Password', 
-                'assets/profile/password.svg',
-                onTap: () => Get.toNamed('/change-password'),
-              ),
-              _buildSettingsItem(
-                'Language', 
-                'assets/profile/language.svg',
-                onTap: () => Get.toNamed('/language'),
-              ),
-              _buildSettingsItem('Notification', 'assets/profile/notifications.svg'),
-              _buildSettingsItem('Saved Post', 'assets/profile/savepost.svg', isLast: true),
-            ]),
-            
-            const SizedBox(height: 24),
+              const SizedBox(height: 12),
 
-            // Settings Group 2
-            _buildSettingsGroup([
-              _buildSettingsItem(
-                'Terms and Condition', 
-                'assets/profile/termsandconditions.svg',
-                onTap: () => Get.toNamed('/termsandcondition'),
-              ),
-              _buildSettingsItem(
-                'Help/FAQ', 
-                'assets/profile/help.svg',
-                onTap: () => Get.toNamed('/help'),
-              ),
-              _buildSettingsItem(
-                'About Us', 
-                'assets/profile/aboutus.svg',
-                onTap: () => Get.toNamed('/aboutus'),
-              ),
-              _buildSettingsItem(
-                'Logout', 
-                'assets/profile/logout.svg', 
-                isLast: true, 
-                isDestructive: true,
-                onTap: () {
-                  Get.defaultDialog(
-                    title: 'Logout',
-                    middleText: 'Are you sure you want to log out?',
-                    textConfirm: 'Yes',
-                    textCancel: 'No',
-                    confirmTextColor: Colors.white,
-                    buttonColor: AppColors.primary,
-                    cancelTextColor: const Color(0xFF101727),
-                    onConfirm: () {
-                      Get.back(); // Close dialog first
-                      controller.logout();
-                    },
-                    onCancel: () => Get.back(),
-                    titlePadding: const EdgeInsets.only(top: 24, bottom: 12),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    radius: 16,
-                  );
-                },
-              ),
-            ]),
+              // Settings Group 1
+              _buildSettingsGroup([
+                _buildSettingsItem(
+                  'Shop',
+                  'assets/profile/shop.svg',
+                  onTap: () => Get.toNamed('/shop'),
+                ),
+                _buildSettingsItem('My Post', 'assets/profile/post.svg'),
+                _buildSettingsItem('Cart', 'assets/profile/cart.svg'),
+                _buildSettingsItem(
+                  'Edit Profile',
+                  'assets/profile/editprofile.svg',
+                  onTap: () => Get.toNamed('/editprofile'),
+                ),
+                _buildSettingsItem(
+                  'Password',
+                  'assets/profile/password.svg',
+                  onTap: () => Get.toNamed('/change-password'),
+                ),
+                _buildSettingsItem(
+                  'Language',
+                  'assets/profile/language.svg',
+                  onTap: () => Get.toNamed('/language'),
+                ),
+                _buildSettingsItem(
+                  'Notification',
+                  'assets/profile/notifications.svg',
+                ),
+                _buildSettingsItem(
+                  'Saved Post',
+                  'assets/profile/savepost.svg',
+                  isLast: true,
+                ),
+              ]),
 
-            const SizedBox(height: 40),
-          ],
-        ),
+              const SizedBox(height: 24),
+
+              // Settings Group 2
+              _buildSettingsGroup([
+                _buildSettingsItem(
+                  'Terms and Condition',
+                  'assets/profile/termsandconditions.svg',
+                  onTap: () => Get.toNamed('/termsandcondition'),
+                ),
+                _buildSettingsItem(
+                  'Help/FAQ',
+                  'assets/profile/help.svg',
+                  onTap: () => Get.toNamed('/help'),
+                ),
+                _buildSettingsItem(
+                  'About Us',
+                  'assets/profile/aboutus.svg',
+                  onTap: () => Get.toNamed('/aboutus'),
+                ),
+                _buildSettingsItem(
+                  'Logout',
+                  'assets/profile/logout.svg',
+                  isLast: true,
+                  isDestructive: true,
+                  onTap: () {
+                    Get.defaultDialog(
+                      title: 'Logout',
+                      middleText: 'Are you sure you want to log out?',
+                      textConfirm: 'Yes',
+                      textCancel: 'No',
+                      confirmTextColor: Colors.white,
+                      buttonColor: AppColors.primary,
+                      cancelTextColor: const Color(0xFF101727),
+                      onConfirm: () {
+                        Get.back(); // Close dialog first
+                        controller.logout();
+                      },
+                      onCancel: () => Get.back(),
+                      titlePadding: const EdgeInsets.only(top: 24, bottom: 12),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                      radius: 16,
+                    );
+                  },
+                ),
+              ]),
+
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
@@ -209,17 +225,24 @@ class ProfileView extends GetView<ProfileController> {
           ),
         ],
       ),
-      child: Column(
-        children: children,
-      ),
+      child: Column(children: children),
     );
   }
 
-  Widget _buildSettingsItem(String title, String iconPath, {bool isLast = false, bool isDestructive = false, VoidCallback? onTap}) {
+  Widget _buildSettingsItem(
+    String title,
+    String iconPath, {
+    bool isLast = false,
+    bool isDestructive = false,
+    VoidCallback? onTap,
+  }) {
     return Column(
       children: [
         ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 4,
+          ),
           leading: SizedBox(
             width: 24,
             height: 24,
@@ -227,7 +250,9 @@ class ProfileView extends GetView<ProfileController> {
               iconPath,
               width: 24,
               height: 24,
-              colorFilter: isDestructive ? null : null, // SVG handles color or allow original
+              colorFilter: isDestructive
+                  ? null
+                  : null, // SVG handles color or allow original
             ),
           ),
           title: Text(
@@ -235,7 +260,9 @@ class ProfileView extends GetView<ProfileController> {
             style: GoogleFonts.arimo(
               fontSize: 16,
               fontWeight: FontWeight.w400,
-              color: isDestructive ? const Color(0xFFEF4444) : const Color(0xFF101727), // Soft red for logout
+              color: isDestructive
+                  ? const Color(0xFFEF4444)
+                  : const Color(0xFF101727), // Soft red for logout
             ),
           ),
           trailing: Icon(
@@ -254,4 +281,3 @@ class ProfileView extends GetView<ProfileController> {
     );
   }
 }
-

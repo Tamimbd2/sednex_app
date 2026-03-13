@@ -18,9 +18,8 @@ class BkashRateView extends GetView<BkashRateController> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-
-                 Color(0xFF1E63FF), // Primary Red
-                 Color(0xFF3575FF), // Darker Red
+                Color(0xFF1E63FF), // Primary Red
+                Color(0xFF3575FF), // Darker Red
               ],
             ),
           ),
@@ -34,7 +33,11 @@ class BkashRateView extends GetView<BkashRateController> {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+            size: 20,
+          ),
           onPressed: () => Get.back(),
         ),
         elevation: 0,
@@ -42,75 +45,83 @@ class BkashRateView extends GetView<BkashRateController> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(20),
           child: Container(
-             height: 20,
-             decoration: const BoxDecoration(
-               color: Color(0xFFFAE8EA),
-               borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-             ),
+            height: 20,
+            decoration: const BoxDecoration(
+              color: Color(0xFFFAE8EA),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+            ),
           ),
         ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        child: Column(
-          children: [
-             // Last Update Section with Icon
-            Center(
-              child: Container(
-                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                 decoration: BoxDecoration(
-                   color: Colors.white,
-                   borderRadius: BorderRadius.circular(30),
-                   boxShadow: [
-                     BoxShadow(
-                       color: Colors.pink.withValues(alpha: 0.1),
-                       blurRadius: 10,
-                       offset: const Offset(0, 4),
-                     )
-                   ]
-                 ),
-                 child: Row(
-                   mainAxisSize: MainAxisSize.min,
-                   children: [
-                     const Icon(Icons.history_rounded, color: Color(0xFF1E63FF), size: 18),
-                     const SizedBox(width: 8),
-                     Text(
-                       'Last Update: 15-03-2025',
-                       style: GoogleFonts.poppins(
-                         fontSize: 13,
-                         color: const Color(0xFF1E63FF),
-                         fontWeight: FontWeight.w500,
-                       ),
-                     ),
-                   ],
-                 ),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Today's Rate Glass Card
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                   colors: [Color(0xFFFCE4EC), Color(0xFFF8BBD0)],
-                   begin: Alignment.topLeft,
-                   end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF1E63FF).withValues(alpha: 0.15),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Last Update Section with Icon
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
                   ),
-                ],
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.pink.withValues(alpha: 0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.history_rounded,
+                        color: Color(0xFF1E63FF),
+                        size: 18,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Last Update: 15-03-2025',
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          color: const Color(0xFF1E63FF),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                   Row(
-                     children: [
+              const SizedBox(height: 24),
+
+              // Today's Rate Glass Card
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFFCE4EC), Color(0xFFF8BBD0)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF1E63FF).withValues(alpha: 0.15),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -121,10 +132,13 @@ class BkashRateView extends GetView<BkashRateController> {
                                 color: Colors.black.withValues(alpha: 0.05),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
-                              )
-                            ]
+                              ),
+                            ],
                           ),
-                          child: const Icon(Icons.currency_exchange, color: Color(0xFF1E63FF)),
+                          child: const Icon(
+                            Icons.currency_exchange,
+                            color: Color(0xFF1E63FF),
+                          ),
                         ),
                         const SizedBox(width: 14),
                         Text(
@@ -135,294 +149,346 @@ class BkashRateView extends GetView<BkashRateController> {
                             color: const Color(0xFF1E63FF),
                           ),
                         ),
-                     ],
-                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      '৳124',
-                      style: GoogleFonts.poppins(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1E63FF),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Calculator Section
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withValues(alpha: 0.08),
-                    blurRadius: 24,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Currency Toggle Tabs
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF5F5F5),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Obx(() => Row(
-                      children: [
-                        _buildAnimatedTab(
-                          '৳  BDT (Taka)', 
-                          controller.isTakaSelected.value, 
-                          () => controller.toggleCurrency(true)
-                        ),
-                        _buildAnimatedTab(
-                          '\$  USD (Dollar)', 
-                          !controller.isTakaSelected.value, 
-                          () => controller.toggleCurrency(false)
-                        ),
-                      ],
-                    )),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Input Field with Label
-                  Text(
-                    'Amount to Send',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF616161),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-
-                  TextField(
-                    controller: controller.inputController,
-                    keyboardType: TextInputType.number,
-                    style: GoogleFonts.poppins(
-                       fontSize: 18,
-                       fontWeight: FontWeight.w600,
-                       color: const Color(0xFF424242),
-                    ),
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.edit_rounded, color: Colors.grey.shade400, size: 20),
-                      hintText: 'Enter amount...', 
-                      hintStyle: GoogleFonts.poppins(color: Colors.grey.shade400, fontSize: 14),
-                      filled: true,
-                      fillColor: const Color(0xFFFAFAFA),
-                      contentPadding: const EdgeInsets.all(16),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: const BorderSide(color: Color(0xFF1E63FF), width: 1.5),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Quick Amount Chips
-                  SizedBox(
-                    height: 40,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildModernChip('1k'),
-                        const SizedBox(width: 10),
-                        _buildModernChip('5k'),
-                        const SizedBox(width: 10),
-                        _buildModernChip('10k'),
-                        const SizedBox(width: 10),
-                        _buildModernChip('20k'),
-                        const SizedBox(width: 10),
-                        _buildModernChip('50k'),
                       ],
                     ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Fancy Divider with Swap Icon
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                       Divider(color: Colors.grey.shade200, thickness: 1.5),
-                       Container(
-                         padding: const EdgeInsets.all(8),
-                         decoration: BoxDecoration(
-                           color: Colors.white,
-                           shape: BoxShape.circle,
-                           boxShadow: [
-                             BoxShadow(
-                               color: Colors.grey.withValues(alpha: 0.1),
-                               blurRadius: 10,
-                               offset: const Offset(0, 4),
-                             )
-                           ],
-                           border: Border.all(color: const Color(0xFFFCE4EC), width: 2)
-                         ),
-                         child: const Icon(Icons.swap_vert_rounded, color: Color(0xFF1E63FF), size: 24),
-                       ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Output Section
-                  Text(
-                    'You Will Receive',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF616161),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFE3F2FD), Color(0xFFBBDEFB)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
                       ),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                         BoxShadow(
-                           color: Colors.blue.withValues(alpha: 0.1),
-                           blurRadius: 15,
-                           offset: const Offset(0, 5)
-                         )
-                      ]
-                    ),
-                    child: Column(
-                      children: [
-                        Obx(() => Text(
-                          controller.displayResult.value, 
-                          style: GoogleFonts.poppins(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w700, 
-                            color: const Color(0xFF1565C0), 
-                            height: 1.2,
-                          ),
-                        )),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Estimated Amount',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: const Color(0xFF1976D2),
-                            fontWeight: FontWeight.w500,
-                          ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '৳124',
+                        style: GoogleFonts.poppins(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF1E63FF),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+              const SizedBox(height: 24),
 
-            const SizedBox(height: 24),
-
-            // Note Box
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFF8E1), 
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFFFFECCB)),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.info_outline_rounded, color: Color(0xFFFB8C00), size: 20),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: RichText(
-                      text: TextSpan(
+              // Calculator Section
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withValues(alpha: 0.08),
+                      blurRadius: 24,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Currency Toggle Tabs
+                    Container(
+                      height: 50,
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF5F5F5),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Stack(
                         children: [
-                          TextSpan(
-                            text: 'Note: ',
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFFE65100), 
-                              fontSize: 13,
+                          // Sliding Background
+                          Obx(() => AnimatedAlign(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeOutBack,
+                            alignment: controller.isTakaSelected.value 
+                                ? Alignment.centerLeft 
+                                : Alignment.centerRight,
+                            child: FractionallySizedBox(
+                              widthFactor: 0.5,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.1),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )),
+                          
+                          // Tab Items
+                          Row(
+                            children: [
+                              _buildAnimatedTab(
+                                '৳ BDT (Taka)', 
+                                controller.isTakaSelected, 
+                                true,
+                                () => controller.toggleCurrency(true)
+                              ),
+                              _buildAnimatedTab(
+                                '\$ USD (Dollar)', 
+                                controller.isTakaSelected, 
+                                false,
+                                () => controller.toggleCurrency(false)
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Input Field with Label
+                    Text(
+                      'Amount to Send',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF616161),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    TextField(
+                      controller: controller.inputController,
+                      keyboardType: TextInputType.number,
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF424242),
+                      ),
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.edit_rounded,
+                          color: Colors.grey.shade400,
+                          size: 20,
+                        ),
+                        hintText: 'Enter amount...',
+                        hintStyle: GoogleFonts.poppins(
+                          color: Colors.grey.shade400,
+                          fontSize: 14,
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFFAFAFA),
+                        contentPadding: const EdgeInsets.all(16),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF1E63FF),
+                            width: 1.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Quick Amount Chips
+                    SizedBox(
+                      height: 40,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          _buildModernChip('1k'),
+                          const SizedBox(width: 10),
+                          _buildModernChip('5k'),
+                          const SizedBox(width: 10),
+                          _buildModernChip('10k'),
+                          const SizedBox(width: 10),
+                          _buildModernChip('20k'),
+                          const SizedBox(width: 10),
+                          _buildModernChip('50k'),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Fancy Divider with Swap Icon
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Divider(color: Colors.grey.shade200, thickness: 1.5),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withValues(alpha: 0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                            border: Border.all(
+                              color: const Color(0xFFFCE4EC),
+                              width: 2,
                             ),
                           ),
-                          TextSpan(
-                            text: 'Commission rates may vary by location. Standard commission is 20 Tk per thousand.',
+                          child: const Icon(
+                            Icons.swap_vert_rounded,
+                            color: Color(0xFF1E63FF),
+                            size: 24,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Output Section
+                    Text(
+                      'You Will Receive',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF616161),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 24,
+                        horizontal: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFE3F2FD), Color(0xFFBBDEFB)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blue.withValues(alpha: 0.1),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Obx(
+                            () => Text(
+                              controller.displayResult.value,
+                              style: GoogleFonts.poppins(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF1565C0),
+                                height: 1.2,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Estimated Amount',
                             style: GoogleFonts.poppins(
-                              color: const Color(0xFF5D4037),
-                              fontSize: 13,
-                              height: 1.5,
+                              fontSize: 12,
+                              color: const Color(0xFF1976D2),
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 30),
-          ],
+
+              const SizedBox(height: 24),
+
+              // Note Box
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF8E1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFFFFECCB)),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.info_outline_rounded,
+                      color: Color(0xFFFB8C00),
+                      size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Note: ',
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFFE65100),
+                                fontSize: 13,
+                              ),
+                            ),
+                            TextSpan(
+                              text:
+                                  'Commission rates may vary by location. Standard commission is 20 Tk per thousand.',
+                              style: GoogleFonts.poppins(
+                                color: const Color(0xFF5D4037),
+                                fontSize: 13,
+                                height: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildAnimatedTab(String title, bool isSelected, VoidCallback onTap) {
+  Widget _buildAnimatedTab(String title, RxBool selectedProp, bool isTaka, VoidCallback onTap) {
     return Expanded(
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected ? Colors.white : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: isSelected 
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  )
-                ] 
-              : null,
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: isSelected ? const Color(0xFF1E63FF) : const Color(0xFF9E9E9E),
-            ),
-          ),
+        child: Center(
+          child: Obx(() {
+            final isSelected = selectedProp.value == isTaka;
+            return AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 300),
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: isSelected ? const Color(0xFF1E63FF) : const Color(0xFF9E9E9E),
+              ),
+              child: Text(title),
+            );
+          }),
         ),
       ),
     );
@@ -438,12 +504,12 @@ class BkashRateView extends GetView<BkashRateController> {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.grey.shade200),
           boxShadow: [
-             BoxShadow(
-               color: Colors.grey.withValues(alpha: 0.05),
-               blurRadius: 6,
-               offset: const Offset(0, 2),
-             )
-          ]
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.05),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         alignment: Alignment.center,
         child: Text(
@@ -458,4 +524,3 @@ class BkashRateView extends GetView<BkashRateController> {
     );
   }
 }
-

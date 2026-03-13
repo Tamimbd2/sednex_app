@@ -20,13 +20,13 @@ class InformationsController extends GetxController {
     ServiceItem(
       label: 'Embassy',
       imagePath: 'assets/essentialService/embassy.png',
-      backgroundColor: const Color(0xFFDC143C),
+      backgroundColor: const Color(0xFF1E63FF),
       route: '/embassy',
     ),
     ServiceItem(
       label: 'Article',
       imagePath: 'assets/essentialService/article.png',
-      backgroundColor: const Color(0xFFFFA500),
+      backgroundColor: const Color(0xFFFFD700),
       route: '/articles',
     ),
     ServiceItem(
@@ -44,12 +44,12 @@ class InformationsController extends GetxController {
     ServiceItem(
       label: 'Grocery Store',
       imagePath: 'assets/essentialService/store.png',
-      backgroundColor: const Color(0xFFDC143C),
+      backgroundColor: const Color(0xFF1E63FF),
     ),
     ServiceItem(
       label: 'Tourist spot',
       imagePath: 'assets/essentialService/touristspot.png',
-      backgroundColor: const Color(0xFFFFA500),
+      backgroundColor: const Color(0xFFFFD700),
       route: '/tourist-spot',
     ),
     ServiceItem(
@@ -67,13 +67,13 @@ class InformationsController extends GetxController {
     ServiceItem(
       label: 'Hospitals',
       imagePath: 'assets/essentialService/hospital.png',
-      backgroundColor: const Color(0xFFDC143C),
+      backgroundColor: const Color(0xFF1E63FF),
       route: '/hospitals',
     ),
     ServiceItem(
       label: 'Local Business',
       imagePath: 'assets/essentialService/Business.png',
-      backgroundColor: const Color(0xFFFFA500),
+      backgroundColor: const Color(0xFFFFD700),
     ),
     ServiceItem(
       label: 'Jewellery shop',
@@ -123,3 +123,5 @@ class InformationsController extends GetxController {
 
 
 }
+
+

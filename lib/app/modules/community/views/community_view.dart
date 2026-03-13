@@ -16,7 +16,7 @@ class CommunityView extends GetView<CommunityController> {
           // Crimson Header with Search
           Container(
             decoration: const BoxDecoration(
-              color: Color(0xFFDC143C),
+              color: Color(0xFF1E63FF),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(0),
                 bottomRight: Radius.circular(0),
@@ -114,7 +114,7 @@ class CommunityView extends GetView<CommunityController> {
               if (controller.isLoading.value) {
                 return const Center(
                   child: CircularProgressIndicator(
-                    color: Color(0xFFDC143C),
+                    color: Color(0xFF1E63FF),
                   ),
                 );
               }
@@ -227,3 +227,4 @@ class CommunityView extends GetView<CommunityController> {
     );
   }
 }
+

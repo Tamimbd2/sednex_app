@@ -173,7 +173,7 @@ class DashboardView extends GetView<DashboardController> {
                 border: Border.all(color: Colors.grey[300]!),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: AppColors.primary.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 2),
                   ),
@@ -196,7 +196,7 @@ class DashboardView extends GetView<DashboardController> {
                 'Search Anything',
                 style: GoogleFonts.inter(
                   fontSize: 16,
-                  color: const Color(0xFFC5A8A8), // Matching the screenshot's muted rose/brown color
+                  color: const Color(0xFF4A5568), // Matching the screenshot's muted rose/brown color
                 ),
               ),
             ),
@@ -261,7 +261,7 @@ class DashboardView extends GetView<DashboardController> {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.crimson.withValues(alpha: 0.3),
+                        color: AppColors.primary.withValues(alpha: 0.3),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -308,7 +308,7 @@ class DashboardView extends GetView<DashboardController> {
             width: 24,
             height: 24,
             colorFilter: ColorFilter.mode(
-              isActive ? const Color(0xFFDC143C) : const Color(0xFF8F95A1),
+              isActive ? const Color(0xFF1E63FF) : const Color(0xFF8F95A1),
               BlendMode.srcIn,
             ),
           ),
@@ -317,3 +317,5 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 }
+
+

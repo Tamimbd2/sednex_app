@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -145,12 +145,12 @@ class LocaltourView extends GetView<LocaltourController> {
                               const Icon(
                                 Icons.access_time,
                                 size: 18,
-                                color: Color(0xFFDC143C),
+                                color: Color(0xFF1E63FF),
                               ),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  '${tour.info.date} Â· ${tour.info.begins} - ${tour.info.returnTime}',
+                                  '${tour.info.date} · ${tour.info.begins} - ${tour.info.returnTime}',
                                   style: GoogleFonts.inter(
                                     fontSize: 14,
                                     color: Colors.grey[700],
@@ -167,7 +167,7 @@ class LocaltourView extends GetView<LocaltourController> {
                               const Icon(
                                 Icons.location_on,
                                 size: 18,
-                                color: Color(0xFFDC143C),
+                                color: Color(0xFF1E63FF),
                               ),
                               const SizedBox(width: 8),
                               Expanded(
@@ -196,4 +196,5 @@ class LocaltourView extends GetView<LocaltourController> {
     );
   }
 }
+
 

@@ -249,7 +249,7 @@ class BusflightView extends GetView<BusflightController> {
                 children: [
                   const Icon(
                     Icons.directions_bus,
-                    color: Color(0xFFFFA500),
+                    color: Color(0xFFFFD700),
                     size: 24,
                   ),
                   const SizedBox(width: 8),
@@ -487,3 +487,4 @@ class BusflightView extends GetView<BusflightController> {
     );
   }
 }
+

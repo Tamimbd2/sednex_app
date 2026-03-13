@@ -55,7 +55,7 @@ class ArticleDetailsView extends StatelessWidget {
                   child: Text(
                     category,
                     style: GoogleFonts.inter(
-                      color: const Color(0xFFDC143C),
+                      color: const Color(0xFF1E63FF),
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -156,20 +156,20 @@ class ArticleDetailsView extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFDC143C).withValues(alpha: 0.1),
+                      color: const Color(0xFF1E63FF).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.share, size: 20, color: Color(0xFFDC143C)),
+                        const Icon(Icons.share, size: 20, color: Color(0xFF1E63FF)),
                         const SizedBox(width: 8),
                         Text(
                           'Share',
                           style: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: const Color(0xFFDC143C),
+                            color: const Color(0xFF1E63FF),
                           ),
                         ),
                       ],
@@ -191,3 +191,4 @@ class ArticleDetailsView extends StatelessWidget {
     return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]} ${date.year}';
   }
 }
+

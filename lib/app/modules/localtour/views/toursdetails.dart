@@ -159,7 +159,7 @@ class LocalTourDetailsView extends StatelessWidget {
                           Icons.attach_money,
                           'Ticket Price',
                           '$ticketPrice $ticketPriceTag',
-                          const Color(0xFFFFA500),
+                          const Color(0xFFFFD700),
                         ),
                       ),
                     ],
@@ -233,7 +233,7 @@ class LocalTourDetailsView extends StatelessWidget {
                     children: [
                       const Icon(
                         Icons.location_on,
-                        color: Color(0xFFDC143C),
+                        color: Color(0xFF1E63FF),
                         size: 20,
                       ),
                       const SizedBox(width: 8),
@@ -395,3 +395,5 @@ class LocalTourDetailsView extends StatelessWidget {
 
 
 }
+
+

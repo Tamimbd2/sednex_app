@@ -22,8 +22,9 @@ class LanguageController extends GetxController {
       'Language Changed', 
       'Language set to ${selectedLanguage.value}. The app will restart to apply changes.',
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: const Color(0xFFDC143C), // primary red
+      backgroundColor: const Color(0xFF1E63FF), // primary red
       colorText: Colors.white,
     );
   }
 }
+

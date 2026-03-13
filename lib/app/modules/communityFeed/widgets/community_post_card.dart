@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_colors.dart';
 import '../controllers/community_feed_controller.dart';
 
 class CommunityPostCard extends StatelessWidget {
@@ -165,13 +166,13 @@ class CommunityPostCard extends StatelessWidget {
                       Icon(
                         Icons.favorite,
                         size: 24,
-                        color: post['isLiked'] ?? false ? const Color(0xFFDC143C) : Colors.grey[400], 
+                        color: post['isLiked'] ?? false ? const Color(0xFF1E63FF) : Colors.grey[400], 
                       ),
                       const SizedBox(width: 6),
                       Text(
                         '${post['likes'] ?? 0}',
                         style: GoogleFonts.poppins(
-                          color: post['isLiked'] ?? false ? const Color(0xFFDC143C) : Colors.grey[600],
+                          color: post['isLiked'] ?? false ? const Color(0xFF1E63FF) : Colors.grey[600],
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -473,7 +474,7 @@ class CommunityPostCard extends StatelessWidget {
                 if (controller.isLoadingComments.value) {
                   return const Center(
                     child: CircularProgressIndicator(
-                      color: Color(0xFFDC143C),
+                      color: Color(0xFF1E63FF),
                     ),
                   );
                 }
@@ -629,7 +630,7 @@ class CommunityPostCard extends StatelessWidget {
                         width: 40,
                         height: 40,
                         decoration: const BoxDecoration(
-                          color: Color(0xFFF08080),
+                          color: AppColors.primary,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
@@ -758,7 +759,7 @@ class CommunityPostCard extends StatelessWidget {
           if (loadingProgress == null) return child;
           return Center(
             child: CircularProgressIndicator(
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
+              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
               value: loadingProgress.expectedTotalBytes != null
                   ? loadingProgress.cumulativeBytesLoaded /
                       loadingProgress.expectedTotalBytes!
@@ -812,7 +813,7 @@ class FullScreenImageViewer extends StatelessWidget {
                       if (loadingProgress == null) return child;
                       return const Center(
                         child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
+                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
                         ),
                       );
                     },
@@ -851,3 +852,4 @@ class FullScreenImageViewer extends StatelessWidget {
     );
   }
 }
+

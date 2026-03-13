@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../communityFeed/controllers/community_feed_controller.dart';
 import '../../../services/api_service.dart';
 
 class CreatepostController extends GetxController {
@@ -107,7 +108,7 @@ class CreatepostController extends GetxController {
                   child: Icon(
                     Icons.check_circle_outline_rounded,
                     size: 40,
-                    color: Color(0xFFDC143C),
+                    color: Color(0xFF1E63FF),
                   ),
                 ),
               ),
@@ -138,10 +139,20 @@ class CreatepostController extends GetxController {
                 child: ElevatedButton(
                   onPressed: () {
                     Get.back(); // Close dialog
+                    
+                    // Trigger refresh of the community feed
+                    try {
+                      if (Get.isRegistered<CommunityFeedController>()) {
+                        Get.find<CommunityFeedController>().refreshPosts();
+                      }
+                    } catch (e) {
+                      debugPrint('Error refreshing feed: $e');
+                    }
+                    
                     Get.back(); // Back to Feed
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFDC143C),
+                    backgroundColor: const Color(0xFF1E63FF),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -173,3 +184,4 @@ class CreatepostController extends GetxController {
     super.onClose();
   }
 }
+

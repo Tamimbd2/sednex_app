@@ -15,7 +15,7 @@ class CreatepostView extends GetView<CreatepostController> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: const Color(0xFFC62828), // Deep Red
+        backgroundColor: const Color(0xFF1E63FF), // Deep Red
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.close, color: Colors.white, size: 28),
@@ -129,7 +129,7 @@ class CreatepostView extends GetView<CreatepostController> {
                     return ElevatedButton(
                       onPressed: isEnabled ? controller.createPost : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isEnabled ? const Color(0xFFDC143C) : Colors.grey[200],
+                        backgroundColor: isEnabled ? const Color(0xFF1E63FF) : Colors.grey[200],
                         foregroundColor: isEnabled ? Colors.white : Colors.grey[400],
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -322,3 +322,4 @@ class CreatepostView extends GetView<CreatepostController> {
     );
   }
 }
+

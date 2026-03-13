@@ -68,12 +68,12 @@ class BusDetailsView extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFA500).withValues(alpha: 0.1),
+                            color: const Color(0xFFFFD700).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(
                             Icons.directions_bus,
-                            color: Color(0xFFFFA500),
+                            color: Color(0xFFFFD700),
                             size: 28,
                           ),
                         ),
@@ -186,7 +186,7 @@ class BusDetailsView extends StatelessWidget {
                     color: const Color(0xFFFFF3E0),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: const Color(0xFFFFA500).withValues(alpha: 0.3),
+                      color: const Color(0xFFFFD700).withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
@@ -195,12 +195,12 @@ class BusDetailsView extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFA500).withValues(alpha: 0.2),
+                          color: const Color(0xFFFFD700).withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
                           Icons.info_outline,
-                          color: Color(0xFFFFA500),
+                          color: Color(0xFFFFD700),
                           size: 20,
                         ),
                       ),
@@ -214,7 +214,7 @@ class BusDetailsView extends StatelessWidget {
                               style: GoogleFonts.inter(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
-                                color: const Color(0xFFFFA500),
+                                color: const Color(0xFFFFD700),
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -370,3 +370,4 @@ class BusDetailsView extends StatelessWidget {
     );
   }
 }
+

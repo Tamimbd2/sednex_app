@@ -18,7 +18,7 @@ class ArticlesView extends GetView<ArticlesController> {
           Container(
             padding: const EdgeInsets.fromLTRB(16, 40, 16, 20),
             decoration: const BoxDecoration(
-              color: Color(0xFFDC143C),
+              color: Color(0xFF1E63FF),
             ),
             child: Column(
               children: [
@@ -70,7 +70,7 @@ class ArticlesView extends GetView<ArticlesController> {
               if (controller.isLoading.value) {
                 return const Center(
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
+                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
                   ),
                 );
               }
@@ -106,7 +106,7 @@ class ArticlesView extends GetView<ArticlesController> {
                               color: Colors.grey[100],
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: const Icon(Icons.tune, size: 20, color: Color(0xFFDC143C)),
+                            child: const Icon(Icons.tune, size: 20, color: Color(0xFF1E63FF)),
                           ),
                         ),
                       ],
@@ -130,7 +130,7 @@ class ArticlesView extends GetView<ArticlesController> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                               decoration: BoxDecoration(
-                                color: isSelected ? const Color(0xFFDC143C) : Colors.grey[200],
+                                color: isSelected ? const Color(0xFF1E63FF) : Colors.grey[200],
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
@@ -184,7 +184,7 @@ class ArticlesView extends GetView<ArticlesController> {
                       }
 
                       return RefreshIndicator(
-                        color: const Color(0xFFDC143C),
+                        color: const Color(0xFF1E63FF),
                         onRefresh: () => controller.refreshArticles(),
                         child: ListView.separated(
                           padding: const EdgeInsets.all(16),
@@ -238,7 +238,7 @@ class ArticlesView extends GetView<ArticlesController> {
                   ElevatedButton(
                     onPressed: controller.selectAllFilters,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFDC143C),
+                      backgroundColor: const Color(0xFF1E63FF),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -313,7 +313,7 @@ class ArticlesView extends GetView<ArticlesController> {
                   ElevatedButton(
                     onPressed: () => Get.back(), // Apply logic handled by Obx in view
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFDC143C),
+                      backgroundColor: const Color(0xFF1E63FF),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -411,7 +411,7 @@ class ArticlesView extends GetView<ArticlesController> {
                     child: Text(
                       article.category,
                       style: GoogleFonts.inter(
-                        color: const Color(0xFFDC143C),
+                        color: const Color(0xFF1E63FF),
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
                       ),
@@ -454,7 +454,7 @@ class ArticlesView extends GetView<ArticlesController> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
-                            color: isSaved ? const Color(0xFFDC143C) : Colors.grey[100],
+                            color: isSaved ? const Color(0xFF1E63FF) : Colors.grey[100],
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -489,3 +489,4 @@ class ArticlesView extends GetView<ArticlesController> {
     );
   }
 }
+

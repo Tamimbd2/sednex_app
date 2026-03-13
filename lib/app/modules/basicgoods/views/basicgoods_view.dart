@@ -42,7 +42,7 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
       ),
       body: RefreshIndicator(
         onRefresh: controller.fetchGoods,
-        color: const Color(0xFFDC143C),
+        color: const Color(0xFF1E63FF),
         child: Column(
           children: [
             // Warning Banner
@@ -53,7 +53,7 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
               child: Text(
                 'Prices may vary by location',
                 style: GoogleFonts.inter(
-                  color: const Color(0xFFDC143C),
+                  color: const Color(0xFF1E63FF),
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                 ),
@@ -81,10 +81,10 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
                           margin: const EdgeInsets.only(right: 8),
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
-                            color: isSelected ? const Color(0xFFDC143C) : Colors.white,
+                            color: isSelected ? const Color(0xFF1E63FF) : Colors.white,
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: isSelected ? const Color(0xFFDC143C) : Colors.grey[300]!,
+                              color: isSelected ? const Color(0xFF1E63FF) : Colors.grey[300]!,
                             ),
                           ),
                           child: Center(
@@ -111,7 +111,7 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
                 () {
                   if (controller.isLoading.value && controller.allGoods.isEmpty) {
                     return const Center(
-                      child: CircularProgressIndicator(color: Color(0xFFDC143C)),
+                      child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
                     );
                   }
 
@@ -214,7 +214,7 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
                                   style: GoogleFonts.inter(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
-                                    color: const Color(0xFFDC143C),
+                                    color: const Color(0xFF1E63FF),
                                   ),
                                 ),
                                 const SizedBox(height: 2),
@@ -242,3 +242,4 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
     );
   }
 }
+

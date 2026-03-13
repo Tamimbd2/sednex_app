@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,7 +22,7 @@ class ShopView extends GetView<ShopController> {
         title: Text(
           'Shop',
           style: GoogleFonts.poppins(
-            color: const Color(0xFFDC143C),
+            color: const Color(0xFF1E63FF),
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
@@ -174,7 +174,7 @@ class ShopView extends GetView<ShopController> {
             child: Text(
               actionText,
               style: GoogleFonts.poppins(
-                color: const Color(0xFFDC143C),
+                color: const Color(0xFF1E63FF),
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
               ),
@@ -269,7 +269,7 @@ class ShopView extends GetView<ShopController> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFDC143C),
+                    color: const Color(0xFF1E63FF),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -300,7 +300,7 @@ class ShopView extends GetView<ShopController> {
       width: active ? 24 : 6,
       height: 6,
       decoration: BoxDecoration(
-        color: active ? const Color(0xFFDC143C) : const Color(0xFFD1D5DC),
+        color: active ? const Color(0xFF1E63FF) : const Color(0xFFD1D5DC),
         borderRadius: BorderRadius.circular(3),
       ),
     );
@@ -381,7 +381,7 @@ class ShopView extends GetView<ShopController> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: product['saleColor'] ?? const Color(0xFFDC143C),
+                      color: product['saleColor'] ?? const Color(0xFF1E63FF),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -450,7 +450,7 @@ class ShopView extends GetView<ShopController> {
                             child: Text(
                               product['price'], // e.g. $89.99
                               style: GoogleFonts.poppins(
-                                color: const Color(0xFFDC143C), // Red price
+                                color: const Color(0xFF1E63FF), // Red price
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -472,7 +472,7 @@ class ShopView extends GetView<ShopController> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFDC143C),
+                        color: const Color(0xFF1E63FF),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -495,4 +495,5 @@ class ShopView extends GetView<ShopController> {
   );
   }
 }
+
 

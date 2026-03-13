@@ -122,7 +122,7 @@ class CommunityFeedController extends GetxController {
               'name': author['name'] ?? 'Unknown',
               'time': _timeAgo(createdAt),
               'content': post['description'] ?? '',
-              'avatar': author['profileImage'] ?? 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=DC143C&color=fff&size=80',
+              'avatar': author['profileImage'] ?? 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=80',
               'likes': post['loveCount'] ?? 0,
               'comments': post['commentsCount'] ?? 0,
               'isLiked': currentUserId != null && lovedBy.contains(currentUserId),
@@ -169,7 +169,7 @@ class CommunityFeedController extends GetxController {
             '_id': c['_id'] ?? '',
             'name': author['name'] ?? 'Unknown',
             'text': c['content'] ?? '',
-            'avatar': author['profileImage'] ?? 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=DC143C&color=fff&size=60',
+            'avatar': author['profileImage'] ?? 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=60',
             'time': _timeAgo(c['createdAt'] ?? ''),
           };
         }).toList();
@@ -333,7 +333,7 @@ class CommunityFeedController extends GetxController {
     try {
       // Show loading
       Get.dialog(
-        const Center(child: CircularProgressIndicator(color: Color(0xFFDC143C))),
+        const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF))),
         barrierDismissible: false,
       );
 
@@ -364,7 +364,7 @@ class CommunityFeedController extends GetxController {
     try {
       // Show loading
       Get.dialog(
-        const Center(child: CircularProgressIndicator(color: Color(0xFFDC143C))),
+        const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF))),
         barrierDismissible: false,
       );
 
@@ -392,7 +392,7 @@ class CommunityFeedController extends GetxController {
     try {
       // Show loading
       Get.dialog(
-        const Center(child: CircularProgressIndicator(color: Color(0xFFDC143C))),
+        const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF))),
         barrierDismissible: false,
       );
 
@@ -418,3 +418,4 @@ class CommunityFeedController extends GetxController {
 
   void increment() => count.value++;
 }
+

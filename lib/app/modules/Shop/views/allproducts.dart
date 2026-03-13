@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -111,7 +111,7 @@ class AllProductsView extends GetView<ShopController> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: product['saleColor'] ?? const Color(0xFFDC143C),
+                        color: product['saleColor'] ?? const Color(0xFF1E63FF),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -180,7 +180,7 @@ class AllProductsView extends GetView<ShopController> {
                               child: Text(
                                 product['price'],
                                 style: GoogleFonts.poppins(
-                                  color: const Color(0xFFDC143C), // Red price
+                                  color: const Color(0xFF1E63FF), // Red price
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -202,7 +202,7 @@ class AllProductsView extends GetView<ShopController> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFDC143C),
+                          color: const Color(0xFF1E63FF),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -225,4 +225,5 @@ class AllProductsView extends GetView<ShopController> {
     );
   }
 }
+
 

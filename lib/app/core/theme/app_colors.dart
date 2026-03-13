@@ -13,8 +13,8 @@ class AppColors {
   /// Accent Golden Yellow
   static const Color accent = Color(0xFFFFD700);
 
-  /// Crimson Red – used for active nav, FAB, badges, like icons
-  static const Color crimson = Color(0xFFDC143C);
+  /// Crimson Red – updated to Royal Blue for 2026 theme
+  static const Color crimson = Color(0xFF1E63FF);
 
   // ── Blue Shades ──────────────────────────────────────────────────────
   static const Color blue1 = Color(0xFF1E63FF); // Primary
@@ -54,7 +54,7 @@ class AppColors {
   static const LinearGradient accentGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+    colors: [Color(0xFFFFD700), Color(0xFFFFB300)],
   );
 
   static const LinearGradient blueGradient = LinearGradient(
@@ -69,3 +69,4 @@ class AppColors {
     colors: [Color(0xFFE3EEFF), Color(0xFFEDF4FF)],
   );
 }
+

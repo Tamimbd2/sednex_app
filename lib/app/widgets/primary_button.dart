@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../core/theme/app_colors.dart';
 
@@ -32,7 +32,7 @@ class PrimaryButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: (color ?? AppColors.primary).withOpacity(0.3),
+              color: (color ?? AppColors.primary).withValues(alpha: 0.3),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -54,3 +54,4 @@ class PrimaryButton extends StatelessWidget {
     );
   }
 }
+

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../controllers/essential_service_controller.dart';
@@ -215,7 +215,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFDC143C).withOpacity(0.1),
+                    color: const Color(0xFFDC143C).withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -274,9 +274,9 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // Advanced Animated Service Card
-// ═══════════════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 class _AdvancedServiceCard extends StatefulWidget {
   final String label;
   final String imagePath;
@@ -347,7 +347,7 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // ── Icon Box ────────────────────────────────────────────────
+                // â”€â”€ Icon Box â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                 Container(
                   width: 64,
                   height: 64,
@@ -357,13 +357,13 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
                       end: Alignment.bottomRight,
                       colors: [
                         widget.color,
-                        widget.color.withOpacity(0.70),
+                        widget.color.withValues(alpha: 0.70),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(18),
                     boxShadow: [
                       BoxShadow(
-                        color: widget.color.withOpacity(_pressed ? 0.6 : 0.35),
+                        color: widget.color.withValues(alpha: _pressed ? 0.6 : 0.35),
                         blurRadius: _pressed ? 16 : 10,
                         spreadRadius: _pressed ? 1 : 0,
                         offset: Offset(0, _pressed ? 2 : 5),
@@ -386,7 +386,7 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Colors.white.withOpacity(0.25),
+                                Colors.white.withValues(alpha: 0.25),
                                 Colors.transparent,
                               ],
                             ),
@@ -409,7 +409,7 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
                   ),
                 ),
                 const SizedBox(height: 7),
-                // ── Label ───────────────────────────────────────────────────
+                // â”€â”€ Label â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                 Flexible(
                   child: Text(
                     widget.label,
@@ -432,3 +432,4 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
     );
   }
 }
+

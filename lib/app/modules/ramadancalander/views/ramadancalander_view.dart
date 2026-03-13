@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -183,7 +183,7 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
                     border: isToday ? Border.all(color: const Color(0xFF4CAF50), width: 1.5) : null,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.03),
+                        color: Colors.black.withValues(alpha: 0.03),
                         blurRadius: 6,
                         offset: const Offset(0, 3),
                       ),
@@ -295,3 +295,4 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
     );
   }
 }
+

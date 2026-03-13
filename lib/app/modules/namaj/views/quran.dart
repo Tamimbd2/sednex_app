@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sednexapp/app/core/theme/app_colors.dart';
@@ -55,7 +55,7 @@ class _QuranViewState extends State<QuranView> {
                 gradient: LinearGradient(
                   colors: [
                     AppColors.primary, 
-                    AppColors.primary.withOpacity(0.8)
+                    AppColors.primary.withValues(alpha: 0.8)
                   ], 
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -246,3 +246,4 @@ class _QuranViewState extends State<QuranView> {
     );
   }
 }
+

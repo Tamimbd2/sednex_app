@@ -23,6 +23,7 @@ class DashboardController extends GetxController {
   // Controllers for auto-scrolling
   final infoScrollController = ScrollController();
   final essentialScrollController = ScrollController();
+  final homeScrollController = ScrollController();
   
   var isMarqueeLoading = false.obs;
   Timer? _marqueeTimer;
@@ -44,6 +45,19 @@ class DashboardController extends GetxController {
     
     // Start auto-scrolls
     startAutoScrolls();
+    
+    // Seamless scroll for community feed
+    homeScrollController.addListener(() {
+      if (homeScrollController.offset > homeScrollController.position.maxScrollExtent + 50) {
+        // Debounce or ensure we only navigate once
+        if (Get.currentRoute != '/community-feed') {
+          Get.toNamed(
+            '/community-feed',
+            preventDuplicates: true,
+          );
+        }
+      }
+    });
   }
   
   void startAutoScrolls() {
@@ -218,6 +232,7 @@ class DashboardController extends GetxController {
     bannerPageController.dispose();
     infoScrollController.dispose();
     essentialScrollController.dispose();
+    homeScrollController.dispose();
     super.onClose();
   }
 

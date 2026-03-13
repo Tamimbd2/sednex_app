@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../controllers/community_controller.dart';
 import 'communityprofiledetails.dart';
@@ -177,7 +178,7 @@ class CommunityView extends GetView<CommunityController> {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: Colors.grey[300],
-                backgroundImage: image.isNotEmpty ? NetworkImage(image) : null,
+                backgroundImage: image.isNotEmpty ? CachedNetworkImageProvider(image) : null,
                 child: image.isEmpty
                     ? Text(
                         name.isNotEmpty ? name[0].toUpperCase() : '?',

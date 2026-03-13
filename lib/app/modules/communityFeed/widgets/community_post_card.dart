@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/theme/app_colors.dart';
 import '../controllers/community_feed_controller.dart';
 
@@ -43,7 +44,7 @@ class CommunityPostCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage: NetworkImage(post['avatar'] ?? ''),
+                backgroundImage: CachedNetworkImageProvider(post['avatar'] ?? ''),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -529,7 +530,7 @@ class CommunityPostCard extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 16,
-                          backgroundImage: NetworkImage(comment['avatar']),
+                          backgroundImage: CachedNetworkImageProvider(comment['avatar']),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -796,26 +797,21 @@ class CommunityPostCard extends StatelessWidget {
   Widget _buildImage(String url, List<dynamic> allImages, int index) {
     return GestureDetector(
       onTap: () => _openFullScreenImage(allImages, index),
-      child: Image.network(
-        url,
+      child: CachedNetworkImage(
+        imageUrl: url,
         fit: BoxFit.cover,
         width: double.infinity,
         height: double.infinity,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Center(
+        placeholder: (context, url) => Container(
+          color: Colors.grey[200],
+          child: const Center(
             child: CircularProgressIndicator(
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                Color(0xFF1E63FF),
-              ),
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                  : null,
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
             ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) => Container(
+          ),
+        ),
+        errorWidget: (context, url, error) => Container(
           color: Colors.grey[200],
           child: const Icon(Icons.broken_image, color: Colors.grey),
         ),
@@ -856,20 +852,17 @@ class FullScreenImageViewer extends StatelessWidget {
                 minScale: 0.5,
                 maxScale: 4.0,
                 child: Center(
-                  child: Image.network(
-                    images[index],
+                  child: CachedNetworkImage(
+                    imageUrl: images[index],
                     fit: BoxFit.contain,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Color(0xFF1E63FF),
-                          ),
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(0xFF1E63FF),
                         ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) => const Icon(
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => const Icon(
                       Icons.broken_image,
                       color: Colors.white54,
                       size: 50,

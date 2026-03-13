@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../controllers/essential_service_controller.dart';
@@ -92,7 +92,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
             _buildServiceCard(
               'Hospitals',
               'assets/essentialService/hospital.png',
-              const Color(0xFFC62828), // Medical Red
+              const Color(0xFF1E63FF), // Medical Red
               () => Get.toNamed('/hospitals'),
             ),
             _buildServiceCard(
@@ -215,13 +215,13 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFDC143C).withValues(alpha: 0.1),
+                    color: const Color(0xFF1E63FF).withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.rocket_launch,
                     size: 50,
-                    color: Color(0xFFDC143C),
+                    color: Color(0xFF1E63FF),
                   ),
                 ),
               ),
@@ -250,7 +250,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
                 child: ElevatedButton(
                   onPressed: () => Get.back(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFDC143C),
+                    backgroundColor: const Color(0xFF1E63FF),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -274,9 +274,9 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
   }
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════════════════════════
 // Advanced Animated Service Card
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════════════════════════
 class _AdvancedServiceCard extends StatefulWidget {
   final String label;
   final String imagePath;
@@ -347,7 +347,7 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // â”€â”€ Icon Box â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                // ── Icon Box ────────────────────────────────────────────────
                 Container(
                   width: 64,
                   height: 64,
@@ -409,7 +409,7 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
                   ),
                 ),
                 const SizedBox(height: 7),
-                // â”€â”€ Label â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                // ── Label ───────────────────────────────────────────────────
                 Flexible(
                   child: Text(
                     widget.label,
@@ -432,4 +432,5 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
     );
   }
 }
+
 

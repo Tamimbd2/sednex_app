@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,8 +18,8 @@ class GoldRateView extends GetView<GoldRateController> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color(0xFFD32F2F), // Red 700
-                Color(0xFFB71C1C), // Red 900
+                Color(0xFF1E63FF), // Red 700
+                Color(0xFF3575FF), // Red 900
               ],
             ),
           ),
@@ -108,7 +108,7 @@ class GoldRateView extends GetView<GoldRateController> {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFD32F2F).withValues(alpha: 0.08),
+                    color: const Color(0xFF1E63FF).withValues(alpha: 0.08),
                     blurRadius: 24,
                     offset: const Offset(0, 10),
                   ),
@@ -135,7 +135,7 @@ class GoldRateView extends GetView<GoldRateController> {
                             color: Colors.white,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.location_on, color: Color(0xFFD32F2F), size: 16),
+                          child: const Icon(Icons.location_on, color: Color(0xFF1E63FF), size: 16),
                         ),
                         const SizedBox(width: 12),
                         Text(
@@ -155,13 +155,13 @@ class GoldRateView extends GetView<GoldRateController> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Column(
                       children: [
-                        _buildPremiumRateRow('1 Vori 22 Carat', '1,12,000 à§³', isHighlight: true),
+                        _buildPremiumRateRow('1 Vori 22 Carat', '1,12,000 ৳', isHighlight: true),
                         _buildDivider(),
-                        _buildPremiumRateRow('1 Vori 21 Carat', '1,07,000 à§³'),
+                        _buildPremiumRateRow('1 Vori 21 Carat', '1,07,000 ৳'),
                         _buildDivider(),
-                        _buildPremiumRateRow('1 Vori 18 Carat', '92,000 à§³'),
+                        _buildPremiumRateRow('1 Vori 18 Carat', '92,000 ৳'),
                         _buildDivider(),
-                        _buildPremiumRateRow('Traditional Method', '76,000 à§³'),
+                        _buildPremiumRateRow('Traditional Method', '76,000 ৳'),
                       ],
                     ),
                   ),
@@ -241,7 +241,7 @@ class GoldRateView extends GetView<GoldRateController> {
                           color: const Color(0xFF37474F),
                         ),
                       )),
-                      const Icon(Icons.calculate_outlined, color: Color(0xFFD32F2F), size: 24),
+                      const Icon(Icons.calculate_outlined, color: Color(0xFF1E63FF), size: 24),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -329,7 +329,7 @@ class GoldRateView extends GetView<GoldRateController> {
           Container( // Price Tag
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: isHighlight ? const Color(0xFFD32F2F).withValues(alpha: 0.08) : Colors.transparent,
+              color: isHighlight ? const Color(0xFF1E63FF).withValues(alpha: 0.08) : Colors.transparent,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -337,7 +337,7 @@ class GoldRateView extends GetView<GoldRateController> {
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFFD32F2F),
+                color: const Color(0xFF1E63FF),
                 height: 1.5,
               ),
             ),
@@ -358,12 +358,12 @@ class GoldRateView extends GetView<GoldRateController> {
             curve: Curves.easeInOut,
             padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFFD32F2F) : Colors.transparent,
+              color: isSelected ? const Color(0xFF1E63FF) : Colors.transparent,
               borderRadius: BorderRadius.circular(12),
               boxShadow: isSelected 
                 ? [
                     BoxShadow(
-                      color: const Color(0xFFD32F2F).withValues(alpha: 0.3),
+                      color: const Color(0xFF1E63FF).withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     )
@@ -416,7 +416,7 @@ class GoldRateView extends GetView<GoldRateController> {
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFFD32F2F), // Primary Red
+              color: const Color(0xFF1E63FF), // Primary Red
               height: 1.5,
             ),
           ),
@@ -425,4 +425,6 @@ class GoldRateView extends GetView<GoldRateController> {
     );
   }
 }
+
+
 

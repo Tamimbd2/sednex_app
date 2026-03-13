@@ -24,7 +24,7 @@ class ShopController extends GetxController {
       "title": "Weekend Deal",
       "subtitle": "Up to 35%",
       "description": "Fashion & Accessories | Free Shipping",
-      "gradientColors": [Color(0xFF811719), Color(0xFFC10007)],
+      "gradientColors": [Color(0xFF1E63FF), Color(0xFF3575FF)],
       "image": "https://via.placeholder.com/344x160.png",
     },
   ];
@@ -65,7 +65,7 @@ class ShopController extends GetxController {
       "image": "https://via.placeholder.com/164x164.png",
       "isSale": true,
       "saleText": "Sale",
-      "saleColor": Color(0xFFDC143C),
+      "saleColor": Color(0xFF1E63FF),
       "rating": 4.5,
       "reviews": 120,
       "description": "Step into comfort and style with these Classic White Sneakers. Made from premium leather, they feature a durable rubber sole and a cushioned insole for all-day wear.",
@@ -164,3 +164,4 @@ class ShopController extends GetxController {
 
   void increment() => count.value++;
 }
+

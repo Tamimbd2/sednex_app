@@ -38,7 +38,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Color(0xFFDC143C), Color(0xFFA00000)],
+                colors: [Color(0xFF1E63FF), Color(0xFF3575FF)],
               ),
             ),
             child: SafeArea(
@@ -182,10 +182,10 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildActionButton(Icons.phone, 'Call', const Color(0xFFDC143C)),
+                        _buildActionButton(Icons.phone, 'Call', const Color(0xFF1E63FF)),
                         _buildActionButton(Icons.navigation, 'Direction', const Color(0xFF4169E1)),
                         _buildActionButton(Icons.language, 'Website', const Color(0xFF00C853)),
-                        _buildActionButton(Icons.share, 'Share', const Color(0xFFFFA500)),
+                        _buildActionButton(Icons.share, 'Share', const Color(0xFFFFD700)),
                       ],
                     ),
                   ),
@@ -203,7 +203,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
                             color: const Color(0xFFFFEBEE),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(Icons.location_on, color: Color(0xFFDC143C), size: 24),
+                          child: const Icon(Icons.location_on, color: Color(0xFF1E63FF), size: 24),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -252,9 +252,9 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
                     margin: const EdgeInsets.only(top: 8),
                     child: TabBar(
                       controller: _tabController,
-                      labelColor: const Color(0xFFDC143C),
+                      labelColor: const Color(0xFF1E63FF),
                       unselectedLabelColor: Colors.grey,
-                      indicatorColor: const Color(0xFFDC143C),
+                      indicatorColor: const Color(0xFF1E63FF),
                       labelStyle: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600),
                       tabs: const [
                         Tab(text: 'About'),
@@ -377,7 +377,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
                         color: const Color(0xFFFFEBEE),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(Icons.access_time, color: Color(0xFFDC143C), size: 20),
+                      child: const Icon(Icons.access_time, color: Color(0xFF1E63FF), size: 20),
                     ),
                     const SizedBox(width: 12),
                     Text(
@@ -411,7 +411,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
             'Hummus',
             'Classic chickpea dip with tahini',
             '\$5.99',
-            const Color(0xFFDC143C),
+            const Color(0xFF1E63FF),
           ),
           const SizedBox(height: 12),
           _buildMenuItem(
@@ -432,7 +432,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
             'Tabbouleh',
             'Fresh parsley salad',
             '\$6.99',
-            const Color(0xFFFFA500),
+            const Color(0xFFFFD700),
           ),
           const SizedBox(height: 12),
           _buildMenuItem(
@@ -455,7 +455,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
             width: 6,
             height: 6,
             decoration: const BoxDecoration(
-              color: Color(0xFFDC143C),
+              color: Color(0xFF1E63FF),
               shape: BoxShape.circle,
             ),
           ),
@@ -542,7 +542,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
             style: GoogleFonts.inter(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFFDC143C),
+              color: const Color(0xFF1E63FF),
             ),
           ),
         ],
@@ -550,3 +550,5 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> with Sing
     );
   }
 }
+
+

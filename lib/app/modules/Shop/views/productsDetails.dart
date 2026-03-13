@@ -87,7 +87,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFDC143C),
+                        color: const Color(0xFF1E63FF),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -120,7 +120,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                       decoration: BoxDecoration(
                         color: const Color(0xFFFCEFA5), // Consistent styling
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFFDC143C), width: 1.5), // Selected style
+                        border: Border.all(color: const Color(0xFF1E63FF), width: 1.5), // Selected style
                       ),
                       padding: const EdgeInsets.all(4),
                       child: Image.network(
@@ -155,7 +155,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             Text(
               product['price'] ?? '\$0.00',
               style: GoogleFonts.poppins(
-                color: const Color(0xFFDC143C),
+                color: const Color(0xFF1E63FF),
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
               ),
@@ -329,7 +329,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 // WhatsApp action
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFDC143C),
+                backgroundColor: const Color(0xFF1E63FF),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -357,3 +357,4 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     );
   }
 }
+

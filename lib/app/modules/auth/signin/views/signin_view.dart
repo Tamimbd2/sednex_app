@@ -160,7 +160,7 @@ class SigninView extends GetView<SigninController> {
                 Obx(() => controller.isLoading.value
                     ? const Center(
                         child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
+                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
                         ),
                       )
                     : PrimaryButton(
@@ -336,3 +336,4 @@ class SigninView extends GetView<SigninController> {
     );
   }
 }
+

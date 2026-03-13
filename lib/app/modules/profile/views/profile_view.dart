@@ -1,8 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../core/theme/app_colors.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -40,11 +41,7 @@ class ProfileView extends GetView<ProfileController> {
                     padding: const EdgeInsets.all(3), // Border width
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [Color(0xFFFF6366), Color(0xFFE7000A)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                      gradient: AppColors.primaryGradient,
                     ),
                     child: Obx(() {
                       final imgUrl = controller.userProfileImage.value;
@@ -176,7 +173,7 @@ class ProfileView extends GetView<ProfileController> {
                     textConfirm: 'Yes',
                     textCancel: 'No',
                     confirmTextColor: Colors.white,
-                    buttonColor: const Color(0xFFFA2B36),
+                    buttonColor: AppColors.primary,
                     cancelTextColor: const Color(0xFF101727),
                     onConfirm: () {
                       Get.back(); // Close dialog first
@@ -238,7 +235,7 @@ class ProfileView extends GetView<ProfileController> {
             style: GoogleFonts.arimo(
               fontSize: 16,
               fontWeight: FontWeight.w400,
-              color: isDestructive ? const Color(0xFFFA2B36) : const Color(0xFF101727),
+              color: isDestructive ? const Color(0xFFEF4444) : const Color(0xFF101727), // Soft red for logout
             ),
           ),
           trailing: Icon(

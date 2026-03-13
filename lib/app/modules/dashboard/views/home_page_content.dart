@@ -8,6 +8,7 @@ import '../../namaj/controllers/namaj_controller.dart';
 import '../../ramadancalander/controllers/ramadancalander_controller.dart';
 import '../../../routes/app_pages.dart';
 import '../../communityFeed/widgets/community_post_card.dart';
+import '../../../core/theme/app_colors.dart';
 
 class HomePageContent extends StatelessWidget {
   const HomePageContent({super.key});
@@ -27,7 +28,7 @@ class HomePageContent extends StatelessWidget {
             width: double.infinity,
             height: 36, // Constrained height for marquee
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-            color: const Color(0xFFFFF0F0), // Light red background
+            color: AppColors.backgroundAlt, // Light blue background (BG 1)
             child: Obx(() {
               final controller = Get.find<DashboardController>();
               final text = controller.marqueeText.value;
@@ -291,14 +292,14 @@ class HomePageContent extends StatelessWidget {
                 _buildEssentialServiceItem(
                   'Embassy',
                   'assets/essentialService/embassy.png',
-                  const Color(0xFFDC143C),
+                  AppColors.primary,
                   () => Get.toNamed('/embassy'),
                 ),
                 const SizedBox(width: 16),
                 _buildEssentialServiceItem(
                   'Article',
                   'assets/essentialService/article.png',
-                  const Color(0xFFFFA500),
+                  const Color(0xFFFFD700),
                   () => Get.toNamed('/articles'),
                 ),
                 const SizedBox(width: 16),
@@ -499,13 +500,13 @@ class HomePageContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.access_time, size: 12, color: Color(0xFFDC143C)),
+                const Icon(Icons.access_time, size: 12, color: AppColors.primary),
                 const SizedBox(width: 4),
                 Text(
                   footerText,
                   style: GoogleFonts.inter(
                     fontSize: 12,
-                    color: const Color(0xFFDC143C),
+                    color: AppColors.primary,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -672,3 +673,4 @@ class HomePageContent extends StatelessWidget {
     );
   }
 }
+

@@ -70,7 +70,7 @@ class SigninController extends GetxController {
           'Error',
           message.toString(),
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: const Color(0xFFDC143C),
+          backgroundColor: const Color(0xFF1E63FF),
           colorText: Colors.white,
           duration: const Duration(seconds: 3),
           margin: const EdgeInsets.all(16),
@@ -83,7 +83,7 @@ class SigninController extends GetxController {
         'Error',
         'Something went wrong. Please try again.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: const Color(0xFFDC143C),
+        backgroundColor: const Color(0xFF1E63FF),
         colorText: Colors.white,
         duration: const Duration(seconds: 3),
         margin: const EdgeInsets.all(16),
@@ -101,3 +101,4 @@ class SigninController extends GetxController {
     super.onClose();
   }
 }
+

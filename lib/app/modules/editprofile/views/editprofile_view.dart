@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../core/theme/app_colors.dart';
 import '../controllers/editprofile_controller.dart';
 
 class EditprofileView extends GetView<EditprofileController> {
@@ -50,11 +51,7 @@ class EditprofileView extends GetView<EditprofileController> {
                       padding: const EdgeInsets.all(3),
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [Color(0xFFFF6366), Color(0xFFE7000A)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+                        gradient: AppColors.primaryGradient,
                       ),
                       child: Container(
                         width: 100,
@@ -73,7 +70,7 @@ class EditprofileView extends GetView<EditprofileController> {
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFDC143C),
+                          color: const Color(0xFF1E63FF),
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.white, width: 2),
                         ),
@@ -91,7 +88,7 @@ class EditprofileView extends GetView<EditprofileController> {
               Text(
                 'Change Photo',
                 style: GoogleFonts.arimo(
-                  color: const Color(0xFFDC143C),
+                  color: const Color(0xFF1E63FF),
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                 ),
@@ -144,7 +141,7 @@ class EditprofileView extends GetView<EditprofileController> {
                 child: ElevatedButton(
                   onPressed: controller.saveChanges,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFDC143C),
+                    backgroundColor: const Color(0xFF1E63FF),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -216,3 +213,4 @@ class EditprofileView extends GetView<EditprofileController> {
     );
   }
 }
+

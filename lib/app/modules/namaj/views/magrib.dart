@@ -18,7 +18,7 @@ class MagribView extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFFC62828),
+        backgroundColor: const Color(0xFF1E63FF),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
@@ -173,14 +173,14 @@ class MagribView extends StatelessWidget {
   Widget _buildSectionHeader({required IconData icon, required String title}) {
     return Row(
       children: [
-        Icon(icon, color: const Color(0xFFC62828), size: 22),
+        Icon(icon, color: const Color(0xFF1E63FF), size: 22),
         const SizedBox(width: 8),
         Text(
           title,
           style: GoogleFonts.hindSiliguri(
             fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFFC62828),
+            color: const Color(0xFF1E63FF),
           ),
         ),
       ],
@@ -290,7 +290,7 @@ class MagribView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: const BoxDecoration(
-              color: Color(0xFFC62828), // Red circle
+              color: Color(0xFF1E63FF), // Red circle
               shape: BoxShape.circle,
             ),
             child: Text(
@@ -353,3 +353,4 @@ class MagribView extends StatelessWidget {
     );
   }
 }
+

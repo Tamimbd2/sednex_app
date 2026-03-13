@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,7 +21,7 @@ class NamajView extends GetView<NamajController> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFDC143C), Color(0xFFB71C1C)],
+              colors: [Color(0xFF1E63FF), Color(0xFF3575FF)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -33,7 +33,7 @@ class NamajView extends GetView<NamajController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'à¦¨à¦¾à¦®à¦¾à¦œà§‡à¦° à¦¸à¦®à§Ÿà¦¸à§‚à¦šà¦¿',
+          'নামাজের সময়সূচি',
           style: GoogleFonts.hindSiliguri(
             color: Colors.white,
             fontSize: 20,
@@ -88,7 +88,7 @@ class NamajView extends GetView<NamajController> {
             const SizedBox(height: 28),
 
             // Prayer Learning Header
-            _buildSectionHeader('à¦¨à¦¾à¦®à¦¾à¦œ à¦¶à¦¿à¦•à§à¦·à¦¾ (à¦¸à¦‚à¦•à§à¦·à§‡à¦ªà§‡)', 'assets/icons/book.svg'), // Using fallback icon logic
+            _buildSectionHeader('নামাজ শিক্ষা (সংক্ষেপে)', 'assets/icons/book.svg'), // Using fallback icon logic
             
             const SizedBox(height: 16),
 
@@ -98,7 +98,7 @@ class NamajView extends GetView<NamajController> {
             const SizedBox(height: 28),
 
             // Essential Duas Header
-             _buildSectionHeader('à¦ªà§à¦°à§Ÿà§‹à¦œà¦¨à§€à§Ÿ à¦¦à§‹à§Ÿà¦¾', 'assets/icons/heart.svg'),
+             _buildSectionHeader('প্রয়োজনীয় দোয়া', 'assets/icons/heart.svg'),
 
             const SizedBox(height: 16),
 
@@ -118,14 +118,14 @@ class NamajView extends GetView<NamajController> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: const Color(0xFFDC143C).withValues(alpha: 0.1),
+            color: const Color(0xFF1E63FF).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
              // Since we don't have the exact SVG paths for generic icons, using standard Icons for now
              iconPath.contains('book') ? Icons.menu_book_rounded : Icons.favorite_rounded,
              size: 20, 
-             color: const Color(0xFFDC143C)
+             color: const Color(0xFF1E63FF)
           ),
         ),
         const SizedBox(width: 12),
@@ -148,7 +148,7 @@ class NamajView extends GetView<NamajController> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFDC143C).withValues(alpha: 0.08),
+            color: const Color(0xFF1E63FF).withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -160,16 +160,16 @@ class NamajView extends GetView<NamajController> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFFDC143C).withValues(alpha: 0.05),
+              color: const Color(0xFF1E63FF).withValues(alpha: 0.05),
               borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-              border: Border(bottom: BorderSide(color: const Color(0xFFDC143C).withValues(alpha: 0.1))),
+              border: Border(bottom: BorderSide(color: const Color(0xFF1E63FF).withValues(alpha: 0.1))),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.calendar_today_rounded, size: 18, color: Color(0xFFDC143C)),
+                    const Icon(Icons.calendar_today_rounded, size: 18, color: Color(0xFF1E63FF)),
                     const SizedBox(width: 8),
                     Obx(() => Text(
                       '${controller.schedule['day']}',
@@ -185,14 +185,14 @@ class NamajView extends GetView<NamajController> {
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [Color(0xFFDC143C), Color(0xFFFF5252)],
+                      colors: [Color(0xFF1E63FF), Color(0xFF4DA3FF)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFDC143C).withValues(alpha: 0.3),
+                        color: const Color(0xFF1E63FF).withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -221,11 +221,11 @@ class NamajView extends GetView<NamajController> {
                    Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildScheduleColumnHeader('à¦«à¦œà¦°', isHighlight: currentIndex == 0),
-                      _buildScheduleColumnHeader('à¦¯à§‹à¦¹à¦°', isHighlight: currentIndex == 1),
-                      _buildScheduleColumnHeader('à¦†à¦›à¦°', isHighlight: currentIndex == 2),
-                      _buildScheduleColumnHeader('à¦®à¦¾à¦—à¦°à¦¿à¦¬', isHighlight: currentIndex == 3),
-                      _buildScheduleColumnHeader('à¦ˆà¦¶à¦¾', isHighlight: currentIndex == 4),
+                      _buildScheduleColumnHeader('ফজর', isHighlight: currentIndex == 0),
+                      _buildScheduleColumnHeader('যোহর', isHighlight: currentIndex == 1),
+                      _buildScheduleColumnHeader('আছর', isHighlight: currentIndex == 2),
+                      _buildScheduleColumnHeader('মাগরিব', isHighlight: currentIndex == 3),
+                      _buildScheduleColumnHeader('ঈশা', isHighlight: currentIndex == 4),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -240,7 +240,7 @@ class NamajView extends GetView<NamajController> {
                          return Container(
                            padding: isHighlight ? const EdgeInsets.symmetric(horizontal: 8, vertical: 4) : null,
                            decoration: isHighlight ? BoxDecoration(
-                             color: const Color(0xFFDC143C).withValues(alpha: 0.1),
+                             color: const Color(0xFF1E63FF).withValues(alpha: 0.1),
                              borderRadius: BorderRadius.circular(8),
                            ) : null,
                            child: Text(
@@ -248,7 +248,7 @@ class NamajView extends GetView<NamajController> {
                              style: GoogleFonts.poppins(
                                fontSize: 14,
                                fontWeight: isHighlight ? FontWeight.w700 : FontWeight.w500,
-                               color: isHighlight ? const Color(0xFFDC143C) : const Color(0xFF333333),
+                               color: isHighlight ? const Color(0xFF1E63FF) : const Color(0xFF333333),
                              ),
                            ),
                          );
@@ -270,7 +270,7 @@ class NamajView extends GetView<NamajController> {
       style: GoogleFonts.hindSiliguri(
         fontSize: 13,
         fontWeight: isHighlight ? FontWeight.w700 : FontWeight.w500,
-        color: isHighlight ? const Color(0xFFDC143C) : const Color(0xFF828282),
+        color: isHighlight ? const Color(0xFF1E63FF) : const Color(0xFF828282),
       ),
     );
   }
@@ -308,17 +308,17 @@ class NamajView extends GetView<NamajController> {
             child: InkWell(
               onTap: () {
                 final title = item['title'];
-                if (title == 'à¦«à¦œà¦°') {
+                if (title == 'ফজর') {
                   Get.to(() => const FajarView());
-                } else if (title == 'à¦¯à§‹à¦¹à¦°') {
+                } else if (title == 'যোহর') {
                   Get.to(() => const ZoharView());
-                } else if (title == 'à¦†à¦›à¦°') {
+                } else if (title == 'আছর') {
                   Get.to(() => const AcharView());
-                } else if (title == 'à¦®à¦¾à¦—à¦°à¦¿à¦¬') {
+                } else if (title == 'মাগরিব') {
                    Get.to(() => const MagribView()); 
-                } else if (title == 'à¦ˆà¦¶à¦¾') {
+                } else if (title == 'ঈশা') {
                   Get.to(() => const EshaView());
-                } else if (title == 'à¦•à§à¦°à¦†à¦¨') {
+                } else if (title == 'কুরআন') {
                   Get.to(() => const QuranView());
                 }
               },
@@ -436,7 +436,7 @@ class NamajView extends GetView<NamajController> {
                        width: 4, 
                        height: 16, 
                        decoration: BoxDecoration(
-                         color: const Color(0xFFDC143C),
+                         color: const Color(0xFF1E63FF),
                          borderRadius: BorderRadius.circular(2),
                        ),
                      ),
@@ -466,7 +466,7 @@ class NamajView extends GetView<NamajController> {
                        decoration: BoxDecoration(
                         color: const Color(0xFFFFF8F8), // Very light warm background
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFFDC143C).withValues(alpha: 0.08)),
+                        border: Border.all(color: const Color(0xFF1E63FF).withValues(alpha: 0.08)),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -509,13 +509,13 @@ class NamajView extends GetView<NamajController> {
                                  child: Row(
                                    mainAxisSize: MainAxisSize.min,
                                    children: [
-                                     Icon(Icons.copy_rounded, size: 14, color: const Color(0xFFDC143C).withValues(alpha: 0.7)),
+                                     Icon(Icons.copy_rounded, size: 14, color: const Color(0xFF1E63FF).withValues(alpha: 0.7)),
                                      const SizedBox(width: 4),
                                      Text(
                                        'Copy',
                                        style: GoogleFonts.poppins(
                                          fontSize: 10,
-                                         color: const Color(0xFFDC143C).withValues(alpha: 0.7),
+                                         color: const Color(0xFF1E63FF).withValues(alpha: 0.7),
                                          fontWeight: FontWeight.w500,
                                        ),
                                      ),
@@ -549,4 +549,5 @@ class NamajView extends GetView<NamajController> {
     );
   }
 }
+
 

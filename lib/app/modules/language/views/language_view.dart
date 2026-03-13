@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -106,7 +106,7 @@ class LanguageView extends GetView<LanguageController> {
                                           width: 24,
                                           height: 24,
                                           decoration: const BoxDecoration(
-                                            color: Color(0xFFDC143C), // Red check
+                                            color: Color(0xFF1E63FF), // Red check
                                             shape: BoxShape.circle,
                                           ),
                                           child: const Icon(Icons.check, color: Colors.white, size: 16),
@@ -145,7 +145,7 @@ class LanguageView extends GetView<LanguageController> {
                     child: ElevatedButton(
                       onPressed: controller.applyLanguage,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFDC143C),
+                        backgroundColor: const Color(0xFF1E63FF),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -178,4 +178,5 @@ class LanguageView extends GetView<LanguageController> {
     );
   }
 }
+
 

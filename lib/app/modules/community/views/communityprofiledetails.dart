@@ -17,7 +17,7 @@ class CommunityProfileDetailsView extends StatelessWidget {
     final image = (member['profileImage'] ?? '').toString();
 
     // Primary Crimson Color used in the app
-    const primaryColor = Color(0xFFDC143C); 
+    const primaryColor = Color(0xFF1E63FF); 
     const textColor = Color(0xFF1F2937);
     const subTextColor = Color(0xFF6B7280);
 
@@ -209,3 +209,4 @@ class CommunityProfileDetailsView extends StatelessWidget {
     );
   }
 }
+

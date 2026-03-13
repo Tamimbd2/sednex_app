@@ -19,8 +19,8 @@ class BkashRateView extends GetView<BkashRateController> {
               end: Alignment.bottomRight,
               colors: [
 
-                 Color(0xFFDC143C), // Primary Red
-                 Color(0xFFB71C1C), // Darker Red
+                 Color(0xFF1E63FF), // Primary Red
+                 Color(0xFF3575FF), // Darker Red
               ],
             ),
           ),
@@ -72,13 +72,13 @@ class BkashRateView extends GetView<BkashRateController> {
                  child: Row(
                    mainAxisSize: MainAxisSize.min,
                    children: [
-                     const Icon(Icons.history_rounded, color: Color(0xFFDC143C), size: 18),
+                     const Icon(Icons.history_rounded, color: Color(0xFF1E63FF), size: 18),
                      const SizedBox(width: 8),
                      Text(
                        'Last Update: 15-03-2025',
                        style: GoogleFonts.poppins(
                          fontSize: 13,
-                         color: const Color(0xFFDC143C),
+                         color: const Color(0xFF1E63FF),
                          fontWeight: FontWeight.w500,
                        ),
                      ),
@@ -100,7 +100,7 @@ class BkashRateView extends GetView<BkashRateController> {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFDC143C).withValues(alpha: 0.15),
+                    color: const Color(0xFF1E63FF).withValues(alpha: 0.15),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -124,7 +124,7 @@ class BkashRateView extends GetView<BkashRateController> {
                               )
                             ]
                           ),
-                          child: const Icon(Icons.currency_exchange, color: Color(0xFFDC143C)),
+                          child: const Icon(Icons.currency_exchange, color: Color(0xFF1E63FF)),
                         ),
                         const SizedBox(width: 14),
                         Text(
@@ -132,7 +132,7 @@ class BkashRateView extends GetView<BkashRateController> {
                           style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFFDC143C),
+                            color: const Color(0xFF1E63FF),
                           ),
                         ),
                      ],
@@ -148,7 +148,7 @@ class BkashRateView extends GetView<BkashRateController> {
                       style: GoogleFonts.poppins(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFFDC143C),
+                        color: const Color(0xFF1E63FF),
                       ),
                     ),
                   ),
@@ -234,7 +234,7 @@ class BkashRateView extends GetView<BkashRateController> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
-                        borderSide: const BorderSide(color: Color(0xFFDC143C), width: 1.5),
+                        borderSide: const BorderSide(color: Color(0xFF1E63FF), width: 1.5),
                       ),
                     ),
                   ),
@@ -280,7 +280,7 @@ class BkashRateView extends GetView<BkashRateController> {
                            ],
                            border: Border.all(color: const Color(0xFFFCE4EC), width: 2)
                          ),
-                         child: const Icon(Icons.swap_vert_rounded, color: Color(0xFFDC143C), size: 24),
+                         child: const Icon(Icons.swap_vert_rounded, color: Color(0xFF1E63FF), size: 24),
                        ),
                     ],
                   ),
@@ -420,7 +420,7 @@ class BkashRateView extends GetView<BkashRateController> {
             style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: isSelected ? const Color(0xFFDC143C) : const Color(0xFF9E9E9E),
+              color: isSelected ? const Color(0xFF1E63FF) : const Color(0xFF9E9E9E),
             ),
           ),
         ),
@@ -458,3 +458,4 @@ class BkashRateView extends GetView<BkashRateController> {
     );
   }
 }
+

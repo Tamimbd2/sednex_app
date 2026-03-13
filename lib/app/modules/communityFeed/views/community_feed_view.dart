@@ -39,13 +39,13 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
         ),
       ),
       body: RefreshIndicator(
-        color: const Color(0xFFDC143C),
+        color: const Color(0xFF1E63FF),
         onRefresh: () => controller.refreshPosts(),
         child: Obx(() {
           if (controller.isLoading.value && controller.posts.isEmpty) {
             return const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
               ),
             );
           }
@@ -108,7 +108,7 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
                     padding: EdgeInsets.symmetric(vertical: 16),
                     child: Center(
                       child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFDC143C)),
+                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
                         strokeWidth: 2,
                       ),
                     ),
@@ -144,7 +144,7 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFFDC143C) : Colors.transparent, // Red if selected
+                  color: isSelected ? const Color(0xFF1E63FF) : Colors.transparent, // Red if selected
                   borderRadius: BorderRadius.circular(24),
                   border: isSelected ? null : Border.all(color: Colors.transparent), // Clean look for unselected
                 ),
@@ -165,3 +165,4 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
     );
   }
 }
+

@@ -103,7 +103,7 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
                 child: ElevatedButton(
                   onPressed: controller.updatePassword,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFDC143C), // Red
+                    backgroundColor: const Color(0xFF1E63FF), // Red
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -131,7 +131,7 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
                   child: Text(
                     'Forgot current password?',
                     style: GoogleFonts.arimo(
-                      color: const Color(0xFFDC143C), // Red
+                      color: const Color(0xFF1E63FF), // Red
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                     ),
@@ -196,3 +196,4 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
     );
   }
 }
+

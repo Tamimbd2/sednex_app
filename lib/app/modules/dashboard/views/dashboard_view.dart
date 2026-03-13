@@ -7,7 +7,7 @@ import '../../../core/theme/app_colors.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import '../../profile/views/profile_view.dart';
-import 'HomePagecontent.dart';
+import 'home_page_content.dart';
 
 class DashboardView extends GetView<DashboardController> {
   const DashboardView({super.key});
@@ -173,7 +173,7 @@ class DashboardView extends GetView<DashboardController> {
                 border: Border.all(color: Colors.grey[300]!),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 2),
                   ),

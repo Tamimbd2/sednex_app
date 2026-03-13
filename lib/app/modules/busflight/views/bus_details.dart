@@ -54,7 +54,7 @@ class BusDetailsView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -68,7 +68,7 @@ class BusDetailsView extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFA500).withOpacity(0.1),
+                            color: const Color(0xFFFFA500).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(
@@ -186,7 +186,7 @@ class BusDetailsView extends StatelessWidget {
                     color: const Color(0xFFFFF3E0),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: const Color(0xFFFFA500).withOpacity(0.3),
+                      color: const Color(0xFFFFA500).withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
@@ -195,7 +195,7 @@ class BusDetailsView extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFA500).withOpacity(0.2),
+                          color: const Color(0xFFFFA500).withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -291,7 +291,7 @@ class BusDetailsView extends StatelessWidget {
                           'Error',
                           'Could not open WhatsApp',
                           snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.red.withOpacity(0.1),
+                          backgroundColor: Colors.red.withValues(alpha: 0.1),
                           colorText: Colors.red,
                         );
                       }
@@ -300,7 +300,7 @@ class BusDetailsView extends StatelessWidget {
                         'Booking',
                         'Bus booking feature coming soon.',
                         snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: AppColors.primary.withOpacity(0.1),
+                        backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                         colorText: AppColors.primary,
                       );
                     }
@@ -338,7 +338,7 @@ class BusDetailsView extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -349,7 +349,7 @@ class BusDetailsView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, color: color, size: 24),

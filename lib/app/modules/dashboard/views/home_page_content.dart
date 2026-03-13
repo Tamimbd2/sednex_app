@@ -101,7 +101,7 @@ class HomePageContent extends StatelessWidget {
                                    width: isActive ? 20 : 8,
                                    height: 8,
                                    decoration: BoxDecoration(
-                                     color: isActive ? Colors.white : Colors.white.withOpacity(0.5),
+                                     color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.5),
                                      borderRadius: BorderRadius.circular(4),
                                    ),
                                  );
@@ -157,7 +157,9 @@ class HomePageContent extends StatelessWidget {
                       NamajController? controller;
                       try {
                         controller = Get.find<NamajController>();
-                      } catch (e) {}
+                      } catch (e) {
+                        // NamajController not yet registered; use default values
+                      }
                       
                       final nextPrayer = controller?.nextPrayerDisplay ?? {'name': 'Fazar', 'time': '05:45 AM'};
                       
@@ -402,7 +404,7 @@ class HomePageContent extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: backgroundColor.withOpacity(0.3),
+                  color: backgroundColor.withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -530,7 +532,9 @@ class HomePageContent extends StatelessWidget {
           RamadancalanderController? rController;
           try {
             rController = Get.find<RamadancalanderController>();
-          } catch(e) {}
+          } catch (e) {
+            // RamadancalanderController not yet registered; use default values
+          }
           
           final data = rController?.todayRamadanData ?? {
             'date': '18 Feb',
@@ -596,7 +600,7 @@ class HomePageContent extends StatelessWidget {
                    Row(
                      mainAxisAlignment: MainAxisAlignment.center,
                      children: [
-                       Image.asset('assets/images/sheheri.png', width: 22, height: 22, errorBuilder: (_, __, ___) => const Icon(Icons.wb_sunny_outlined, size: 14)),
+                       Image.asset('assets/images/sheheri.png', width: 22, height: 22, errorBuilder: (_, _, _) => const Icon(Icons.wb_sunny_outlined, size: 14)),
                        const SizedBox(width: 4),
                        Text(
                          'Seheri',
@@ -636,7 +640,7 @@ class HomePageContent extends StatelessWidget {
                    Row(
                      mainAxisAlignment: MainAxisAlignment.center,
                      children: [
-                       Image.asset('assets/images/ifter.png', width: 22, height: 22, errorBuilder: (_, __, ___) => const Icon(Icons.nights_stay_outlined, size: 14)),
+                       Image.asset('assets/images/ifter.png', width: 22, height: 22, errorBuilder: (_, _, _) => const Icon(Icons.nights_stay_outlined, size: 14)),
                        const SizedBox(width: 4),
                        Text(
                          'Ifter',

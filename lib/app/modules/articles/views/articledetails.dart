@@ -151,12 +151,12 @@ class ArticleDetailsView extends StatelessWidget {
                 // Share button
                 GestureDetector(
                   onTap: () {
-                    Share.share(shareText);
+                    SharePlus.instance.share(ShareParams(text: shareText));
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFDC143C).withOpacity(0.1),
+                      color: const Color(0xFFDC143C).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(

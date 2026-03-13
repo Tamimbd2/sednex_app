@@ -13,7 +13,7 @@ class VerifyotpController extends GetxController {
         'Success',
         'OTP Verified: $otp',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withOpacity(0.1),
+        backgroundColor: Colors.green.withValues(alpha: 0.1),
         colorText: Colors.green,
       );
       Get.toNamed(Routes.RESETPASSWORD);
@@ -22,7 +22,7 @@ class VerifyotpController extends GetxController {
         'Error',
         'Please enter a 6-digit code',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.1),
+        backgroundColor: Colors.red.withValues(alpha: 0.1),
         colorText: Colors.red,
       );
     }
@@ -33,7 +33,7 @@ class VerifyotpController extends GetxController {
       'Success',
       'OTP Resent',
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green.withOpacity(0.1),
+      backgroundColor: Colors.green.withValues(alpha: 0.1),
       colorText: Colors.green,
     );
   }

@@ -110,6 +110,6 @@ class AboutusController extends GetxController {
 
   void openUrl(String url) {
     // Implement URL launching logic here
-    print("Launching $url");
+    debugPrint("Launching $url");
   }
 }

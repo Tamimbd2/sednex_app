@@ -163,7 +163,7 @@ class ResetpasswordView extends GetView<ResetpasswordController> {
             ),
             suffixIcon: suffixIcon,
             filled: true,
-            fillColor: AppColors.inputField.withOpacity(0.5),
+            fillColor: AppColors.inputField.withValues(alpha: 0.5),
             contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

@@ -63,7 +63,7 @@ class BkashRateView extends GetView<BkashRateController> {
                    borderRadius: BorderRadius.circular(30),
                    boxShadow: [
                      BoxShadow(
-                       color: Colors.pink.withOpacity(0.1),
+                       color: Colors.pink.withValues(alpha: 0.1),
                        blurRadius: 10,
                        offset: const Offset(0, 4),
                      )
@@ -100,7 +100,7 @@ class BkashRateView extends GetView<BkashRateController> {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFDC143C).withOpacity(0.15),
+                    color: const Color(0xFFDC143C).withValues(alpha: 0.15),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -118,7 +118,7 @@ class BkashRateView extends GetView<BkashRateController> {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black.withValues(alpha: 0.05),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               )
@@ -165,7 +165,7 @@ class BkashRateView extends GetView<BkashRateController> {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.08),
+                    color: Colors.grey.withValues(alpha: 0.08),
                     blurRadius: 24,
                     offset: const Offset(0, 10),
                   ),
@@ -273,7 +273,7 @@ class BkashRateView extends GetView<BkashRateController> {
                            shape: BoxShape.circle,
                            boxShadow: [
                              BoxShadow(
-                               color: Colors.grey.withOpacity(0.1),
+                               color: Colors.grey.withValues(alpha: 0.1),
                                blurRadius: 10,
                                offset: const Offset(0, 4),
                              )
@@ -310,7 +310,7 @@ class BkashRateView extends GetView<BkashRateController> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                          BoxShadow(
-                           color: Colors.blue.withOpacity(0.1),
+                           color: Colors.blue.withValues(alpha: 0.1),
                            blurRadius: 15,
                            offset: const Offset(0, 5)
                          )
@@ -407,7 +407,7 @@ class BkashRateView extends GetView<BkashRateController> {
             boxShadow: isSelected 
               ? [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                    color: Colors.black.withValues(alpha: 0.08),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   )
@@ -439,7 +439,7 @@ class BkashRateView extends GetView<BkashRateController> {
           border: Border.all(color: Colors.grey.shade200),
           boxShadow: [
              BoxShadow(
-               color: Colors.grey.withOpacity(0.05),
+               color: Colors.grey.withValues(alpha: 0.05),
                blurRadius: 6,
                offset: const Offset(0, 2),
              )

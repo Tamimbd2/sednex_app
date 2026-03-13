@@ -11,7 +11,6 @@ class TouristSpotDetailsView extends StatelessWidget {
     final String title = Get.arguments['title'] ?? 'Tourist Spot';
     final String description = Get.arguments['description'] ?? 'No description available.';
     final String image = Get.arguments['image'] ?? '';
-    final String location = Get.arguments['location'] ?? 'Unknown location';
 
     return Scaffold(
       backgroundColor: Colors.white,

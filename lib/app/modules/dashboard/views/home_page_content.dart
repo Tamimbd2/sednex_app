@@ -87,7 +87,9 @@ class HomePageContent extends StatelessWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
                             image: DecorationImage(
-                              image: CachedNetworkImageProvider(banners[actualIndex]),
+                              image: CachedNetworkImageProvider(
+                                banners[actualIndex],
+                              ),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -219,10 +221,11 @@ class HomePageContent extends StatelessWidget {
                                   service['value'] ??
                                   '0')
                               .toString();
-                      if (isBkash)
+                      if (isBkash) {
                         subtitle += '৳';
-                      else if (isGold)
+                      } else if (isGold) {
                         subtitle += '£';
+                      }
                       Color bgColor = isBkash
                           ? const Color(0xFFFCE4EC)
                           : (isGold
@@ -425,16 +428,19 @@ class HomePageContent extends StatelessWidget {
             child: Center(
               child: Column(
                 children: [
-                   const Icon(Icons.keyboard_arrow_down, color: Color(0xFF8F95A1)),
-                   const SizedBox(height: 4),
-                   Text(
-                     'Scroll up to see more in community',
-                     style: GoogleFonts.poppins(
-                       fontSize: 12,
-                       color: const Color(0xFF8F95A1),
-                       fontWeight: FontWeight.w400,
-                     ),
-                   ),
+                  const Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Color(0xFF8F95A1),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Scroll up to see more in community',
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      color: const Color(0xFF8F95A1),
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
                 ],
               ),
             ),

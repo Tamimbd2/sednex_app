@@ -44,7 +44,9 @@ class CommunityPostCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage: CachedNetworkImageProvider(post['avatar'] ?? ''),
+                backgroundImage: CachedNetworkImageProvider(
+                  post['avatar'] ?? '',
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -530,7 +532,9 @@ class CommunityPostCard extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 16,
-                          backgroundImage: CachedNetworkImageProvider(comment['avatar']),
+                          backgroundImage: CachedNetworkImageProvider(
+                            comment['avatar'],
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -593,8 +597,9 @@ class CommunityPostCard extends StatelessWidget {
 
             // Reply Target Indicator
             Obx(() {
-              if (controller.replyTargetCommentId.value == null)
+              if (controller.replyTargetCommentId.value == null) {
                 return const SizedBox.shrink();
+              }
               return Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,

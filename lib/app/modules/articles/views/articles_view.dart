@@ -182,8 +182,9 @@ class ArticlesView extends GetView<ArticlesController> {
                             a.category,
                           );
                         }
-                        if (controller.selectedCategory.value == 'All')
+                        if (controller.selectedCategory.value == 'All') {
                           return true;
+                        }
                         return a.category == controller.selectedCategory.value;
                       }).toList();
 

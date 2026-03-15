@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sednexapp/app/core/constants/url.dart';
 
 class TermItem {
   final String id;
@@ -46,9 +47,7 @@ class TermsandconditionController extends GetxController {
   Future<void> fetchTerms() async {
     try {
       isLoading.value = true;
-      final response = await _connect.get(
-        'https://sednex-zvk1.onrender.com/api/about/terms',
-      );
+      final response = await _connect.get('${AppUrl.baseUrl}api/about/terms');
 
       if (response.status.hasError) {
         debugPrint('Error fetching terms: ${response.statusText}');

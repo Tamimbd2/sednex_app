@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sednexapp/app/core/constants/url.dart';
 
 class LocalTourInfo {
   final String date;
@@ -23,13 +24,13 @@ class LocalTourInfo {
 
   factory LocalTourInfo.fromJson(Map<String, dynamic> json) {
     return LocalTourInfo(
-     date: json['date'] ?? '',
-     distance: json['distance'] ?? '',
-     duration: json['duration'] ?? '',
-     ticketPrice: json['ticketPrice'] ?? 0,
-     ticketPriceTag: json['ticketPriceTag'] ?? '',
-     begins: json['begins'] ?? '',
-     returnTime: json['returnTime'] ?? '',
+      date: json['date'] ?? '',
+      distance: json['distance'] ?? '',
+      duration: json['duration'] ?? '',
+      ticketPrice: json['ticketPrice'] ?? 0,
+      ticketPriceTag: json['ticketPriceTag'] ?? '',
+      begins: json['begins'] ?? '',
+      returnTime: json['returnTime'] ?? '',
     );
   }
 }
@@ -77,7 +78,7 @@ class LocaltourController extends GetxController {
   Future<void> fetchTours() async {
     try {
       isLoading.value = true;
-      final response = await _connect.get('https://sednex-zvk1.onrender.com/api/local-tour/');
+      final response = await _connect.get('${AppUrl.baseUrl}api/local-tour/');
       if (response.status.hasError) return;
 
       var body = response.body;

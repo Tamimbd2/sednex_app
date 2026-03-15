@@ -1,17 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sednexapp/app/core/constants/url.dart';
 
 class FlightRoute {
   final String from;
   final List<String> via;
   final String to;
 
-  FlightRoute({
-    required this.from,
-    required this.via,
-    required this.to,
-  });
+  FlightRoute({required this.from, required this.via, required this.to});
 
   factory FlightRoute.fromJson(Map<String, dynamic> json) {
     return FlightRoute(
@@ -79,10 +76,10 @@ class BusService {
 
 class BusflightController extends GetxController {
   final _connect = GetConnect();
-  
+
   final RxList<FlightRoute> routes = <FlightRoute>[].obs;
   final RxList<BusFlight> activeAirlines = <BusFlight>[].obs;
-  
+
   final isLoadingFlights = false.obs;
   final isLoadingRoutes = false.obs;
 
@@ -100,8 +97,8 @@ class BusflightController extends GetxController {
   Future<void> fetchBusServices() async {
     try {
       isLoadingBus.value = true;
-      final response = await _connect.get('https://sednex-zvk1.onrender.com/api/bus-services/');
-      
+      final response = await _connect.get('${AppUrl.baseUrl}api/bus-services/');
+
       if (response.status.hasError) return;
 
       var body = response.body;
@@ -121,8 +118,8 @@ class BusflightController extends GetxController {
   Future<void> fetchActiveAirlines() async {
     try {
       isLoadingFlights.value = true;
-      final response = await _connect.get('https://sednex-zvk1.onrender.com/api/bus-flights/');
-      
+      final response = await _connect.get('${AppUrl.baseUrl}api/bus-flights/');
+
       if (response.status.hasError) return;
 
       var body = response.body;
@@ -142,8 +139,10 @@ class BusflightController extends GetxController {
   Future<void> fetchRoutes() async {
     try {
       isLoadingRoutes.value = true;
-      final response = await _connect.get('https://sednex-zvk1.onrender.com/api/flight-routes/');
-      
+      final response = await _connect.get(
+        '${AppUrl.baseUrl}api/flight-routes/',
+      );
+
       if (response.status.hasError) return;
 
       var body = response.body;

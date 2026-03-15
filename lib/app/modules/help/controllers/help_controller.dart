@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:sednexapp/app/core/constants/url.dart';
 
 class HelpController extends GetxController {
   final _connect = GetConnect();
@@ -23,7 +24,7 @@ class HelpController extends GetxController {
           _box.read('token') ??
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTk5MzhmYjViNWJjMmM1YjEyMzYyY2QiLCJlbWFpbCI6ImFmc2FyQHNlZG5leC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc3Mjg2MTYzMiwiZXhwIjoxNzczNDY2NDMyfQ.PuRUjybyM9EzP2ICL0X_SXoSx8PwDOlJh0XrSi5fiwU';
       final response = await _connect.get(
-        'https://sednex-zvk1.onrender.com/api/about/faq/',
+        '${AppUrl.baseUrl}api/about/faq/',
         headers: {'Authorization': 'Bearer $token'},
       );
 
@@ -62,5 +63,4 @@ class HelpController extends GetxController {
   void toggleFaq(int index) {
     faqs[index]['isExpanded'].value = !faqs[index]['isExpanded'].value;
   }
-
 }

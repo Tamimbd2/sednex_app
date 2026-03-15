@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:sednexapp/app/core/constants/url.dart';
 
 class BasicGood {
   final String id;
@@ -26,7 +27,9 @@ class BasicGood {
       price: json['price'] ?? 0,
       icon: json['icon'] ?? '',
       category: json['category'] ?? 'Others',
-      updatedAt: DateTime.parse(json['updatedAt'] ?? DateTime.now().toIso8601String()),
+      updatedAt: DateTime.parse(
+        json['updatedAt'] ?? DateTime.now().toIso8601String(),
+      ),
       pricetag: json['pricetag'],
     );
   }
@@ -36,7 +39,7 @@ class BasicgoodsController extends GetxController {
   final _connect = GetConnect();
   final isLoading = false.obs;
   final selectedCategory = 'All'.obs;
-  
+
   final RxList<BasicGood> allGoods = <BasicGood>[].obs;
   final RxList<String> categories = ['All'].obs;
 
@@ -44,7 +47,9 @@ class BasicgoodsController extends GetxController {
     if (selectedCategory.value == 'All') {
       return allGoods;
     }
-    return allGoods.where((good) => good.category == selectedCategory.value).toList();
+    return allGoods
+        .where((good) => good.category == selectedCategory.value)
+        .toList();
   }
 
   void selectCategory(String category) {
@@ -54,8 +59,8 @@ class BasicgoodsController extends GetxController {
   Future<void> fetchGoods() async {
     try {
       isLoading.value = true;
-      final response = await _connect.get('https://sednex-zvk1.onrender.com/api/goods/');
-      
+      final response = await _connect.get('${AppUrl.baseUrl}api/goods/');
+
       if (response.status.hasError) {
         Get.snackbar('Error', 'Failed to fetch goods: ${response.statusText}');
         return;
@@ -63,14 +68,13 @@ class BasicgoodsController extends GetxController {
 
       final List<dynamic> goodsData = response.body['goods'] ?? [];
       allGoods.value = goodsData.map((e) => BasicGood.fromJson(e)).toList();
-      
+
       // Update categories dynamically from data
       final Set<String> categoriesSet = {'All'};
       for (var good in allGoods) {
         categoriesSet.add(good.category);
       }
       categories.value = categoriesSet.toList();
-      
     } catch (e) {
       Get.snackbar('Error', 'An unexpected error occurred: $e');
     } finally {
@@ -111,4 +115,3 @@ class BasicgoodsController extends GetxController {
     fetchGoods();
   }
 }
-

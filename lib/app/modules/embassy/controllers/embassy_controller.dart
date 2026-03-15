@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:sednexapp/app/core/constants/url.dart';
 
 class Contact {
   final String phone;
@@ -70,10 +71,13 @@ class EmbassyController extends GetxController {
 
   List<Embassy> get filteredEmbassies {
     if (searchQuery.value.isEmpty) return embassies;
-    return embassies.where((e) => 
-      e.name.toLowerCase().contains(searchQuery.value.toLowerCase())
-    ).toList();
+    return embassies
+        .where(
+          (e) => e.name.toLowerCase().contains(searchQuery.value.toLowerCase()),
+        )
+        .toList();
   }
+
   @override
   void onInit() {
     super.onInit();
@@ -84,11 +88,12 @@ class EmbassyController extends GetxController {
     try {
       isLoading.value = true;
       final token = _box.read('token');
-      
+
       final response = await _connect.get(
-        'https://sednex-zvk1.onrender.com/api/sections/embassy/items',
+        '${AppUrl.baseUrl}api/sections/embassy/items',
         headers: {
-          'Authorization': 'Bearer ${token ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTk5MzhmYjViNWJjMmM1YjEyMzYyY2QiLCJlbWFpbCI6ImFmc2FyQHNlZG5leC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc3Mjg2MTYzMiwiZXhwIjoxNzczNDY2NDMyfQ.PuRUjybyM9EzP2ICL0X_SXoSx8PwDOlJh0XrSi5fiwU"}'
+          'Authorization':
+              'Bearer ${token ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTk5MzhmYjViNWJjMmM1YjEyMzYyY2QiLCJlbWFpbCI6ImFmc2FyQHNlZG5leC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc3Mjg2MTYzMiwiZXhwIjoxNzczNDY2NDMyfQ.PuRUjybyM9EzP2ICL0X_SXoSx8PwDOlJh0XrSi5fiwU"}',
         },
       );
 
@@ -110,7 +115,6 @@ class EmbassyController extends GetxController {
       final List<dynamic> data = body['items'] ?? [];
       embassies.value = data.map((e) => Embassy.fromJson(e)).toList();
       debugPrint('Loaded ${embassies.length} embassies');
-
     } catch (e) {
       debugPrint('Error fetching embassies: $e');
     } finally {
@@ -118,4 +122,3 @@ class EmbassyController extends GetxController {
     }
   }
 }
-

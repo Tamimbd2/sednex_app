@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sednexapp/app/core/constants/url.dart';
 
 class TouristSpot {
   final String id;
@@ -39,8 +40,8 @@ class TouristSpotController extends GetxController {
   Future<void> fetchTouristSpots() async {
     try {
       isLoading.value = true;
-      final response = await _connect.get('https://sednex-zvk1.onrender.com/api/tourist/');
-      
+      final response = await _connect.get('${AppUrl.baseUrl}api/tourist/');
+
       if (response.status.hasError) {
         debugPrint('API Error: ${response.statusText}');
         return;
@@ -66,4 +67,3 @@ class TouristSpotController extends GetxController {
     }
   }
 }
-

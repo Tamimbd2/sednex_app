@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sednexapp/app/core/constants/url.dart';
 import '../controllers/embassy_controller.dart';
 import '../../../core/theme/app_colors.dart';
 
@@ -38,7 +39,9 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _animCtrl = AnimationController(
-        duration: const Duration(milliseconds: 500), vsync: this);
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
     _fadeAnim = CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
     _slideAnim = Tween<Offset>(
       begin: const Offset(0, 0.08),
@@ -78,12 +81,14 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
     try {
       final connect = GetConnect();
       final response = await connect.get(
-        'https://sednex-zvk1.onrender.com/api/sections/embassy/items/${embassy.id}/details',
+        '${AppUrl.baseUrl}api/sections/embassy/items/${embassy.id}/details',
       );
       if (!response.status.hasError) {
         var body = response.body;
         if (body is String) {
-          try { body = jsonDecode(body); } catch (_) {}
+          try {
+            body = jsonDecode(body);
+          } catch (_) {}
         }
         final itemData = body['item'] ?? {};
         final List detailsList = body['details'] ?? [];
@@ -98,12 +103,19 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
           _imageUrl = itemData['image'] ?? itemData['icon'] ?? embassy.icon;
           _category = itemData['category'] ?? embassy.category;
           _about = about['description'] ?? embassy.about;
-          _phone = contact['mobile'] ?? contact['phone'] ?? embassy.contact.phone;
+          _phone =
+              contact['mobile'] ?? contact['phone'] ?? embassy.contact.phone;
           _email = contact['email'] ?? embassy.contact.email;
           _website = contact['website'] ?? embassy.contact.website;
-          _address = location['address'] ?? contact['direction'] ?? embassy.contact.address;
+          _address =
+              location['address'] ??
+              contact['direction'] ??
+              embassy.contact.address;
           _services = List<String>.from(about['services'] ?? embassy.services);
-          final days = offSchedules.map<String>((e) => e['day']?.toString() ?? '').where((d) => d.isNotEmpty).toList();
+          final days = offSchedules
+              .map<String>((e) => e['day']?.toString() ?? '')
+              .where((d) => d.isNotEmpty)
+              .toList();
           _offDays = days.isEmpty ? embassy.offDays : days;
         });
       }
@@ -143,8 +155,11 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
         systemOverlayStyle: SystemUiOverlayStyle.light,
         leading: IconButton(
           onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back_ios_new,
-              color: Colors.white, size: 18),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+            size: 18,
+          ),
         ),
         title: Text(
           _name.isEmpty ? 'Embassy' : _name,
@@ -160,7 +175,10 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(
-                  color: AppColors.primary, strokeWidth: 2))
+                color: AppColors.primary,
+                strokeWidth: 2,
+              ),
+            )
           : FadeTransition(
               opacity: _fadeAnim,
               child: SlideTransition(
@@ -211,7 +229,11 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: const LinearGradient(
-                    colors: [AppColors.accent, Color(0xFFFFF8DC), AppColors.accent],
+                    colors: [
+                      AppColors.accent,
+                      Color(0xFFFFF8DC),
+                      AppColors.accent,
+                    ],
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -223,15 +245,20 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                 child: Container(
                   padding: const EdgeInsets.all(2),
                   decoration: const BoxDecoration(
-                      color: Colors.white, shape: BoxShape.circle),
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
                   child: ClipOval(
                     child: SizedBox(
                       width: 60,
                       height: 60,
                       child: _imageUrl.isNotEmpty
-                          ? Image.network(_imageUrl,
+                          ? Image.network(
+                              _imageUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => _avatarFallback())
+                              errorBuilder: (context, error, stackTrace) =>
+                                  _avatarFallback(),
+                            )
                           : _avatarFallback(),
                     ),
                   ),
@@ -274,7 +301,9 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(6),
@@ -291,24 +320,33 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                     const SizedBox(width: 6),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.accent.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
-                            color: AppColors.accent.withValues(alpha: 0.35)),
+                          color: AppColors.accent.withValues(alpha: 0.35),
+                        ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.verified_rounded,
-                              color: AppColors.accent, size: 10),
+                          const Icon(
+                            Icons.verified_rounded,
+                            color: AppColors.accent,
+                            size: 10,
+                          ),
                           const SizedBox(width: 3),
-                          Text('Verified',
-                              style: GoogleFonts.inter(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                  color: const Color(0xFFB8860B))),
+                          Text(
+                            'Verified',
+                            style: GoogleFonts.inter(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFFB8860B),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -323,16 +361,16 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
   }
 
   Widget _avatarFallback() => Container(
-        color: AppColors.backgroundAlt,
-        child: const Icon(Icons.flag_rounded, size: 36, color: AppColors.primary),
-      );
-
+    color: AppColors.backgroundAlt,
+    child: const Icon(Icons.flag_rounded, size: 36, color: AppColors.primary),
+  );
 
   // ── Location Row ───────────────────────────────────────────────────
   Widget _locationRow() {
     return GestureDetector(
       onTap: () => _launchUrl(
-          'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}'),
+        'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}',
+      ),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -350,22 +388,29 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                 color: AppColors.primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.location_on_rounded,
-                  color: AppColors.primary, size: 18),
+              child: const Icon(
+                Icons.location_on_rounded,
+                color: AppColors.primary,
+                size: 18,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 _address,
                 style: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xFF374151),
-                    height: 1.4),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF374151),
+                  height: 1.4,
+                ),
               ),
             ),
-            const Icon(Icons.chevron_right_rounded,
-                color: Color(0xFFD1D5DB), size: 20),
+            const Icon(
+              Icons.chevron_right_rounded,
+              color: Color(0xFFD1D5DB),
+              size: 20,
+            ),
           ],
         ),
       ),
@@ -415,10 +460,17 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
               labelColor: AppColors.primary,
               unselectedLabelColor: const Color(0xFF9CA3AF),
               labelStyle: GoogleFonts.inter(
-                  fontSize: 13, fontWeight: FontWeight.w700),
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+              ),
               unselectedLabelStyle: GoogleFonts.inter(
-                  fontSize: 13, fontWeight: FontWeight.w500),
-              tabs: const [Tab(text: 'About'), Tab(text: 'Contact')],
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+              tabs: const [
+                Tab(text: 'About'),
+                Tab(text: 'Contact'),
+              ],
             ),
           ),
           SizedBox(
@@ -444,12 +496,15 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
           if (_about.isNotEmpty) ...[
             _label('About'),
             const SizedBox(height: 8),
-            Text(_about,
-                style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: const Color(0xFF4B5563),
-                    height: 1.75,
-                    fontWeight: FontWeight.w400)),
+            Text(
+              _about,
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: const Color(0xFF4B5563),
+                height: 1.75,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
             const SizedBox(height: 20),
           ],
 
@@ -461,13 +516,18 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                 tween: Tween(begin: 0, end: 1),
                 duration: Duration(milliseconds: 200 + e.key * 60),
                 builder: (_, v, child) => Opacity(
-                    opacity: v,
-                    child: Transform.translate(
-                        offset: Offset(16 * (1 - v), 0), child: child)),
+                  opacity: v,
+                  child: Transform.translate(
+                    offset: Offset(16 * (1 - v), 0),
+                    child: child,
+                  ),
+                ),
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 8),
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 12),
+                    horizontal: 14,
+                    vertical: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF8FAFF),
                     borderRadius: BorderRadius.circular(12),
@@ -485,11 +545,14 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: Text(e.value,
-                            style: GoogleFonts.inter(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: const Color(0xFF1F2937))),
+                        child: Text(
+                          e.value,
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF1F2937),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -506,21 +569,29 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
               spacing: 8,
               runSpacing: 8,
               children: _offDays
-                  .map((d) => Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 7),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.06),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                              color: AppColors.primary.withValues(alpha: 0.15)),
+                  .map(
+                    (d) => Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 7,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.06),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColors.primary.withValues(alpha: 0.15),
                         ),
-                        child: Text(d,
-                            style: GoogleFonts.inter(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.primary)),
-                      ))
+                      ),
+                      child: Text(
+                        d,
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  )
                   .toList(),
             ),
           ],
@@ -535,24 +606,56 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
   // ── Contact Tab ──────────────────────────────────────────────────
   Widget _contactTab() {
     final items = [
-      _ContactItem(icon: Icons.call_rounded, label: 'Phone',
-          value: _phone, color: AppColors.primary, onTap: () async {
-            try { await launchUrl(Uri(scheme: 'tel', path: _phone)); } catch (_) {}
-          }),
-      _ContactItem(icon: Icons.alternate_email_rounded, label: 'Email',
-          value: _email, color: AppColors.secondary, onTap: () async {
-            try { await launchUrl(Uri(scheme: 'mailto', path: _email)); } catch (_) {}
-          }),
-      _ContactItem(icon: Icons.open_in_browser_rounded, label: 'Website',
-          value: _website, color: const Color(0xFFB8860B), onTap: () async {
-            final uri = Uri.parse(_website.startsWith('http') ? _website : 'https://$_website');
-            try { await launchUrl(uri, mode: LaunchMode.externalApplication); } catch (_) {}
-          }),
-      _ContactItem(icon: Icons.location_on_rounded, label: 'Address',
-          value: _address, color: AppColors.blue3, onTap: () async {
-            final uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}');
-            try { await launchUrl(uri, mode: LaunchMode.externalApplication); } catch (_) {}
-          }),
+      _ContactItem(
+        icon: Icons.call_rounded,
+        label: 'Phone',
+        value: _phone,
+        color: AppColors.primary,
+        onTap: () async {
+          try {
+            await launchUrl(Uri(scheme: 'tel', path: _phone));
+          } catch (_) {}
+        },
+      ),
+      _ContactItem(
+        icon: Icons.alternate_email_rounded,
+        label: 'Email',
+        value: _email,
+        color: AppColors.secondary,
+        onTap: () async {
+          try {
+            await launchUrl(Uri(scheme: 'mailto', path: _email));
+          } catch (_) {}
+        },
+      ),
+      _ContactItem(
+        icon: Icons.open_in_browser_rounded,
+        label: 'Website',
+        value: _website,
+        color: const Color(0xFFB8860B),
+        onTap: () async {
+          final uri = Uri.parse(
+            _website.startsWith('http') ? _website : 'https://$_website',
+          );
+          try {
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          } catch (_) {}
+        },
+      ),
+      _ContactItem(
+        icon: Icons.location_on_rounded,
+        label: 'Address',
+        value: _address,
+        color: AppColors.blue3,
+        onTap: () async {
+          final uri = Uri.parse(
+            'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}',
+          );
+          try {
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          } catch (_) {}
+        },
+      ),
     ];
 
     return ListView.separated(
@@ -567,9 +670,12 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
           tween: Tween(begin: 0, end: 1),
           duration: Duration(milliseconds: 200 + i * 70),
           builder: (_, v, child) => Opacity(
-              opacity: v,
-              child: Transform.translate(
-                  offset: Offset(0, 12 * (1 - v)), child: child)),
+            opacity: v,
+            child: Transform.translate(
+              offset: Offset(0, 12 * (1 - v)),
+              child: child,
+            ),
+          ),
           child: GestureDetector(
             onTap: hasValue ? item.onTap : null,
             behavior: HitTestBehavior.opaque,
@@ -579,9 +685,10 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                 color: const Color(0xFFF8FAFF),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                    color: hasValue
-                        ? item.color.withValues(alpha: 0.15)
-                        : const Color(0xFFE5EAF5)),
+                  color: hasValue
+                      ? item.color.withValues(alpha: 0.15)
+                      : const Color(0xFFE5EAF5),
+                ),
               ),
               child: Row(
                 children: [
@@ -599,21 +706,25 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(item.label,
-                            style: GoogleFonts.inter(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
-                                color: item.color,
-                                letterSpacing: 0.6)),
+                        Text(
+                          item.label,
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: item.color,
+                            letterSpacing: 0.6,
+                          ),
+                        ),
                         const SizedBox(height: 3),
                         Text(
                           hasValue ? item.value : '—',
                           style: GoogleFonts.inter(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: hasValue
-                                  ? const Color(0xFF111827)
-                                  : const Color(0xFFD1D5DB)),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: hasValue
+                                ? const Color(0xFF111827)
+                                : const Color(0xFFD1D5DB),
+                          ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -621,8 +732,11 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                     ),
                   ),
                   if (hasValue)
-                    Icon(Icons.arrow_forward_ios_rounded,
-                        size: 12, color: const Color(0xFFD1D5DB)),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 12,
+                      color: const Color(0xFFD1D5DB),
+                    ),
                 ],
               ),
             ),
@@ -633,14 +747,14 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
   }
 
   Widget _label(String text) => Text(
-        text,
-        style: GoogleFonts.inter(
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-          color: const Color(0xFF9CA3AF),
-          letterSpacing: 0.8,
-        ),
-      );
+    text,
+    style: GoogleFonts.inter(
+      fontSize: 12,
+      fontWeight: FontWeight.w700,
+      color: const Color(0xFF9CA3AF),
+      letterSpacing: 0.8,
+    ),
+  );
 }
 
 // ── Helper Classes ──────────────────────────────────────────────────
@@ -650,12 +764,13 @@ class _ContactItem {
   final String value;
   final Color color;
   final VoidCallback onTap;
-  const _ContactItem(
-      {required this.icon,
-      required this.label,
-      required this.value,
-      required this.color,
-      required this.onTap});
+  const _ContactItem({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+    required this.onTap,
+  });
 }
 
 class _EmptyState extends StatelessWidget {
@@ -674,15 +789,21 @@ class _EmptyState extends StatelessWidget {
                 color: const Color(0xFFF1F5F9),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Icon(Icons.inbox_rounded,
-                  size: 28, color: Color(0xFFD1D5DB)),
+              child: const Icon(
+                Icons.inbox_rounded,
+                size: 28,
+                color: Color(0xFFD1D5DB),
+              ),
             ),
             const SizedBox(height: 14),
-            Text('No information available',
-                style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: const Color(0xFF9CA3AF),
-                    fontWeight: FontWeight.w500)),
+            Text(
+              'No information available',
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: const Color(0xFF9CA3AF),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       ),

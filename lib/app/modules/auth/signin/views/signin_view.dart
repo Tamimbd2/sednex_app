@@ -141,12 +141,12 @@ class SigninView extends GetView<SigninController> {
                   children: [
                     _buildSocialButton(
                       iconPath: 'assets/icons/google.svg',
-                      onTap: () {},
+                      onTap: () => controller.signInWithGoogle(),
                     ),
                     const SizedBox(width: 32),
                     _buildSocialButton(
                       iconPath: 'assets/icons/facebook.svg',
-                      onTap: () {},
+                      onTap: () => controller.signInWithFacebook(),
                     ),
                   ],
                 ),

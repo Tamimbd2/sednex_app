@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sednexapp/app/core/constants/url.dart';
 
 class LearnArabicCategory {
   final String id;
@@ -74,7 +75,7 @@ class LearnarabicController extends GetxController {
   Future<void> fetchCategories() async {
     try {
       final response = await _connect.get(
-        'https://sednex-zvk1.onrender.com/api/learn-arabic/categories',
+        '${AppUrl.baseUrl}api/learn-arabic/categories',
       );
       if (response.status.hasError) return;
 
@@ -95,7 +96,7 @@ class LearnarabicController extends GetxController {
   Future<void> fetchWords() async {
     try {
       final response = await _connect.get(
-        'https://sednex-zvk1.onrender.com/api/learn-arabic/words',
+        '${AppUrl.baseUrl}api/learn-arabic/words',
       );
       if (response.status.hasError) return;
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -49,7 +50,7 @@ class ProfileView extends GetView<ProfileController> {
                           radius: 42,
                           backgroundColor: Colors.grey[200],
                           backgroundImage: imgUrl != null
-                              ? NetworkImage(imgUrl)
+                              ? CachedNetworkImageProvider(imgUrl)
                               : null,
                           child: imgUrl == null
                               ? const Icon(

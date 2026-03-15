@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../controllers/dashboard_controller.dart';
 import '../../../routes/app_pages.dart';
 import '../../../core/theme/app_colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import '../../profile/views/profile_view.dart';
@@ -20,8 +21,9 @@ class DashboardView extends GetView<DashboardController> {
         preferredSize: const Size.fromHeight(80),
         child: Obx(() {
           // Hide AppBar only for Cart (index 2). Show for Home (0), Search (1), and Profile (3).
-          if (controller.currentIndex.value == 2)
+          if (controller.currentIndex.value == 2) {
             return const SizedBox.shrink();
+          }
           return Container(
             height: 80,
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -126,7 +128,7 @@ class DashboardView extends GetView<DashboardController> {
                           radius: 18,
                           backgroundColor: Colors.grey[100],
                           backgroundImage: imgUrl != null
-                              ? NetworkImage(imgUrl)
+                              ? CachedNetworkImageProvider(imgUrl)
                               : null,
                           child: imgUrl == null
                               ? const Icon(

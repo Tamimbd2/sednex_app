@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 
@@ -110,7 +111,7 @@ class AboutusView extends GetView<AboutusController> {
                                   ),
                                   image: member.image.isNotEmpty
                                       ? DecorationImage(
-                                          image: NetworkImage(member.image),
+                                          image: CachedNetworkImageProvider(member.image),
                                           fit: BoxFit.cover,
                                         )
                                       : null,

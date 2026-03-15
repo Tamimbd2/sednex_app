@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:sednexapp/app/core/constants/url.dart';
 
 class TeamMember {
   final String id;
@@ -61,7 +62,7 @@ class AboutusController extends GetxController {
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTk5MzhmYjViNWJjMmM1YjEyMzYyY2QiLCJlbWFpbCI6ImFmc2FyQHNlZG5leC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc3Mjg2MTYzMiwiZXhwIjoxNzczNDY2NDMyfQ.PuRUjybyM9EzP2ICL0X_SXoSx8PwDOlJh0XrSi5fiwU';
 
       final response = await _connect.get(
-        'https://sednex-zvk1.onrender.com/api/about/teams',
+        '${AppUrl.baseUrl}api/about/teams',
         headers: {'Authorization': 'Bearer $token'},
       );
 
@@ -86,9 +87,7 @@ class AboutusController extends GetxController {
 
   Future<void> fetchContact() async {
     try {
-      final response = await _connect.get(
-        'https://sednex-zvk1.onrender.com/api/about/contact',
-      );
+      final response = await _connect.get('${AppUrl.baseUrl}api/about/contact');
 
       if (response.status.hasError) {
         debugPrint('Error fetching contact: ${response.statusText}');

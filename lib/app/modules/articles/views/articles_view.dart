@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/articles_controller.dart';
@@ -181,8 +182,9 @@ class ArticlesView extends GetView<ArticlesController> {
                             a.category,
                           );
                         }
-                        if (controller.selectedCategory.value == 'All')
+                        if (controller.selectedCategory.value == 'All') {
                           return true;
+                        }
                         return a.category == controller.selectedCategory.value;
                       }).toList();
 
@@ -424,10 +426,10 @@ class ArticlesView extends GetView<ArticlesController> {
                 height: 160,
                 width: double.infinity,
                 child: isNetworkImage
-                    ? Image.network(
-                        article.imageUrl,
+                    ? CachedNetworkImage(
+                        imageUrl: article.imageUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
+                        errorWidget: (context, url, error) {
                           return Container(
                             color: Colors.grey[100],
                             child: const Icon(
@@ -437,6 +439,17 @@ class ArticlesView extends GetView<ArticlesController> {
                             ),
                           );
                         },
+                        placeholder: (context, url) => Container(
+                          color: Colors.grey[100],
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFF1E63FF),
+                              ),
+                            ),
+                          ),
+                        ),
                       )
                     : Image.asset(
                         article.imageUrl,

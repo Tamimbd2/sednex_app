@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CommunityProfileDetailsView extends StatelessWidget {
@@ -65,7 +66,7 @@ class CommunityProfileDetailsView extends StatelessWidget {
                       radius: 60,
                       backgroundColor: Colors.grey[100],
                       backgroundImage: image.isNotEmpty
-                          ? NetworkImage(image)
+                          ? CachedNetworkImageProvider(image)
                           : null,
                       child: image.isEmpty
                           ? Text(

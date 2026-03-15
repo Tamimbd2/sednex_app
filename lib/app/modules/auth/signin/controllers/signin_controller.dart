@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:sednexapp/app/core/constants/url.dart';
 
 class SigninController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -21,13 +22,10 @@ class SigninController extends GetxController {
 
     try {
       final connect = GetConnect();
-      final response = await connect.post(
-        'https://sednex-zvk1.onrender.com/api/auth/login',
-        {
-          'email': emailController.text.trim(),
-          'password': passwordController.text,
-        },
-      );
+      final response = await connect.post('${AppUrl.baseUrl}api/auth/login', {
+        'email': emailController.text.trim(),
+        'password': passwordController.text,
+      });
 
       var body = response.body;
       if (body is String) {
@@ -37,9 +35,25 @@ class SigninController extends GetxController {
       }
 
       if (response.statusCode == 200 && body is Map) {
+        final user = body['user'] ?? {};
+
+        // Check if user account is active
+        if (user['isActive'] == false) {
+          Get.snackbar(
+            'Account Suspended',
+            'Your account is currently inactive. Please contact the administrator for more information.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: const Color(0xFFE53935),
+            colorText: Colors.white,
+            duration: const Duration(seconds: 5),
+            margin: const EdgeInsets.all(16),
+            borderRadius: 12,
+          );
+          return;
+        }
+
         // Store token
         final token = body['token'] ?? '';
-        final user = body['user'] ?? {};
 
         final box = GetStorage();
         await box.write('token', token);
@@ -101,4 +115,3 @@ class SigninController extends GetxController {
     super.onClose();
   }
 }
-

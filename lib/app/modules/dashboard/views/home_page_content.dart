@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:marquee/marquee.dart';
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../communityFeed/controllers/community_feed_controller.dart';
 import '../controllers/dashboard_controller.dart';
 import '../../namaj/controllers/namaj_controller.dart';
@@ -20,7 +21,11 @@ class HomePageContent extends StatelessWidget {
       CommunityFeedController(),
     );
 
+    final dashboardController = Get.find<DashboardController>();
+
     return SingleChildScrollView(
+      controller: dashboardController.homeScrollController,
+      physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -82,7 +87,9 @@ class HomePageContent extends StatelessWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
                             image: DecorationImage(
-                              image: NetworkImage(banners[actualIndex]),
+                              image: CachedNetworkImageProvider(
+                                banners[actualIndex],
+                              ),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -214,10 +221,11 @@ class HomePageContent extends StatelessWidget {
                                   service['value'] ??
                                   '0')
                               .toString();
-                      if (isBkash)
+                      if (isBkash) {
                         subtitle += '৳';
-                      else if (isGold)
+                      } else if (isGold) {
                         subtitle += '£';
+                      }
                       Color bgColor = isBkash
                           ? const Color(0xFFFCE4EC)
                           : (isGold
@@ -414,7 +422,29 @@ class HomePageContent extends StatelessWidget {
             );
           }),
 
-          const SizedBox(height: 24),
+          // More in Community Footer
+          Padding(
+            padding: const EdgeInsets.only(bottom: 24, top: 8),
+            child: Center(
+              child: Column(
+                children: [
+                  const Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Color(0xFF8F95A1),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Scroll up to see more in community',
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      color: const Color(0xFF8F95A1),
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -491,11 +521,17 @@ class HomePageContent extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (imagePath.startsWith('http'))
-              Image.network(
-                imagePath,
+              CachedNetworkImage(
+                imageUrl: imagePath,
                 height: iconSize,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => Icon(
+                placeholder: (context, url) => SizedBox(
+                  height: iconSize,
+                  child: const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Icon(
                   Icons.broken_image,
                   size: iconSize,
                   color: Colors.grey,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sednexapp/app/core/constants/url.dart';
 
 class Article {
   final String id;
@@ -46,7 +47,7 @@ class ArticlesController extends GetxController {
     isLoading.value = true;
     try {
       final connect = GetConnect();
-      final response = await connect.get('https://sednex-zvk1.onrender.com/api/article/');
+      final response = await connect.get('${AppUrl.baseUrl}api/article/');
 
       if (response.statusCode == 200) {
         var body = response.body;
@@ -77,7 +78,10 @@ class ArticlesController extends GetxController {
               id: item['_id'] ?? '',
               title: item['title'] ?? 'Untitled',
               description: item['description'] ?? '',
-              imageUrl: item['image'] ?? item['thumbnail'] ?? 'assets/essentialService/article.png',
+              imageUrl:
+                  item['image'] ??
+                  item['thumbnail'] ??
+                  'assets/essentialService/article.png',
               date: parsedDate,
               content: item['description'] ?? '',
               category: item['category'] ?? 'General',
@@ -102,7 +106,9 @@ class ArticlesController extends GetxController {
           debugPrint('Categories found: ${uniqueCategories.toList()}');
         }
       } else {
-        debugPrint('Failed to fetch articles: ${response.statusCode} ${response.statusText}');
+        debugPrint(
+          'Failed to fetch articles: ${response.statusCode} ${response.statusText}',
+        );
       }
     } catch (e) {
       debugPrint("Error fetching articles: $e");

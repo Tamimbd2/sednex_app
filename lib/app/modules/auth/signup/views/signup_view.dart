@@ -155,7 +155,7 @@ class SignupView extends GetView<SignupController> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => Get.toNamed(Routes.SIGNIN),
+                      onTap: () => Get.offNamed(Routes.SIGNIN),
                       child: Text(
                         'Login',
                         style: GoogleFonts.poppins(
@@ -312,21 +312,20 @@ class SignupView extends GetView<SignupController> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 48,
-        height: 48,
-        padding: const EdgeInsets.all(12),
+        width: 56,
+        height: 56,
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
+          border: Border.all(
+            color: const Color(0xFFE5E7EB),
+            width: 1.5,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 6,
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 12,
               offset: const Offset(0, 4),
             ),
           ],

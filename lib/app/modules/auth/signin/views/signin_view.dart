@@ -41,11 +41,11 @@ class SigninView extends GetView<SigninController> {
                 Text(
                   'Login to your Account',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.arimo(
-                    color: const Color(0xFF1D2838),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                    height: 1.40,
+                  style: GoogleFonts.poppins(
+                    color: const Color(0xFF1C1C1C),
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    height: 1.50,
                   ),
                 ),
                 const SizedBox(height: 45),
@@ -55,6 +55,7 @@ class SigninView extends GetView<SigninController> {
                   hintText: 'Enter email',
                   controller: controller.emailController,
                   keyboardType: TextInputType.emailAddress,
+                  prefixIcon: const Icon(Icons.email_outlined, size: 20, color: Color(0xFF6E6E6E)),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
@@ -67,90 +68,41 @@ class SigninView extends GetView<SigninController> {
                 ),
                 const SizedBox(height: 20),
                 // Password Field
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Password',
-                      style: GoogleFonts.arimo(
-                        color: const Color(0xFF697282),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        height: 1.43,
-                      ),
+                Obx(() => _buildInputField(
+                  label: 'Password',
+                  hintText: 'Enter password',
+                  controller: controller.passwordController,
+                  obscureText: controller.obscurePassword.value,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      controller.obscurePassword.value
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      color: const Color(0xFF6E6E6E),
+                      size: 20,
                     ),
-                    const SizedBox(height: 8),
-                    Obx(() => TextFormField(
-                      controller: controller.passwordController,
-                      obscureText: controller.obscurePassword.value,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      },
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        color: const Color(0xFF1D2838),
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Enter password',
-                        hintStyle: GoogleFonts.poppins(
-                          color: AppColors.hintText,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        filled: true,
-                        fillColor: AppColors.inputField.withAlpha(128),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            controller.obscurePassword.value
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
-                            color: const Color(0xFF697282),
-                            size: 22,
-                          ),
-                          onPressed: controller.togglePasswordVisibility,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: AppColors.inputField, width: 1.15),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: AppColors.inputField, width: 1.15),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.grey, width: 1.15),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.red, width: 1.15),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.red, width: 1.15),
-                        ),
-                        errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
-                      ),
-                    )),
-                  ],
-                ),
+                    onPressed: controller.togglePasswordVisibility,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
+                )),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () => Get.toNamed(Routes.SENDOTP),
                     child: Text(
                       'Forgot password?',
-                      style: GoogleFonts.arimo(
+                      style: GoogleFonts.poppins(
                         color: AppColors.primary,
                         fontSize: 14,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
@@ -205,20 +157,20 @@ class SigninView extends GetView<SigninController> {
                   children: [
                     Text(
                       "Don't have an account? ",
-                      style: GoogleFonts.arimo(
-                        color: const Color(0xFF697282),
+                      style: GoogleFonts.poppins(
+                        color: const Color(0xFF6E6E6E),
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => Get.toNamed(Routes.SIGNUP),
+                      onTap: () => Get.offNamed(Routes.SIGNUP),
                       child: Text(
                         'Sign up',
-                        style: GoogleFonts.arimo(
+                        style: GoogleFonts.poppins(
                           color: AppColors.primary,
                           fontSize: 14,
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -240,17 +192,19 @@ class SigninView extends GetView<SigninController> {
     String? Function(String?)? validator,
     bool obscureText = false,
     TextInputType? keyboardType,
+    Widget? prefixIcon,
+    Widget? suffixIcon,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: GoogleFonts.arimo(
-            color: const Color(0xFF697282),
+          style: GoogleFonts.poppins(
+            color: const Color(0xFF1C1C1C),
             fontSize: 14,
-            fontWeight: FontWeight.w400,
-            height: 1.43,
+            fontWeight: FontWeight.w500,
+            height: 1.50,
           ),
         ),
         const SizedBox(height: 8),
@@ -259,6 +213,7 @@ class SigninView extends GetView<SigninController> {
           obscureText: obscureText,
           keyboardType: keyboardType,
           validator: validator,
+          cursorColor: Colors.grey,
           style: GoogleFonts.poppins(
             fontSize: 15,
             color: const Color(0xFF1D2838),
@@ -270,8 +225,10 @@ class SigninView extends GetView<SigninController> {
               fontSize: 15,
               fontWeight: FontWeight.w400,
             ),
+            prefixIcon: prefixIcon,
+            suffixIcon: suffixIcon,
             filled: true,
-            fillColor: AppColors.inputField.withAlpha(128),
+            fillColor: AppColors.inputField.withValues(alpha: 0.5),
             contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -279,7 +236,7 @@ class SigninView extends GetView<SigninController> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.inputField, width: 1.15),
+              borderSide: const BorderSide(color: Colors.white, width: 1.15),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -307,21 +264,20 @@ class SigninView extends GetView<SigninController> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 48,
-        height: 48,
-        padding: const EdgeInsets.all(12),
+        width: 56,
+        height: 56,
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
+          border: Border.all(
+            color: const Color(0xFFE5E7EB),
+            width: 1.5,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(128),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-            BoxShadow(
-              color: Colors.black.withAlpha(128),
-              blurRadius: 6,
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 12,
               offset: const Offset(0, 4),
             ),
           ],

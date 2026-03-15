@@ -3,6 +3,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sednexapp/app/core/constants/url.dart';
 
 class ApiService extends GetConnect {
+  bool _isRedirecting = false;
+
   @override
   void onInit() {
     httpClient.baseUrl = AppUrl.baseUrl;
@@ -20,21 +22,30 @@ class ApiService extends GetConnect {
 
     // Handle global responses (like 401 Unauthorized)
     httpClient.addResponseModifier((request, response) {
-      if (response.statusCode == 401) {
+      if (response.statusCode == 401 && !_isRedirecting) {
+        _isRedirecting = true;
+
         // Token expired or invalid
         final box = GetStorage();
         box.remove('token');
         box.remove('user');
         box.write('isLoggedIn', false);
 
-        // Redirect to Login Screen
-        Get.offAllNamed('/signin');
+        // Redirect to Login Screen if not already there
+        if (Get.currentRoute != '/signin') {
+          Get.offAllNamed('/signin');
 
-        Get.snackbar(
-          'Session Expired',
-          'Please log in again.',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+          Get.snackbar(
+            'Session Expired',
+            'Please log in again.',
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        }
+
+        // Reset flag after a short delay
+        Future.delayed(const Duration(seconds: 2), () {
+          _isRedirecting = false;
+        });
       }
       return response;
     });

@@ -1,0 +1,1 @@
+fetch('https://sednex-zvk1.onrender.com/api/auth/facebook-login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: 'test' }) }).then(r => r.json().then(j => console.log(j))).catch(console.error);

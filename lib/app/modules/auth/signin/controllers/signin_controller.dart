@@ -117,14 +117,9 @@ class SigninController extends GetxController {
       
       // 1. Opens the native Google login popup on the phone
       final GoogleSignInAccount googleUser = await GoogleSignIn.instance.authenticate();
-      if (googleUser == null) {
-        // User cancelled the login prompt
-        isLoading.value = false;
-        return;
-      }
 
       // 2. Grabs the secure authentication tokens
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
       
       // 3. Authenticate with Firebase
       final AuthCredential credential = GoogleAuthProvider.credential(
@@ -217,16 +212,31 @@ class SigninController extends GetxController {
 
       if (result.status == LoginStatus.success) {
         final AccessToken accessToken = result.accessToken!;
-        final String token = accessToken.tokenString;
+        final String facebookToken = accessToken.tokenString;
 
-        debugPrint("Facebook Token acquired. Sending to Backend...");
+        // Authenticate with Firebase using Facebook Token
+        final AuthCredential credential = FacebookAuthProvider.credential(facebookToken);
+        final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+        final String? firebaseToken = await userCredential.user?.getIdToken();
+
+        if (firebaseToken == null) {
+          throw Exception("Failed to retrieve Firebase ID token.");
+        }
+
+        debugPrint("Firebase Token acquired from Facebook. Sending to Backend...");
 
         final connect = GetConnect();
         final response = await connect.post('${AppUrl.baseUrl}api/auth/facebook-login', {
-          'token': token,
+          'token': firebaseToken,
         });
 
         var body = response.body;
+
+        debugPrint("------------ FACEBOOK LOGIN BACKEND RESPONSE ------------");
+        debugPrint("Status Code: ${response.statusCode}");
+        debugPrint("Body: $body");
+        debugPrint("---------------------------------------------------------");
+
         if (body is String) {
           try { body = jsonDecode(body); } catch (_) {}
         }

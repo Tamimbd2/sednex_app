@@ -19,7 +19,7 @@ void main() async {
   );
   runApp(
     GetMaterialApp(
-      title: "SEDNEX",
+      title: "Sednex",
       initialRoute: AppPages.INITIAL,
       initialBinding: InitialBinding(),
       getPages: AppPages.routes,

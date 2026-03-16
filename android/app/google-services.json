@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "744906527407",
+    "project_id": "sednex-3bb6f",
+    "storage_bucket": "sednex-3bb6f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744906527407:android:b167373b38d7cbf7b7fa5a",
+        "android_client_info": {
+          "package_name": "com.sednex.sednexapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744906527407-sd41g6lvtj4tsla2s3hsbpkfakqfq9fo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sednex.sednexapp",
+            "certificate_hash": "27ae1aaec04f39ad67b0be0c774e5ed813dd774b"
+          }
+        },
+        {
+          "client_id": "744906527407-86gviq0c785c6tnchvkdhgkbqa8elb6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCz2Px2kpe6ssgK7zXfhH4hBujX8iRb2Ck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744906527407-86gviq0c785c6tnchvkdhgkbqa8elb6g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744906527407-mtidd0buqhkbvvcqqrga14b9jl3givr7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sednex.sednexapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

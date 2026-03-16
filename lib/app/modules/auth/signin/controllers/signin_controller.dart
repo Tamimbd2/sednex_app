@@ -63,8 +63,6 @@ class SigninController extends GetxController {
         await box.write('user', jsonEncode(user));
         await box.write('isLoggedIn', true);
 
-        debugPrint('Login successful! Token: $token');
-
         Get.snackbar(
           'Success',
           'Login successful',
@@ -133,8 +131,6 @@ class SigninController extends GetxController {
         throw Exception("Failed to retrieve Firebase ID token.");
       }
 
-      debugPrint("Firebase Token acquired. Sending to Backend...");
-
       // 4. Send the Firebase ID Token to your backend to verify and create session
       final connect = GetConnect();
       final response = await connect.post('${AppUrl.baseUrl}api/auth/google-login', {
@@ -142,11 +138,6 @@ class SigninController extends GetxController {
       });
 
       var body = response.body;
-
-      debugPrint("------------ GOOGLE LOGIN BACKEND RESPONSE ------------");
-      debugPrint("Status Code: ${response.statusCode}");
-      debugPrint("Body: $body");
-      debugPrint("-------------------------------------------------------");
 
       if (body is String) {
         try { body = jsonDecode(body); } catch (_) {}
@@ -223,19 +214,12 @@ class SigninController extends GetxController {
           throw Exception("Failed to retrieve Firebase ID token.");
         }
 
-        debugPrint("Firebase Token acquired from Facebook. Sending to Backend...");
-
         final connect = GetConnect();
         final response = await connect.post('${AppUrl.baseUrl}api/auth/facebook-login', {
           'token': firebaseToken,
         });
 
         var body = response.body;
-
-        debugPrint("------------ FACEBOOK LOGIN BACKEND RESPONSE ------------");
-        debugPrint("Status Code: ${response.statusCode}");
-        debugPrint("Body: $body");
-        debugPrint("---------------------------------------------------------");
 
         if (body is String) {
           try { body = jsonDecode(body); } catch (_) {}

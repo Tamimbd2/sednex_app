@@ -12,9 +12,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await GetStorage.init();
-  
+
+  final serverClientId = AppConstants.googleServerClientId.trim();
   await GoogleSignIn.instance.initialize(
-    serverClientId: AppConstants.googleServerClientId,
+    serverClientId: serverClientId.isEmpty ? null : serverClientId,
   );
   runApp(
     GetMaterialApp(

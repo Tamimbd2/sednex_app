@@ -58,8 +58,6 @@ class SignupController extends GetxController {
         throw Exception("Failed to retrieve Firebase ID token.");
       }
 
-      debugPrint("Firebase ID Token acquired. Sending to Backend...");
-
       final connect = GetConnect();
       final response = await connect.post('${AppUrl.baseUrl}api/auth/google-login', {
         'token': firebaseToken,
@@ -139,8 +137,6 @@ class SignupController extends GetxController {
         if (firebaseToken == null) {
           throw Exception("Failed to retrieve Firebase ID token.");
         }
-
-        debugPrint("Firebase Token acquired from Facebook. Sending to Backend...");
 
         final connect = GetConnect();
         final response = await connect.post('${AppUrl.baseUrl}api/auth/facebook-login', {

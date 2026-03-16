@@ -36,6 +36,10 @@ migrate_working_dir/
 
 # Local debug/data dumps
 /analyze_output.txt
+/sha1.txt
+/sha1_utf8.txt
+/test_fb.js
+/test_fb_out.txt
 /debug_api.js
 /articles.json
 /goods.json

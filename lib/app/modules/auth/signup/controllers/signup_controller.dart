@@ -9,12 +9,12 @@ import 'package:sednexapp/app/core/constants/url.dart';
 
 class SignupController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  
+
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final isLoading = false.obs;
-  
+
   final countries = [
     'Lebanon',
     'Bangladesh',
@@ -23,7 +23,7 @@ class SignupController extends GetxController {
     'United Arab Emirates',
     'United States',
   ];
-  
+
   final selectedCountry = 'Lebanon'.obs;
   final isPasswordVisible = false.obs;
 
@@ -43,15 +43,17 @@ class SignupController extends GetxController {
   Future<void> signInWithGoogle() async {
     try {
       isLoading.value = true;
-      
-      final GoogleSignInAccount googleUser = await GoogleSignIn.instance.authenticate();
+
+      final GoogleSignInAccount googleUser = await GoogleSignIn.instance
+          .authenticate();
 
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
       final String? firebaseToken = await userCredential.user?.getIdToken();
 
       if (firebaseToken == null) {
@@ -59,13 +61,16 @@ class SignupController extends GetxController {
       }
 
       final connect = GetConnect();
-      final response = await connect.post('${AppUrl.baseUrl}api/auth/google-login', {
-        'token': firebaseToken,
-      });
+      final response = await connect.post(
+        '${AppUrl.baseUrl}api/auth/google-login',
+        {'token': firebaseToken},
+      );
 
       var body = response.body;
       if (body is String) {
-        try { body = jsonDecode(body); } catch (_) {}
+        try {
+          body = jsonDecode(body);
+        } catch (_) {}
       }
 
       if (response.statusCode == 200 && body is Map) {
@@ -100,10 +105,11 @@ class SignupController extends GetxController {
 
         Get.offAllNamed('/dashboard');
       } else {
-        final message = body is Map ? (body['message'] ?? 'Login failed') : 'Login failed';
+        final message = body is Map
+            ? (body['message'] ?? 'Login failed')
+            : 'Login failed';
         throw Exception(message);
       }
-      
     } catch (e) {
       debugPrint('Google Sign-In Error: $e');
       Get.snackbar(
@@ -122,7 +128,7 @@ class SignupController extends GetxController {
   Future<void> signInWithFacebook() async {
     try {
       isLoading.value = true;
-      
+
       final LoginResult result = await FacebookAuth.instance.login();
 
       if (result.status == LoginStatus.success) {
@@ -130,8 +136,11 @@ class SignupController extends GetxController {
         final String facebookToken = accessToken.tokenString;
 
         // Authenticate with Firebase using Facebook Token
-        final AuthCredential credential = FacebookAuthProvider.credential(facebookToken);
-        final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+        final AuthCredential credential = FacebookAuthProvider.credential(
+          facebookToken,
+        );
+        final UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithCredential(credential);
         final String? firebaseToken = await userCredential.user?.getIdToken();
 
         if (firebaseToken == null) {
@@ -139,13 +148,16 @@ class SignupController extends GetxController {
         }
 
         final connect = GetConnect();
-        final response = await connect.post('${AppUrl.baseUrl}api/auth/facebook-login', {
-          'token': firebaseToken,
-        });
+        final response = await connect.post(
+          '${AppUrl.baseUrl}api/auth/facebook-login',
+          {'token': firebaseToken},
+        );
 
         var body = response.body;
         if (body is String) {
-          try { body = jsonDecode(body); } catch (_) {}
+          try {
+            body = jsonDecode(body);
+          } catch (_) {}
         }
 
         if (response.statusCode == 200 && body is Map) {
@@ -180,14 +192,16 @@ class SignupController extends GetxController {
 
           Get.offAllNamed('/dashboard');
         } else {
-          final message = body is Map ? (body['message'] ?? 'Login failed') : 'Login failed';
+          final message = body is Map
+              ? (body['message'] ?? 'Login failed')
+              : 'Login failed';
           throw Exception(message);
         }
       } else if (result.status == LoginStatus.cancelled) {
-         isLoading.value = false;
-         return;
+        isLoading.value = false;
+        return;
       } else {
-         throw Exception(result.message);
+        throw Exception(result.message);
       }
     } catch (e) {
       debugPrint('Facebook Sign-In Error: $e');

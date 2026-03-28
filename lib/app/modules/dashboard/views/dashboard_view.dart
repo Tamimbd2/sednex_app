@@ -16,7 +16,7 @@ class DashboardView extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(80),
         child: Obx(() {
@@ -28,10 +28,10 @@ class DashboardView extends GetView<DashboardController> {
             height: 110,
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: const Color(0xFFFFFFFF),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
+                  color: Colors.black.withValues(alpha: 0.10),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -179,14 +179,14 @@ class DashboardView extends GetView<DashboardController> {
             padding: const EdgeInsets.all(16.0),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color(0xFFFFFFFF),
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(color: Colors.grey[300]!),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
+                    color: Colors.black.withValues(alpha: 0.10),
+                    blurRadius: 15,
+                    offset: const Offset(0, 5),
                   ),
                 ],
               ),
@@ -207,9 +207,7 @@ class DashboardView extends GetView<DashboardController> {
                 'Search Anything',
                 style: GoogleFonts.inter(
                   fontSize: 16,
-                  color: const Color(
-                    0xFF4A5568,
-                  ), // Matching the screenshot's muted rose/brown color
+                  color: const Color(0xFF2C2C2C),
                 ),
               ),
             ),
@@ -236,12 +234,12 @@ class DashboardView extends GetView<DashboardController> {
     return Obx(
       () => Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFFFFFFFF),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 20,
-              offset: const Offset(0, -4),
+              color: Colors.black.withValues(alpha: 0.10),
+              blurRadius: 15,
+              offset: const Offset(0, -5), // Negative Y for bottom bar to show shadow upwards
             ),
           ],
         ),

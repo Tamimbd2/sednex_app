@@ -27,16 +27,67 @@ class SignupController extends GetxController {
   final selectedCountry = 'Lebanon'.obs;
   final isPasswordVisible = false.obs;
 
-  void signup() {
-    if (formKey.currentState!.validate()) {
-      // Proceed with signup logic
+  Future<void> signup() async {
+    if (!formKey.currentState!.validate()) return;
+
+    isLoading.value = true;
+    try {
+      final connect = GetConnect();
+      final response = await connect.post('${AppUrl.baseUrl}api/auth/register', {
+        'fullName': nameController.text.trim(),
+        'email': emailController.text.trim(),
+        'password': passwordController.text,
+        'country': selectedCountry.value,
+      });
+
+      var body = response.body;
+
+      debugPrint("------------ SIGNUP BACKEND RESPONSE ------------");
+      debugPrint("Status Code: ${response.statusCode}");
+      debugPrint("Status Text: ${response.statusText}");
+      debugPrint("Body: $body");
+      debugPrint("-------------------------------------------------");
+
+      if (body is String) {
+        try { body = jsonDecode(body); } catch (_) {}
+      }
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        Get.snackbar(
+          'Success',
+          'Account created successfully. Please login.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: const Color(0xFF22C55E),
+          colorText: Colors.white,
+        );
+        // Clear fields
+        nameController.clear();
+        emailController.clear();
+        passwordController.clear();
+        
+        // Navigate to login
+        Get.offAllNamed('/signin');
+      } else {
+        final message = body is Map ? (body['message'] ?? 'Signup failed') : 'Signup failed';
+        Get.snackbar(
+          'Error',
+          message.toString(),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: const Color(0xFFE53935),
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      debugPrint('Signup Error: $e');
       Get.snackbar(
-        'Success',
-        'Account created for ${nameController.text}',
+        'Error',
+        'Something went wrong. Please try again.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withValues(alpha: 0.1),
-        colorText: Colors.green,
+        backgroundColor: const Color(0xFFE53935),
+        colorText: Colors.white,
       );
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -47,26 +98,44 @@ class SignupController extends GetxController {
       final GoogleSignInAccount googleUser = await GoogleSignIn.instance
           .authenticate();
 
-      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      // 2. Grabs the secure authentication tokens
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+ 
+      // 3. Authenticate with Firebase
       final AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
       );
-
+ 
       final UserCredential userCredential = await FirebaseAuth.instance
           .signInWithCredential(credential);
-      final String? firebaseToken = await userCredential.user?.getIdToken();
+      final String? firebaseToken = await userCredential.user?.getIdToken(true);
 
       if (firebaseToken == null) {
         throw Exception("Failed to retrieve Firebase ID token.");
       }
 
+      debugPrint("------------ GOOGLE SIGNUP TOKENS ------------");
+      debugPrint("Google ID Token: ${googleAuth.idToken}");
+      debugPrint("Firebase ID Token: $firebaseToken");
+      debugPrint("---------------------------------------------");
+
       final connect = GetConnect();
+      // Increase timeout to 30 seconds
+      connect.timeout = const Duration(seconds: 30);
+      
       final response = await connect.post(
         '${AppUrl.baseUrl}api/auth/google-login',
-        {'token': firebaseToken},
+        {'token': firebaseToken}, // Updated to send firebaseToken
       );
-
+      
       var body = response.body;
+
+      debugPrint("------------ GOOGLE SIGNUP BACKEND RESPONSE ------------");
+      debugPrint("Status Code: ${response.statusCode}");
+      debugPrint("Status Text: ${response.statusText}");
+      debugPrint("Has Error: ${response.hasError}");
+      debugPrint("Body: $body");
+      debugPrint("---------------------------------------------------------");
       if (body is String) {
         try {
           body = jsonDecode(body);
@@ -112,6 +181,7 @@ class SignupController extends GetxController {
       }
     } catch (e) {
       debugPrint('Google Sign-In Error: $e');
+      debugPrint("------------ GOOGLE SIGN-IN FAILED ------------");
       Get.snackbar(
         'Error',
         'Google sign-in failed. Please try again.',
@@ -154,6 +224,15 @@ class SignupController extends GetxController {
         );
 
         var body = response.body;
+        
+        debugPrint("Firebase Token Length: ${firebaseToken.length}");
+        debugPrint("------------ FB SIGNUP BACKEND RESPONSE ------------");
+        debugPrint("Status Code: ${response.statusCode}");
+        debugPrint("Status Text: ${response.statusText}");
+        debugPrint("Has Error: ${response.hasError}");
+        debugPrint("Body: $body");
+        debugPrint("-----------------------------------------------------");
+
         if (body is String) {
           try {
             body = jsonDecode(body);

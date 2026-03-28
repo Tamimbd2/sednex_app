@@ -73,6 +73,13 @@ class ArticlesController extends GetxController {
             } catch (_) {
               parsedDate = DateTime.now();
             }
+            
+            String catName = 'General';
+            if (item['category'] is Map) {
+              catName = item['category']['name'] ?? 'General';
+            } else if (item['category'] is String) {
+              catName = item['category'];
+            }
 
             return Article(
               id: item['_id'] ?? '',
@@ -84,7 +91,7 @@ class ArticlesController extends GetxController {
                   'assets/essentialService/article.png',
               date: parsedDate,
               content: item['description'] ?? '',
-              category: item['category'] ?? 'General',
+              category: catName,
               authorName: author != null ? author['name'] : null,
             );
           }).toList();

@@ -12,16 +12,16 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF3575FF),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
           'Essential service',
-          style: GoogleFonts.inter(
-            color: Colors.black,
+          style: GoogleFonts.poppins(
+            color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),

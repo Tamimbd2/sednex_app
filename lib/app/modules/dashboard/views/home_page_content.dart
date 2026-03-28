@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:marquee/marquee.dart';
 import 'package:get/get.dart';
@@ -144,14 +145,14 @@ class HomePageContent extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF101727),
+                    color: const Color(0xFF2C2C2C),
                   ),
                 ),
                 const SizedBox(width: 8),
                 const Icon(
                   Icons.arrow_forward_ios,
                   size: 16,
-                  color: Color(0xFF101727),
+                  color: Color(0xFF2C2C2C),
                 ),
               ],
             ),
@@ -286,7 +287,7 @@ class HomePageContent extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF101727),
+                    color: const Color(0xFF2C2C2C),
                   ),
                 ),
                 GestureDetector(
@@ -314,32 +315,32 @@ class HomePageContent extends StatelessWidget {
                 final services = [
                   {
                     'title': 'Informations',
-                    'icon': 'assets/essentialService/informations.png',
-                    'color': const Color(0xFF4169E1),
+                    'icon': 'assets/newessential/info.svg',
+                    'color': const Color(0xFFFF5722),
                     'route': '/informations',
                   },
                   {
                     'title': 'Embassy',
-                    'icon': 'assets/essentialService/embassy.png',
-                    'color': AppColors.primary,
+                    'icon': 'assets/newessential/City-Hall--Streamline-Core-Gradient.svg',
+                    'color': const Color(0xFF9C27B0),
                     'route': '/embassy',
                   },
                   {
                     'title': 'Article',
-                    'icon': 'assets/essentialService/article.png',
-                    'color': const Color(0xFFFFD700),
+                    'icon': 'assets/newessential/Multiple-File-2--Streamline-Core-Gradient.svg',
+                    'color': const Color(0xFF00BFA5),
                     'route': '/articles',
                   },
                   {
                     'title': 'Basic Goods',
-                    'icon': 'assets/essentialService/basicgoods.png',
-                    'color': const Color(0xFF20B2AA),
+                    'icon': 'assets/newessential/Shopping-Basket-2--Streamline-Core-Gradient.svg',
+                    'color': const Color(0xFF448AFF),
                     'route': '/basicgoods',
                   },
                   {
                     'title': 'Community',
-                    'icon': 'assets/essentialService/community.png',
-                    'color': const Color(0xFF4169E1),
+                    'icon': 'assets/newessential/User-Multiple-Group--Streamline-Core-Gradient.svg',
+                    'color': const Color(0xFF4CAF50),
                     'route': '/community',
                   },
                 ];
@@ -376,7 +377,7 @@ class HomePageContent extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF101727),
+                    color: const Color(0xFF2C2C2C),
                   ),
                 ),
                 GestureDetector(
@@ -465,27 +466,38 @@ class HomePageContent extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 70,
-            height: 70,
+            width: 72,
+            height: 72,
             decoration: BoxDecoration(
-              color: backgroundColor,
+              color: Colors.white,
               borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: backgroundColor.withValues(alpha: 0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
             ),
             child: Center(
-              child: Image.asset(
-                imagePath,
-                width: 36,
-                height: 36,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.image, color: Colors.white, size: 32),
+              child: Builder(
+                builder: (context) {
+                  if (imagePath.endsWith('.svg')) {
+                    return SvgPicture.asset(
+                      imagePath,
+                      width: 38,
+                      height: 38,
+                      fit: BoxFit.contain,
+                      placeholderBuilder: (BuildContext context) => const Icon(
+                        Icons.grid_view_rounded,
+                        color: Colors.grey,
+                        size: 28,
+                      ),
+                    );
+                  } else {
+                    return Image.asset(
+                      imagePath,
+                      width: 38,
+                      height: 38,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.image, color: Colors.grey, size: 28),
+                    );
+                  }
+                },
               ),
             ),
           ),
@@ -495,7 +507,7 @@ class HomePageContent extends StatelessWidget {
             style: GoogleFonts.inter(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: const Color(0xFF354152),
+              color: const Color(0xFF2C2C2C),
             ),
           ),
         ],
@@ -558,7 +570,7 @@ class HomePageContent extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF354152),
+                color: const Color(0xFF2C2C2C),
               ),
               textAlign: TextAlign.center,
             ),

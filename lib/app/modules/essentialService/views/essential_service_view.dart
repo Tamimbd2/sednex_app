@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../controllers/essential_service_controller.dart';
 
 class EssentialServiceView extends GetView<EssentialServiceController> {
@@ -37,140 +38,140 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
           children: [
             _buildServiceCard(
               'Informations',
-              'assets/essentialService/informations.png',
-              const Color(0xFF1976D2), // Info Blue
+              'assets/newessential/info.svg',
+              const Color(0xFFFF5722),
               () => Get.toNamed('/informations'),
             ),
             _buildServiceCard(
               'Embassy',
-              'assets/essentialService/embassy.png',
-              const Color(0xFF6A1B9A), // Official Purple
+              'assets/newessential/City-Hall--Streamline-Core-Gradient.svg',
+              const Color(0xFF9C27B0),
               () => Get.toNamed('/embassy'),
             ),
             _buildServiceCard(
               'Article',
-              'assets/essentialService/article.png',
-              const Color(0xFFFF6F00), // Amber - reading/knowledge
+              'assets/newessential/Receipt--Streamline-Core-Gradient.svg',
+              const Color(0xFF00BFA5),
               () => Get.toNamed('/articles'),
             ),
             _buildServiceCard(
-              'Basic Gods',
-              'assets/essentialService/basicgoods.png',
-              const Color(0xFF00897B), // Teal - daily essentials
+              'Basic Goods',
+              'assets/newessential/Shopping-Basket-2--Streamline-Core-Gradient.svg',
+              const Color(0xFF448AFF),
               () => Get.toNamed('/basicgoods'),
             ),
             _buildServiceCard(
               'Community',
-              'assets/essentialService/community.png',
-              const Color(0xFF7B1FA2), // Purple - social/community
+              'assets/newessential/User-Multiple-Group--Streamline-Core-Gradient.svg',
+              const Color(0xFF4CAF50),
               () => Get.toNamed('/community'),
             ),
             _buildServiceCard(
               'Grocery Store',
-              'assets/essentialService/store.png',
-              const Color(0xFF388E3C), // Green - fresh grocery
+              'assets/newessential/Store-1--Streamline-Core-Gradient.svg',
+              const Color(0xFFFF9800),
               () => _showComingSoonDialog(context, 'Grocery Store'),
             ),
             _buildServiceCard(
               'Tourist spot',
-              'assets/essentialService/touristspot.png',
-              const Color(0xFF0097A7), // Cyan - scenic/travel
+              'assets/newessential/Landscape-2--Streamline-Core-Gradient.svg',
+              const Color(0xFF00BCD4),
               () => Get.toNamed('/tourist-spot'),
             ),
             _buildServiceCard(
               'Learn Arabic',
-              'assets/essentialService/learnarabic.png',
-              const Color(0xFF1565C0), // Deep Blue - learning
+              'assets/newessential/Dictionary-Language-Book--Streamline-Core-Gradient.svg',
+              const Color(0xFF795548),
               () => Get.toNamed('/learnarabic'),
             ),
             _buildServiceCard(
               'Restaurants',
-              'assets/essentialService/restaurent.png',
-              const Color(0xFFE53935), // Red-Orange - food/appetite
+              'assets/newessential/Fork-Knife--Streamline-Core-Gradient.svg',
+              const Color(0xFFE91E63),
               () => Get.toNamed('/restaurents'),
             ),
             _buildServiceCard(
               'Hospitals',
-              'assets/essentialService/hospital.png',
-              const Color(0xFF1E63FF), // Medical Red
+              'assets/newessential/Hospital-Sign-Square--Streamline-Core-Gradient.svg',
+              const Color(0xFFF44336),
               () => Get.toNamed('/hospitals'),
             ),
             _buildServiceCard(
               'Local Business',
-              'assets/essentialService/Business.png',
-              const Color(0xFFF57C00), // Orange - commerce
+              'assets/newessential/Briefcase-Dollar--Streamline-Core-Gradient.svg',
+              const Color(0xFF607D8B),
               () => _showComingSoonDialog(context, 'Local Business'),
             ),
             _buildServiceCard(
               'Jewellery shop',
-              'assets/essentialService/Jeweller.png',
-              const Color(0xFFB8860B), // Dark Gold - jewellery
+              'assets/newessential/Gift-2--Streamline-Core-Gradient.svg',
+              const Color(0xFFFFC107),
               () => _showComingSoonDialog(context, 'Jewellery shop'),
             ),
             _buildServiceCard(
               'Clothing shop',
-              'assets/essentialService/clothshop.png',
-              const Color(0xFFAD1457), // Deep Pink - fashion
+              'assets/newessential/Shopping-Bag-Hand-Bag-2--Streamline-Core-Gradient.svg',
+              const Color(0xFF9C27B0),
               () => _showComingSoonDialog(context, 'Clothing shop'),
             ),
             _buildServiceCard(
               'Organization',
-              'assets/essentialService/Organization.png',
-              const Color(0xFF283593), // Deep Indigo - formal/official
+              'assets/newessential/Business-Profession-Home-Office--Streamline-Core-Gradient.svg',
+              const Color(0xFF3F51B5),
               () => _showComingSoonDialog(context, 'Organization'),
             ),
             _buildServiceCard(
               'Sports team',
-              'assets/essentialService/sports.png',
-              const Color(0xFF2E7D32), // Dark Green - sports/energy
+              'assets/newessential/Good-Health-And-Well-Being--Streamline-Core-Gradient.svg',
+              const Color(0xFF8BC34A),
               () => _showComingSoonDialog(context, 'Sports team'),
             ),
             _buildServiceCard(
               'Taxi Drivers',
-              'assets/essentialService/texidriver.png',
-              const Color(0xFFF9A825), // Yellow - taxi
+              'assets/newessential/Car-Taxi-1--Streamline-Core-Gradient.svg',
+              const Color(0xFFFFEB3B),
               () => _showComingSoonDialog(context, 'Taxi Drivers'),
             ),
             _buildServiceCard(
               'Businessman',
-              'assets/essentialService/businessman.png',
-              const Color(0xFF37474F), // Blue-Grey - professional
+              'assets/newessential/Necktie--Streamline-Core-Gradient.svg',
+              const Color(0xFF607D8B),
               () => _showComingSoonDialog(context, 'Businessman'),
             ),
             _buildServiceCard(
               'Influencer',
-              'assets/essentialService/Influencer.png',
-              const Color(0xFFE91E63), // Hot Pink - social media
+              'assets/newessential/Megaphone-2--Streamline-Core-Gradient.svg',
+              const Color(0xFFE91E63),
               () => _showComingSoonDialog(context, 'Influencer'),
             ),
             _buildServiceCard(
               'Local Market',
-              'assets/essentialService/Local Market.png',
-              const Color(0xFFBF360C), // Deep Orange - market/bazaar
+              'assets/newessential/Shopping-Cart-1--Streamline-Core-Gradient.svg',
+              const Color(0xFFFF5722),
               () => _showComingSoonDialog(context, 'Local Market'),
             ),
             _buildServiceCard(
               'Pharmacist',
-              'assets/essentialService/Pharmacist.png',
-              const Color(0xFF00695C), // Dark Teal - pharmacy/medical
+              'assets/newessential/Tablet-Capsule--Streamline-Core-Gradient.svg',
+              const Color(0xFF009688),
               () => _showComingSoonDialog(context, 'Pharmacist'),
             ),
             _buildServiceCard(
               'NGO',
-              'assets/essentialService/NGO.png',
-              const Color(0xFF1B5E20), // Dark Green - charity/social good
+              'assets/newessential/Decent-Work-And-Economic-Growth--Streamline-Core-Gradient.svg',
+              const Color(0xFF4CAF50),
               () => _showComingSoonDialog(context, 'NGO'),
             ),
             _buildServiceCard(
               'Bus & Flight Booking',
-              'assets/essentialService/Bus.png',
-              const Color(0xFF0277BD), // Sky Blue - transportation/sky
+              'assets/newessential/Bus--Streamline-Core-Gradient.svg',
+              const Color(0xFF2196F3),
               () => Get.toNamed('/busflight'),
             ),
             _buildServiceCard(
               'Local Tour',
-              'assets/essentialService/localTour.png',
-              const Color(0xFF00838F), // Cyan-Teal - tour/explore
+              'assets/newessential/Location-Compass-1--Streamline-Core-Gradient.svg',
+              const Color(0xFF00BCD4),
               () => Get.toNamed('/localtour'),
             ),
           ],
@@ -349,63 +350,52 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
               children: [
                 // ── Icon Box ────────────────────────────────────────────────
                 Container(
-                  width: 64,
-                  height: 64,
+                  width: 72,
+                  height: 72,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        widget.color,
-                        widget.color.withValues(alpha: 0.70),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(18),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: widget.color.withValues(alpha: _pressed ? 0.6 : 0.35),
-                        blurRadius: _pressed ? 16 : 10,
-                        spreadRadius: _pressed ? 1 : 0,
-                        offset: Offset(0, _pressed ? 2 : 5),
+                        color: widget.color.withValues(alpha: _pressed ? 0.2 : 0.08),
+                        blurRadius: _pressed ? 12 : 20,
+                        spreadRadius: _pressed ? 0 : 2,
+                        offset: Offset(0, _pressed ? 4 : 8),
                       ),
                     ],
                   ),
                   clipBehavior: Clip.antiAlias,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Top shine highlight
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          height: 28,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.white.withValues(alpha: 0.25),
-                                Colors.transparent,
-                              ],
+                  child: Center(
+                    child: Builder(
+                      builder: (context) {
+                        if (widget.imagePath.endsWith('.svg')) {
+                          return SvgPicture.asset(
+                            widget.imagePath,
+                            width: 38,
+                            height: 38,
+                            fit: BoxFit.contain,
+                            placeholderBuilder: (BuildContext context) => const Icon(
+                              Icons.grid_view_rounded,
+                              color: Colors.grey,
+                              size: 28,
                             ),
-                          ),
-                        ),
-                      ),
-                      // Icon image
-                      Image.asset(
-                        widget.imagePath,
-                        width: 36,
-                        height: 36,
-                        fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => const Icon(
-                          Icons.apps_rounded,
-                          color: Colors.white,
-                          size: 28,
-                        ),
-                      ),
-                    ],
+                          );
+                        } else {
+                          // Fallback for png
+                          return Image.asset(
+                            widget.imagePath,
+                            width: 38,
+                            height: 38,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) => const Icon(
+                              Icons.grid_view_rounded,
+                              color: Colors.grey,
+                              size: 28,
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 7),

@@ -16,6 +16,8 @@ class ServiceItem {
 }
 
 class InformationsController extends GetxController {
+  final searchQuery = ''.obs;
+  
   final List<ServiceItem> services = [
     ServiceItem(
       label: 'Embassy',

@@ -30,7 +30,7 @@ class BusDetailsView extends StatelessWidget {
         ),
         title: Text(
           'Bus Service Details',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -84,7 +84,7 @@ class BusDetailsView extends StatelessWidget {
                             children: [
                               Text(
                                 busName,
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.hindSiliguri(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.black,
@@ -93,7 +93,7 @@ class BusDetailsView extends StatelessWidget {
                               const SizedBox(height: 4),
                               Text(
                                 'ডিজাইনিং এবং বুক সার্ভিসিং',
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.hindSiliguri(
                                   fontSize: 13,
                                   color: Colors.grey[600],
                                 ),
@@ -155,7 +155,7 @@ class BusDetailsView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'Rent Details',
-                style: GoogleFonts.inter(
+                style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                   color: Colors.black,
@@ -211,7 +211,7 @@ class BusDetailsView extends StatelessWidget {
                           children: [
                             Text(
                               'নোট:',
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.hindSiliguri(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
                                 color: const Color(0xFFFFD700),
@@ -220,7 +220,7 @@ class BusDetailsView extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               note,
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.hindSiliguri(
                                 fontSize: 13,
                                 color: Colors.black87,
                                 height: 1.4,
@@ -249,7 +249,7 @@ class BusDetailsView extends StatelessWidget {
                   children: [
                     Text(
                       'About Bus Service',
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: Colors.black,
@@ -258,7 +258,7 @@ class BusDetailsView extends StatelessWidget {
                     const SizedBox(height: 12),
                     Text(
                       about,
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.hindSiliguri(
                         fontSize: 14,
                         color: Colors.grey[700],
                         height: 1.6,
@@ -314,7 +314,7 @@ class BusDetailsView extends StatelessWidget {
                   ),
                   child: Text(
                     'Book This Bus Now',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
@@ -358,7 +358,7 @@ class BusDetailsView extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.hindSiliguri(
                 fontSize: 14,
                 color: Colors.black87,
                 height: 1.4,

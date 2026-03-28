@@ -25,7 +25,7 @@ class DashboardView extends GetView<DashboardController> {
             return const SizedBox.shrink();
           }
           return Container(
-            height: 80,
+            height: 110,
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             decoration: BoxDecoration(
               color: Colors.white,

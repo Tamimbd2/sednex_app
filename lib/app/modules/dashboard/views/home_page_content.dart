@@ -171,7 +171,7 @@ class HomePageContent extends StatelessWidget {
 
                   // Construct static + dynamic items
                   final List<Widget> items = [
-                    // _buildSehriIftarCompactCard(),
+                    _buildSehriIftarCompactCard(),
 
                     // Namaj Card
                     SizedBox(

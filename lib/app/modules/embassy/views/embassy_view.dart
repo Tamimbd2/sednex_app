@@ -14,19 +14,19 @@ class EmbassyView extends GetView<EmbassyController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF3575FF),
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.only(left: 8),
           child: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black, size: 28),
+            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
             onPressed: () => Get.back(),
           ),
         ),
         title: Text(
           'Embassy',
           style: GoogleFonts.inter(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 24,
             fontWeight: FontWeight.w700,
           ),
@@ -35,7 +35,7 @@ class EmbassyView extends GetView<EmbassyController> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(
-            color: Colors.grey[200],
+            color: const Color(0xFF3575FF), // Matches the AppBar since it doesn't need to stand out
             height: 1,
           ),
         ),
@@ -53,32 +53,33 @@ class EmbassyView extends GetView<EmbassyController> {
               decoration: InputDecoration(
                 hintText: 'Search embassy...',
                 hintStyle: GoogleFonts.inter(
-                  color: Colors.grey[400],
+                  color: Colors.grey[500],
                   fontSize: 15,
                   fontWeight: FontWeight.w400,
                 ),
-                prefixIcon: Icon(Icons.search, color: Colors.grey[400], size: 24),
+                prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
                 filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                fillColor: Colors.grey[100], // Minimalist soft grey background
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none, // No borders initially for a clean look
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
                 ),
               ),
               style: GoogleFonts.inter(
-                color: Colors.black,
+                color: const Color(0xFF2C2C2C),
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
+              cursorColor: const Color(0xFF3575FF),
             ),
           ),
           const SizedBox(height: 24),
@@ -87,7 +88,7 @@ class EmbassyView extends GetView<EmbassyController> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              'Embassy',
+              'All Embassy',
               style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -161,53 +162,31 @@ class EmbassyView extends GetView<EmbassyController> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Circular Logo
-            Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.grey[300]!,
-                  width: 1,
-                ),
-              ),
-              child: ClipOval(
-                child: embassy.icon.isNotEmpty
-                    ? Image.network(
-                        embassy.icon,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[200],
-                            child: const Icon(
-                              Icons.flag,
-                              color: Colors.grey,
-                              size: 32,
-                            ),
-                          );
-                        },
-                      )
-                    : Container(
-                        color: Colors.grey[200],
-                        child: const Icon(
+            // Flag Logo
+            SizedBox(
+              width: 60,
+              height: 60,
+              child: embassy.icon.isNotEmpty
+                  ? Image.network(
+                      embassy.icon,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
                           Icons.flag,
                           color: Colors.grey,
-                          size: 32,
-                        ),
-                      ),
-              ),
+                          size: 40,
+                        );
+                      },
+                    )
+                  : const Icon(
+                      Icons.flag,
+                      color: Colors.grey,
+                      size: 40,
+                    ),
             ),
             const SizedBox(height: 12),
             // Embassy Name

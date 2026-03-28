@@ -147,9 +147,9 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: const Color(0xFF3575FF),
         elevation: 0,
         centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -209,75 +209,30 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
       margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        color: const Color(0xFFFFFFFF),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.06),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Row(
         children: [
-          // Avatar
-          Stack(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(2.5),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    colors: [
-                      AppColors.accent,
-                      Color(0xFFFFF8DC),
-                      AppColors.accent,
-                    ],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.accent.withValues(alpha: 0.35),
-                      blurRadius: 10,
-                    ),
-                  ],
-                ),
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: ClipOval(
-                    child: SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: _imageUrl.isNotEmpty
-                          ? Image.network(
-                              _imageUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  _avatarFallback(),
-                            )
-                          : _avatarFallback(),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 2,
-                right: 2,
-                child: Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF00E676),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                ),
-              ),
-            ],
+          // Flag Logo
+          SizedBox(
+            width: 60,
+            height: 60,
+            child: _imageUrl.isNotEmpty
+                ? Image.network(
+                    _imageUrl,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) =>
+                        _avatarFallback(),
+                  )
+                : _avatarFallback(),
           ),
           const SizedBox(width: 14),
           // Info
@@ -288,8 +243,8 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                 Text(
                   _name,
                   style: GoogleFonts.inter(
-                    color: const Color(0xFF0D1B3E),
-                    fontSize: 15,
+                    color: const Color(0xFF2C2C2C),
+                    fontSize: 16,
                     fontWeight: FontWeight.w700,
                     height: 1.2,
                   ),
@@ -360,9 +315,10 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
     );
   }
 
-  Widget _avatarFallback() => Container(
-    color: AppColors.backgroundAlt,
-    child: const Icon(Icons.flag_rounded, size: 36, color: AppColors.primary),
+  Widget _avatarFallback() => const Icon(
+    Icons.flag_rounded,
+    size: 40,
+    color: Colors.grey,
   );
 
   // ── Location Row ───────────────────────────────────────────────────
@@ -375,9 +331,15 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
         margin: const EdgeInsets.symmetric(horizontal: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.cardBorder),
+          color: const Color(0xFFFFFFFF),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           children: [
@@ -401,7 +363,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                 style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFF374151),
+                  color: const Color(0xFF2C2C2C),
                   height: 1.4,
                 ),
               ),
@@ -422,13 +384,13 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: const Color(0xFFFFFFFF),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.06),
-            blurRadius: 20,
-            offset: const Offset(0, 6),
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),

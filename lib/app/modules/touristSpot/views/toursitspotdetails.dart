@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class TouristSpotDetailsView extends StatelessWidget {
   const TouristSpotDetailsView({super.key});
@@ -15,18 +16,18 @@ class TouristSpotDetailsView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF3575FF),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
           'Tourist Spots',
-          style: GoogleFonts.inter(
-            color: Colors.black,
+          style: GoogleFonts.poppins(
+            color: Colors.white,
             fontSize: 18,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
@@ -83,8 +84,8 @@ class TouristSpotDetailsView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 title,
-                style: GoogleFonts.inter(
-                  fontSize: 20,
+                style: GoogleFonts.hindSiliguri(
+                  fontSize: 22,
                   fontWeight: FontWeight.w700,
                   color: Colors.black,
                   height: 1.3,
@@ -105,13 +106,17 @@ class TouristSpotDetailsView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      description,
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: Colors.grey[700],
-                        height: 1.6,
-                      ),
+                    Html(
+                      data: description,
+                      style: {
+                        "body": Style(
+                          fontFamily: GoogleFonts.hindSiliguri().fontFamily,
+                          fontSize: FontSize(15.0),
+                          color: Colors.grey[800],
+                          lineHeight: LineHeight(1.5),
+                          margin: Margins.zero,
+                        ),
+                      },
                     ),
                   ],
                 ),

@@ -25,13 +25,13 @@ class CommunityProfileDetailsView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF3575FF),
         elevation: 0,
         centerTitle: true,
         title: Text(
           'Profile',
           style: GoogleFonts.outfit(
-            color: textColor,
+            color: Colors.white,
             fontWeight: FontWeight.w600,
             fontSize: 18,
           ),
@@ -39,7 +39,7 @@ class CommunityProfileDetailsView extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new,
-            color: textColor,
+            color: Colors.white,
             size: 20,
           ),
           onPressed: () => Get.back(),

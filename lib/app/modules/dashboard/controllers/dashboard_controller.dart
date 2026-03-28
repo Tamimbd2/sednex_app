@@ -61,23 +61,23 @@ class DashboardController extends GetxController {
   }
   
   void startAutoScrolls() {
-    // Info Carousel Auto-scroll (Circular feel)
-    _infoAutoScrollTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
-      if (infoScrollController.hasClients) {
-        double currentScroll = infoScrollController.offset;
-        double nextScroll = currentScroll + 132; // item width 120 + 12 spacing
-        infoScrollController.animateTo(nextScroll, duration: const Duration(milliseconds: 800), curve: Curves.easeOutCubic);
-      }
-    });
+    // Info Carousel Auto-scroll (Circular feel) - Disabled as requested
+    // _infoAutoScrollTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+    //   if (infoScrollController.hasClients) {
+    //     double currentScroll = infoScrollController.offset;
+    //     double nextScroll = currentScroll + 132; // item width 120 + 12 spacing
+    //     infoScrollController.animateTo(nextScroll, duration: const Duration(milliseconds: 800), curve: Curves.easeOutCubic);
+    //   }
+    // });
 
-    // Essential Services Auto-scroll (Circular feel)
-    _essentialAutoScrollTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      if (essentialScrollController.hasClients) {
-        double currentScroll = essentialScrollController.offset;
-        double nextScroll = currentScroll + 100; // rough width of one icon + text + padding
-        essentialScrollController.animateTo(nextScroll, duration: const Duration(milliseconds: 800), curve: Curves.easeOutCubic);
-      }
-    });
+    // Essential Services Auto-scroll (Circular feel) - Disabled as requested
+    // _essentialAutoScrollTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    //   if (essentialScrollController.hasClients) {
+    //     double currentScroll = essentialScrollController.offset;
+    //     double nextScroll = currentScroll + 100; // rough width of one icon + text + padding
+    //     essentialScrollController.animateTo(nextScroll, duration: const Duration(milliseconds: 800), curve: Curves.easeOutCubic);
+    //   }
+    // });
   }
 
   void loadUserData() {

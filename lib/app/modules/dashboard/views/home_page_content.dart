@@ -263,11 +263,11 @@ class HomePageContent extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     physics: const BouncingScrollPhysics(),
-                    itemCount: 10000,
+                    itemCount: items.length,
                     separatorBuilder: (_, __) => const SizedBox(width: 12),
                     itemBuilder: (context, index) {
                       if (items.isEmpty) return const SizedBox();
-                      return items[index % items.length];
+                      return items[index];
                     },
                   );
                 }),
@@ -309,15 +309,8 @@ class HomePageContent extends StatelessWidget {
           // Essential Services Carousel
           SizedBox(
             height: 120,
-            child: ListView.separated(
-              controller:
-                  Get.find<DashboardController>().essentialScrollController,
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: 10000,
-              separatorBuilder: (_, __) => const SizedBox(width: 16),
-              itemBuilder: (context, index) {
+            child: Builder(
+              builder: (context) {
                 final services = [
                   {
                     'title': 'Informations',
@@ -350,14 +343,25 @@ class HomePageContent extends StatelessWidget {
                     'route': '/community',
                   },
                 ];
-                final item = services[index % services.length];
-                return _buildEssentialServiceItem(
-                  item['title'] as String,
-                  item['icon'] as String,
-                  item['color'] as Color,
-                  () => Get.toNamed(item['route'] as String),
+                return ListView.separated(
+                  controller:
+                      Get.find<DashboardController>().essentialScrollController,
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: services.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 16),
+                  itemBuilder: (context, index) {
+                    final item = services[index];
+                    return _buildEssentialServiceItem(
+                      item['title'] as String,
+                      item['icon'] as String,
+                      item['color'] as Color,
+                      () => Get.toNamed(item['route'] as String),
+                    );
+                  },
                 );
-              },
+              }
             ),
           ),
 

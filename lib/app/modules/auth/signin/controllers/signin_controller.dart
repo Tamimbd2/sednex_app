@@ -133,19 +133,17 @@ class SigninController extends GetxController {
         throw Exception("Failed to retrieve Firebase ID token.");
       }
 
-      // 4. Send the Firebase ID Token to your backend to verify and create session
-      debugPrint("------------ GOOGLE & FIREBASE TOKENS ------------");
-      debugPrint("Google ID Token: ${googleAuth.idToken}");
-      debugPrint("Firebase ID Token: $firebaseToken");
-      debugPrint("-------------------------------------------------");
-
       final connect = GetConnect();
       // Increasing timeout to 30s as the backend might be on a cold start
       connect.timeout = const Duration(seconds: 30);
       
       final response = await connect.post(
         '${AppUrl.baseUrl}api/auth/google-login',
-        {'token': firebaseToken}, // Reverted to firebaseToken as backend expects it
+        {
+          'token': firebaseToken,
+          'email': userCredential.user?.email,
+          'name': userCredential.user?.displayName,
+        },
       );
 
       var body = response.body;
@@ -235,19 +233,23 @@ class SigninController extends GetxController {
             .signInWithCredential(credential);
         final String? firebaseToken = await userCredential.user?.getIdToken();
 
-        if (firebaseToken == null) {
-          throw Exception("Failed to retrieve Firebase ID token.");
-        }
+      if (firebaseToken == null) {
+        throw Exception("Failed to retrieve Firebase ID token.");
+      }
 
-        final connect = GetConnect();
-        final response = await connect.post(
-          '${AppUrl.baseUrl}api/auth/facebook-login',
-          {'token': firebaseToken},
-        );
+      final connect = GetConnect();
+      connect.timeout = const Duration(seconds: 30);
 
-        var body = response.body;
+      final response = await connect.post(
+        '${AppUrl.baseUrl}api/auth/facebook-login',
+        {
+          'token': firebaseToken,
+          'email': userCredential.user?.email,
+          'name': userCredential.user?.displayName,
+        },
+      );
 
-        debugPrint("Firebase Token Length: ${firebaseToken.length}");
+      var body = response.body;
         debugPrint("------------ FACEBOOK LOGIN BACKEND RESPONSE ------------");
         debugPrint("Status Code: ${response.statusCode}");
         debugPrint("Status Text: ${response.statusText}");

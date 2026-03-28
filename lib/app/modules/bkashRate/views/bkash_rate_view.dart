@@ -10,7 +10,7 @@ class BkashRateView extends GetView<BkashRateController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAE8EA), // Soft Pinkish Background
+      backgroundColor: const Color(0xFFEDF4FF), // New BG 2
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -18,8 +18,8 @@ class BkashRateView extends GetView<BkashRateController> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color(0xFF1E63FF), // Primary Red
-                Color(0xFF3575FF), // Darker Red
+                Color(0xFF1E63FF), // Primary
+                Color(0xFF3575FF), // Color 2
               ],
             ),
           ),
@@ -47,8 +47,8 @@ class BkashRateView extends GetView<BkashRateController> {
           child: Container(
             height: 20,
             decoration: const BoxDecoration(
-              color: Color(0xFFFAE8EA),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              color: const Color(0xFFEDF4FF),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
             ),
           ),
         ),
@@ -70,7 +70,7 @@ class BkashRateView extends GetView<BkashRateController> {
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.pink.withValues(alpha: 0.1),
+                        color: const Color(0xFF1E63FF).withValues(alpha: 0.1),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -104,14 +104,14 @@ class BkashRateView extends GetView<BkashRateController> {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFFFCE4EC), Color(0xFFF8BBD0)],
+                    colors: [Color(0xFFFFEAC2), Color(0xFFFFD700)], // Warm Golden Yellow
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF1E63FF).withValues(alpha: 0.15),
+                      color: const Color(0xFFFFD700).withValues(alpha: 0.3),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -339,7 +339,7 @@ class BkashRateView extends GetView<BkashRateController> {
                               ),
                             ],
                             border: Border.all(
-                              color: const Color(0xFFFCE4EC),
+                              color: const Color(0xFFE3EEFF),
                               width: 2,
                             ),
                           ),
@@ -373,14 +373,14 @@ class BkashRateView extends GetView<BkashRateController> {
                       ),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Color(0xFFE3F2FD), Color(0xFFBBDEFB)],
+                          colors: [Color(0xFFE3EEFF), Color(0xFF95C6FF)], // BG 1 to Color 6
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.blue.withValues(alpha: 0.1),
+                            color: const Color(0xFF1E63FF).withValues(alpha: 0.15),
                             blurRadius: 15,
                             offset: const Offset(0, 5),
                           ),
@@ -394,7 +394,7 @@ class BkashRateView extends GetView<BkashRateController> {
                               style: GoogleFonts.poppins(
                                 fontSize: 32,
                                 fontWeight: FontWeight.w700,
-                                color: const Color(0xFF1565C0),
+                                color: const Color(0xFF1E63FF),
                                 height: 1.2,
                               ),
                             ),
@@ -404,7 +404,7 @@ class BkashRateView extends GetView<BkashRateController> {
                             'Estimated Amount',
                             style: GoogleFonts.poppins(
                               fontSize: 12,
-                              color: const Color(0xFF1976D2),
+                              color: const Color(0xFF3575FF),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -422,16 +422,16 @@ class BkashRateView extends GetView<BkashRateController> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFF8E1),
+                  color: const Color(0xFFFFFDF5),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFFFECCB)),
+                  border: Border.all(color: const Color(0xFFFFD700).withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Icon(
                       Icons.info_outline_rounded,
-                      color: Color(0xFFFB8C00),
+                      color: Color(0xFFFFB300),
                       size: 20,
                     ),
                     const SizedBox(width: 12),
@@ -443,7 +443,7 @@ class BkashRateView extends GetView<BkashRateController> {
                               text: 'Note: ',
                               style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w700,
-                                color: const Color(0xFFE65100),
+                                color: const Color(0xFFD48806),
                                 fontSize: 13,
                               ),
                             ),
@@ -451,7 +451,7 @@ class BkashRateView extends GetView<BkashRateController> {
                               text:
                                   'Commission rates may vary by location. Standard commission is 20 Tk per thousand.',
                               style: GoogleFonts.poppins(
-                                color: const Color(0xFF5D4037),
+                                color: const Color(0xFF2C2C2C),
                                 fontSize: 13,
                                 height: 1.5,
                               ),

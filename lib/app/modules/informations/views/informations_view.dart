@@ -13,7 +13,7 @@ class InformationsView extends GetView<InformationsController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF3575FF),
+        backgroundColor: const Color(0xFF1E63FF),
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.only(left: 8),
@@ -70,7 +70,7 @@ class InformationsView extends GetView<InformationsController> {
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
                 ),
-                cursorColor: const Color(0xFF3575FF),
+                cursorColor: const Color(0xFF1E63FF),
               ),
               const SizedBox(height: 12),
 

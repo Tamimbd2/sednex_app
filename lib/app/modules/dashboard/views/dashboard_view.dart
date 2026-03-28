@@ -28,10 +28,10 @@ class DashboardView extends GetView<DashboardController> {
             height: 110,
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFFFFF),
+              color: const Color(0xFF1E63FF),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.10),
+                  color: const Color(0xFF1E63FF).withValues(alpha: 0.30),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -43,8 +43,8 @@ class DashboardView extends GetView<DashboardController> {
                 children: [
                   // Logo
                   Image.asset(
-                    'assets/logo/textlogoblack.png',
-                    height: 32,
+                    'assets/logo/Sednex Website Logo Eng@3x.png',
+                    height: 28,
                     fit: BoxFit.contain,
                   ),
                   const Spacer(),
@@ -54,17 +54,17 @@ class DashboardView extends GetView<DashboardController> {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[50],
+                          color: Colors.white.withValues(alpha: 0.0),
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
                           onPressed: () => Get.toNamed(Routes.NOTIFICATIONS),
                           icon: SvgPicture.asset(
                             'assets/icons/Icon.svg',
-                            width: 22,
-                            height: 22,
+                            width: 26,
+                            height: 28,
                             colorFilter: const ColorFilter.mode(
-                              Color(0xFF6B7280),
+                              Colors.white,
                               BlendMode.srcIn,
                             ),
                           ),

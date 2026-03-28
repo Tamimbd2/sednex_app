@@ -21,13 +21,14 @@ class CommunityView extends GetView<CommunityController> {
         ),
         title: Text(
           'Community',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
+      
         ),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -66,7 +67,7 @@ class CommunityView extends GetView<CommunityController> {
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
-              cursorColor: const Color(0xFF3575FF),
+              cursorColor: const Color(0xFF1E63FF),
             ),
           ),
           const SizedBox(height: 8),

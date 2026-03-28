@@ -14,7 +14,7 @@ class EmbassyView extends GetView<EmbassyController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF3575FF),
+        backgroundColor: const Color(0xFF1E63FF),
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.only(left: 8),
@@ -25,13 +25,13 @@ class EmbassyView extends GetView<EmbassyController> {
         ),
         title: Text(
           'Embassy',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.poppins(
             color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        centerTitle: false,
+        centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(
@@ -79,7 +79,7 @@ class EmbassyView extends GetView<EmbassyController> {
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
-              cursorColor: const Color(0xFF3575FF),
+              cursorColor: const Color(0xFF1E63FF),
             ),
           ),
           const SizedBox(height: 24),

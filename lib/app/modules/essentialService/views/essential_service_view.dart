@@ -12,7 +12,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF3575FF),
+        backgroundColor: const Color(0xFF1E63FF),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),

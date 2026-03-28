@@ -14,7 +14,7 @@ class ArticlesView extends GetView<ArticlesController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF3575FF),
+        backgroundColor: const Color(0xFF1E63FF),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -66,7 +66,7 @@ class ArticlesView extends GetView<ArticlesController> {
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
-              cursorColor: const Color(0xFF3575FF),
+              cursorColor: const Color(0xFF1E63FF),
             ),
           ),
 

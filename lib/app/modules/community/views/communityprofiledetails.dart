@@ -25,7 +25,7 @@ class CommunityProfileDetailsView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF3575FF),
+        backgroundColor: const Color(0xFF1E63FF),
         elevation: 0,
         centerTitle: true,
         title: Text(

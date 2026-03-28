@@ -12,7 +12,7 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF3575FF),
+        backgroundColor: const Color(0xFF1E63FF),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -26,6 +26,7 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
             fontWeight: FontWeight.w600,
           ),
         ),
+        centerTitle: true,
       ),
       body: RefreshIndicator(
         onRefresh: controller.fetchGoods,

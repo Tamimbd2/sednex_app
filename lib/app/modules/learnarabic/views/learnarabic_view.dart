@@ -13,21 +13,21 @@ class LearnarabicView extends GetView<LearnarabicController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF3575FF),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
           'Learn Arabic',
-          style: GoogleFonts.inter(
-            color: Colors.black,
+          style: GoogleFonts.poppins(
+            color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -47,37 +47,45 @@ class LearnarabicView extends GetView<LearnarabicController> {
 
         return Column(
           children: [
+            const SizedBox(height: 16),
             // Search Bar
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: TextField(
-                  onChanged: controller.onSearchChanged,
-                  style: GoogleFonts.inter(fontSize: 14),
-                  decoration: InputDecoration(
-                    hintText: 'Search word (Bangla / Arabic / English)',
-                    hintStyle: GoogleFonts.inter(
-                      fontSize: 13,
-                      color: Colors.grey[400],
-                    ),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey[400],
-                      size: 20,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                onChanged: controller.onSearchChanged,
+                decoration: InputDecoration(
+                  hintText: 'Search word (Bangla / Arabic / English)',
+                  hintStyle: GoogleFonts.inter(
+                    color: Colors.grey[500],
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
+                  filled: true,
+                  fillColor: Colors.grey[100], // Minimalist soft grey background
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none, // No borders initially for a clean look
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
                   ),
                 ),
+                style: GoogleFonts.inter(
+                  color: const Color(0xFF2C2C2C),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+                cursorColor: const Color(0xFF3575FF),
               ),
             ),
+            const SizedBox(height: 24),
             // Category Tabs
             SizedBox(
               height: 40,

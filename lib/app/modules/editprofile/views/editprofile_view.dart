@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/constants/url.dart';
 import '../controllers/editprofile_controller.dart';
 
 class EditprofileView extends GetView<EditprofileController> {
@@ -44,53 +45,81 @@ class EditprofileView extends GetView<EditprofileController> {
             children: [
               // Avatar Section
               Center(
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(3),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: AppColors.primaryGradient,
-                      ),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
+                child: GestureDetector(
+                  onTap: controller.pickImage,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Obx(() => Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.grey[200],
-                          border: Border.all(color: Colors.white, width: 2),
+                          gradient: AppColors.primaryGradient,
                         ),
-                        child: const Icon(Icons.person, size: 50, color: Colors.grey),
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey[200],
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          child: controller.selectedImageBytes.value != null
+                              ? ClipOval(
+                                  child: Image.memory(
+                                    controller.selectedImageBytes.value!,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : (controller.currentAvatar.value.isNotEmpty
+                                  ? ClipOval(
+                                      child: Image.network(
+                                        controller.currentAvatar.value.startsWith('http')
+                                            ? controller.currentAvatar.value
+                                            : "${AppUrl.baseUrl}${controller.currentAvatar.value}",
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (_, __, ___) =>
+                                            const Icon(Icons.person, size: 50, color: Colors.grey),
+                                      ),
+                                    )
+                                  : const Icon(Icons.person, size: 50, color: Colors.grey)),
+                        ),
+                      )),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1E63FF),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          child: const Icon(
+                            Icons.camera_alt_outlined,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1E63FF),
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 2),
-                        ),
-                        child: const Icon(
-                          Icons.camera_alt_outlined,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
-              Text(
-                'Change Photo',
-                style: GoogleFonts.arimo(
-                  color: const Color(0xFF1E63FF),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
+              GestureDetector(
+                onTap: controller.pickImage,
+                child: Text(
+                  'Change Photo',
+                  style: GoogleFonts.arimo(
+                    color: const Color(0xFF1E63FF),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
               const SizedBox(height: 32),
@@ -138,8 +167,8 @@ class EditprofileView extends GetView<EditprofileController> {
               SizedBox(
                 width: double.infinity,
                 height: 56,
-                child: ElevatedButton(
-                  onPressed: controller.saveChanges,
+                child: Obx(() => ElevatedButton(
+                  onPressed: controller.isLoading.value ? null : controller.saveChanges,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1E63FF),
                     shape: RoundedRectangleBorder(
@@ -147,15 +176,21 @@ class EditprofileView extends GetView<EditprofileController> {
                     ),
                     elevation: 0,
                   ),
-                  child: Text(
-                    'Save Changes',
-                    style: GoogleFonts.arimo(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
+                  child: controller.isLoading.value
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        )
+                      : Text(
+                          'Save Changes',
+                          style: GoogleFonts.arimo(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                )),
               ),
             ],
           ),
@@ -185,29 +220,35 @@ class EditprofileView extends GetView<EditprofileController> {
     int maxLines = 1,
     TextInputType? keyboardType,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+    return TextField(
+      controller: controller,
+      maxLines: maxLines,
+      keyboardType: keyboardType,
+      style: GoogleFonts.arimo(
+        color: const Color(0xFF101727),
+        fontSize: 16,
       ),
-      child: TextField(
-        controller: controller,
-        maxLines: maxLines,
-        keyboardType: keyboardType,
-        style: GoogleFonts.arimo(
-          color: const Color(0xFF101727),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: GoogleFonts.arimo(
+          color: const Color(0xFF9CA3AF),
           fontSize: 16,
         ),
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: GoogleFonts.arimo(
-            color: const Color(0xFF9CA3AF),
-            fontSize: 16,
-          ),
-          prefixIcon: icon != null ? Icon(icon, color: const Color(0xFF9CA3AF)) : null,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        prefixIcon: icon != null ? Icon(icon, color: const Color(0xFF9CA3AF), size: 22) : null,
+        filled: true,
+        fillColor: const Color(0xFFF3F8FF),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Color(0xFFE1E8F5), width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Color(0xFF1E63FF), width: 1.5),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
         ),
       ),
     );

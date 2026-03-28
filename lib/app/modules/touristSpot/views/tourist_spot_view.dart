@@ -1,6 +1,8 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/tourist_spot_controller.dart';
 import 'toursitspotdetails.dart';
@@ -12,18 +14,18 @@ class TouristSpotView extends GetView<TouristSpotController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF3575FF),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
-        title: const Text(
+        title: Text(
           'Tourist Spots',
-          style: TextStyle(
-            color: Colors.black,
+          style: GoogleFonts.poppins(
+            color: Colors.white,
             fontSize: 18,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
@@ -34,10 +36,10 @@ class TouristSpotView extends GetView<TouristSpotController> {
         }
 
         if (controller.touristSpots.isEmpty) {
-          return const Center(
+          return Center(
             child: Text(
               'No tourist spots found',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 16,
                 color: Colors.grey,
                 fontWeight: FontWeight.w500,
@@ -116,34 +118,44 @@ class TouristSpotView extends GetView<TouristSpotController> {
                             ),
                     ),
                     // Content
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            spot.title,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                              height: 1.3,
+                    SizedBox(
+                      height: 125, // Forces identical lower-half card size
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              spot.title,
+                              style: GoogleFonts.hindSiliguri(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF2C2C2C),
+                                height: 1.3,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            spot.description,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                              height: 1.4,
+                            const SizedBox(height: 6),
+                            Expanded(
+                              child: Text(
+                                spot.description
+                                    .replaceAll(RegExp(r'<[^>]*>'), ' ') // Strip HTML tags
+                                    .replaceAll('&nbsp;', ' ')
+                                    .replaceAll('&amp;', '&')
+                                    .replaceAll(RegExp(r'\s+'), ' ') // Collapse random spaces
+                                    .trim(),
+                                style: GoogleFonts.hindSiliguri(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                  height: 1.4,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],

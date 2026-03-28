@@ -175,32 +175,45 @@ class DashboardView extends GetView<DashboardController> {
     return SafeArea(
       child: Column(
         children: [
+          const SizedBox(height: 16),
+          // Search Bar
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFFFFF),
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: Colors.grey[300]!),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.10),
-                    blurRadius: 15,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  hintStyle: GoogleFonts.inter(color: Colors.grey),
-                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              onChanged: (val) => controller.searchQuery.value = val,
+              decoration: InputDecoration(
+                hintText: 'Search Anything...',
+                hintStyle: GoogleFonts.inter(
+                  color: Colors.grey[500],
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                ),
+                prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
+                filled: true,
+                fillColor: Colors.grey[100], // Minimalist soft grey background
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none, // No borders initially for a clean look
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
                 ),
               ),
+              style: GoogleFonts.inter(
+                color: const Color(0xFF2C2C2C),
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+              cursorColor: const Color(0xFF1E63FF),
             ),
           ),
+          const SizedBox(height: 8),
           Expanded(
             child: Center(
               child: Text(

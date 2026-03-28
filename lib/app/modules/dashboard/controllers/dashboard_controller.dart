@@ -9,6 +9,8 @@ class DashboardController extends GetxController {
   // Current selected index for bottom navigation
   final currentIndex = 0.obs;
   
+  final searchQuery = ''.obs;
+  
   final apiService = Get.find<ApiService>();
   final _box = GetStorage();
   

@@ -185,29 +185,35 @@ class EditprofileView extends GetView<EditprofileController> {
     int maxLines = 1,
     TextInputType? keyboardType,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+    return TextField(
+      controller: controller,
+      maxLines: maxLines,
+      keyboardType: keyboardType,
+      style: GoogleFonts.arimo(
+        color: const Color(0xFF101727),
+        fontSize: 16,
       ),
-      child: TextField(
-        controller: controller,
-        maxLines: maxLines,
-        keyboardType: keyboardType,
-        style: GoogleFonts.arimo(
-          color: const Color(0xFF101727),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: GoogleFonts.arimo(
+          color: const Color(0xFF9CA3AF),
           fontSize: 16,
         ),
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: GoogleFonts.arimo(
-            color: const Color(0xFF9CA3AF),
-            fontSize: 16,
-          ),
-          prefixIcon: icon != null ? Icon(icon, color: const Color(0xFF9CA3AF)) : null,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        prefixIcon: icon != null ? Icon(icon, color: const Color(0xFF9CA3AF), size: 22) : null,
+        filled: true,
+        fillColor: const Color(0xFFF3F8FF),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Color(0xFFE1E8F5), width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Color(0xFF1E63FF), width: 1.5),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
         ),
       ),
     );

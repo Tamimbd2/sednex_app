@@ -118,7 +118,7 @@ class SigninController extends GetxController {
           .authenticate();
 
       // 2. Grabs the secure authentication tokens
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
       // 3. Authenticate with Firebase
       final AuthCredential credential = GoogleAuthProvider.credential(

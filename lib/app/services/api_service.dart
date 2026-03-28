@@ -89,6 +89,15 @@ class ApiService extends GetConnect {
     }
   }
 
+  Future<Response> patchMultipartData(String uri, FormData formData) async {
+    try {
+      final response = await request(uri, 'PATCH', body: formData);
+      return response;
+    } catch (e) {
+      return Response(statusCode: 500, statusText: e.toString());
+    }
+  }
+
   Future<Response> deleteData(String uri) async {
     try {
       final response = await delete(uri);

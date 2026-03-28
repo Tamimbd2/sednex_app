@@ -20,10 +20,8 @@ class DashboardView extends GetView<DashboardController> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(80),
         child: Obx(() {
-          // Hide AppBar only for Cart (index 2). Show for Home (0), Search (1), and Profile (3).
-          if (controller.currentIndex.value == 2) {
-            return const SizedBox.shrink();
-          }
+          // Show header consistently across all tabs
+
           return Container(
             height: 110,
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),

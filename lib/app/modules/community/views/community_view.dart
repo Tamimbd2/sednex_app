@@ -11,85 +11,65 @@ class CommunityView extends GetView<CommunityController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF5F5F5),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E63FF),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Get.back(),
+        ),
+        title: Text(
+          'Community',
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: false,
+      ),
       body: Column(
         children: [
-          // Crimson Header with Search
-          Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFF1E63FF),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(0),
-                bottomRight: Radius.circular(0),
-              ),
-            ),
-            child: SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Back button and title
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                          ),
-                          onPressed: () => Get.back(),
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          'Community',
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    // Search Bar
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: TextField(
-                        onChanged: (value) => controller.searchMembers(value),
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: Colors.black87,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Search members...',
-                          hintStyle: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: Colors.grey[400],
-                          ),
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.grey[400],
-                            size: 20,
-                          ),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+          const SizedBox(height: 16),
+          // Search Bar
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              onChanged: (val) => controller.searchMembers(val),
+              decoration: InputDecoration(
+                hintText: 'Search members...',
+                hintStyle: GoogleFonts.inter(
+                  color: Colors.grey[500],
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                ),
+                prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
+                filled: true,
+                fillColor: Colors.grey[100], // Minimalist soft grey background
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none, // No borders initially for a clean look
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
                 ),
               ),
+              style: GoogleFonts.inter(
+                color: const Color(0xFF2C2C2C),
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+              cursorColor: const Color(0xFF3575FF),
             ),
           ),
+          const SizedBox(height: 8),
           // Members Count
           Padding(
             padding: const EdgeInsets.all(16),

@@ -118,7 +118,7 @@ class SigninController extends GetxController {
           .authenticate();
 
       // 2. Grabs the secure authentication tokens
-      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       // 3. Authenticate with Firebase
       final AuthCredential credential = GoogleAuthProvider.credential(
@@ -127,20 +127,35 @@ class SigninController extends GetxController {
 
       final UserCredential userCredential = await FirebaseAuth.instance
           .signInWithCredential(credential);
-      final String? firebaseToken = await userCredential.user?.getIdToken();
+      final String? firebaseToken = await userCredential.user?.getIdToken(true);
 
       if (firebaseToken == null) {
         throw Exception("Failed to retrieve Firebase ID token.");
       }
 
       // 4. Send the Firebase ID Token to your backend to verify and create session
+      debugPrint("------------ GOOGLE & FIREBASE TOKENS ------------");
+      debugPrint("Google ID Token: ${googleAuth.idToken}");
+      debugPrint("Firebase ID Token: $firebaseToken");
+      debugPrint("-------------------------------------------------");
+
       final connect = GetConnect();
+      // Increasing timeout to 30s as the backend might be on a cold start
+      connect.timeout = const Duration(seconds: 30);
+      
       final response = await connect.post(
         '${AppUrl.baseUrl}api/auth/google-login',
-        {'token': firebaseToken},
+        {'token': firebaseToken}, // Reverted to firebaseToken as backend expects it
       );
 
       var body = response.body;
+
+      debugPrint("------------ GOOGLE LOGIN BACKEND RESPONSE ------------");
+      debugPrint("Status Code: ${response.statusCode}");
+      debugPrint("Status Text: ${response.statusText}");
+      debugPrint("Has Error: ${response.hasError}");
+      debugPrint("Body: $body");
+      debugPrint("-------------------------------------------------------");
 
       if (body is String) {
         try {
@@ -188,6 +203,7 @@ class SigninController extends GetxController {
       }
     } catch (e) {
       debugPrint('Google Sign-In Error: $e');
+      debugPrint("------------ GOOGLE SIGN-IN FAILED ------------");
       Get.snackbar(
         'Error',
         'Google sign-in failed. Please try again.',
@@ -230,6 +246,14 @@ class SigninController extends GetxController {
         );
 
         var body = response.body;
+
+        debugPrint("Firebase Token Length: ${firebaseToken.length}");
+        debugPrint("------------ FACEBOOK LOGIN BACKEND RESPONSE ------------");
+        debugPrint("Status Code: ${response.statusCode}");
+        debugPrint("Status Text: ${response.statusText}");
+        debugPrint("Has Error: ${response.hasError}");
+        debugPrint("Body: $body");
+        debugPrint("---------------------------------------------------------");
 
         if (body is String) {
           try {

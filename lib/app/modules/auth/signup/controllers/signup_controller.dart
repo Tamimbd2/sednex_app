@@ -114,18 +114,17 @@ class SignupController extends GetxController {
         throw Exception("Failed to retrieve Firebase ID token.");
       }
 
-      debugPrint("------------ GOOGLE SIGNUP TOKENS ------------");
-      debugPrint("Google ID Token: ${googleAuth.idToken}");
-      debugPrint("Firebase ID Token: $firebaseToken");
-      debugPrint("---------------------------------------------");
-
       final connect = GetConnect();
       // Increase timeout to 30 seconds
       connect.timeout = const Duration(seconds: 30);
       
       final response = await connect.post(
         '${AppUrl.baseUrl}api/auth/google-login',
-        {'token': firebaseToken}, // Updated to send firebaseToken
+        {
+          'token': firebaseToken,
+          'email': userCredential.user?.email,
+          'name': userCredential.user?.displayName,
+        },
       );
       
       var body = response.body;

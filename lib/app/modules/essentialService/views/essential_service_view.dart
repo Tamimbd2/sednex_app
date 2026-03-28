@@ -50,7 +50,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
             ),
             _buildServiceCard(
               'Article',
-              'assets/newessential/Receipt--Streamline-Core-Gradient.svg',
+              'assets/newessential/Multiple-File-2--Streamline-Core-Gradient.svg',
               const Color(0xFF00BFA5),
               () => Get.toNamed('/articles'),
             ),
@@ -74,7 +74,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
             ),
             _buildServiceCard(
               'Tourist spot',
-              'assets/newessential/Landscape-2--Streamline-Core-Gradient.svg',
+              'assets/newessential/Beach--Streamline-Core-Gradient.svg',
               const Color(0xFF00BCD4),
               () => Get.toNamed('/tourist-spot'),
             ),
@@ -92,7 +92,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
             ),
             _buildServiceCard(
               'Hospitals',
-              'assets/newessential/Hospital-Sign-Square--Streamline-Core-Gradient.svg',
+              'assets/newessential/Ambulance--Streamline-Core-Gradient.svg',
               const Color(0xFFF44336),
               () => Get.toNamed('/hospitals'),
             ),
@@ -122,7 +122,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
             ),
             _buildServiceCard(
               'Sports team',
-              'assets/newessential/Good-Health-And-Well-Being--Streamline-Core-Gradient.svg',
+              'assets/newessential/Flash-3--Streamline-Core-Gradient.svg',
               const Color(0xFF8BC34A),
               () => _showComingSoonDialog(context, 'Sports team'),
             ),
@@ -170,7 +170,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
             ),
             _buildServiceCard(
               'Local Tour',
-              'assets/newessential/Location-Compass-1--Streamline-Core-Gradient.svg',
+              'assets/newessential/Location-Pin-3--Streamline-Core-Gradient.svg',
               const Color(0xFF00BCD4),
               () => Get.toNamed('/localtour'),
             ),

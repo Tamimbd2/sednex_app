@@ -12,32 +12,19 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF3575FF),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Basic Goods',
-              style: GoogleFonts.inter(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            Text(
-              'Daily Market Prices',
-              style: GoogleFonts.inter(
-                color: Colors.grey[600],
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        title: Text(
+          'Basic Goods',
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       body: RefreshIndicator(
@@ -49,13 +36,12 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: const Color(0xFFFFEBEE),
               child: Text(
                 'Prices may vary by location',
-                style: GoogleFonts.inter(
-                  color: const Color(0xFF1E63FF),
+                style: GoogleFonts.poppins(
+                  color: const Color(0xFFD48806), // Warning / Note color
                   fontSize: 13,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -74,31 +60,33 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
                     itemCount: controller.categories.length,
                     itemBuilder: (context, index) {
                       final category = controller.categories[index];
-                      final isSelected = controller.selectedCategory.value == category;
-                      return GestureDetector(
-                        onTap: () => controller.selectCategory(category),
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 8),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: isSelected ? const Color(0xFF1E63FF) : Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: isSelected ? const Color(0xFF1E63FF) : Colors.grey[300]!,
+                      return Obx(() {
+                        final isSelected = controller.selectedCategory.value == category;
+                        return GestureDetector(
+                          onTap: () => controller.selectCategory(category),
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: isSelected ? const Color(0xFF3575FF) : Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: isSelected ? const Color(0xFF3575FF) : Colors.grey[300]!,
+                              ),
                             ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              category,
-                              style: GoogleFonts.inter(
-                                color: isSelected ? Colors.white : Colors.grey[700],
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
+                            child: Center(
+                              child: Text(
+                                category,
+                                style: GoogleFonts.hindSiliguri(
+                                  color: isSelected ? Colors.white : Colors.grey[700],
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
+                        );
+                      });
                     },
                   ),
                 ),
@@ -124,7 +112,7 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
                           const SizedBox(height: 16),
                           Text(
                             'No goods found',
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.poppins(
                               fontSize: 16,
                               color: Colors.grey[600],
                               fontWeight: FontWeight.w500,
@@ -187,17 +175,17 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
                                 children: [
                                   Text(
                                     item.name,
-                                    style: GoogleFonts.inter(
-                                      fontSize: 15,
+                                    style: GoogleFonts.hindSiliguri(
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.black,
+                                      color: const Color(0xFF2C2C2C),
                                     ),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
                                     item.category,
-                                    style: GoogleFonts.inter(
-                                      fontSize: 12,
+                                    style: GoogleFonts.hindSiliguri(
+                                      fontSize: 13,
                                       color: Colors.grey[600],
                                     ),
                                   ),
@@ -211,16 +199,16 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
                               children: [
                                 Text(
                                   '${controller.getCurrencySymbol(item.pricetag)} ${item.price}',
-                                  style: GoogleFonts.inter(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF1E63FF),
+                                    color: const Color(0xFF3575FF),
                                   ),
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
                                   'Updated ${controller.getTimeAgo(item.updatedAt)}',
-                                  style: GoogleFonts.inter(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 11,
                                     color: Colors.grey[500],
                                   ),

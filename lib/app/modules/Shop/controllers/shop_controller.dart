@@ -1,166 +1,115 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../services/api_service.dart';
 
 class ShopController extends GetxController {
-  final count = 0.obs;
+  final ApiService _apiService = Get.find<ApiService>();
   
-  // Data for Special Offers
-  final List<Map<String, dynamic>> specialOffers = [
-    {
-      "title": "Get Special Offer",
-      "subtitle": "Up to 40%",
-      "description": "All Services Available | T&C Applied",
-      "gradientColors": [Color(0xFF101727), Color(0xFF354152)],
-      "image": "https://via.placeholder.com/344x160.png",
-    },
-    {
-      "title": "Flash Sale",
-      "subtitle": "Up to 50%",
-      "description": "Electronics Only | While Stocks Last",
-      "gradientColors": [Color(0xFF59168B), Color(0xFF8200DA)],
-      "image": "https://via.placeholder.com/344x160.png",
-    },
-    {
-      "title": "Weekend Deal",
-      "subtitle": "Up to 35%",
-      "description": "Fashion & Accessories | Free Shipping",
-      "gradientColors": [Color(0xFF1E63FF), Color(0xFF3575FF)],
-      "image": "https://via.placeholder.com/344x160.png",
-    },
-  ];
+  final count = 0.obs;
+  final isLoading = false.obs;
+  final isCategoriesLoading = false.obs;
+  final categories = <Map<String, dynamic>>[].obs;
+  final products = <Map<String, dynamic>>[].obs;
 
-  // Data for Categories
-  final List<Map<String, dynamic>> categories = [
-    {"name": "Clothes", "icon": Icons.checkroom, "color": Color(0xFFFEF2F2)},
-    {"name": "Electronics", "icon": Icons.phone_android, "color": Color(0xFFEFF6FF)},
-    {"name": "Shoes", "icon": Icons.hiking, "color": Color(0xFFFFF7ED)},
-    {"name": "Watch", "icon": Icons.watch, "color": Color(0xFFFAF5FF)},
-    {"name": "Home", "icon": Icons.home, "color": Color(0xFFF0FDF4)},
-    {"name": "Gifts", "icon": Icons.card_giftcard, "color": Color(0xFFFDF2F8)},
-    {"name": "Food", "icon": Icons.restaurant, "color": Color(0xFFFEFCE8)},
-    {"name": "Beauty", "icon": Icons.brush, "color": Color(0xFFFCE7F3)},
-    {"name": "Books", "icon": Icons.menu_book, "color": Color(0xFFE0F2FE)},
-    {"name": "Baby", "icon": Icons.child_care, "color": Color(0xFFFFF1F2)},
-    {"name": "Furniture", "icon": Icons.chair, "color": Color(0xFFF3F4F6)},
-    {"name": "Gaming", "icon": Icons.sports_esports, "color": Color(0xFFEEF2FF)},
-    {"name": "Automotive", "icon": Icons.directions_car, "color": Color(0xFFF1F5F9)},
-    {"name": "Health", "icon": Icons.local_hospital, "color": Color(0xFFE6FFFA)},
-    {"name": "Accessories", "icon": Icons.work_outline, "color": Color(0xFFFFFBEB)},
-    {"name": "Stationery", "icon": Icons.edit, "color": Color(0xFFF0F9FF)},
-    {"name": "Pet Care", "icon": Icons.pets, "color": Color(0xFFFFF7ED)},
-    {"name": "Jewelry", "icon": Icons.diamond, "color": Color(0xFFFAF5FF)},
-    {"name": "Tools", "icon": Icons.build, "color": Color(0xFFF5F5F4)},
-    {"name": "Music", "icon": Icons.music_note, "color": Color(0xFFFDF4FF)},
-    {"name": "Office", "icon": Icons.business_center, "color": Color(0xFFEFF6FF)},
-    {"name": "Travel", "icon": Icons.flight_takeoff, "color": Color(0xFFF0FDFA)},
-  ];
+  @override
+  void onInit() {
+    super.onInit();
+    fetchCategories();
+    fetchProducts();
+  }
 
-  // Data for Products
-  final List<Map<String, dynamic>> products = [
-    {
-      "name": "Classic White Sneakers",
-      "category": "Shoes",
-      "price": "৳89.99",
-      "originalPrice": "৳129.99",
-      "image": "https://via.placeholder.com/164x164.png",
-      "isSale": true,
-      "saleText": "Sale",
-      "saleColor": Color(0xFF1E63FF),
-      "rating": 4.5,
-      "reviews": 120,
-      "description": "Step into comfort and style with these Classic White Sneakers. Made from premium leather, they feature a durable rubber sole and a cushioned insole for all-day wear.",
-      "colors": [Color(0xFFFFFFFF), Color(0xFF000000)],
-    },
-    {
-      "name": "Wireless Headphones Pro",
-      "category": "Electronics",
-      "price": "৳199.99",
-      "originalPrice": "",
-      "image": "https://via.placeholder.com/164x164.png",
-      "isSale": true,
-      "saleText": "New",
-      "saleColor": Color(0xFF00C853), // Green for New
-      "rating": 4.8,
-      "reviews": 85,
-      "description": "Experience premium sound quality with active noise cancellation. 30-hour battery life, comfortable over-ear design, and premium build quality. Perfect for music lovers and professionals.",
-      "images": [
-        "https://via.placeholder.com/344x344.png",
-        "https://via.placeholder.com/344x344.png", 
-        "https://via.placeholder.com/344x344.png"
-      ],
-      "colors": [Color(0xFF000000), Color(0xFFC0C0C0), Color(0xFF1A237E)],
-      "specifications": {
-        "Battery Life": "30 hours",
-        "Connectivity": "Bluetooth 5.0",
-        "Noise Cancellation": "Active ANC",
-        "Weight": "250g",
-      },
-      "seller": {
-        "name": "Sednex Store BD",
-        "logo": "TSB", // Placeholder for initial if no image
-        "rating": 4.8,
-      },
-    },
-    {
-      "name": "Smart Watch Series 5",
-      "category": "Watch",
-      "price": "৳299.99",
-      "originalPrice": "৳399.00",
-      "image": "https://via.placeholder.com/164x164.png",
-      "isSale": true,
-      "saleText": "-25%",
-      "saleColor": Color(0xFFFFAB00), // Amber for discount percentage
-      "rating": 4.7,
-      "reviews": 432,
-      "description": "Stay connected and active with the Smart Watch Series 5. Features include heart rate monitoring, GPS, water resistance, and a customizable always-on retina display.",
-      "colors": [Color(0xFF000000), Color(0xFFE91E63), Color(0xFF2196F3)],
-    },
-    {
-      "name": "Premium Backpack",
-      "category": "Accessories",
-      "price": "৳59.99",
-      "originalPrice": "৳79.99",
-      "image": "https://via.placeholder.com/164x164.png",
-      "isSale": true,
-      "saleText": "-25%",
-      "saleColor": Color(0xFFFFAB00),
-      "rating": 4.6,
-      "reviews": 189,
-      "description": "Carry your essentials in style with this Premium Backpack. It offers multiple compartments, a padded laptop sleeve, and ergonomic straps for maximum comfort.",
-      "colors": [Color(0xFF3E2723), Color(0xFF212121), Color(0xFF1A237E)],
-    },
-    {
-      "name": "Designer Sunglasses",
-      "category": "Accessories",
-      "price": "৳149.99",
-      "originalPrice": "",
-      "image": "https://via.placeholder.com/164x164.png",
-      "isSale": true,
-      "saleText": "New",
-      "saleColor": Color(0xFF00C853),
-      "rating": 4.8,
-      "reviews": 312,
-      "description": "Protect your eyes and look great with these Designer Sunglasses. UV400 protection, lightweight frame, and a trendy design that suits any face shape.",
-      "colors": [Color(0xFF000000), Color(0xFF8D6E63)],
-    },
-    {
-      "name": "MacBook Air 13\"",
-      "category": "Electronics",
-      "price": "৳999.99",
-      "originalPrice": "৳1199.99",
-      "image": "https://via.placeholder.com/164x164.png",
-      "isSale": true,
-      "saleText": "-17%",
-      "saleColor": Color(0xFFFFAB00),
-      "rating": 4.9,
-      "reviews": 876,
-      "description": "The MacBook Air 13\" combines power and portability. With the M1 chip, 8GB RAM, and 256GB SSD, it handles everything from professional editing to casual browsing with ease.",
-      "colors": [Color(0xFFE0E0E0), Color(0xFFBDBDBD), Color(0xFFFFD54F)],
-    },
-  ];
+  Future<void> fetchCategories() async {
+    try {
+      isCategoriesLoading.value = true;
+      final response = await _apiService.getData('api/categories/');
+      
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.body['categories'];
+        final fetchedCategories = data.map((item) {
+          final name = item['name'] ?? 'General';
+          return {
+            "id": item['_id'],
+            "name": name,
+            "slug": item['slug'],
+            "icon": _getCategoryIcon(name),
+            "color": _getCategoryColor(name),
+          };
+        }).toList();
+        
+        categories.assignAll(fetchedCategories);
+      }
+    } catch (e) {
+      debugPrint("Error fetching categories: $e");
+    } finally {
+      isCategoriesLoading.value = false;
+    }
+  }
 
+  IconData _getCategoryIcon(String name) {
+    final lowerName = name.toLowerCase();
+    if (lowerName.contains('dress') || lowerName.contains('cloth')) return Icons.checkroom;
+    if (lowerName.contains('electronic') || lowerName.contains('tech')) return Icons.phone_android;
+    if (lowerName.contains('shoe')) return Icons.hiking;
+    if (lowerName.contains('health')) return Icons.local_hospital;
+    if (lowerName.contains('jewel')) return Icons.diamond;
+    if (lowerName.contains('cycle')) return Icons.directions_bike;
+    if (lowerName.contains('peripherals')) return Icons.mouse;
+    if (lowerName.contains('watch')) return Icons.watch;
+    if (lowerName.contains('home')) return Icons.home;
+    if (lowerName.contains('gift')) return Icons.card_giftcard;
+    if (lowerName.contains('food')) return Icons.restaurant;
+    if (lowerName.contains('beauty')) return Icons.brush;
+    return Icons.category; // Default icon
+  }
 
+  Color _getCategoryColor(String name) {
+    final lowerName = name.toLowerCase();
+    if (lowerName.contains('dress')) return const Color(0xFFFEF2F2);
+    if (lowerName.contains('electronic')) return const Color(0xFFEFF6FF);
+    if (lowerName.contains('health')) return const Color(0xFFE6FFFA);
+    if (lowerName.contains('jewel')) return const Color(0xFFFAF5FF);
+    if (lowerName.contains('shoe')) return const Color(0xFFFFF7ED);
+    if (lowerName.contains('cycle')) return const Color(0xFFF0FDF4);
+    if (lowerName.contains('tech')) return const Color(0xFFE0F2FE);
+    if (lowerName.contains('peripherals')) return const Color(0xFFEEF2FF);
+    return const Color(0xFFF3F4F6); // Default color
+  }
 
+  Future<void> fetchProducts() async {
+    try {
+      isLoading.value = true;
+      final response = await _apiService.getData('api/products/');
+      
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.body['products'];
+        final fetchedProducts = data.map((item) {
+          return {
+            "id": item['_id'],
+            "name": item['name'] ?? 'No Name',
+            "category": item['category']?['name'] ?? 'General',
+            "price": "৳${item['price']}",
+            "originalPrice": item['discountPrice'] != null ? "৳${item['price'] + 50}" : "", 
+            "image": (item['images'] != null && item['images'].isNotEmpty) 
+                ? item['images'][0] 
+                : "https://via.placeholder.com/164x164.png",
+            "isSale": item['discountPrice'] != null,
+            "saleText": item['discountPrice'] != null ? "Sale" : "New",
+            "saleColor": item['discountPrice'] != null ? const Color(0xFF1E63FF) : const Color(0xFF00C853),
+            "rating": 4.5, 
+            "reviews": 120,
+            "description": item['description'] ?? '',
+            "colors": [const Color(0xFFFFFFFF), const Color(0xFF000000)],
+          };
+        }).toList();
+        
+        products.assignAll(fetchedProducts);
+      }
+    } catch (e) {
+      debugPrint("Error fetching products: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   void increment() => count.value++;
 }

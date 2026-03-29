@@ -171,7 +171,7 @@ class HomePageContent extends StatelessWidget {
 
                   // Construct static + dynamic items
                   final List<Widget> items = [
-                    // _buildSehriIftarCompactCard(),
+                    _buildSehriIftarCompactCard(),
 
                     // Namaj Card
                     SizedBox(
@@ -469,8 +469,8 @@ class HomePageContent extends StatelessWidget {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: const Color(0xFFFFFFFF),
-              borderRadius: BorderRadius.circular(20),
+              color: const Color(0xFFEDF4FF),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),

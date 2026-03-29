@@ -47,8 +47,8 @@ class BkashRateView extends GetView<BkashRateController> {
           child: Container(
             height: 20,
             decoration: const BoxDecoration(
-              color: const Color(0xFFEDF4FF),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+              color: Color(0xFFEDF4FF),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
             ),
           ),
         ),

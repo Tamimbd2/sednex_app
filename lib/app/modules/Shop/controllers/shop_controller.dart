@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '../../../services/api_service.dart';
 
 class ShopController extends GetxController {
   final ApiService _apiService = Get.find<ApiService>();
+  final _box = GetStorage();
   
   final count = 0.obs;
   final isLoading = false.obs;
@@ -81,45 +83,119 @@ class ShopController extends GetxController {
       final response = await _apiService.getData('api/products/');
       
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.body['products'];
-        final fetchedProducts = (data).map((item) {
+        final dynamic body = response.body;
+        debugPrint("API Response Body: $body");
+        List<dynamic> data = [];
+
+        if (body is Map && body.containsKey('products')) {
+          data = body['products'] is List ? body['products'] : [];
+        } else if (body is List) {
+          data = body;
+        } else {
+          debugPrint("Unexpected response format: ${body.runtimeType}");
+        }
+
+        final currentUser = _box.read('user');
+        final currentUserId = (currentUser is Map) ? currentUser['_id'] : null;
+
+        final fetchedProducts = data.map((item) {
           try {
-            final price = item['price'] ?? 0;
-            final discountPrice = item['discountPrice'];
+            final productMap = Map<String, dynamic>.from(item is Map ? item : {});
+            final price = productMap['price'] ?? 0;
+            final discountPrice = productMap['discountPrice'];
+            
+            final likedBy = productMap['likedBy'] is List ? productMap['likedBy'] as List : [];
+            final isLoved = currentUserId != null && likedBy.contains(currentUserId);
+            
+            final images = productMap['images'];
+            final imageUrl = (images is List && images.isNotEmpty) 
+                ? images[0].toString() 
+                : "https://via.placeholder.com/164x164.png";
+
+            final String? whatsappUrl = productMap['whatsappUrl']?.toString();
+            final safeWhatsappUrl = (whatsappUrl != null && whatsappUrl.contains('wa.me/0'))
+                ? whatsappUrl.replaceFirst('wa.me/0', 'wa.me/880')
+                : whatsappUrl;
             
             return {
-              ...item as Map<String, dynamic>,
-              "id": item['_id'],
-              "name": item['name'] ?? 'No Name',
-              "category": item['category'] is Map ? (item['category']['name'] ?? 'General') : 'General',
+              ...productMap,
+              "id": productMap['_id'],
+              "name": productMap['name']?.toString() ?? 'No Name',
+              "category": productMap['category'] is Map ? (productMap['category']['name'] ?? 'General') : 'General',
               "price": "৳$price",
               "originalPrice": discountPrice != null ? "৳${(price is num ? price : 0) + 50}" : "", 
-              "image": (item['images'] != null && (item['images'] as List).isNotEmpty) 
-                  ? item['images'][0] 
-                  : "https://via.placeholder.com/164x164.png",
+              "image": imageUrl,
               "isSale": discountPrice != null,
               "saleText": discountPrice != null ? "Sale" : "New",
               "saleColor": discountPrice != null ? const Color(0xFF1E63FF) : const Color(0xFF00C853),
               "rating": 4.5, 
               "reviews": 120,
-              "description": item['description'] ?? '',
+              "description": productMap['description']?.toString() ?? '',
+              "isLoved": isLoved,
               "colors": [const Color(0xFFFFFFFF), const Color(0xFF000000)],
-              "whatsappUrl": item['whatsappUrl'] != null && (item['whatsappUrl'] as String).contains('wa.me/0')
-                  ? (item['whatsappUrl'] as String).replaceFirst('wa.me/0', 'wa.me/880')
-                  : item['whatsappUrl'],
+              "whatsappUrl": safeWhatsappUrl,
             };
-          } catch (e) {
-            debugPrint("Error mapping product: $e");
+          } catch (e, stack) {
+            debugPrint("Error mapping product: $e\n$stack");
             return <String, dynamic>{};
           }
         }).where((p) => p.isNotEmpty).cast<Map<String, dynamic>>().toList();
         
+        debugPrint("API Products total: ${data.length}, Mapped: ${fetchedProducts.length}");
         products.assignAll(fetchedProducts);
+      } else {
+        debugPrint("Failed to fetch products: ${response.statusCode}");
       }
     } catch (e) {
-      debugPrint("Error fetching products: $e");
+      debugPrint("Error fetching products entirely: $e");
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> toggleLove(String productId) async {
+    debugPrint("Toggle Love called for product: $productId");
+    try {
+      final index = products.indexWhere((p) => p['id'] == productId);
+      if (index != -1) {
+        final product = products[index];
+        final bool currentlyLoved = product['isLoved'] ?? false;
+        
+        // Optimistic UI Update: change immediately
+        products[index] = {
+          ...product,
+          'isLoved': !currentlyLoved,
+          'loveCount': currentlyLoved ? (product['loveCount'] ?? 1) - 1 : (product['loveCount'] ?? 0) + 1,
+        };
+        products.refresh();
+
+        // Make API Call using patchData
+        final path = 'api/products/$productId/love';
+        debugPrint("Calling PATCH: $path");
+        final response = await _apiService.patchData(path, {});
+        
+        if (response.statusCode != 200) {
+          debugPrint("Love API Failed: ${response.statusCode} - ${response.statusText}");
+          // Revert if API failed (e.g., unauthorized)
+          products[index] = product;
+          products.refresh();
+          Get.snackbar('Notice', 'You must be logged in to save products.');
+        } else {
+          // Sync with true backend response just to be sure
+          final data = response.body;
+          debugPrint("Love API Success: $data");
+          if (data['success'] == true) {
+            products[index] = {
+              ...products[index],
+              'isLoved': data['loved'],
+              'loveCount': data['loveCount'],
+            };
+            products.refresh();
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint("Error toggling save feature: $e");
     }
   }
 

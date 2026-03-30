@@ -20,7 +20,9 @@ class DashboardController extends GetxController {
   final bannerPageController = PageController(initialPage: 5000);
   
   var servicesList = <dynamic>[].obs; // Dynamic Services List
+  var lovedProducts = <Map<String, dynamic>>[].obs; // Favorited products for Cart
   var userProfileImage = RxnString(); // Observable profile image
+  var isLovedProductsLoading = false.obs;
 
   // Controllers for auto-scrolling
   final infoScrollController = ScrollController();
@@ -40,6 +42,7 @@ class DashboardController extends GetxController {
     fetchMarqueeText();
     fetchBanner();
     fetchServices();
+    fetchLovedProducts();
     // Poll every 30 seconds for real-time updates
     _marqueeTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       fetchMarqueeText();
@@ -241,5 +244,63 @@ class DashboardController extends GetxController {
   // Change page based on bottom navigation selection
   void changePage(int index) {
     currentIndex.value = index;
+    if (index == 2) {
+      fetchLovedProducts();
+    }
+  }
+
+  void fetchLovedProducts() async {
+    try {
+      isLovedProductsLoading.value = true;
+      final path = 'api/products/love/';
+      final fullUrl = '${apiService.httpClient.baseUrl}$path';
+      debugPrint("Favorites Full URL: $fullUrl");
+      final response = await apiService.getData(path);
+      
+      debugPrint("Favorites Status: ${response.statusCode} - ${response.statusText}");
+      
+      if (response.statusCode == 200) {
+        final dynamic body = response.body;
+        debugPrint("Favorites API Response: $body");
+        List<dynamic> items = [];
+
+        if (body is Map && body['success'] == true) {
+          items = body['products'] is List ? body['products'] : [];
+        } else if (body is List) {
+          items = body;
+        }
+
+        final mapped = items.map((item) {
+          try {
+            final productMap = Map<String, dynamic>.from(item is Map ? item : {});
+            final price = productMap['price'] ?? 0;
+            final discountPrice = productMap['discountPrice'];
+            
+            return {
+              ...productMap,
+              "id": productMap['_id'],
+              "name": productMap['name']?.toString() ?? 'No Name',
+              "price": "৳$price",
+              "originalPrice": discountPrice != null ? "৳${(price is num ? price : 0) + 50}" : "",
+              "image": (productMap['images'] is List && (productMap['images'] as List).isNotEmpty) 
+                  ? productMap['images'][0] 
+                  : "https://via.placeholder.com/164x164.png",
+              "category": productMap['category'] is Map 
+                  ? (productMap['category']['name'] ?? 'General') 
+                  : 'General',
+            };
+          } catch (e) {
+            debugPrint('Error mapping loved product: $e');
+            return <String, dynamic>{};
+          }
+        }).where((p) => p.isNotEmpty).cast<Map<String, dynamic>>().toList();
+
+        lovedProducts.assignAll(mapped);
+      }
+    } catch (e) {
+      debugPrint("Error fetching loved products: $e");
+    } finally {
+      isLovedProductsLoading.value = false;
+    }
   }
 }

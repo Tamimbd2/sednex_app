@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductDetailsView extends StatefulWidget {
   const ProductDetailsView({super.key});
@@ -29,8 +30,12 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     // Fallbacks for data to avoid null errors
     final List<String> images = (product['images'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [product['image'] ?? ''];
     final List<Color> colors = (product['colors'] as List<dynamic>?)?.cast<Color>() ?? [];
-    final Map<String, dynamic> specs = (product['specifications'] as Map<String, dynamic>?) ?? {};
-    final Map<String, dynamic> seller = (product['seller'] as Map<String, dynamic>?) ?? {};
+    
+    // Safety check for specifications (API might send list or map)
+    final Map<String, dynamic> specs = product['specifications'] is Map ? (product['specifications'] as Map<String, dynamic>) : {};
+    
+    // Safety check for seller (API might not include this or send different format)
+    final Map<String, dynamic> seller = product['seller'] is Map ? (product['seller'] as Map<String, dynamic>) : {};
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -325,8 +330,18 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             width: double.infinity,
             height: 56,
             child: ElevatedButton(
-              onPressed: () {
-                // WhatsApp action
+              onPressed: () async {
+                final String? url = product['whatsappUrl'];
+                if (url != null && url.isNotEmpty) {
+                  final uri = Uri.parse(url);
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  } else {
+                    Get.snackbar("Error", "Could not launch WhatsApp");
+                  }
+                } else {
+                  Get.snackbar("Notice", "WhatsApp contact not provided for this product");
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1E63FF),

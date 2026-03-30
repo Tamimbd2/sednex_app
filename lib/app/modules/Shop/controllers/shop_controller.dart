@@ -82,25 +82,37 @@ class ShopController extends GetxController {
       
       if (response.statusCode == 200) {
         final List<dynamic> data = response.body['products'];
-        final fetchedProducts = data.map((item) {
-          return {
-            "id": item['_id'],
-            "name": item['name'] ?? 'No Name',
-            "category": item['category']?['name'] ?? 'General',
-            "price": "৳${item['price']}",
-            "originalPrice": item['discountPrice'] != null ? "৳${item['price'] + 50}" : "", 
-            "image": (item['images'] != null && item['images'].isNotEmpty) 
-                ? item['images'][0] 
-                : "https://via.placeholder.com/164x164.png",
-            "isSale": item['discountPrice'] != null,
-            "saleText": item['discountPrice'] != null ? "Sale" : "New",
-            "saleColor": item['discountPrice'] != null ? const Color(0xFF1E63FF) : const Color(0xFF00C853),
-            "rating": 4.5, 
-            "reviews": 120,
-            "description": item['description'] ?? '',
-            "colors": [const Color(0xFFFFFFFF), const Color(0xFF000000)],
-          };
-        }).toList();
+        final fetchedProducts = (data).map((item) {
+          try {
+            final price = item['price'] ?? 0;
+            final discountPrice = item['discountPrice'];
+            
+            return {
+              ...item as Map<String, dynamic>,
+              "id": item['_id'],
+              "name": item['name'] ?? 'No Name',
+              "category": item['category'] is Map ? (item['category']['name'] ?? 'General') : 'General',
+              "price": "৳$price",
+              "originalPrice": discountPrice != null ? "৳${(price is num ? price : 0) + 50}" : "", 
+              "image": (item['images'] != null && (item['images'] as List).isNotEmpty) 
+                  ? item['images'][0] 
+                  : "https://via.placeholder.com/164x164.png",
+              "isSale": discountPrice != null,
+              "saleText": discountPrice != null ? "Sale" : "New",
+              "saleColor": discountPrice != null ? const Color(0xFF1E63FF) : const Color(0xFF00C853),
+              "rating": 4.5, 
+              "reviews": 120,
+              "description": item['description'] ?? '',
+              "colors": [const Color(0xFFFFFFFF), const Color(0xFF000000)],
+              "whatsappUrl": item['whatsappUrl'] != null && (item['whatsappUrl'] as String).contains('wa.me/0')
+                  ? (item['whatsappUrl'] as String).replaceFirst('wa.me/0', 'wa.me/880')
+                  : item['whatsappUrl'],
+            };
+          } catch (e) {
+            debugPrint("Error mapping product: $e");
+            return <String, dynamic>{};
+          }
+        }).where((p) => p.isNotEmpty).cast<Map<String, dynamic>>().toList();
         
         products.assignAll(fetchedProducts);
       }

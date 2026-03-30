@@ -9,7 +9,7 @@ class Article {
   final String description;
   final String imageUrl;
   final DateTime date;
-  final String content;
+  final List<dynamic> fullContent;
   final String category;
   final String? authorName;
   var isSaved = false.obs;
@@ -20,7 +20,7 @@ class Article {
     required this.description,
     required this.imageUrl,
     required this.date,
-    required this.content,
+    required this.fullContent,
     required this.category,
     this.authorName,
     bool isSaved = false,
@@ -31,7 +31,9 @@ class Article {
 
 class ArticlesController extends GetxController {
   final categories = <String>['All'].obs;
+  final categoriesMap = <String, String>{}.obs; // ID -> Name map
   final selectedCategory = 'All'.obs;
+  final searchQuery = ''.obs;
   final articles = <Article>[].obs;
   final isLoading = true.obs;
 
@@ -40,11 +42,55 @@ class ArticlesController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchArticles();
+    _initializeData();
+  }
+
+  void search(String query) {
+    searchQuery.value = query;
+  }
+
+  Future<void> _initializeData() async {
+    isLoading.value = true;
+    await fetchCategories();
+    await fetchArticles();
+    isLoading.value = false;
+  }
+
+  String _stripHtmlTags(String htmlString) {
+    if (htmlString.isEmpty) return "";
+    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+    return htmlString.replaceAll(exp, '').trim();
+  }
+
+  Future<void> fetchCategories() async {
+    try {
+      final connect = GetConnect();
+      final response = await connect.get('${AppUrl.baseUrl}api/article/category');
+
+      if (response.statusCode == 200) {
+        final body = response.body;
+        if (body is Map && body['categories'] is List) {
+          final List rawCats = body['categories'];
+          final Map<String, String> newMap = {};
+          
+          for (var cat in rawCats) {
+            final id = cat['_id']?.toString();
+            final name = cat['name']?.toString();
+            if (id != null && name != null) {
+              newMap[id] = name;
+            }
+          }
+          categoriesMap.assignAll(newMap);
+          debugPrint('Categories mapped: ${categoriesMap.length} categories found.');
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching categories: $e');
+    }
   }
 
   Future<void> fetchArticles() async {
-    isLoading.value = true;
+    if (!isLoading.value) isLoading.value = true;
     try {
       final connect = GetConnect();
       final response = await connect.get('${AppUrl.baseUrl}api/article/');
@@ -67,6 +113,8 @@ class ArticlesController extends GetxController {
           final List<Article> mappedArticles = rawArticles.map<Article>((item) {
             final author = item['author'];
             final createdAt = item['createdAt'] ?? '';
+            final List contentList = item['content'] is List ? item['content'] : [];
+            
             DateTime parsedDate;
             try {
               parsedDate = DateTime.parse(createdAt).toLocal();
@@ -74,48 +122,64 @@ class ArticlesController extends GetxController {
               parsedDate = DateTime.now();
             }
             
+            // Resolve Category Name from ID
+            String catValue = item['category']?.toString() ?? '';
             String catName = 'General';
-            if (item['category'] is Map) {
+            
+            if (categoriesMap.containsKey(catValue)) {
+              catName = categoriesMap[catValue]!;
+            } else if (item['category'] is Map) {
               catName = item['category']['name'] ?? 'General';
-            } else if (item['category'] is String) {
-              catName = item['category'];
+            } else if (catValue.isNotEmpty && !catValue.contains(RegExp(r'^[0-9a-fA-F]{24}$'))) {
+              // If it's already a name (not a 24-char hex ID), use it
+              catName = catValue;
+            }
+
+            // Extract first image URL and first paragraph for preview
+            String extractedImageUrl = '';
+            String extractedDescription = '';
+
+            for (var content in contentList) {
+              if (content['type'] == 'image' && extractedImageUrl.isEmpty) {
+                extractedImageUrl = content['url'] ?? '';
+              }
+              if (content['type'] == 'paragraph' && extractedDescription.isEmpty) {
+                extractedDescription = _stripHtmlTags(content['data'] ?? '');
+              }
             }
 
             return Article(
               id: item['_id'] ?? '',
               title: item['title'] ?? 'Untitled',
-              description: item['description'] ?? '',
-              imageUrl:
-                  item['image'] ??
-                  item['thumbnail'] ??
-                  'assets/essentialService/article.png',
+              description: extractedDescription.isNotEmpty 
+                  ? extractedDescription 
+                  : (item['description'] ?? ''),
+              imageUrl: extractedImageUrl,
               date: parsedDate,
-              content: item['description'] ?? '',
+              fullContent: contentList,
               category: catName,
               authorName: author != null ? author['name'] : null,
             );
           }).toList();
 
+          // Sort articles by date descending (recent first)
+          mappedArticles.sort((a, b) => b.date.compareTo(a.date));
+
           articles.assignAll(mappedArticles);
 
-          // Extract unique categories from API data and build chips
-          final Set<String> uniqueCategories = {};
+          // Extract unique categories from API data (now with names) and build chips
+          final Set<String> uniqueCategoryNames = {};
           for (var article in mappedArticles) {
             if (article.category.isNotEmpty) {
-              uniqueCategories.add(article.category);
+              uniqueCategoryNames.add(article.category);
             }
           }
 
-          // Build categories list: "All" + unique categories from API
-          categories.assignAll(['All', ...uniqueCategories.toList()..sort()]);
+          // Build categories list: "All" + unique category names
+          categories.assignAll(['All', ...uniqueCategoryNames.toList()..sort()]);
 
-          debugPrint('Articles loaded: ${mappedArticles.length}');
-          debugPrint('Categories found: ${uniqueCategories.toList()}');
+          debugPrint('Articles loaded with category names: ${mappedArticles.length}');
         }
-      } else {
-        debugPrint(
-          'Failed to fetch articles: ${response.statusCode} ${response.statusText}',
-        );
       }
     } catch (e) {
       debugPrint("Error fetching articles: $e");
@@ -161,3 +225,4 @@ class ArticlesController extends GetxController {
     article.isSaved.value = !article.isSaved.value;
   }
 }
+

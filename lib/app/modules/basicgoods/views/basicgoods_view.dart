@@ -182,14 +182,6 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
                                       color: const Color(0xFF2C2C2C),
                                     ),
                                   ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    item.category,
-                                    style: GoogleFonts.hindSiliguri(
-                                      fontSize: 13,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),

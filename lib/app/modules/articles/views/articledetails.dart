@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
@@ -14,9 +16,19 @@ class ArticleDetailsView extends StatelessWidget {
     final String description = args['description'] ?? '';
     final String category = args['category'] ?? 'General';
     final DateTime date = args['date'] ?? DateTime.now();
+    final List<dynamic> fullContent = args['fullContent'] ?? [];
 
     final String formattedDate = _formatDate(date);
-    final String shareText = '$title\n\n$description';
+    
+    // Build share text from content
+    String shareTextContent = description;
+    if (fullContent.isNotEmpty) {
+      shareTextContent = fullContent
+          .where((e) => e['type'] == 'paragraph')
+          .map((e) => e['data'].toString().replaceAll(RegExp(r"<[^>]*>"), ""))
+          .join('\n\n');
+    }
+    final String shareText = '$title\n\n$shareTextContent';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -29,8 +41,8 @@ class ArticleDetailsView extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Article',
-          style: GoogleFonts.inter(
+          'Article Details',
+          style: GoogleFonts.poppins(
             color: const Color(0xFF101727),
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -54,7 +66,7 @@ class ArticleDetailsView extends StatelessWidget {
                   ),
                   child: Text(
                     category,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.poppins(
                       color: const Color(0xFF1E63FF),
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -66,7 +78,7 @@ class ArticleDetailsView extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   formattedDate,
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.poppins(
                     color: Colors.grey[600],
                     fontSize: 12,
                   ),
@@ -79,9 +91,9 @@ class ArticleDetailsView extends StatelessWidget {
             // Title
             Text(
               title,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.hindSiliguri(
                 fontSize: 24,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w700,
                 color: Colors.black,
                 height: 1.3,
               ),
@@ -91,15 +103,83 @@ class ArticleDetailsView extends StatelessWidget {
             const Divider(height: 1),
             const SizedBox(height: 16),
 
-            // Description
-            Text(
-              description,
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                height: 1.8,
-                color: Colors.grey[800],
-              ),
-            ),
+            // Complex Content Rendering
+            if (fullContent.isEmpty)
+              Text(
+                description,
+                style: GoogleFonts.hindSiliguri(
+                  fontSize: 16,
+                  height: 1.8,
+                  color: Colors.grey[800],
+                ),
+              )
+            else
+              ...fullContent.map((item) {
+                if (item['type'] == 'paragraph') {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
+                    child: Html(
+                      data: item['data'] ?? '',
+                      style: {
+                        "body": Style(
+                          fontSize: FontSize(17),
+                          lineHeight: const LineHeight(1.8),
+                          color: Colors.black87,
+                          fontFamily: GoogleFonts.hindSiliguri().fontFamily,
+                          margin: Margins.zero,
+                          padding: HtmlPaddings.zero,
+                        ),
+                        "p": Style(
+                          margin: Margins.only(bottom: 10),
+                        ),
+                        "b": Style(
+                           fontWeight: FontWeight.bold,
+                        ),
+                        "strong": Style(
+                           fontWeight: FontWeight.bold,
+                        ),
+                        "h2": Style(
+                           fontSize: FontSize(22),
+                           fontWeight: FontWeight.bold,
+                           lineHeight: const LineHeight(1.4),
+                           margin: Margins.only(top: 20, bottom: 10),
+                           fontFamily: GoogleFonts.hindSiliguri().fontFamily,
+                        ),
+                        "h3": Style(
+                           fontSize: FontSize(20),
+                           fontWeight: FontWeight.bold,
+                           lineHeight: const LineHeight(1.4),
+                           margin: Margins.only(top: 15, bottom: 8),
+                           fontFamily: GoogleFonts.hindSiliguri().fontFamily,
+                        ),
+                      },
+                    ),
+                  );
+                } else if (item['type'] == 'image') {
+                  final imageUrl = item['url'] ?? '';
+                  if (imageUrl.isEmpty) return const SizedBox.shrink();
+                  
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        placeholder: (context, url) => Container(
+                          height: 200,
+                          width: double.infinity,
+                          color: Colors.grey[100],
+                          child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                        ),
+                        errorWidget: (context, url, error) => const SizedBox.shrink(),
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              }),
 
             const SizedBox(height: 40),
 
@@ -135,7 +215,7 @@ class ArticleDetailsView extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           'Copy',
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey[700],
@@ -166,7 +246,7 @@ class ArticleDetailsView extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           'Share',
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: const Color(0xFF1E63FF),
@@ -191,4 +271,5 @@ class ArticleDetailsView extends StatelessWidget {
     return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]} ${date.year}';
   }
 }
+
 

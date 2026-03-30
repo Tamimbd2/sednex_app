@@ -43,6 +43,8 @@ abstract class Routes {
   static const GOLD_RATE = _Paths.GOLD_RATE;
   static const RAMADANCALANDER = _Paths.RAMADANCALANDER;
   static const NOTIFICATIONS = _Paths.NOTIFICATIONS;
+  static const MYPOST = _Paths.MYPOST;
+  static const SAVEPOST = _Paths.SAVEPOST;
 }
 
 abstract class _Paths {
@@ -87,4 +89,6 @@ abstract class _Paths {
   static const GOLD_RATE = '/gold-rate';
   static const RAMADANCALANDER = '/ramadancalander';
   static const NOTIFICATIONS = '/notifications';
+  static const MYPOST = '/mypost';
+  static const SAVEPOST = '/savepost';
 }

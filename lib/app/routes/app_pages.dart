@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+
 import '../modules/Shop/bindings/shop_binding.dart';
 import '../modules/Shop/views/allCategory.dart';
 import '../modules/Shop/views/allproducts.dart';
@@ -54,6 +55,8 @@ import '../modules/learnarabic/bindings/learnarabic_binding.dart';
 import '../modules/learnarabic/views/learnarabic_view.dart';
 import '../modules/localtour/bindings/localtour_binding.dart';
 import '../modules/localtour/views/localtour_view.dart';
+import '../modules/mypost/bindings/mypost_binding.dart';
+import '../modules/mypost/views/mypost_view.dart';
 import '../modules/namaj/bindings/namaj_binding.dart';
 import '../modules/namaj/views/namaj_view.dart';
 import '../modules/notifications/bindings/notifications_binding.dart';
@@ -66,6 +69,8 @@ import '../modules/ramadancalander/bindings/ramadancalander_binding.dart';
 import '../modules/ramadancalander/views/ramadancalander_view.dart';
 import '../modules/restaurents/bindings/restaurents_binding.dart';
 import '../modules/restaurents/views/restaurents_view.dart';
+import '../modules/savepost/bindings/savepost_binding.dart';
+import '../modules/savepost/views/savepost_view.dart';
 import '../modules/sendotp/bindings/sendotp_binding.dart';
 import '../modules/sendotp/views/sendotp_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
@@ -283,6 +288,16 @@ class AppPages {
       name: _Paths.NOTIFICATIONS,
       page: () => const NotificationsView(),
       binding: NotificationsBinding(),
+    ),
+    GetPage(
+      name: _Paths.MYPOST,
+      page: () => const MypostView(),
+      binding: MypostBinding(),
+    ),
+    GetPage(
+      name: _Paths.SAVEPOST,
+      page: () => const SavepostView(),
+      binding: SavepostBinding(),
     ),
   ];
 }

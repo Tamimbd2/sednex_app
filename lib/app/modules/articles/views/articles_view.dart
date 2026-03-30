@@ -37,17 +37,20 @@ class ArticlesView extends GetView<ArticlesController> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: TextField(
+              onChanged: (value) => controller.search(value),
               decoration: InputDecoration(
                 hintText: 'Search legal topics...',
-                hintStyle: GoogleFonts.inter(
+                hintStyle: GoogleFonts.poppins(
                   color: Colors.grey[500],
                   fontSize: 15,
                   fontWeight: FontWeight.w400,
                 ),
-                prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
+                prefixIcon: Icon(Icons.search_rounded,
+                    color: Colors.grey[500], size: 22),
                 filled: true,
                 fillColor: Colors.grey[100],
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,
@@ -61,7 +64,7 @@ class ArticlesView extends GetView<ArticlesController> {
                   borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5),
                 ),
               ),
-              style: GoogleFonts.inter(
+              style: GoogleFonts.poppins(
                 color: const Color(0xFF2C2C2C),
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -102,7 +105,7 @@ class ArticlesView extends GetView<ArticlesController> {
                             const SizedBox(width: 8),
                             Text(
                               'Categories',
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black,
@@ -159,7 +162,7 @@ class ArticlesView extends GetView<ArticlesController> {
                                 ),
                                 child: Text(
                                   category,
-                                  style: GoogleFonts.inter(
+                                  style: GoogleFonts.poppins(
                                     color: isSelected
                                         ? Colors.white
                                         : Colors.black,
@@ -184,10 +187,17 @@ class ArticlesView extends GetView<ArticlesController> {
                           controller.selectedFilterCategories.isNotEmpty;
 
                       final filteredArticles = controller.articles.where((a) {
+                        final matchesSearch = controller.searchQuery.isEmpty ||
+                            a.title.toLowerCase().contains(
+                                controller.searchQuery.value.toLowerCase()) ||
+                            a.category.toLowerCase().contains(
+                                controller.searchQuery.value.toLowerCase());
+
+                        if (!matchesSearch) return false;
+
                         if (isFilterMode) {
-                          return controller.selectedFilterCategories.contains(
-                            a.category,
-                          );
+                          return controller.selectedFilterCategories
+                              .contains(a.category);
                         }
                         if (controller.selectedCategory.value == 'All') {
                           return true;
@@ -208,7 +218,7 @@ class ArticlesView extends GetView<ArticlesController> {
                               const SizedBox(height: 16),
                               Text(
                                 'No articles found',
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   color: Colors.grey[400],
                                   fontWeight: FontWeight.w500,
@@ -258,7 +268,7 @@ class ArticlesView extends GetView<ArticlesController> {
                 children: [
                   Text(
                     'Filter Categories',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                     ),
@@ -339,7 +349,7 @@ class ArticlesView extends GetView<ArticlesController> {
                                     const SizedBox(width: 12),
                                     Text(
                                       category,
-                                      style: GoogleFonts.inter(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 16,
                                         color: Colors.black87,
                                       ),
@@ -361,7 +371,7 @@ class ArticlesView extends GetView<ArticlesController> {
                   Obx(
                     () => Text(
                       '${controller.selectedFilterCategories.length} selected',
-                      style: GoogleFonts.inter(color: Colors.grey),
+                      style: GoogleFonts.poppins(color: Colors.grey),
                     ),
                   ),
                   ElevatedButton(
@@ -401,7 +411,7 @@ class ArticlesView extends GetView<ArticlesController> {
             'description': article.description,
             'imageUrl': article.imageUrl,
             'date': article.date,
-            'content': article.content,
+            'fullContent': article.fullContent,
             'category': article.category,
             'authorName': article.authorName,
           },
@@ -424,88 +434,68 @@ class ArticlesView extends GetView<ArticlesController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Article Image
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-              child: SizedBox(
-                height: 160,
-                width: double.infinity,
-                child: isNetworkImage
-                    ? CachedNetworkImage(
-                        imageUrl: article.imageUrl,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, url, error) {
-                          return Container(
+            // Article Image - Only show if image URL is present
+            if (article.imageUrl.isNotEmpty)
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
+                child: SizedBox(
+                  height: 160,
+                  width: double.infinity,
+                  child: isNetworkImage
+                      ? CachedNetworkImage(
+                          imageUrl: article.imageUrl,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) {
+                            return Container(
+                              color: Colors.grey[100],
+                              child: const Icon(
+                                Icons.image_not_supported,
+                                color: Colors.grey,
+                                size: 40,
+                              ),
+                            );
+                          },
+                          placeholder: (context, url) => Container(
                             color: Colors.grey[100],
-                            child: const Icon(
-                              Icons.image_not_supported,
-                              color: Colors.grey,
-                              size: 40,
-                            ),
-                          );
-                        },
-                        placeholder: (context, url) => Container(
-                          color: Colors.grey[100],
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xFF1E63FF),
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color(0xFF1E63FF),
+                                ),
                               ),
                             ),
                           ),
+                        )
+                      : Image.asset(
+                          article.imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[100],
+                              child: const Icon(
+                                Icons.image_not_supported,
+                                color: Colors.grey,
+                                size: 40,
+                              ),
+                            );
+                          },
                         ),
-                      )
-                    : Image.asset(
-                        article.imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[100],
-                            child: const Icon(
-                              Icons.image_not_supported,
-                              color: Colors.grey,
-                              size: 40,
-                            ),
-                          );
-                        },
-                      ),
+                ),
               ),
-            ),
 
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Category Badge
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFEBEE),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      article.category,
-                      style: GoogleFonts.inter(
-                        color: const Color(0xFF1E63FF),
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
                   // Title
                   Text(
                     article.title,
-                    style: GoogleFonts.inter(
-                      fontSize: 16,
+                    style: GoogleFonts.hindSiliguri(
+                      fontSize: 17,
                       fontWeight: FontWeight.w700,
                       color: Colors.black,
                       height: 1.3,
@@ -516,13 +506,30 @@ class ArticlesView extends GetView<ArticlesController> {
                   // Description
                   Text(
                     article.description,
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
+                    style: GoogleFonts.hindSiliguri(
+                      fontSize: 14,
                       color: Colors.grey[600],
                       height: 1.5,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Date
+                  Row(
+                    children: [
+                      Icon(Icons.access_time_rounded, size: 13, color: Colors.grey[400]),
+                      const SizedBox(width: 4),
+                      Text(
+                        _smartDate(article.date),
+                        style: GoogleFonts.poppins(
+                          fontSize: 11,
+                          color: Colors.grey[400],
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
 
@@ -559,7 +566,7 @@ class ArticlesView extends GetView<ArticlesController> {
                               const SizedBox(width: 8),
                               Text(
                                 isSaved ? 'Saved' : 'Save',
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.poppins(
                                   color: isSaved
                                       ? Colors.white
                                       : Colors.grey[600],
@@ -580,5 +587,19 @@ class ArticlesView extends GetView<ArticlesController> {
         ),
       ),
     );
+  }
+
+  String _smartDate(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final articleDay = DateTime(date.year, date.month, date.day);
+    final diff = today.difference(articleDay).inDays;
+
+    if (diff == 0) return 'Today';
+    if (diff == 1) return 'Yesterday';
+
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]} ${date.year}';
   }
 }

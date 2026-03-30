@@ -128,7 +128,9 @@ class ProfileView extends GetView<ProfileController> {
                   'assets/profile/shop.svg',
                   onTap: () => Get.toNamed('/shop'),
                 ),
-                _buildSettingsItem('My Post', 'assets/profile/post.svg'),
+                _buildSettingsItem('My Post', 'assets/profile/post.svg',
+                  onTap: () => Get.toNamed('/mypost'),
+                ),
                 _buildSettingsItem('Cart', 'assets/profile/cart.svg'),
                 _buildSettingsItem(
                   'Edit Profile',
@@ -145,14 +147,12 @@ class ProfileView extends GetView<ProfileController> {
                   'assets/profile/language.svg',
                   onTap: () => Get.toNamed('/language'),
                 ),
-                _buildSettingsItem(
-                  'Notification',
-                  'assets/profile/notifications.svg',
-                ),
+
                 _buildSettingsItem(
                   'Saved Post',
                   'assets/profile/savepost.svg',
                   isLast: true,
+                  onTap: () => Get.toNamed('/savepost'),
                 ),
               ]),
 

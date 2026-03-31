@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'app/core/constants/app_constants.dart';
 import 'app/routes/app_pages.dart';
 import 'app/bindings/initial_binding.dart';
@@ -24,7 +25,14 @@ void main() async {
       initialBinding: InitialBinding(),
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.lightTheme.copyWith(
+        // Global font fallback: Poppins for Latin, Hind Siliguri for Bengali
+        textTheme: AppTheme.lightTheme.textTheme.apply(
+          fontFamilyFallback: [
+            GoogleFonts.hindSiliguri().fontFamily ?? 'HindSiliguri',
+          ],
+        ),
+      ),
     ),
   );
 }

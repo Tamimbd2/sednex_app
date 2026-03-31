@@ -63,6 +63,8 @@ import '../modules/notifications/bindings/notifications_binding.dart';
 import '../modules/notifications/views/notifications_view.dart';
 import '../modules/onboard/bindings/onboard_binding.dart';
 import '../modules/onboard/views/onboard_view.dart';
+import '../modules/organization/bindings/organization_binding.dart';
+import '../modules/organization/views/organization_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/ramadancalander/bindings/ramadancalander_binding.dart';
@@ -304,6 +306,11 @@ class AppPages {
       name: _Paths.FAVORITES,
       page: () => const FavoritesView(),
       binding: DashboardBinding(),
+    ),
+    GetPage(
+      name: _Paths.ORGANIZATION,
+      page: () => const OrganizationView(),
+      binding: OrganizationBinding(),
     ),
   ];
 }

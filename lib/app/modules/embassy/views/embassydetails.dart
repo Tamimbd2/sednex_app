@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:get_storage/get_storage.dart';
 import '../controllers/embassy_controller.dart';
 import '../../../core/theme/app_colors.dart';
 
@@ -60,28 +61,45 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
   Future<void> _fetchDetails() async {
     final args = Get.arguments as Map<String, dynamic>? ?? {};
     final Embassy? embassy = args['embassy'];
-    if (embassy == null) {
+
+    // Support both: Embassy object (from embassy list) OR plain id/name/logoPath (from informations)
+    final String id = embassy?.id ?? args['id'] ?? '';
+    final String fallbackName = embassy?.name ?? args['name'] ?? '';
+    final String fallbackImage = embassy?.icon ?? args['logoPath'] ?? '';
+    final String fallbackCategory = embassy?.category ?? 'Embassy';
+
+    // Set whatever we already have immediately
+    setState(() {
+      _name = fallbackName;
+      _imageUrl = fallbackImage;
+      _category = fallbackCategory;
+      if (embassy != null) {
+        _about = embassy.about;
+        _phone = embassy.contact.phone;
+        _email = embassy.contact.email;
+        _website = embassy.contact.website;
+        _address = embassy.contact.address;
+        _services = embassy.services;
+        _offDays = embassy.offDays;
+      }
+    });
+
+    if (id.isEmpty) {
       setState(() => _isLoading = false);
+      _animCtrl.forward();
       return;
     }
 
-    setState(() {
-      _name = embassy.name;
-      _imageUrl = embassy.icon;
-      _category = embassy.category;
-      _about = embassy.about;
-      _phone = embassy.contact.phone;
-      _email = embassy.contact.email;
-      _website = embassy.contact.website;
-      _address = embassy.contact.address;
-      _services = embassy.services;
-      _offDays = embassy.offDays;
-    });
-
     try {
       final connect = GetConnect();
+      final box = GetStorage();
+      final token = box.read('token');
       final response = await connect.get(
-        '${AppUrl.baseUrl}api/sections/embassy/items/${embassy.id}/details',
+        '${AppUrl.baseUrl}api/sections/embassy/items/$id/details',
+        headers: {
+          'Authorization':
+              'Bearer ${token ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE2NDc4NGFiMjQ3YTI0NTc2MGIxOGIiLCJlbWFpbCI6IlNha2liQHNlZG5leC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ4NzkwNzUsImV4cCI6MTc3NTQ4Mzg3NX0.SYIpSj3uqab2J8EciPMW0nmb77xe-ld0NHruVyU1Ojs"}',
+        },
       );
       if (!response.status.hasError) {
         var body = response.body;
@@ -99,24 +117,20 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
         final List offSchedules = detail['offDaySchedules'] ?? [];
 
         setState(() {
-          _name = itemData['name'] ?? embassy.name;
-          _imageUrl = itemData['image'] ?? itemData['icon'] ?? embassy.icon;
-          _category = itemData['category'] ?? embassy.category;
-          _about = about['description'] ?? embassy.about;
-          _phone =
-              contact['mobile'] ?? contact['phone'] ?? embassy.contact.phone;
-          _email = contact['email'] ?? embassy.contact.email;
-          _website = contact['website'] ?? embassy.contact.website;
-          _address =
-              location['address'] ??
-              contact['direction'] ??
-              embassy.contact.address;
-          _services = List<String>.from(about['services'] ?? embassy.services);
+          _name = itemData['name'] ?? fallbackName;
+          _imageUrl = itemData['image'] ?? itemData['icon'] ?? fallbackImage;
+          _category = itemData['category'] ?? fallbackCategory;
+          _about = about['description'] ?? _about;
+          _phone = contact['mobile'] ?? contact['phone'] ?? _phone;
+          _email = contact['email'] ?? _email;
+          _website = contact['website'] ?? _website;
+          _address = location['address'] ?? contact['direction'] ?? _address;
+          _services = List<String>.from(about['services'] ?? _services);
           final days = offSchedules
               .map<String>((e) => e['day']?.toString() ?? '')
               .where((d) => d.isNotEmpty)
               .toList();
-          _offDays = days.isEmpty ? embassy.offDays : days;
+          _offDays = days.isEmpty ? _offDays : days;
         });
       }
     } catch (e) {

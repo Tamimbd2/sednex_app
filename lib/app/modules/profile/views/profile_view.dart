@@ -3,12 +3,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../routes/app_pages.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../controllers/profile_controller.dart';
+import '../../dashboard/controllers/dashboard_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
-  const ProfileView({super.key});
+  ProfileView({super.key});
+
+  final dashboardController = Get.find<DashboardController>();
 
   @override
   Widget build(BuildContext context) {
@@ -123,15 +127,15 @@ class ProfileView extends GetView<ProfileController> {
 
               // Settings Group 1
               _buildSettingsGroup([
-                _buildSettingsItem(
-                  'Shop',
-                  'assets/profile/shop.svg',
-                  onTap: () => Get.toNamed('/shop'),
-                ),
                 _buildSettingsItem('My Post', 'assets/profile/post.svg',
                   onTap: () => Get.toNamed('/mypost'),
                 ),
-                _buildSettingsItem('Cart', 'assets/profile/cart.svg'),
+                Obx(() => _buildSettingsItem(
+                  'Cart',
+                  'assets/profile/cart.svg',
+                  badgeCount: dashboardController.lovedProducts.length,
+                  onTap: () => Get.toNamed(Routes.FAVORITES),
+                )),
                 _buildSettingsItem(
                   'Edit Profile',
                   'assets/profile/editprofile.svg',
@@ -236,6 +240,7 @@ class ProfileView extends GetView<ProfileController> {
     bool isLast = false,
     bool isDestructive = false,
     VoidCallback? onTap,
+    int? badgeCount,
   }) {
     return Column(
       children: [
@@ -266,10 +271,41 @@ class ProfileView extends GetView<ProfileController> {
                   : const Color(0xFF101727), // Soft red for logout
             ),
           ),
-          trailing: Icon(
-            Icons.chevron_right,
-            color: Colors.grey[400],
-            size: 20,
+          trailing: SizedBox(
+            width: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (badgeCount != null && badgeCount > 0)
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF1E63FF),
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 20,
+                      minHeight: 20,
+                    ),
+                    child: Center(
+                      child: Text(
+                        badgeCount.toString(),
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                const SizedBox(width: 8),
+                Icon(
+                  Icons.chevron_right,
+                  color: Colors.grey[400],
+                  size: 20,
+                ),
+              ],
+            ),
           ),
           onTap: onTap,
         ),

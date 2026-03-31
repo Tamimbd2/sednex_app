@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import '../../profile/views/profile_view.dart';
+import '../../Shop/views/shop_view.dart';
 import 'home_page_content.dart';
 
 class DashboardView extends GetView<DashboardController> {
@@ -157,7 +158,7 @@ class DashboardView extends GetView<DashboardController> {
       case 1:
         return _buildSearchPage();
       case 2:
-        return _buildCartPage();
+        return _buildShopPage();
       case 3:
         return _buildProfilePage();
       default:
@@ -228,174 +229,12 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
-  Widget _buildCartPage() {
-    return Obx(() {
-      if (controller.isLovedProductsLoading.value && controller.lovedProducts.isEmpty) {
-        return const Center(child: CircularProgressIndicator());
-      }
-
-      if (controller.lovedProducts.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.shopping_bag_outlined, size: 64, color: Colors.grey[300]),
-              const SizedBox(height: 16),
-              Text(
-                'Your cart is empty',
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF6B7280),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Save your favorite products to see them here.',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: const Color(0xFF9CA3AF),
-                ),
-              ),
-            ],
-          ),
-        );
-      }
-
-      return SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Text(
-                    'My Favorites',
-                    style: GoogleFonts.inter(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF101727),
-                    ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    '${controller.lovedProducts.length} items',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: const Color(0xFF6B7280),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                itemCount: controller.lovedProducts.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 16),
-                itemBuilder: (context, index) {
-                  final product = controller.lovedProducts[index];
-                  return GestureDetector(
-                    onTap: () => Get.toNamed(Routes.PRODUCT_DETAILS, arguments: product),
-                    child: Container(
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFFF3F4F6)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.02),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          // Product Image
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: AspectRatio(
-                                aspectRatio: 1.0,
-                                child: Image.network(
-                                  product['image'],
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, err, stack) => 
-                                      const Icon(Icons.broken_image, color: Colors.grey),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          // Details
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        product['name'],
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.inter(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: const Color(0xFF101727),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        product['category'],
-                                        style: GoogleFonts.inter(
-                                          fontSize: 12,
-                                          color: const Color(0xFF6B7280),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    product['price'],
-                                    style: GoogleFonts.inter(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xFF1E63FF),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          // Cart/Remove Icon
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: IconButton(
-                              icon: const Icon(Icons.shopping_cart, size: 22, color: Color(0xFF1E63FF)),
-                              onPressed: () => controller.toggleFavorite(product['id'] ?? product['_id']),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+  Widget _buildShopPage() {
+    return const ShopContent();
   }
 
   Widget _buildProfilePage() {
-    return const ProfileView();
+    return ProfileView();
   }
 
   Widget _buildBottomNavigationBar() {
@@ -449,7 +288,7 @@ class DashboardView extends GetView<DashboardController> {
                   ),
                 ),
                 _buildNavItem(
-                  iconPath: 'assets/nav/cart.svg',
+                  iconPath: 'assets/profile/shop.svg', // Moved Shop to nav
                   index: 2,
                   isActive: controller.currentIndex.value == 2,
                 ),

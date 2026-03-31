@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../../../services/api_service.dart';
+import '../../dashboard/controllers/dashboard_controller.dart';
 
 class ShopController extends GetxController {
   final ApiService _apiService = Get.find<ApiService>();
@@ -238,6 +239,14 @@ class ShopController extends GetxController {
               'loveCount': data['loveCount'],
             };
             products.refresh();
+            
+            // Refresh Dashboard loved products to update the Cart count and screen immediately
+            try {
+              final dashboardController = Get.find<DashboardController>();
+              dashboardController.fetchLovedProducts();
+            } catch (e) {
+              debugPrint("DashboardController not found during toggleLove");
+            }
           }
         }
       }

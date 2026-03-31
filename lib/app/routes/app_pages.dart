@@ -81,6 +81,7 @@ import '../modules/termsandconditions/bindings/termsandconditions_binding.dart';
 import '../modules/termsandconditions/views/termsandconditions_view.dart';
 import '../modules/touristSpot/bindings/tourist_spot_binding.dart';
 import '../modules/touristSpot/views/tourist_spot_view.dart';
+import '../modules/favorites/views/favorites_view.dart';
 
 part 'app_routes.dart';
 
@@ -202,7 +203,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PROFILE,
-      page: () => const ProfileView(),
+      page: () => ProfileView(),
       binding: ProfileBinding(),
     ),
     GetPage(
@@ -298,6 +299,11 @@ class AppPages {
       name: _Paths.SAVEPOST,
       page: () => const SavepostView(),
       binding: SavepostBinding(),
+    ),
+    GetPage(
+      name: _Paths.FAVORITES,
+      page: () => const FavoritesView(),
+      binding: DashboardBinding(),
     ),
   ];
 }

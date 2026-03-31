@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../../../services/api_service.dart';
+import '../../Shop/controllers/shop_controller.dart';
 
 class DashboardController extends GetxController {
   // Current selected index for bottom navigation
@@ -320,6 +321,14 @@ class DashboardController extends GetxController {
           Get.snackbar('Notice', 'Failed to update. Please try again.');
         } else {
           debugPrint("Unsaved from cart: $productId");
+          
+          // Refresh Shop products to update the heart icons immediately
+          try {
+            final shopController = Get.find<ShopController>();
+            shopController.fetchProducts();
+          } catch (e) {
+            debugPrint("ShopController not found during toggleFavorite: $e");
+          }
         }
       }
     } catch (e) {

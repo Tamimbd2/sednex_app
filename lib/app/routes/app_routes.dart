@@ -45,6 +45,7 @@ abstract class Routes {
   static const NOTIFICATIONS = _Paths.NOTIFICATIONS;
   static const MYPOST = _Paths.MYPOST;
   static const SAVEPOST = _Paths.SAVEPOST;
+  static const FAVORITES = _Paths.FAVORITES;
 }
 
 abstract class _Paths {
@@ -91,4 +92,5 @@ abstract class _Paths {
   static const NOTIFICATIONS = '/notifications';
   static const MYPOST = '/mypost';
   static const SAVEPOST = '/savepost';
+  static const FAVORITES = '/favorites';
 }

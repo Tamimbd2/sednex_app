@@ -421,16 +421,6 @@ class InformationsView extends GetView<InformationsController> {
     }
   }
 
-  String _typeLabel(String type) {
-    switch (type) {
-      case 'embassy': return 'Embassy';
-      case 'hospitals': return 'Hospital';
-      case 'restaurents': return 'Restaurant';
-      case 'organization': return 'Org';
-      default: return type;
-    }
-  }
-
   IconData _typeIcon(String type) {
     switch (type) {
       case 'embassy': return Icons.account_balance_rounded;

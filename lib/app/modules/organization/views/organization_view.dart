@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../controllers/hospitals_controller.dart';
-import 'hospitaldetails.dart';
+import '../controllers/organization_controller.dart';
+import 'detailsorg.dart';
 
-class HospitalsView extends GetView<HospitalsController> {
-  const HospitalsView({super.key});
+class OrganizationView extends GetView<OrganizationController> {
+  const OrganizationView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +24,7 @@ class HospitalsView extends GetView<HospitalsController> {
           ),
         ),
         title: Text(
-          'Hospitals',
+          'Organization',
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 20,
@@ -51,7 +51,7 @@ class HospitalsView extends GetView<HospitalsController> {
             child: TextField(
               onChanged: (val) => controller.searchQuery.value = val,
               decoration: InputDecoration(
-                hintText: 'Search hospitals...',
+                hintText: 'Search organizations...',
                 hintStyle: GoogleFonts.inter(
                   color: Colors.grey[500],
                   fontSize: 15,
@@ -87,11 +87,11 @@ class HospitalsView extends GetView<HospitalsController> {
           ),
           const SizedBox(height: 24),
 
-          // Hospitals Heading
+          // Heading
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              'All Hospitals',
+              'All Organizations',
               style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -101,18 +101,18 @@ class HospitalsView extends GetView<HospitalsController> {
           ),
           const SizedBox(height: 16),
 
-          // Hospitals Grid
+          // Grid
           Expanded(
             child: Obx(
               () {
                 if (controller.isLoading.value &&
-                    controller.hospitals.isEmpty) {
+                    controller.organizations.isEmpty) {
                   return Center(
-                      child:
-                          CircularProgressIndicator(color: AppColors.primary));
+                      child: CircularProgressIndicator(
+                          color: AppColors.primary));
                 }
 
-                if (controller.filteredHospitals.isEmpty) {
+                if (controller.filteredOrganizations.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -121,7 +121,7 @@ class HospitalsView extends GetView<HospitalsController> {
                             size: 60, color: Colors.grey[300]),
                         const SizedBox(height: 16),
                         Text(
-                          'No hospitals found',
+                          'No organizations found',
                           style: GoogleFonts.inter(
                             fontSize: 15,
                             color: Colors.grey[500],
@@ -141,10 +141,10 @@ class HospitalsView extends GetView<HospitalsController> {
                     crossAxisSpacing: 16,
                     childAspectRatio: 0.85,
                   ),
-                  itemCount: controller.filteredHospitals.length,
+                  itemCount: controller.filteredOrganizations.length,
                   itemBuilder: (context, index) {
-                    final hospital = controller.filteredHospitals[index];
-                    return _buildHospitalCard(hospital);
+                    final org = controller.filteredOrganizations[index];
+                    return _buildOrganizationCard(org);
                   },
                 );
               },
@@ -155,15 +155,15 @@ class HospitalsView extends GetView<HospitalsController> {
     );
   }
 
-  Widget _buildHospitalCard(Hospital hospital) {
+  Widget _buildOrganizationCard(Organization org) {
     return GestureDetector(
       onTap: () {
         Get.to(
-          () => const HospitalDetailsView(),
+          () => const OrganizationDetailsView(),
           arguments: {
-            'id': hospital.id,
-            'name': hospital.name,
-            'logoPath': hospital.image,
+            'id': org.id,
+            'name': org.name,
+            'logoPath': org.image,
           },
         );
       },
@@ -175,34 +175,34 @@ class HospitalsView extends GetView<HospitalsController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Hospital Logo
+            // Organization Logo
             SizedBox(
               width: 60,
               height: 60,
-              child: hospital.image.isNotEmpty
+              child: org.image.isNotEmpty
                   ? Image.network(
-                      hospital.image,
+                      org.image,
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) {
                         return const Icon(
-                          Icons.local_hospital,
+                          Icons.business_rounded,
                           color: Colors.grey,
                           size: 40,
                         );
                       },
                     )
                   : const Icon(
-                      Icons.local_hospital,
+                      Icons.business_rounded,
                       color: Colors.grey,
                       size: 40,
                     ),
             ),
             const SizedBox(height: 12),
-            // Hospital Name
+            // Organization Name
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Text(
-                hospital.name,
+                org.name,
                 style: GoogleFonts.inter(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,

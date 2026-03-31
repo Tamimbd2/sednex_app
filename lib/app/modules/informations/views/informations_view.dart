@@ -5,6 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../controllers/informations_controller.dart';
+import '../../embassy/views/embassydetails.dart';
+import '../../hospitals/views/hospitaldetails.dart';
+import '../../restaurents/views/restaurantdetails.dart';
+import '../../organization/views/detailsorg.dart';
 
 class InformationsView extends GetView<InformationsController> {
   const InformationsView({super.key});
@@ -43,10 +47,14 @@ class InformationsView extends GetView<InformationsController> {
                 onChanged: (val) => controller.searchQuery.value = val,
                 decoration: InputDecoration(
                   hintText: 'Search embassy, restaurant, phar...',
-                  hintStyle: GoogleFonts.inter(
+                  hintStyle: GoogleFonts.poppins(
                     color: Colors.grey[500],
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
+                  ).copyWith(
+                    fontFamilyFallback: [
+                      GoogleFonts.hindSiliguri().fontFamily!,
+                    ],
                   ),
                   prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
                   filled: true,
@@ -65,10 +73,14 @@ class InformationsView extends GetView<InformationsController> {
                     borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
                   ),
                 ),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.poppins(
                   color: const Color(0xFF2C2C2C),
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
+                ).copyWith(
+                  fontFamilyFallback: [
+                    GoogleFonts.hindSiliguri().fontFamily!,
+                  ],
                 ),
                 cursorColor: const Color(0xFF1E63FF),
               ),
@@ -101,76 +113,91 @@ class InformationsView extends GetView<InformationsController> {
               ),
               const SizedBox(height: 8),
 
-              // Service Cards Grid (2 rows x 4 columns = 8 cards)
-              GridView.count(
+              // Service Cards Grid (Dynamic based on search)
+              Obx(() => GridView.builder(
                 padding: EdgeInsets.zero,
-                crossAxisCount: 4,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 0.75,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: 0.75,
+                ),
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  _buildServiceCard('Embassy', 'assets/newessential/City-Hall--Streamline-Core-Gradient.svg', const Color(0xFF9C27B0), () => Get.toNamed('/embassy')),
-                  _buildServiceCard('Article', 'assets/newessential/Multiple-File-2--Streamline-Core-Gradient.svg', const Color(0xFF00BFA5), () => Get.toNamed('/articles')),
-                  _buildServiceCard('Basic Goods', 'assets/newessential/Shopping-Basket-2--Streamline-Core-Gradient.svg', const Color(0xFF448AFF), () => Get.toNamed('/basicgoods')),
-                  _buildServiceCard('Community', 'assets/newessential/User-Multiple-Group--Streamline-Core-Gradient.svg', const Color(0xFF4CAF50), () => Get.toNamed('/community')),
-                  _buildServiceCard('Grocery Store', 'assets/newessential/Store-1--Streamline-Core-Gradient.svg', const Color(0xFFFF9800), () => _showComingSoonDialog(context, 'Grocery Store')),
-                  _buildServiceCard('Tourist spot', 'assets/newessential/Beach--Streamline-Core-Gradient.svg', const Color(0xFF00BCD4), () => Get.toNamed('/tourist-spot')),
-                  _buildServiceCard('Learn Arabic', 'assets/newessential/Dictionary-Language-Book--Streamline-Core-Gradient.svg', const Color(0xFF795548), () => Get.toNamed('/learnarabic')),
-                  _buildServiceCard('Restaurants', 'assets/newessential/Fork-Knife--Streamline-Core-Gradient.svg', const Color(0xFFE91E63), () => Get.toNamed('/restaurents')),
-                ],
-              ),
+                itemCount: controller.filteredServices.length,
+                itemBuilder: (context, index) {
+                  final service = controller.filteredServices[index];
+                  return _buildServiceCard(
+                    service.label,
+                    service.imagePath,
+                    service.backgroundColor,
+                    () {
+                      if (service.route != null) {
+                        Get.toNamed(service.route!);
+                      } else {
+                        _showComingSoonDialog(context, service.label);
+                      }
+                    },
+                  );
+                },
+              )),
               
               const SizedBox(height: 12),
 
               // "All" Section Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'All',
-                    style: GoogleFonts.inter(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {}, // Can navigate to a full list if needed
-                    child: Text(
-                      'View All',
-                      style: GoogleFonts.inter(
-                        color: Colors.grey[500],
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
+              Text(
+                'All',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ).copyWith(
+                  fontFamilyFallback: [
+                    GoogleFonts.hindSiliguri().fontFamily!,
+                  ],
+                ),
               ),
               const SizedBox(height: 12),
 
-              // Mixed Services Grid (3 columns)
-              GridView.builder(
-                padding: EdgeInsets.zero,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 0.8,
-                ),
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: controller.mixedServices.length,
-                itemBuilder: (context, index) {
-                  final service = controller.mixedServices[index];
-                  return _buildMixedServiceCard(
-                    service.label,
-                    service.imagePath,
+              // Mixed Live Cards Grid (3 columns × max 2 rows)
+              Obx(() {
+                if (controller.isLoadingMixed.value &&
+                    controller.mixedCards.isEmpty) {
+                  return const SizedBox(
+                    height: 160,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFF1E63FF),
+                        strokeWidth: 2,
+                      ),
+                    ),
                   );
-                },
-              ),
+                }
+                if (controller.mixedCards.isEmpty) {
+                  return const SizedBox(
+                    height: 100,
+                    child: Center(
+                      child: Text('No data available'),
+                    ),
+                  );
+                }
+                final cards = controller.previewCards;
+                return GridView.builder(
+                  padding: EdgeInsets.zero,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 14,
+                    crossAxisSpacing: 14,
+                    childAspectRatio: 0.82,
+                  ),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: cards.length,
+                  itemBuilder: (context, index) {
+                    return _buildLiveCard(cards[index], index);
+                  },
+                );
+              }),
               const SizedBox(height: 20),
             ],
           ),
@@ -229,20 +256,28 @@ class InformationsView extends GetView<InformationsController> {
               const SizedBox(height: 24),
               Text(
                 'Coming Soon!',
-                style: GoogleFonts.inter(
+                style: GoogleFonts.poppins(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
                   color: Colors.black,
+                ).copyWith(
+                  fontFamilyFallback: [
+                    GoogleFonts.hindSiliguri().fontFamily!,
+                  ],
                 ),
               ),
               const SizedBox(height: 12),
               Text(
                 '$serviceName feature is currently under development and will be available shortly.',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.grey[600],
                   height: 1.5,
+                ).copyWith(
+                  fontFamilyFallback: [
+                    GoogleFonts.hindSiliguri().fontFamily!,
+                  ],
                 ),
               ),
               const SizedBox(height: 24),
@@ -259,10 +294,14 @@ class InformationsView extends GetView<InformationsController> {
                   ),
                   child: Text(
                     'Got it',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
+                    ).copyWith(
+                      fontFamilyFallback: [
+                        GoogleFonts.hindSiliguri().fontFamily!,
+                      ],
                     ),
                   ),
                 ),
@@ -273,60 +312,133 @@ class InformationsView extends GetView<InformationsController> {
       ),
     );
   }
-  Widget _buildMixedServiceCard(String title, String iconPath) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey[200]!),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
+  Widget _buildLiveCard(MixedCard card, int index) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: Duration(milliseconds: 250 + index * 60),
+      builder: (_, v, child) => Opacity(
+        opacity: v,
+        child: Transform.translate(
+          offset: Offset(0, 12 * (1 - v)),
+          child: child,
+        ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-            child: ClipOval(
-              child: Image.asset(
-                iconPath,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Icon(
-                  Icons.image,
-                  color: Colors.grey,
-                  size: 30,
+      child: GestureDetector(
+        onTap: () => _navigateToDetails(card),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Logo
+              SizedBox(
+                width: 52,
+                height: 52,
+                child: card.image.isNotEmpty
+                    ? Image.network(
+                        card.image,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => Icon(
+                          _typeIcon(card.type),
+                          size: 32,
+                          color: _typeColor(card.type).withValues(alpha: 0.4),
+                        ),
+                      )
+                    : Icon(
+                        _typeIcon(card.type),
+                        size: 32,
+                        color: _typeColor(card.type).withValues(alpha: 0.4),
+                      ),
+              ),
+              const SizedBox(height: 8),
+              // Name
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: Text(
+                  card.name,
+                  style: GoogleFonts.poppins(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF1F2937),
+                    height: 1.3,
+                  ).copyWith(
+                    fontFamilyFallback: [
+                      GoogleFonts.hindSiliguri().fontFamily!,
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-            ),
+              const SizedBox(height: 6),
+            ],
           ),
-          const SizedBox(height: 12),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              title,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-                height: 1.2,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
+  }
+
+  void _navigateToDetails(MixedCard card) {
+    final args = {
+      'id': card.id,
+      'name': card.name,
+      'logoPath': card.image,
+    };
+    switch (card.type) {
+      case 'embassy':
+        Get.to(() => const EmbassyDetailsView(), arguments: args);
+        break;
+      case 'hospitals':
+        Get.to(() => const HospitalDetailsView(), arguments: args);
+        break;
+      case 'restaurents':
+        Get.to(() => const RestaurantDetailsView(), arguments: args);
+        break;
+      case 'organization':
+        Get.to(() => const OrganizationDetailsView(), arguments: args);
+        break;
+    }
+  }
+
+  Color _typeColor(String type) {
+    switch (type) {
+      case 'embassy': return const Color(0xFF9C27B0);
+      case 'hospitals': return const Color(0xFFF44336);
+      case 'restaurents': return const Color(0xFFE91E63);
+      case 'organization': return const Color(0xFF3F51B5);
+      default: return const Color(0xFF1E63FF);
+    }
+  }
+
+  String _typeLabel(String type) {
+    switch (type) {
+      case 'embassy': return 'Embassy';
+      case 'hospitals': return 'Hospital';
+      case 'restaurents': return 'Restaurant';
+      case 'organization': return 'Org';
+      default: return type;
+    }
+  }
+
+  IconData _typeIcon(String type) {
+    switch (type) {
+      case 'embassy': return Icons.account_balance_rounded;
+      case 'hospitals': return Icons.local_hospital_rounded;
+      case 'restaurents': return Icons.restaurant_rounded;
+      case 'organization': return Icons.business_rounded;
+      default: return Icons.category_rounded;
+    }
   }
 }
 
@@ -461,11 +573,15 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.poppins(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
                       color: const Color(0xFF2C2C2C),
                       height: 1.25,
+                    ).copyWith(
+                      fontFamilyFallback: [
+                        GoogleFonts.hindSiliguri().fontFamily!,
+                      ],
                     ),
                   ),
                 ),

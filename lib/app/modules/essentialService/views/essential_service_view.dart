@@ -118,7 +118,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Organization',
               'assets/newessential/Business-Profession-Home-Office--Streamline-Core-Gradient.svg',
               const Color(0xFF3F51B5),
-              () => _showComingSoonDialog(context, 'Organization'),
+              () => Get.toNamed('/organization'),
             ),
             _buildServiceCard(
               'Sports team',

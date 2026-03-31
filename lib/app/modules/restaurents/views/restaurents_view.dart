@@ -1,8 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../core/theme/app_colors.dart';
 import '../controllers/restaurents_controller.dart';
 import 'restaurantdetails.dart';
 
@@ -13,24 +14,28 @@ class RestaurentsView extends GetView<RestaurentsController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF1E63FF),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Get.back(),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
+            onPressed: () => Get.back(),
+          ),
         ),
         title: Text(
           'Restaurants',
-          style: GoogleFonts.inter(
-            color: Colors.black,
-            fontSize: 18,
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
         ),
+        centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(
-            color: Colors.grey[300],
+            color: const Color(0xFF3575FF),
             height: 1,
           ),
         ),
@@ -38,36 +43,55 @@ class RestaurentsView extends GetView<RestaurentsController> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 16),
+
           // Search Bar
           Padding(
-            padding: const EdgeInsets.all(16),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey[300]!),
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search restaurants...',
-                  hintStyle: GoogleFonts.inter(
-                    color: Colors.grey[400],
-                    fontSize: 14,
-                  ),
-                  prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              onChanged: (val) => controller.searchQuery.value = val,
+              decoration: InputDecoration(
+                hintText: 'Search restaurants...',
+                hintStyle: GoogleFonts.inter(
+                  color: Colors.grey[500],
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                ),
+                prefixIcon:
+                    Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
+                filled: true,
+                fillColor: Colors.grey[100],
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide:
+                      BorderSide(color: Colors.grey[300]!, width: 1.5),
                 ),
               ),
+              style: GoogleFonts.inter(
+                color: const Color(0xFF2C2C2C),
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+              cursorColor: const Color(0xFF1E63FF),
             ),
           ),
           const SizedBox(height: 24),
 
-          // Restaurants Heading
+          // Heading
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              'Restaurants',
+              'All Restaurants',
               style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -77,22 +101,53 @@ class RestaurentsView extends GetView<RestaurentsController> {
           ),
           const SizedBox(height: 16),
 
-          // Restaurants Grid
+          // Grid
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.85,
-                ),
-                itemCount: controller.restaurants.length,
-                itemBuilder: (context, index) {
-                  return _buildRestaurantCard(controller.restaurants[index]);
-                },
-              ),
+            child: Obx(
+              () {
+                if (controller.isLoading.value &&
+                    controller.restaurants.isEmpty) {
+                  return Center(
+                      child: CircularProgressIndicator(
+                          color: AppColors.primary));
+                }
+
+                if (controller.filteredRestaurants.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.search_off_rounded,
+                            size: 60, color: Colors.grey[300]),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No restaurants found',
+                          style: GoogleFonts.inter(
+                            fontSize: 15,
+                            color: Colors.grey[500],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return GridView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 0.85,
+                  ),
+                  itemCount: controller.filteredRestaurants.length,
+                  itemBuilder: (context, index) {
+                    final restaurant = controller.filteredRestaurants[index];
+                    return _buildRestaurantCard(restaurant);
+                  },
+                );
+              },
             ),
           ),
         ],
@@ -106,8 +161,9 @@ class RestaurentsView extends GetView<RestaurentsController> {
         Get.to(
           () => const RestaurantDetailsView(),
           arguments: {
+            'id': restaurant.id,
             'name': restaurant.name,
-            'logoPath': restaurant.logoPath,
+            'logoPath': restaurant.image,
           },
         );
       },
@@ -115,56 +171,47 @@ class RestaurentsView extends GetView<RestaurentsController> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Circular Logo
-            Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.grey[300]!,
-                  width: 1,
-                ),
-              ),
-              child: ClipOval(
-                child: Image.asset(
-                  restaurant.logoPath,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[200],
-                      child: const Icon(
-                        Icons.restaurant,
-                        color: Colors.grey,
-                        size: 32,
-                      ),
-                    );
-                  },
-                ),
-              ),
+            // Restaurant Logo
+            SizedBox(
+              width: 60,
+              height: 60,
+              child: restaurant.image.isNotEmpty
+                  ? Image.network(
+                      restaurant.image,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Icons.restaurant,
+                          color: Colors.grey,
+                          size: 40,
+                        );
+                      },
+                    )
+                  : const Icon(
+                      Icons.restaurant,
+                      color: Colors.grey,
+                      size: 40,
+                    ),
             ),
             const SizedBox(height: 12),
             // Restaurant Name
-            Text(
-              restaurant.name,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Text(
+                restaurant.name,
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
             ),
           ],
         ),
@@ -172,4 +219,3 @@ class RestaurentsView extends GetView<RestaurentsController> {
     );
   }
 }
-

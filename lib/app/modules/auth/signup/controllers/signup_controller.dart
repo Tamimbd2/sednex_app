@@ -33,7 +33,7 @@ class SignupController extends GetxController {
     isLoading.value = true;
     try {
       final connect = GetConnect();
-      final response = await connect.post('${AppUrl.baseUrl}api/auth/register', {
+      final response = await connect.post('${AppUrl.baseUrl}api/auth/signin', {
         'fullName': nameController.text.trim(),
         'email': emailController.text.trim(),
         'password': passwordController.text,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../../../services/api_service.dart';
+import '../../Shop/controllers/shop_controller.dart';
 
 class DashboardController extends GetxController {
   // Current selected index for bottom navigation
@@ -20,7 +21,9 @@ class DashboardController extends GetxController {
   final bannerPageController = PageController(initialPage: 5000);
   
   var servicesList = <dynamic>[].obs; // Dynamic Services List
+  var lovedProducts = <Map<String, dynamic>>[].obs; // Favorited products for Cart
   var userProfileImage = RxnString(); // Observable profile image
+  var isLovedProductsLoading = false.obs;
 
   // Controllers for auto-scrolling
   final infoScrollController = ScrollController();
@@ -40,6 +43,7 @@ class DashboardController extends GetxController {
     fetchMarqueeText();
     fetchBanner();
     fetchServices();
+    fetchLovedProducts();
     // Poll every 30 seconds for real-time updates
     _marqueeTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       fetchMarqueeText();
@@ -241,5 +245,94 @@ class DashboardController extends GetxController {
   // Change page based on bottom navigation selection
   void changePage(int index) {
     currentIndex.value = index;
+    if (index == 2) {
+      fetchLovedProducts();
+    }
+  }
+
+  void fetchLovedProducts() async {
+    try {
+      isLovedProductsLoading.value = true;
+      final path = 'api/products/love/';
+      final fullUrl = '${apiService.httpClient.baseUrl}$path';
+      debugPrint("Favorites Full URL: $fullUrl");
+      final response = await apiService.getData(path);
+      
+      debugPrint("Favorites Status: ${response.statusCode} - ${response.statusText}");
+      
+      if (response.statusCode == 200) {
+        final dynamic body = response.body;
+        debugPrint("Favorites API Response: $body");
+        List<dynamic> items = [];
+
+        if (body is Map && body['success'] == true) {
+          items = body['products'] is List ? body['products'] : [];
+        } else if (body is List) {
+          items = body;
+        }
+
+        final mapped = items.map((item) {
+          try {
+            final productMap = Map<String, dynamic>.from(item is Map ? item : {});
+            final price = productMap['price'] ?? 0;
+            final discountPrice = productMap['discountPrice'];
+            
+            return {
+              ...productMap,
+              "id": productMap['_id'],
+              "name": productMap['name']?.toString() ?? 'No Name',
+              "price": "৳$price",
+              "originalPrice": discountPrice != null ? "৳${(price is num ? price : 0) + 50}" : "",
+              "image": (productMap['images'] is List && (productMap['images'] as List).isNotEmpty) 
+                  ? productMap['images'][0] 
+                  : "https://via.placeholder.com/164x164.png",
+              "category": productMap['category'] is Map 
+                  ? (productMap['category']['name'] ?? 'General') 
+                  : 'General',
+            };
+          } catch (e) {
+            debugPrint('Error mapping loved product: $e');
+            return <String, dynamic>{};
+          }
+        }).where((p) => p.isNotEmpty).cast<Map<String, dynamic>>().toList();
+
+        lovedProducts.assignAll(mapped);
+      }
+    } catch (e) {
+      debugPrint("Error fetching loved products: $e");
+    } finally {
+      isLovedProductsLoading.value = false;
+    }
+  }
+
+  void toggleFavorite(String productId) async {
+    try {
+      // Optimistic UI Update: remove from list immediately
+      final removedIndex = lovedProducts.indexWhere((p) => (p['id'] ?? p['_id']) == productId);
+      if (removedIndex != -1) {
+        final removedProduct = lovedProducts[removedIndex];
+        lovedProducts.removeAt(removedIndex);
+        
+        final response = await apiService.patchData('api/products/$productId/love/', {});
+        
+        if (response.statusCode != 200) {
+          // Revert if API failed
+          lovedProducts.insert(removedIndex, removedProduct);
+          Get.snackbar('Notice', 'Failed to update. Please try again.');
+        } else {
+          debugPrint("Unsaved from cart: $productId");
+          
+          // Refresh Shop products to update the heart icons immediately
+          try {
+            final shopController = Get.find<ShopController>();
+            shopController.fetchProducts();
+          } catch (e) {
+            debugPrint("ShopController not found during toggleFavorite: $e");
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint("Error toggling favorite from cart: $e");
+    }
   }
 }

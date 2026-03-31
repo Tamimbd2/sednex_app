@@ -97,11 +97,14 @@ class ResetpasswordView extends GetView<ResetpasswordController> {
                 )),
                 const SizedBox(height: 50),
                 // Reset Password Button
-                PrimaryButton(
-                  title: 'Reset Password',
-                  onTap: () => controller.resetPassword(),
-                  width: double.infinity,
-                  height: 56,
+                Obx(() => controller.isLoading.value 
+                    ? const Center(child: CircularProgressIndicator())
+                    : PrimaryButton(
+                        title: 'Reset Password',
+                        onTap: () => controller.resetPassword(),
+                        width: double.infinity,
+                        height: 56,
+                      ),
                 ),
                 const SizedBox(height: 40),
                 // Footer

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -12,6 +13,7 @@ class ShopController extends GetxController {
   final isCategoriesLoading = false.obs;
   final categories = <Map<String, dynamic>>[].obs;
   final products = <Map<String, dynamic>>[].obs;
+  final favoriteIds = <String>{}.obs;
 
   @override
   void onInit() {
@@ -77,9 +79,31 @@ class ShopController extends GetxController {
     return const Color(0xFFF3F4F6); // Default color
   }
 
+  Future<void> fetchFavoriteIds() async {
+    try {
+      final response = await _apiService.getData('api/products/love/');
+      if (response.statusCode == 200) {
+        final dynamic body = response.body;
+        List<dynamic> items = [];
+        if (body is Map && body['products'] is List) {
+          items = body['products'];
+        } else if (body is List) {
+          items = body;
+        }
+        
+        final ids = items.map((item) => item['_id']?.toString() ?? '').where((id) => id.isNotEmpty).toSet();
+        favoriteIds.assignAll(ids);
+        debugPrint("Fetched ${favoriteIds.length} favorited IDs");
+      }
+    } catch (e) {
+      debugPrint("Error fetching favorite IDs: $e");
+    }
+  }
+
   Future<void> fetchProducts() async {
     try {
       isLoading.value = true;
+      await fetchFavoriteIds();
       final response = await _apiService.getData('api/products/');
       
       if (response.statusCode == 200) {
@@ -95,18 +119,35 @@ class ShopController extends GetxController {
           debugPrint("Unexpected response format: ${body.runtimeType}");
         }
 
-        final currentUser = _box.read('user');
-        final currentUserId = (currentUser is Map) ? currentUser['_id'] : null;
-
+        final rawUser = _box.read('user');
+        Map<String, dynamic>? userMap;
+        if (rawUser != null) {
+          try {
+            final decoded = rawUser is String ? jsonDecode(rawUser) : rawUser;
+            userMap = Map<String, dynamic>.from(decoded is Map ? decoded : {});
+          } catch (e) {
+            debugPrint("Error decoding user in shop: $e");
+          }
+        }
+        final currentUserId = userMap?['_id']?.toString();
+        debugPrint("Current User ID in Shop: $currentUserId");
+        
         final fetchedProducts = data.map((item) {
           try {
             final productMap = Map<String, dynamic>.from(item is Map ? item : {});
+            final productId = productMap['_id']?.toString() ?? '';
             final price = productMap['price'] ?? 0;
             final discountPrice = productMap['discountPrice'];
             
             final likedBy = productMap['likedBy'] is List ? productMap['likedBy'] as List : [];
-            final isLoved = currentUserId != null && likedBy.contains(currentUserId);
+            final serverSaysLoved = currentUserId != null && 
+                likedBy.any((id) => id.toString().trim() == currentUserId.trim());
             
+            final isLoved = serverSaysLoved || favoriteIds.contains(productId);
+            
+            if (isLoved) {
+              debugPrint("Product ${productMap['name']} is marked as LOVED (ID: $productId)");
+            }
             final images = productMap['images'];
             final imageUrl = (images is List && images.isNotEmpty) 
                 ? images[0].toString() 
@@ -119,7 +160,7 @@ class ShopController extends GetxController {
             
             return {
               ...productMap,
-              "id": productMap['_id'],
+              "id": productId,
               "name": productMap['name']?.toString() ?? 'No Name',
               "category": productMap['category'] is Map ? (productMap['category']['name'] ?? 'General') : 'General',
               "price": "৳$price",
@@ -176,18 +217,24 @@ class ShopController extends GetxController {
         
         if (response.statusCode != 200) {
           debugPrint("Love API Failed: ${response.statusCode} - ${response.statusText}");
-          // Revert if API failed (e.g., unauthorized)
+          // Revert if API failed
           products[index] = product;
           products.refresh();
           Get.snackbar('Notice', 'You must be logged in to save products.');
         } else {
-          // Sync with true backend response just to be sure
           final data = response.body;
           debugPrint("Love API Success: $data");
           if (data['success'] == true) {
+            final isNowLoved = data['loved'];
+            if (isNowLoved == true) {
+              favoriteIds.add(productId);
+            } else {
+              favoriteIds.remove(productId);
+            }
+            
             products[index] = {
               ...products[index],
-              'isLoved': data['loved'],
+              'isLoved': isNowLoved,
               'loveCount': data['loveCount'],
             };
             products.refresh();

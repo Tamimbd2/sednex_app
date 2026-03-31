@@ -284,24 +284,17 @@ class ShopView extends GetView<ShopController> {
                     child: Container(
                       width: 32,
                       height: 32,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
                       ),
                       child: Icon(
                         product['isLoved'] == true 
-                            ? Icons.favorite 
-                            : Icons.favorite_border,
-                        size: 16,
+                            ? Icons.shopping_cart 
+                            : Icons.shopping_cart_outlined,
+                        size: 18,
                         color: product['isLoved'] == true 
-                            ? Colors.red 
+                            ? const Color(0xFF1E63FF) 
                             : Colors.grey,
                       ),
                     ),

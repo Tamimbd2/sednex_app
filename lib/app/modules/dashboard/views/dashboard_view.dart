@@ -373,10 +373,13 @@ class DashboardView extends GetView<DashboardController> {
                               ),
                             ),
                           ),
-                          // ArrowIcon
+                          // Cart/Remove Icon
                           Padding(
-                            padding: const EdgeInsets.only(right: 16),
-                            child: Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey[400]),
+                            padding: const EdgeInsets.only(right: 8),
+                            child: IconButton(
+                              icon: const Icon(Icons.shopping_cart, size: 22, color: Color(0xFF1E63FF)),
+                              onPressed: () => controller.toggleFavorite(product['id'] ?? product['_id']),
+                            ),
                           ),
                         ],
                       ),

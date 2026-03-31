@@ -303,4 +303,27 @@ class DashboardController extends GetxController {
       isLovedProductsLoading.value = false;
     }
   }
+
+  void toggleFavorite(String productId) async {
+    try {
+      // Optimistic UI Update: remove from list immediately
+      final removedIndex = lovedProducts.indexWhere((p) => (p['id'] ?? p['_id']) == productId);
+      if (removedIndex != -1) {
+        final removedProduct = lovedProducts[removedIndex];
+        lovedProducts.removeAt(removedIndex);
+        
+        final response = await apiService.patchData('api/products/$productId/love/', {});
+        
+        if (response.statusCode != 200) {
+          // Revert if API failed
+          lovedProducts.insert(removedIndex, removedProduct);
+          Get.snackbar('Notice', 'Failed to update. Please try again.');
+        } else {
+          debugPrint("Unsaved from cart: $productId");
+        }
+      }
+    } catch (e) {
+      debugPrint("Error toggling favorite from cart: $e");
+    }
+  }
 }

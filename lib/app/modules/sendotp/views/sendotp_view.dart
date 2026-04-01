@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -104,11 +104,14 @@ class SendotpView extends GetView<SendotpController> {
                 ),
                 const SizedBox(height: 50),
                 // Send Code Button
-                PrimaryButton(
-                  title: 'Send Code',
-                  onTap: () => controller.sendCode(),
-                  width: double.infinity,
-                  height: 56,
+                Obx(() => controller.isLoading.value
+                    ? const Center(child: CircularProgressIndicator())
+                    : PrimaryButton(
+                        title: 'Send Code',
+                        onTap: () => controller.sendCode(),
+                        width: double.infinity,
+                        height: 56,
+                      ),
                 ),
                 const SizedBox(height: 40),
                 // Footer

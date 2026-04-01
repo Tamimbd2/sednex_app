@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import '../../profile/views/profile_view.dart';
+import '../../Shop/views/shop_view.dart';
 import 'home_page_content.dart';
 
 class DashboardView extends GetView<DashboardController> {
@@ -157,7 +158,7 @@ class DashboardView extends GetView<DashboardController> {
       case 1:
         return _buildSearchPage();
       case 2:
-        return _buildCartPage();
+        return _buildShopPage();
       case 3:
         return _buildProfilePage();
       default:
@@ -228,17 +229,12 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
-  Widget _buildCartPage() {
-    return const Center(
-      child: Text(
-        'Cart',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    );
+  Widget _buildShopPage() {
+    return const ShopContent();
   }
 
   Widget _buildProfilePage() {
-    return const ProfileView();
+    return ProfileView();
   }
 
   Widget _buildBottomNavigationBar() {
@@ -292,7 +288,7 @@ class DashboardView extends GetView<DashboardController> {
                   ),
                 ),
                 _buildNavItem(
-                  iconPath: 'assets/nav/cart.svg',
+                  iconPath: 'assets/profile/shop.svg', // Moved Shop to nav
                   index: 2,
                   isActive: controller.currentIndex.value == 2,
                 ),

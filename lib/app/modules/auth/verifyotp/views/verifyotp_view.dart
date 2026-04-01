@@ -84,11 +84,14 @@ class VerifyotpView extends GetView<VerifyotpController> {
               ),
               const SizedBox(height: 50),
               // Verify Button
-              PrimaryButton(
-                title: 'Verify Code',
-                onTap: () => controller.verifyCode(),
-                width: double.infinity,
-                height: 56,
+              Obx(() => controller.isLoading.value 
+                  ? const Center(child: CircularProgressIndicator())
+                  : PrimaryButton(
+                      title: 'Verify Code',
+                      onTap: () => controller.verifyCode(),
+                      width: double.infinity,
+                      height: 56,
+                    ),
               ),
               const SizedBox(height: 40),
               // Footer

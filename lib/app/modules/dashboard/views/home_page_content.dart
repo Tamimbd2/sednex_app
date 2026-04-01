@@ -44,10 +44,14 @@ class HomePageContent extends StatelessWidget {
 
               return Marquee(
                 text: text,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.poppins(
                   color: Colors.black,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
+                ).copyWith(
+                  fontFamilyFallback: [
+                    GoogleFonts.hindSiliguri().fontFamily!,
+                  ],
                 ),
                 scrollAxis: Axis.horizontal,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -511,10 +515,14 @@ class HomePageContent extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             label,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.poppins(
               fontSize: 12,
               fontWeight: FontWeight.w500,
               color: const Color(0xFF2C2C2C),
+            ).copyWith(
+              fontFamilyFallback: [
+                GoogleFonts.hindSiliguri().fontFamily!,
+              ],
             ),
           ),
         ],
@@ -604,10 +612,14 @@ class HomePageContent extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   footerText,
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.poppins(
                     fontSize: 12,
                     color: AppColors.primary,
                     fontWeight: FontWeight.w400,
+                  ).copyWith(
+                    fontFamilyFallback: [
+                      GoogleFonts.hindSiliguri().fontFamily!,
+                    ],
                   ),
                 ),
               ],

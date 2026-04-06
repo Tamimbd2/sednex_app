@@ -84,6 +84,8 @@ import '../modules/termsandconditions/views/termsandconditions_view.dart';
 import '../modules/touristSpot/bindings/tourist_spot_binding.dart';
 import '../modules/touristSpot/views/tourist_spot_view.dart';
 import '../modules/favorites/views/favorites_view.dart';
+import '../modules/generalsection/bindings/generalsection_binding.dart';
+import '../modules/generalsection/views/generalsection_view.dart';
 
 part 'app_routes.dart';
 
@@ -311,6 +313,11 @@ class AppPages {
       name: _Paths.ORGANIZATION,
       page: () => const OrganizationView(),
       binding: OrganizationBinding(),
+    ),
+    GetPage(
+      name: _Paths.GENERAL_SECTION,
+      page: () => const GeneralSectionView(),
+      binding: GeneralSectionBinding(),
     ),
   ];
 }

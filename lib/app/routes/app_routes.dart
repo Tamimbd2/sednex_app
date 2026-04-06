@@ -47,6 +47,7 @@ abstract class Routes {
   static const SAVEPOST = _Paths.SAVEPOST;
   static const FAVORITES = _Paths.FAVORITES;
   static const ORGANIZATION = _Paths.ORGANIZATION;
+  static const GENERAL_SECTION = _Paths.GENERAL_SECTION;
 }
 
 abstract class _Paths {
@@ -95,4 +96,5 @@ abstract class _Paths {
   static const SAVEPOST = '/savepost';
   static const FAVORITES = '/favorites';
   static const ORGANIZATION = '/organization';
+  static const GENERAL_SECTION = '/general-section';
 }

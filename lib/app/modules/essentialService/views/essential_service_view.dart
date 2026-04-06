@@ -70,7 +70,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Grocery Store',
               'assets/newessential/Store-1--Streamline-Core-Gradient.svg',
               const Color(0xFFFF9800),
-              () => _showComingSoonDialog(context, 'Grocery Store'),
+              () => Get.toNamed('/general-section', arguments: {'slug': 'grocery-store', 'title': 'Grocery Store'}),
             ),
             _buildServiceCard(
               'Tourist spot',
@@ -100,19 +100,19 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Local Business',
               'assets/newessential/Briefcase-Dollar--Streamline-Core-Gradient.svg',
               const Color(0xFF607D8B),
-              () => _showComingSoonDialog(context, 'Local Business'),
+              () => Get.toNamed('/general-section', arguments: {'slug': 'local-business', 'title': 'Local Business'}),
             ),
             _buildServiceCard(
               'Jewellery shop',
               'assets/newessential/Gift-2--Streamline-Core-Gradient.svg',
               const Color(0xFFFFC107),
-              () => _showComingSoonDialog(context, 'Jewellery shop'),
+              () => Get.toNamed('/general-section', arguments: {'slug': 'jewellery-shop', 'title': 'Jewellery shop'}),
             ),
             _buildServiceCard(
               'Clothing shop',
               'assets/newessential/Shopping-Bag-Hand-Bag-2--Streamline-Core-Gradient.svg',
               const Color(0xFF9C27B0),
-              () => _showComingSoonDialog(context, 'Clothing shop'),
+              () => Get.toNamed('/general-section', arguments: {'slug': 'clothing-shop', 'title': 'Clothing shop'}),
             ),
             _buildServiceCard(
               'Organization',
@@ -124,43 +124,43 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Sports team',
               'assets/newessential/Flash-3--Streamline-Core-Gradient.svg',
               const Color(0xFF8BC34A),
-              () => _showComingSoonDialog(context, 'Sports team'),
+              () => Get.toNamed('/general-section', arguments: {'slug': 'sports-team', 'title': 'Sports team'}),
             ),
             _buildServiceCard(
               'Taxi Drivers',
               'assets/newessential/Car-Taxi-1--Streamline-Core-Gradient.svg',
               const Color(0xFFFFEB3B),
-              () => _showComingSoonDialog(context, 'Taxi Drivers'),
+              () => Get.toNamed('/general-section', arguments: {'slug': 'texi-driver', 'title': 'Taxi Drivers'}),
             ),
             _buildServiceCard(
               'Businessman',
               'assets/newessential/Necktie--Streamline-Core-Gradient.svg',
               const Color(0xFF607D8B),
-              () => _showComingSoonDialog(context, 'Businessman'),
+              () => Get.toNamed('/general-section', arguments: {'slug': 'businessman', 'title': 'Businessman'}),
             ),
             _buildServiceCard(
               'Influencer',
               'assets/newessential/Megaphone-2--Streamline-Core-Gradient.svg',
               const Color(0xFFE91E63),
-              () => _showComingSoonDialog(context, 'Influencer'),
+              () => Get.toNamed('/general-section', arguments: {'slug': 'influencer', 'title': 'Influencer'}),
             ),
             _buildServiceCard(
               'Local Market',
               'assets/newessential/Shopping-Cart-1--Streamline-Core-Gradient.svg',
               const Color(0xFFFF5722),
-              () => _showComingSoonDialog(context, 'Local Market'),
+              () => Get.toNamed('/general-section', arguments: {'slug': 'local-market', 'title': 'Local Market'}),
             ),
             _buildServiceCard(
-              'Pharmacist',
+              'Pharmacy',
               'assets/newessential/Tablet-Capsule--Streamline-Core-Gradient.svg',
               const Color(0xFF009688),
-              () => _showComingSoonDialog(context, 'Pharmacist'),
+              () => Get.toNamed('/general-section', arguments: {'slug': 'pharmacy', 'title': 'Pharmacy'}),
             ),
             _buildServiceCard(
               'NGO',
               'assets/newessential/Decent-Work-And-Economic-Growth--Streamline-Core-Gradient.svg',
               const Color(0xFF4CAF50),
-              () => _showComingSoonDialog(context, 'NGO'),
+              () => Get.toNamed('/general-section', arguments: {'slug': 'ngo', 'title': 'NGO'}),
             ),
             _buildServiceCard(
               'Bus & Flight Booking',
@@ -191,86 +191,6 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
       imagePath: imagePath,
       color: backgroundColor,
       onTap: onTap,
-    );
-  }
-
-  void _showComingSoonDialog(BuildContext context, String serviceName) {
-    Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TweenAnimationBuilder<double>(
-                tween: Tween<double>(begin: 0.0, end: 1.0),
-                duration: const Duration(milliseconds: 800),
-                curve: Curves.elasticOut,
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: value,
-                    child: child,
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E63FF).withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.rocket_launch,
-                    size: 50,
-                    color: Color(0xFF1E63FF),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Coming Soon!',
-                style: GoogleFonts.inter(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                '$serviceName feature is currently under development and will be available shortly.',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Get.back(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1E63FF),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    'Got it',
-                    style: GoogleFonts.inter(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

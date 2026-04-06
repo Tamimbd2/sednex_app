@@ -36,10 +36,14 @@ class LocalTourDetailsView extends StatelessWidget {
         ),
         title: Text(
           'Local Tour',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.w600,
+          ).copyWith(
+            fontFamilyFallback: [
+              GoogleFonts.hindSiliguri().fontFamily!,
+            ],
           ),
         ),
         centerTitle: true,
@@ -91,18 +95,26 @@ class LocalTourDetailsView extends StatelessWidget {
                   // Title
                   Text(
                     title,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                       color: Colors.black,
+                    ).copyWith(
+                      fontFamilyFallback: [
+                        GoogleFonts.hindSiliguri().fontFamily!,
+                      ],
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     locationDetails,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.grey[600],
+                    ).copyWith(
+                      fontFamilyFallback: [
+                        GoogleFonts.hindSiliguri().fontFamily!,
+                      ],
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -112,10 +124,14 @@ class LocalTourDetailsView extends StatelessWidget {
                   // Tour Information
                   Text(
                     'Tour Information',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
+                    ).copyWith(
+                      fontFamilyFallback: [
+                        GoogleFonts.hindSiliguri().fontFamily!,
+                      ],
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -200,10 +216,14 @@ class LocalTourDetailsView extends StatelessWidget {
                       children: [
                         Text(
                           'Included with Tickets',
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
+                          ).copyWith(
+                            fontFamilyFallback: [
+                              GoogleFonts.hindSiliguri().fontFamily!,
+                            ],
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -219,8 +239,12 @@ class LocalTourDetailsView extends StatelessWidget {
                         else
                           Text(
                             "No details available.",
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.poppins(
                               color: Colors.grey[700],
+                            ).copyWith(
+                              fontFamilyFallback: [
+                                GoogleFonts.hindSiliguri().fontFamily!,
+                              ],
                             ),
                           ),
                       ],
@@ -239,10 +263,14 @@ class LocalTourDetailsView extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         'Location Details',
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Colors.black,
+                        ).copyWith(
+                          fontFamilyFallback: [
+                            GoogleFonts.hindSiliguri().fontFamily!,
+                          ],
                         ),
                       ),
                     ],
@@ -250,24 +278,42 @@ class LocalTourDetailsView extends StatelessWidget {
                   const SizedBox(height: 12),
                   Text(
                     locationDetails,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.grey[700],
                       height: 1.5,
+                    ).copyWith(
+                      fontFamilyFallback: [
+                        GoogleFonts.hindSiliguri().fontFamily!,
+                      ],
                     ),
                   ),
                   const SizedBox(height: 12),
                   const SizedBox(height: 16),
                   GestureDetector(
-                    onTap: () {
-                      // Handle privacy policy tap
+                    onTap: () async {
+                      final Uri uri = Uri.parse('https://sednex.com/privacy-policy');
+                      try {
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        } else {
+                          // Try launching anyway even if canLaunchUrl returns false
+                          await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        }
+                      } catch (e) {
+                        debugPrint('Could not launch privacy policy: $e');
+                      }
                     },
                     child: Text(
                       'Privacy Policy',
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: const Color(0xFF4169E1),
                         decoration: TextDecoration.underline,
+                      ).copyWith(
+                        fontFamilyFallback: [
+                          GoogleFonts.hindSiliguri().fontFamily!,
+                        ],
                       ),
                     ),
                   ),
@@ -306,10 +352,14 @@ class LocalTourDetailsView extends StatelessWidget {
                       ),
                       child: Text(
                         'Join Now on WhatsApp',
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
+                        ).copyWith(
+                          fontFamilyFallback: [
+                            GoogleFonts.hindSiliguri().fontFamily!,
+                          ],
                         ),
                       ),
                     ),
@@ -349,17 +399,25 @@ class LocalTourDetailsView extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.poppins(
                     fontSize: 11,
                     color: Colors.grey[600],
+                  ).copyWith(
+                    fontFamilyFallback: [
+                      GoogleFonts.hindSiliguri().fontFamily!,
+                    ],
                   ),
                 ),
                 Text(
                   value,
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.poppins(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
+                  ).copyWith(
+                    fontFamilyFallback: [
+                      GoogleFonts.hindSiliguri().fontFamily!,
+                    ],
                   ),
                 ),
               ],
@@ -384,9 +442,13 @@ class LocalTourDetailsView extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           text,
-          style: GoogleFonts.inter(
+          style: GoogleFonts.poppins(
             fontSize: 14,
             color: Colors.black87,
+          ).copyWith(
+            fontFamilyFallback: [
+              GoogleFonts.hindSiliguri().fontFamily!,
+            ],
           ),
         ),
       ],

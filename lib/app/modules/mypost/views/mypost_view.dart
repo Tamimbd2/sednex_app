@@ -9,15 +9,9 @@ class MypostView extends GetView<MypostController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('MypostView'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('MypostView'), centerTitle: true),
       body: const Center(
-        child: Text(
-          'MypostView is working',
-          style: TextStyle(fontSize: 20),
-        ),
+        child: Text('MypostView is working', style: TextStyle(fontSize: 20)),
       ),
     );
   }

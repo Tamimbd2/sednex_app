@@ -18,7 +18,7 @@ class BkashRateView extends GetView<BkashRateController> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color(0xFF1E63FF), // Primary
+                Color(0xFF1E63FF), // Primary Blue
                 Color(0xFF3575FF), // Color 2
               ],
             ),
@@ -85,14 +85,44 @@ class BkashRateView extends GetView<BkashRateController> {
                         size: 18,
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        'Last Update: 15-03-2025',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          color: const Color(0xFF1E63FF),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      Obx(() {
+                        String dateStr = 'Pending';
+                        if (controller.updateDate.value.isNotEmpty) {
+                          try {
+                            DateTime dt = DateTime.parse(
+                              controller.updateDate.value,
+                            );
+                            final months = [
+                              'January',
+                              'February',
+                              'March',
+                              'April',
+                              'May',
+                              'June',
+                              'July',
+                              'August',
+                              'September',
+                              'October',
+                              'November',
+                              'December',
+                            ];
+                            String d = dt.day.toString();
+                            String m = months[dt.month - 1];
+                            String y = dt.year.toString();
+                            dateStr = '$d $m $y';
+                          } catch (e) {
+                            dateStr = 'N/A';
+                          }
+                        }
+                        return Text(
+                          'Last Update: $dateStr',
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: const Color(0xFF1E63FF),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -104,14 +134,17 @@ class BkashRateView extends GetView<BkashRateController> {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFFFFEAC2), Color(0xFFFFD700)], // Warm Golden Yellow
+                    colors: [
+                      Color(0xFFFCE4EC),
+                      Color(0xFFF8BBD0),
+                    ], // Soft Pink Mix
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFFFD700).withValues(alpha: 0.3),
+                      color: const Color(0xFFD12053).withValues(alpha: 0.15),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -137,7 +170,7 @@ class BkashRateView extends GetView<BkashRateController> {
                           ),
                           child: const Icon(
                             Icons.currency_exchange,
-                            color: Color(0xFF1E63FF),
+                            color: Color(0xFFD12053),
                           ),
                         ),
                         const SizedBox(width: 14),
@@ -146,7 +179,7 @@ class BkashRateView extends GetView<BkashRateController> {
                           style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF1E63FF),
+                            color: const Color(0xFFD12053),
                           ),
                         ),
                       ],
@@ -160,12 +193,14 @@ class BkashRateView extends GetView<BkashRateController> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Text(
-                        '৳124',
-                        style: GoogleFonts.poppins(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF1E63FF),
+                      child: Obx(
+                        () => Text(
+                          '৳${controller.exchangeRate.value.toStringAsFixed(0)}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFFD12053),
+                          ),
                         ),
                       ),
                     ),
@@ -202,44 +237,48 @@ class BkashRateView extends GetView<BkashRateController> {
                       child: Stack(
                         children: [
                           // Sliding Background
-                          Obx(() => AnimatedAlign(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeOutBack,
-                            alignment: controller.isTakaSelected.value 
-                                ? Alignment.centerLeft 
-                                : Alignment.centerRight,
-                            child: FractionallySizedBox(
-                              widthFactor: 0.5,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.1),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
+                          Obx(
+                            () => AnimatedAlign(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOutBack,
+                              alignment: controller.isTakaSelected.value
+                                  ? Alignment.centerLeft
+                                  : Alignment.centerRight,
+                              child: FractionallySizedBox(
+                                widthFactor: 0.5,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.1,
+                                        ),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          )),
-                          
+                          ),
+
                           // Tab Items
                           Row(
                             children: [
                               _buildAnimatedTab(
-                                '৳ BDT (Taka)', 
-                                controller.isTakaSelected, 
+                                '৳ BDT (Taka)',
+                                controller.isTakaSelected,
                                 true,
-                                () => controller.toggleCurrency(true)
+                                () => controller.toggleCurrency(true),
                               ),
                               _buildAnimatedTab(
-                                '\$ USD (Dollar)', 
-                                controller.isTakaSelected, 
+                                '\$ USD (Dollar)',
+                                controller.isTakaSelected,
                                 false,
-                                () => controller.toggleCurrency(false)
+                                () => controller.toggleCurrency(false),
                               ),
                             ],
                           ),
@@ -356,7 +395,7 @@ class BkashRateView extends GetView<BkashRateController> {
 
                     // Output Section
                     Text(
-                      'You Will Receive',
+                      'Amount to send total',
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -373,14 +412,19 @@ class BkashRateView extends GetView<BkashRateController> {
                       ),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Color(0xFFE3EEFF), Color(0xFF95C6FF)], // BG 1 to Color 6
+                          colors: [
+                            Color(0xFFE3EEFF),
+                            Color(0xFF95C6FF),
+                          ], // BG 1 to Color 6
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF1E63FF).withValues(alpha: 0.15),
+                            color: const Color(
+                              0xFF1E63FF,
+                            ).withValues(alpha: 0.15),
                             blurRadius: 15,
                             offset: const Offset(0, 5),
                           ),
@@ -424,7 +468,9 @@ class BkashRateView extends GetView<BkashRateController> {
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFFDF5),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFFFD700).withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: const Color(0xFFFFD700).withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -471,7 +517,12 @@ class BkashRateView extends GetView<BkashRateController> {
     );
   }
 
-  Widget _buildAnimatedTab(String title, RxBool selectedProp, bool isTaka, VoidCallback onTap) {
+  Widget _buildAnimatedTab(
+    String title,
+    RxBool selectedProp,
+    bool isTaka,
+    VoidCallback onTap,
+  ) {
     return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -484,7 +535,9 @@ class BkashRateView extends GetView<BkashRateController> {
               style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? const Color(0xFF1E63FF) : const Color(0xFF9E9E9E),
+                color: isSelected
+                    ? const Color(0xFF1E63FF)
+                    : const Color(0xFF9E9E9E),
               ),
               child: Text(title),
             );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../services/api_service.dart';
 
 class BkashRateController extends GetxController {
   // State variables
@@ -7,14 +8,49 @@ class BkashRateController extends GetxController {
   final inputController = TextEditingController();
   final displayResult = '0'.obs;
   
-  // Hardcoded rate for now, can be fetched from API later
-  final exchangeRate = 124.0; 
+  // Observable rates from API
+  final exchangeRate = 124.0.obs;
+  final updateDate = ''.obs;
+
+  final _apiService = Get.find<ApiService>();
 
   @override
   void onInit() {
     super.onInit();
+    fetchRates();
     // Listen to input changes to recalculate
     inputController.addListener(_calculateResult);
+  }
+
+  Future<void> fetchRates() async {
+    try {
+      final response = await _apiService.getData('api/homepage/services');
+      if (response.statusCode == 200) {
+        final body = response.body;
+        List items = [];
+        if (body is List) {
+          items = body;
+        } else if (body is Map) {
+          if (body['cards'] is List) items = body['cards'];
+          else if (body['services'] is List) items = body['services'];
+        }
+
+        for (var item in items) {
+          final name = item['name']?.toString().toLowerCase() ?? '';
+          if (name.contains('bkash')) {
+            final rate = double.tryParse(item['rate']?.toString() ?? item['price']?.toString() ?? '124') ?? 124.0;
+            exchangeRate.value = rate;
+            updateDate.value = item['time']?.toString() ?? 
+                               item['updatedAt']?.toString() ?? 
+                               item['createdAt']?.toString() ?? '';
+            _calculateResult(); // Recalculate with new rate
+            break;
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint("Error fetching bKash rates: $e");
+    }
   }
 
   @override
@@ -49,20 +85,16 @@ class BkashRateController extends GetxController {
     }
 
     double inputAmount = double.tryParse(text) ?? 0;
-    double result;
-
+    
+    // User request: Same formula for USD/BDT - Pro-rated addition per thousand
+    // Formula: inputAmount + (rate * (inputAmount / 1000))
+    double multiplier = inputAmount / 1000.0;
+    double result = inputAmount + (exchangeRate.value * multiplier);
+    
     if (isTakaSelected.value) {
-      // Input is Taka, convert to USD
-      // Assuming rate is Taka per USD. So Taka / Rate = USD
-      // Wait, usually the rate displayed "124" means 1 USD = 124 BDT.
-      // So if I input 124 Taka, I get 1 USD.
-      result = inputAmount / exchangeRate;
-      displayResult.value = '\$${result.toStringAsFixed(2)}';
-    } else {
-      // Input is USD, convert to Taka
-      // USD * Rate = Taka
-      result = inputAmount * exchangeRate;
       displayResult.value = '৳${result.toStringAsFixed(2)}';
+    } else {
+      displayResult.value = '\$${result.toStringAsFixed(2)}';
     }
   }
 }

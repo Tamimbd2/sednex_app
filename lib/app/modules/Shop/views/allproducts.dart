@@ -21,19 +21,30 @@ class AllProductsView extends GetView<ShopController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1E63FF),
+                Color(0xFF4B83FF),
+              ],
+            ),
+          ),
+        ),
         title: Text(
           category ?? 'All Products',
-          style: GoogleFonts.poppins(
-            color: const Color(0xFF101727),
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
+          style: GoogleFonts.outfit(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF101727)),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
           onPressed: () => Get.back(),
         ),
       ),
@@ -55,7 +66,7 @@ class AllProductsView extends GetView<ShopController> {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.55,
+                  childAspectRatio: 0.62, // Increased height to fix overflow
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
                 ),
@@ -74,12 +85,12 @@ class AllProductsView extends GetView<ShopController> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(22), // Switched to 22 for better consistency
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: const Color(0xFF1E63FF).withValues(alpha: 0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
             ),
           ],
         ),
@@ -90,54 +101,40 @@ class AllProductsView extends GetView<ShopController> {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
                   child: AspectRatio(
-                    aspectRatio: 1.0,
+                    aspectRatio: 1.1,
                     child: Container(
-                      color: const Color(0xFFF3F4F6),
+                      color: const Color(0xFFF1F5FF),
                       child: Image.network(
                         product['image'],
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.error)),
+                        errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.broken_image_rounded, color: Colors.grey)),
                       ),
                     ),
                   ),
                 ),
-                // Sale Tag
+                // Percent OFF Tag
                 if (product['isSale'] == true)
                   Positioned(
-                    top: 8,
-                    left: 8,
+                    top: 10,
+                    left: 10,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: product['saleColor'] ?? const Color(0xFF1E63FF),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
                         product['saleText'],
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.outfit(
                           color: Colors.white,
                           fontSize: 10,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
                   ),
-                // Favorite Button
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.favorite_border, size: 16, color: Colors.grey),
-                  ),
-                ),
               ],
             ),
             
@@ -147,70 +144,93 @@ class AllProductsView extends GetView<ShopController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    product['category'] ?? '',
-                    style: GoogleFonts.poppins(
-                      color: const Color(0xFF697282),
-                      fontSize: 10,
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F5FF),
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    product['name'],
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.poppins(
-                      color: const Color(0xFF101727),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                    child: Text(
+                      product['category']?.toString().toUpperCase() ?? '',
+                      style: GoogleFonts.outfit(
+                        color: const Color(0xFF1E63FF),
+                        fontSize: 8,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          product['name'],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.outfit(
+                            color: const Color(0xFF101727),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        product['price'],
+                        style: GoogleFonts.outfit(
+                          color: const Color(0xFF1E63FF),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                product['price'],
-                                style: GoogleFonts.poppins(
-                                  color: const Color(0xFF1E63FF), // Red price
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            if (product['originalPrice'].isNotEmpty)
-                              Text(
-                                product['originalPrice'],
-                                style: GoogleFonts.poppins(
-                                  color: const Color(0xFF99A1AE),
-                                  fontSize: 10,
-                                  decoration: TextDecoration.lineThrough,
-                                ),
-                              ),
-                          ],
+                      GestureDetector(
+                        onTap: () => controller.toggleLove(product['id']),
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: product['isLoved'] == true 
+                                ? const Color(0xFF1E63FF).withValues(alpha: 0.1) 
+                                : const Color(0xFFF1F5FF),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            product['isLoved'] == true 
+                                ? Icons.shopping_cart_rounded 
+                                : Icons.shopping_cart_outlined,
+                            size: 18,
+                            color: product['isLoved'] == true 
+                                ? const Color(0xFF1E63FF) 
+                                : const Color(0xFF94A3B8),
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 4),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFF1E63FF),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF1E63FF).withValues(alpha: 0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
                         child: Text(
                           'Details',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.outfit(
                             color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),

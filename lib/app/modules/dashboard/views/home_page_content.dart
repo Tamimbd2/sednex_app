@@ -45,15 +45,16 @@ class HomePageContent extends StatelessWidget {
 
               return Marquee(
                 text: text,
-                style: GoogleFonts.poppins(
-                  color: Colors.black,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ).copyWith(
-                  fontFamilyFallback: [
-                    GoogleFonts.hindSiliguri().fontFamily!,
-                  ],
-                ),
+                style:
+                    GoogleFonts.poppins(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ).copyWith(
+                      fontFamilyFallback: [
+                        GoogleFonts.hindSiliguri().fontFamily!,
+                      ],
+                    ),
                 scrollAxis: Axis.horizontal,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 blankSpace: 20.0,
@@ -93,28 +94,40 @@ class HomePageContent extends StatelessWidget {
                           onTap: () async {
                             String urlStr = banner['url']?.toString() ?? '';
                             debugPrint('Hero Banner: Tapped! URL: "$urlStr"');
-                            
+
                             if (urlStr.isNotEmpty) {
                               // Standardize URL schema if missing
                               if (!urlStr.startsWith('http')) {
                                 urlStr = 'https://$urlStr';
                               }
-                              
+
                               final Uri uri = Uri.parse(urlStr);
                               if (await canLaunchUrl(uri)) {
                                 debugPrint('Hero Banner: Launching $urlStr');
-                                await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                await launchUrl(
+                                  uri,
+                                  mode: LaunchMode.externalApplication,
+                                );
                               } else {
-                                debugPrint('Hero Banner: Could not launch $urlStr');
+                                debugPrint(
+                                  'Hero Banner: Could not launch $urlStr',
+                                );
                                 // Try launching even if canLaunchUrl fails (can happen)
                                 try {
-                                   await launchUrl(uri, mode: LaunchMode.externalApplication);
-                                } catch(e) {
-                                   debugPrint('Hero Banner: Final error launching $urlStr: $e');
+                                  await launchUrl(
+                                    uri,
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                } catch (e) {
+                                  debugPrint(
+                                    'Hero Banner: Final error launching $urlStr: $e',
+                                  );
                                 }
                               }
                             } else {
-                               debugPrint('Hero Banner: URL is empty, nothing to redirect.');
+                              debugPrint(
+                                'Hero Banner: URL is empty, nothing to redirect.',
+                              );
                             }
                           },
                           child: Container(
@@ -206,7 +219,7 @@ class HomePageContent extends StatelessWidget {
 
                   // Construct static + dynamic items
                   final List<Widget> items = [
-                    _buildSehriIftarCompactCard(),
+                    // _buildSehriIftarCompactCard(),
 
                     // Namaj Card
                     SizedBox(
@@ -276,13 +289,31 @@ class HomePageContent extends StatelessWidget {
                           isBkash && name.toLowerCase().contains('gold')
                           ? 'bKash Rate'
                           : name;
+                      String rawDate = service['time']?.toString() ?? 
+                                       service['updatedAt']?.toString() ?? 
+                                       service['createdAt']?.toString() ?? '';
+                      String formattedDate = 'today';
+                      if (rawDate.isNotEmpty) {
+                        try {
+                          // Standardize format (4 Apr 26) manually
+                          DateTime dt = DateTime.parse(rawDate);
+                          final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                          String d = dt.day.toString();
+                          String m = months[dt.month - 1];
+                          String y = dt.year.toString().substring(2);
+                          formattedDate = '$d $m $y';
+                        } catch (e) {
+                          formattedDate = 'today';
+                        }
+                      }
+                      
                       return SizedBox(
                         width: 120,
                         child: _buildServiceCard(
                           title: displayName,
                           subtitle: subtitle,
                           subtitleColor: subColor,
-                          footerText: 'today',
+                          footerText: formattedDate,
                           imagePath: image,
                           bgColor: bgColor,
                           iconSize: 50,
@@ -356,25 +387,29 @@ class HomePageContent extends StatelessWidget {
                   },
                   {
                     'title': 'Embassy',
-                    'icon': 'assets/newessential/City-Hall--Streamline-Core-Gradient.svg',
+                    'icon':
+                        'assets/newessential/City-Hall--Streamline-Core-Gradient.svg',
                     'color': const Color(0xFF9C27B0),
                     'route': '/embassy',
                   },
                   {
                     'title': 'Article',
-                    'icon': 'assets/newessential/Multiple-File-2--Streamline-Core-Gradient.svg',
+                    'icon':
+                        'assets/newessential/Multiple-File-2--Streamline-Core-Gradient.svg',
                     'color': const Color(0xFF00BFA5),
                     'route': '/articles',
                   },
                   {
                     'title': 'Basic Goods',
-                    'icon': 'assets/newessential/Shopping-Basket-2--Streamline-Core-Gradient.svg',
+                    'icon':
+                        'assets/newessential/Shopping-Basket-2--Streamline-Core-Gradient.svg',
                     'color': const Color(0xFF448AFF),
                     'route': '/basicgoods',
                   },
                   {
                     'title': 'Community',
-                    'icon': 'assets/newessential/User-Multiple-Group--Streamline-Core-Gradient.svg',
+                    'icon':
+                        'assets/newessential/User-Multiple-Group--Streamline-Core-Gradient.svg',
                     'color': const Color(0xFF4CAF50),
                     'route': '/community',
                   },
@@ -397,7 +432,7 @@ class HomePageContent extends StatelessWidget {
                     );
                   },
                 );
-              }
+              },
             ),
           ),
 
@@ -505,7 +540,9 @@ class HomePageContent extends StatelessWidget {
             height: 72,
             decoration: BoxDecoration(
               color: const Color(0xFFEDF4FF),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(30),
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
@@ -546,15 +583,14 @@ class HomePageContent extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             label,
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF2C2C2C),
-            ).copyWith(
-              fontFamilyFallback: [
-                GoogleFonts.hindSiliguri().fontFamily!,
-              ],
-            ),
+            style:
+                GoogleFonts.poppins(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF2C2C2C),
+                ).copyWith(
+                  fontFamilyFallback: [GoogleFonts.hindSiliguri().fontFamily!],
+                ),
           ),
         ],
       ),
@@ -643,15 +679,16 @@ class HomePageContent extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   footerText,
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w400,
-                  ).copyWith(
-                    fontFamilyFallback: [
-                      GoogleFonts.hindSiliguri().fontFamily!,
-                    ],
-                  ),
+                  style:
+                      GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w400,
+                      ).copyWith(
+                        fontFamilyFallback: [
+                          GoogleFonts.hindSiliguri().fontFamily!,
+                        ],
+                      ),
                 ),
               ],
             ),

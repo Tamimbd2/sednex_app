@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,25 +12,32 @@ class HelpView extends GetView<HelpController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
-        title: Text(
-          'FAQ / Help',
-          style: GoogleFonts.arimo(
-            color: const Color(0xFF101727),
-            fontSize: 20,
-            fontWeight: FontWeight.w400,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1E63FF),
+                Color(0xFF3575FF),
+              ],
+            ),
           ),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
+        title: Text(
+          'FAQ / Help',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF101727)),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
           onPressed: () => Get.back(),
         ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF2F4F6), height: 1.0),
-        ),
+        elevation: 0,
+        centerTitle: true,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -40,7 +47,7 @@ class HelpView extends GetView<HelpController> {
             children: [
               Text(
                 'Frequently Asked Questions',
-                style: GoogleFonts.arimo(
+                style: GoogleFonts.poppins(
                   color: const Color(0xFF495565),
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
@@ -79,7 +86,7 @@ class HelpView extends GetView<HelpController> {
                       child: Center(
                         child: Text(
                           'No FAQs found.',
-                          style: GoogleFonts.arimo(
+                          style: GoogleFonts.poppins(
                             color: const Color(0xFF697282),
                             fontSize: 16,
                           ),
@@ -121,7 +128,7 @@ class HelpView extends GetView<HelpController> {
                               ),
                               title: Text(
                                 faq['question'],
-                                style: GoogleFonts.arimo(
+                                style: GoogleFonts.hindSiliguri(
                                   color: const Color(0xFF101727),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -139,7 +146,7 @@ class HelpView extends GetView<HelpController> {
                               children: [
                                 Text(
                                   faq['answer'],
-                                  style: GoogleFonts.arimo(
+                                  style: GoogleFonts.hindSiliguri(
                                     color: const Color(0xFF697282),
                                     fontSize: 14,
                                     height: 1.5,

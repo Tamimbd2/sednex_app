@@ -15,6 +15,28 @@ class ShopController extends GetxController {
   final categories = <Map<String, dynamic>>[].obs;
   final products = <Map<String, dynamic>>[].obs;
   final favoriteIds = <String>{}.obs;
+  
+  // Search State
+  final searchQuery = ''.obs;
+
+  // Filtered Getters
+  List<Map<String, dynamic>> get filteredCategories {
+    if (searchQuery.value.isEmpty) return categories;
+    return categories.where((cat) {
+      final name = cat['name']?.toString().toLowerCase() ?? '';
+      return name.contains(searchQuery.value.toLowerCase());
+    }).toList();
+  }
+
+  List<Map<String, dynamic>> get filteredProducts {
+    if (searchQuery.value.isEmpty) return products;
+    return products.where((prod) {
+      final name = prod['name']?.toString().toLowerCase() ?? '';
+      final category = prod['category']?.toString().toLowerCase() ?? '';
+      final query = searchQuery.value.toLowerCase();
+      return name.contains(query) || category.contains(query);
+    }).toList();
+  }
 
   @override
   void onInit() {
@@ -159,16 +181,57 @@ class ShopController extends GetxController {
                 ? whatsappUrl.replaceFirst('wa.me/0', 'wa.me/880')
                 : whatsappUrl;
             
+            final discountVal = discountPrice is num ? discountPrice : 0;
+            final priceVal = price is num ? price : 0;
+            final originalPriceVal = priceVal + discountVal;
+            final discountPercentage = originalPriceVal > 0 
+                ? ((discountVal / originalPriceVal) * 100).round() 
+                : 0;
+
+            final rawCurrency = (productMap['priceTage'] ?? // Specific field from API
+                                    productMap['currencySymbol'] ?? 
+                                    productMap['currency'] ?? 
+                                    (body is Map ? body['currency'] : null) ?? 
+                                    '৳').toString().trim();
+            
+            // Map standard currency tags/codes to symbols
+            final Map<String, String> symbolMap = {
+              "AED": "د.إ",
+              "BHD": ".د.ب",
+              "BDT": "৳",
+              "GBP": "£",
+              "ILS": "₪",
+              "IQD": "ع.د",
+              "IRR": "﷼",
+              "JOD": "د.ا",
+              "KWD": "د.ك",
+              "LBP": "ل.ل",
+              "OMR": "ر.ع",
+              "QAR": "ر.ق",
+              "SAR": "ر.س",
+              "SYP": "ل.س",
+              "TRY": "₺",
+              "USD": "\$",
+              "YER": "﷼"
+            };
+            
+            final String currency = symbolMap[rawCurrency.toUpperCase()] ?? rawCurrency;
+            
+            // Format price string with currency
+            final String priceStr = "$currency$price";
+            final String originalPriceStr = discountPrice != null ? "$currency$originalPriceVal" : "";
+
             return {
               ...productMap,
               "id": productId,
               "name": productMap['name']?.toString() ?? 'No Name',
               "category": productMap['category'] is Map ? (productMap['category']['name'] ?? 'General') : 'General',
-              "price": "৳$price",
-              "originalPrice": discountPrice != null ? "৳${(price is num ? price : 0) + 50}" : "", 
+              "price": priceStr,
+              "originalPrice": originalPriceStr, 
+              "discountPercentage": discountPercentage,
               "image": imageUrl,
               "isSale": discountPrice != null,
-              "saleText": discountPrice != null ? "Sale" : "New",
+              "saleText": discountPrice != null ? "$discountPercentage% OFF" : "NEW",
               "saleColor": discountPrice != null ? const Color(0xFF1E63FF) : const Color(0xFF00C853),
               "rating": 4.5, 
               "reviews": 120,
@@ -176,6 +239,7 @@ class ShopController extends GetxController {
               "isLoved": isLoved,
               "colors": [const Color(0xFFFFFFFF), const Color(0xFF000000)],
               "whatsappUrl": safeWhatsappUrl,
+              "currency": currency,
             };
           } catch (e, stack) {
             debugPrint("Error mapping product: $e\n$stack");
@@ -185,6 +249,7 @@ class ShopController extends GetxController {
         
         debugPrint("API Products total: ${data.length}, Mapped: ${fetchedProducts.length}");
         products.assignAll(fetchedProducts);
+        products.shuffle(); // Randomize order every load
       } else {
         debugPrint("Failed to fetch products: ${response.statusCode}");
       }

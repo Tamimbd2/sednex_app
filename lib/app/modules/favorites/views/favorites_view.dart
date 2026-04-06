@@ -13,18 +13,30 @@ class FavoritesView extends GetView<DashboardController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1E63FF),
+                Color(0xFF4B83FF),
+              ],
+            ),
+          ),
+        ),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF101727)),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Cart',
-          style: GoogleFonts.poppins(
-            color: const Color(0xFF1E63FF),
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
+          'My Cart',
+          style: GoogleFonts.outfit(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.5,
           ),
         ),
         centerTitle: true,
@@ -165,11 +177,11 @@ class FavoritesView extends GetView<DashboardController> {
                               ],
                             ),
                           ),
-                          // Cart/Remove Icon
+                          // Remove Icon
                           Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: IconButton(
-                              icon: const Icon(Icons.shopping_cart, size: 22, color: Color(0xFF1E63FF)),
+                              icon: const Icon(Icons.delete_outline_rounded, size: 24, color: Colors.redAccent),
                               onPressed: () => controller.toggleFavorite(product['id'] ?? product['_id']),
                             ),
                           ),

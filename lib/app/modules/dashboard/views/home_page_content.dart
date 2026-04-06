@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:marquee/marquee.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../communityFeed/controllers/community_feed_controller.dart';
 import '../controllers/dashboard_controller.dart';
 import '../../namaj/controllers/namaj_controller.dart';
@@ -87,15 +88,45 @@ class HomePageContent extends StatelessWidget {
                       itemCount: 10000,
                       itemBuilder: (context, index) {
                         final actualIndex = index % banners.length;
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            image: DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                banners[actualIndex],
+                        final banner = banners[actualIndex];
+                        return GestureDetector(
+                          onTap: () async {
+                            String urlStr = banner['url']?.toString() ?? '';
+                            debugPrint('Hero Banner: Tapped! URL: "$urlStr"');
+                            
+                            if (urlStr.isNotEmpty) {
+                              // Standardize URL schema if missing
+                              if (!urlStr.startsWith('http')) {
+                                urlStr = 'https://$urlStr';
+                              }
+                              
+                              final Uri uri = Uri.parse(urlStr);
+                              if (await canLaunchUrl(uri)) {
+                                debugPrint('Hero Banner: Launching $urlStr');
+                                await launchUrl(uri, mode: LaunchMode.externalApplication);
+                              } else {
+                                debugPrint('Hero Banner: Could not launch $urlStr');
+                                // Try launching even if canLaunchUrl fails (can happen)
+                                try {
+                                   await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                } catch(e) {
+                                   debugPrint('Hero Banner: Final error launching $urlStr: $e');
+                                }
+                              }
+                            } else {
+                               debugPrint('Hero Banner: URL is empty, nothing to redirect.');
+                            }
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              image: DecorationImage(
+                                image: CachedNetworkImageProvider(
+                                  banner['image'] ?? '',
+                                ),
+                                fit: BoxFit.cover,
                               ),
-                              fit: BoxFit.cover,
                             ),
                           ),
                         );

@@ -41,6 +41,7 @@ class LocalTour {
   final String image;
   final List<String> includedWithTickets;
   final String locationDetails;
+  final String tourStatus;
   final LocalTourInfo info;
 
   LocalTour({
@@ -49,6 +50,7 @@ class LocalTour {
     required this.image,
     required this.includedWithTickets,
     required this.locationDetails,
+    required this.tourStatus,
     required this.info,
   });
 
@@ -59,6 +61,7 @@ class LocalTour {
       image: json['image'] ?? '',
       includedWithTickets: List<String>.from(json['includedWithTickets'] ?? []),
       locationDetails: json['locationDetails'] ?? '',
+      tourStatus: json['tourStatus'] ?? 'upcoming',
       info: LocalTourInfo.fromJson(json['info'] ?? {}),
     );
   }
@@ -87,7 +90,17 @@ class LocaltourController extends GetxController {
       }
 
       final List<dynamic> data = body['tours'] ?? [];
-      tours.value = data.map((e) => LocalTour.fromJson(e)).toList();
+      final fetchedTours = data.map((e) => LocalTour.fromJson(e)).toList();
+      
+      // Sort: running > upcoming > completed
+      fetchedTours.sort((a, b) {
+        final statusOrder = {'running': 0, 'upcoming': 1, 'completed': 2};
+        int orderA = statusOrder[a.tourStatus.toLowerCase()] ?? 3;
+        int orderB = statusOrder[b.tourStatus.toLowerCase()] ?? 3;
+        return orderA.compareTo(orderB);
+      });
+      
+      tours.value = fetchedTours;
     } catch (e) {
       debugPrint('Error fetching local tours: $e');
     } finally {

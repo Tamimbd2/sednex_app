@@ -14,18 +14,16 @@ class LocaltourView extends GetView<LocaltourController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
-        ),
         title: Text(
           'Local Tour',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.w600,
+          ).copyWith(
+            fontFamilyFallback: [
+              GoogleFonts.hindSiliguri().fontFamily!,
+            ],
           ),
         ),
         centerTitle: true,
@@ -38,7 +36,7 @@ class LocaltourView extends GetView<LocaltourController> {
           return Center(
             child: Text(
               'No tours found',
-              style: GoogleFonts.inter(color: Colors.grey),
+              style: GoogleFonts.poppins(color: Colors.grey),
             ),
           );
         }
@@ -85,20 +83,34 @@ class LocaltourView extends GetView<LocaltourController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Tour Image
-                    ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16),
-                      ),
-                      child: tour.image.isNotEmpty
-                          ? Image.network(
-                              tour.image,
-                              width: double.infinity,
-                              height: 200,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
+                    // Tour Image & Status Badge
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                          ),
+                          child: tour.image.isNotEmpty
+                              ? Image.network(
+                                  tour.image,
+                                  width: double.infinity,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      width: double.infinity,
+                                      height: 200,
+                                      color: Colors.grey[300],
+                                      child: const Icon(
+                                        Icons.image,
+                                        size: 60,
+                                        color: Colors.grey,
+                                      ),
+                                    );
+                                  },
+                                )
+                              : Container(
                                   width: double.infinity,
                                   height: 200,
                                   color: Colors.grey[300],
@@ -107,19 +119,16 @@ class LocaltourView extends GetView<LocaltourController> {
                                     size: 60,
                                     color: Colors.grey,
                                   ),
-                                );
-                              },
-                            )
-                          : Container(
-                              width: double.infinity,
-                              height: 200,
-                              color: Colors.grey[300],
-                              child: const Icon(
-                                Icons.image,
-                                size: 60,
-                                color: Colors.grey,
-                              ),
-                            ),
+                                ),
+                        ),
+                        
+                        // Status Badge
+                        Positioned(
+                          top: 12,
+                          right: 12,
+                          child: _buildStatusBadge(tour.tourStatus),
+                        ),
+                      ],
                     ),
                     
                     // Tour Details
@@ -131,10 +140,14 @@ class LocaltourView extends GetView<LocaltourController> {
                           // Title
                           Text(
                             tour.title,
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
                               color: Colors.black,
+                            ).copyWith(
+                              fontFamilyFallback: [
+                                GoogleFonts.hindSiliguri().fontFamily!,
+                              ],
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -151,9 +164,14 @@ class LocaltourView extends GetView<LocaltourController> {
                               Expanded(
                                 child: Text(
                                   '${tour.info.date} · ${tour.info.begins} - ${tour.info.returnTime}',
-                                  style: GoogleFonts.inter(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     color: Colors.grey[700],
+                                    fontWeight: FontWeight.w500,
+                                  ).copyWith(
+                                    fontFamilyFallback: [
+                                      GoogleFonts.hindSiliguri().fontFamily!,
+                                    ],
                                   ),
                                 ),
                               ),
@@ -161,7 +179,6 @@ class LocaltourView extends GetView<LocaltourController> {
                           ),
                           const SizedBox(height: 8),
                           
-                          // Location
                           Row(
                             children: [
                               const Icon(
@@ -173,9 +190,13 @@ class LocaltourView extends GetView<LocaltourController> {
                               Expanded(
                                 child: Text(
                                   tour.locationDetails,
-                                  style: GoogleFonts.inter(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     color: Colors.grey[700],
+                                  ).copyWith(
+                                    fontFamilyFallback: [
+                                      GoogleFonts.hindSiliguri().fontFamily!,
+                                    ],
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -193,6 +214,51 @@ class LocaltourView extends GetView<LocaltourController> {
           },
         );
       }),
+    );
+  }
+
+  Widget _buildStatusBadge(String status) {
+    Color bgColor;
+    Color textColor;
+    String label;
+
+    switch (status.toLowerCase()) {
+      case 'running':
+        bgColor = const Color(0xFFE8F5E9);
+        textColor = const Color(0xFF2E7D32);
+        label = 'Running';
+        break;
+      case 'upcoming':
+        bgColor = const Color(0xFFE3F2FD);
+        textColor = const Color(0xFF1565C0);
+        label = 'Upcoming';
+        break;
+      case 'completed':
+        bgColor = const Color(0xFFFFEBEE);
+        textColor = const Color(0xFFC62828);
+        label = 'Completed';
+        break;
+      default:
+        bgColor = Colors.grey[200]!;
+        textColor = Colors.grey[700]!;
+        label = status.capitalizeFirst ?? status;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: textColor.withValues(alpha: 0.3)),
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.poppins(
+          color: textColor,
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
   }
 }

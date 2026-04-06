@@ -16,7 +16,7 @@ class DashboardController extends GetxController {
   final _box = GetStorage();
   
   var marqueeText = 'Welcome to SedNex!'.obs; // Default text
-  var bannerList = <String>[].obs; // Hero Banner URLs
+  var bannerList = <Map<String, dynamic>>[].obs; // Hero Banner Data (image, url)
   var currentBannerIndex = 0.obs;
   final bannerPageController = PageController(initialPage: 5000);
   
@@ -153,15 +153,20 @@ class DashboardController extends GetxController {
 
         // Get all active banner images
         if (items.isNotEmpty) {
-           final urls = <String>[];
+           final banners = <Map<String, dynamic>>[];
            for (var item in items) {
              if (item['image'] != null) {
-               urls.add(item['image']);
+               // The API uses buttonUrl for the redirection link
+               final link = item['buttonUrl'] ?? item['url'] ?? item['link'] ?? '';
+               banners.add({
+                 'image': item['image'],
+                 'url': link,
+               });
              }
            }
            
-           if (urls.isNotEmpty) {
-             bannerList.value = urls;
+           if (banners.isNotEmpty) {
+             bannerList.value = banners;
              startBannerSlider();
            }
         }

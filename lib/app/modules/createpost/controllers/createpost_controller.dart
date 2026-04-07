@@ -95,11 +95,9 @@ class CreatepostController extends GetxController {
       if (selectedImages.isNotEmpty) {
         final List<MultipartFile> files = [];
         for (var image in selectedImages) {
-          // Using the path directly often works better with GetConnect for multi-part files
-          files.add(MultipartFile(image.path, filename: image.name));
+          final bytes = await image.readAsBytes();
+          files.add(MultipartFile(bytes, filename: image.name));
         }
-        // Send as 'images' key. If the server expects repeated keys, 
-        // GetConnect usually handles List<MultipartFile> by repeating the key or using images[]
         body['images'] = files;
       }
 

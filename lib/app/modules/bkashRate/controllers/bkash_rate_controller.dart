@@ -31,8 +31,11 @@ class BkashRateController extends GetxController {
         if (body is List) {
           items = body;
         } else if (body is Map) {
-          if (body['cards'] is List) items = body['cards'];
-          else if (body['services'] is List) items = body['services'];
+          if (body['cards'] is List) {
+            items = body['cards'];
+          } else if (body['services'] is List) {
+            items = body['services'];
+          }
         }
 
         for (var item in items) {

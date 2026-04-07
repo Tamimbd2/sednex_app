@@ -236,11 +236,21 @@ class CommunityPostCard extends StatelessWidget {
               const Spacer(),
 
               // Speaker
-              const Icon(
-                Icons.volume_up_outlined,
-                size: 20,
-                color: Color(0xFF495565),
-              ),
+              Obx(() {
+                final isSpeaking = controller.currentlySpeakingIndex.value == index;
+                return GestureDetector(
+                  onTap: () => controller.speakPost(index, post['content'] ?? ''),
+                  behavior: HitTestBehavior.opaque,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      isSpeaking ? Icons.stop_circle_rounded : Icons.volume_up_outlined,
+                      size: 24,
+                      color: isSpeaking ? const Color(0xFF1E63FF) : const Color(0xFF495565),
+                    ),
+                  ),
+                );
+              }),
             ],
           ),
         ],

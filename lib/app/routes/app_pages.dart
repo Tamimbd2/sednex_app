@@ -268,6 +268,7 @@ class AppPages {
       name: _Paths.COMMUNITY_FEED,
       page: () => const CommunityFeedView(),
       binding: CommunityFeedBinding(),
+      transition: Transition.noTransition,
     ),
     GetPage(
       name: _Paths.NAMAJ,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../../../services/api_service.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class CommunityFeedController extends GetxController {
   final apiService = Get.find<ApiService>();
@@ -30,6 +31,10 @@ class CommunityFeedController extends GetxController {
   final currentPage = 1.obs;
   final totalPages = 1.obs;
   final expandedPosts = <int>{}.obs;
+  
+  // TTS State
+  final flutterTts = FlutterTts();
+  final currentlySpeakingIndex = (-1).obs;
 
   // Reply related states
   final replyTargetCommentId = RxnString();
@@ -417,5 +422,48 @@ class CommunityFeedController extends GetxController {
 
 
   void increment() => count.value++;
+
+  // Text-to-Speech Implementation
+  Future<void> speakPost(int index, String text) async {
+    try {
+      if (currentlySpeakingIndex.value == index) {
+        await flutterTts.stop();
+        currentlySpeakingIndex.value = -1;
+        return;
+      }
+
+      // Stop any current speech
+      await flutterTts.stop();
+      
+      // Auto-detect language (Simple check for Bangla characters)
+      final bool hasBangla = RegExp(r"[\u0980-\u09FF]").hasMatch(text);
+      if (hasBangla) {
+        await flutterTts.setLanguage("bn-BD");
+      } else {
+        await flutterTts.setLanguage("en-US");
+      }
+      
+      // Configure TTS
+      await flutterTts.setPitch(1.0);
+      await flutterTts.setSpeechRate(0.5);
+
+      // Start speaking
+      await flutterTts.speak(text);
+      currentlySpeakingIndex.value = index;
+
+      // Handle completion
+      flutterTts.setCompletionHandler(() {
+        currentlySpeakingIndex.value = -1;
+      });
+    } catch (e) {
+      debugPrint("TTS Error: $e");
+    }
+  }
+
+  @override
+  void onClose() {
+    flutterTts.stop();
+    super.onClose();
+  }
 }
 

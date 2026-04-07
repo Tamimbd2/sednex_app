@@ -336,7 +336,7 @@ class ProductDetailsView extends GetView<ShopController> {
             ),
           ],
         ),
-        padding: EdgeInsets.fromLTRB(24, 12, 24, Get.bottomBarHeight + 12),
+        padding: EdgeInsets.fromLTRB(24, 16, 24, 16 + MediaQuery.of(context).padding.bottom),
         child: Row(
           children: [
             // Cart Button

@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../communityFeed/controllers/community_feed_controller.dart';
 import '../controllers/dashboard_controller.dart';
 import '../../namaj/controllers/namaj_controller.dart';
-import '../../ramadancalander/controllers/ramadancalander_controller.dart';
+
 import '../../../routes/app_pages.dart';
 import '../../communityFeed/widgets/community_post_card.dart';
 import '../../../core/theme/app_colors.dart';
@@ -219,7 +219,7 @@ class HomePageContent extends StatelessWidget {
 
                   // Construct static + dynamic items
                   final List<Widget> items = [
-                    // _buildSehriIftarCompactCard(),
+
 
                     // Namaj Card
                     SizedBox(
@@ -497,29 +497,7 @@ class HomePageContent extends StatelessWidget {
             );
           }),
 
-          // More in Community Footer
-          Padding(
-            padding: const EdgeInsets.only(bottom: 24, top: 8),
-            child: Center(
-              child: Column(
-                children: [
-                  const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Color(0xFF8F95A1),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Scroll up to see more in community',
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      color: const Color(0xFF8F95A1),
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+
         ],
       ),
     );
@@ -694,201 +672,6 @@ class HomePageContent extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildSehriIftarCompactCard() {
-    return GestureDetector(
-      onTap: () => Get.toNamed(Routes.RAMADANCALANDER),
-      child: Container(
-        width: 120,
-        height: 170,
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: const Color(0xFFD4F3D8),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Obx(() {
-          RamadancalanderController? rController;
-          try {
-            rController = Get.find<RamadancalanderController>();
-          } catch (e) {
-            // RamadancalanderController not yet registered; use default values
-          }
-
-          final data =
-              rController?.todayRamadanData ??
-              {
-                'date': '18 Feb',
-                'seheri': '04:55 AM',
-                'iftar': '5:26 PM',
-                'location': 'Beirut',
-              };
-
-          return Column(
-            children: [
-              // Date and Location Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 4,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.history, size: 8, color: Colors.black),
-                        const SizedBox(width: 2),
-                        Text(
-                          data['date']!.split(
-                            ' 2026',
-                          )[0], // Shorten date if needed
-                          style: GoogleFonts.poppins(
-                            fontSize: 7,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 4,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.location_on_outlined,
-                          size: 8,
-                          color: Colors.black,
-                        ),
-                        const SizedBox(width: 2),
-                        Text(
-                          data['location']!,
-                          style: GoogleFonts.poppins(
-                            fontSize: 7,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              // Sehri Card
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/sheheri.png',
-                            width: 22,
-                            height: 22,
-                            errorBuilder: (_, _, _) =>
-                                const Icon(Icons.wb_sunny_outlined, size: 14),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Seheri',
-                            style: GoogleFonts.poppins(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        data['seheri']!,
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF2E7D32),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              // Iftar Card
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/ifter.png',
-                            width: 22,
-                            height: 22,
-                            errorBuilder: (_, _, _) => const Icon(
-                              Icons.nights_stay_outlined,
-                              size: 14,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Ifter',
-                            style: GoogleFonts.poppins(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        data['iftar']!,
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF2E7D32),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          );
-        }),
       ),
     );
   }

@@ -10,102 +10,52 @@ class BkashRateView extends GetView<BkashRateController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEDF4FF), // New BG 2
+      backgroundColor: const Color(0xFFEDF4FF),
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF1E63FF), // Primary Blue
-                Color(0xFF3575FF), // Color 2
-              ],
+              colors: [Color(0xFF1E63FF), Color(0xFF3575FF)],
             ),
           ),
         ),
         title: Text(
           'Rate Calculator',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            color: Colors.white,
-          ),
+          style: _getStyle(fontWeight: FontWeight.w700, fontSize: 22, color: Colors.white),
         ),
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: Colors.white,
-            size: 20,
-          ),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
           onPressed: () => Get.back(),
         ),
         elevation: 0,
         centerTitle: true,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(20),
-          child: Container(
-            height: 20,
-            decoration: const BoxDecoration(
-              color: Color(0xFFEDF4FF),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-            ),
-          ),
-        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: SafeArea(
           child: Column(
             children: [
-              // Last Update Section with Icon
               Center(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF1E63FF).withValues(alpha: 0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                    boxShadow: [BoxShadow(color: const Color(0xFF1E63FF).withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
-                        Icons.history_rounded,
-                        color: Color(0xFF1E63FF),
-                        size: 18,
-                      ),
+                      const Icon(Icons.history_rounded, color: Color(0xFF1E63FF), size: 18),
                       const SizedBox(width: 8),
                       Obx(() {
                         String dateStr = 'Pending';
                         if (controller.updateDate.value.isNotEmpty) {
                           try {
-                            DateTime dt = DateTime.parse(
-                              controller.updateDate.value,
-                            );
-                            final months = [
-                              'January',
-                              'February',
-                              'March',
-                              'April',
-                              'May',
-                              'June',
-                              'July',
-                              'August',
-                              'September',
-                              'October',
-                              'November',
-                              'December',
-                            ];
+                            DateTime dt = DateTime.parse(controller.updateDate.value);
+                            final months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
                             String d = dt.day.toString();
                             String m = months[dt.month - 1];
                             String y = dt.year.toString();
@@ -116,11 +66,7 @@ class BkashRateView extends GetView<BkashRateController> {
                         }
                         return Text(
                           'Last Update: $dateStr',
-                          style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            color: const Color(0xFF1E63FF),
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: _getStyle(fontSize: 13, color: const Color(0xFF1E63FF), fontWeight: FontWeight.w500),
                         );
                       }),
                     ],
@@ -128,27 +74,12 @@ class BkashRateView extends GetView<BkashRateController> {
                 ),
               ),
               const SizedBox(height: 24),
-
-              // Today's Rate Glass Card
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFFFCE4EC),
-                      Color(0xFFF8BBD0),
-                    ], // Soft Pink Mix
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  gradient: const LinearGradient(colors: [Color(0xFFFCE4EC), Color(0xFFF8BBD0)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                   borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFD12053).withValues(alpha: 0.15),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
+                  boxShadow: [BoxShadow(color: const Color(0xFFD12053).withValues(alpha: 0.15), blurRadius: 20, offset: const Offset(0, 8))],
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -157,189 +88,82 @@ class BkashRateView extends GetView<BkashRateController> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.05),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.currency_exchange,
-                            color: Color(0xFFD12053),
-                          ),
+                          decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8, offset: const Offset(0, 4))]),
+                          child: const Icon(Icons.currency_exchange, color: Color(0xFFD12053)),
                         ),
                         const SizedBox(width: 14),
                         Text(
                           'Today\'s Rate',
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFD12053),
-                          ),
+                          style: _getStyle(fontSize: 16, fontWeight: FontWeight.w600, color: const Color(0xFFD12053)),
                         ),
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Obx(
-                        () => Text(
-                          '৳${controller.exchangeRate.value.toStringAsFixed(0)}',
-                          style: GoogleFonts.poppins(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFFD12053),
-                          ),
-                        ),
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+                      child: Obx(() => Text(
+                            '৳${controller.exchangeRate.value.toStringAsFixed(0)}',
+                            style: _getStyle(fontSize: 22, fontWeight: FontWeight.w700, color: const Color(0xFFD12053)),
+                          )),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
-
-              // Calculator Section
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withValues(alpha: 0.08),
-                      blurRadius: 24,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
+                  boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.08), blurRadius: 24, offset: const Offset(0, 10))],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Currency Toggle Tabs
                     Container(
                       height: 50,
                       padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF5F5F5),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
+                      decoration: BoxDecoration(color: const Color(0xFFF5F5F5), borderRadius: BorderRadius.circular(16)),
                       child: Stack(
                         children: [
-                          // Sliding Background
-                          Obx(
-                            () => AnimatedAlign(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeOutBack,
-                              alignment: controller.isTakaSelected.value
-                                  ? Alignment.centerLeft
-                                  : Alignment.centerRight,
-                              child: FractionallySizedBox(
-                                widthFactor: 0.5,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(
-                                          alpha: 0.1,
-                                        ),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
+                          Obx(() => AnimatedAlign(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeOutBack,
+                                alignment: controller.isTakaSelected.value ? Alignment.centerLeft : Alignment.centerRight,
+                                child: FractionallySizedBox(
+                                  widthFactor: 0.5,
+                                  child: Container(decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, 2))])),
                                 ),
-                              ),
-                            ),
-                          ),
-
-                          // Tab Items
+                              )),
                           Row(
                             children: [
-                              _buildAnimatedTab(
-                                '৳ BDT (Taka)',
-                                controller.isTakaSelected,
-                                true,
-                                () => controller.toggleCurrency(true),
-                              ),
-                              _buildAnimatedTab(
-                                '\$ USD (Dollar)',
-                                controller.isTakaSelected,
-                                false,
-                                () => controller.toggleCurrency(false),
-                              ),
+                              _buildAnimatedTab('৳ BDT (Taka)', controller.isTakaSelected, true, () => controller.toggleCurrency(true)),
+                              _buildAnimatedTab('\$ USD (Dollar)', controller.isTakaSelected, false, () => controller.toggleCurrency(false)),
                             ],
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 24),
-
-                    // Input Field with Label
-                    Text(
-                      'Amount to Send',
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xFF616161),
-                      ),
-                    ),
+                    Text('Amount to Send', style: _getStyle(fontSize: 14, fontWeight: FontWeight.w500, color: const Color(0xFF616161))),
                     const SizedBox(height: 8),
-
                     TextField(
                       controller: controller.inputController,
                       keyboardType: TextInputType.number,
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF424242),
-                      ),
+                      style: _getStyle(fontSize: 18, fontWeight: FontWeight.w600, color: const Color(0xFF424242)),
                       decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.edit_rounded,
-                          color: Colors.grey.shade400,
-                          size: 20,
-                        ),
+                        prefixIcon: Icon(Icons.edit_rounded, color: Colors.grey.shade400, size: 20),
                         hintText: 'Enter amount...',
-                        hintStyle: GoogleFonts.poppins(
-                          color: Colors.grey.shade400,
-                          fontSize: 14,
-                        ),
+                        hintStyle: _getStyle(color: Colors.grey.shade400, fontSize: 14),
                         filled: true,
                         fillColor: const Color(0xFFFAFAFA),
                         contentPadding: const EdgeInsets.all(16),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF1E63FF),
-                            width: 1.5,
-                          ),
-                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFF1E63FF), width: 1.5)),
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // Quick Amount Chips
                     SizedBox(
                       height: 40,
                       child: ListView(
@@ -357,151 +181,63 @@ class BkashRateView extends GetView<BkashRateController> {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 24),
-
-                    // Fancy Divider with Swap Icon
                     Stack(
                       alignment: Alignment.center,
                       children: [
                         Divider(color: Colors.grey.shade200, thickness: 1.5),
                         Container(
                           padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withValues(alpha: 0.1),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                            border: Border.all(
-                              color: const Color(0xFFE3EEFF),
-                              width: 2,
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.swap_vert_rounded,
-                            color: Color(0xFF1E63FF),
-                            size: 24,
-                          ),
+                          decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))], border: Border.all(color: const Color(0xFFE3EEFF), width: 2)),
+                          child: const Icon(Icons.swap_vert_rounded, color: Color(0xFF1E63FF), size: 24),
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 24),
-
-                    // Output Section
-                    Text(
-                      'Amount to send total',
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xFF616161),
-                      ),
-                    ),
+                    Text('Amount to send total', style: _getStyle(fontSize: 14, fontWeight: FontWeight.w500, color: const Color(0xFF616161))),
                     const SizedBox(height: 8),
-
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 24,
-                        horizontal: 20,
-                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFFE3EEFF),
-                            Color(0xFF95C6FF),
-                          ], // BG 1 to Color 6
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+                        gradient: const LinearGradient(colors: [Color(0xFFE3EEFF), Color(0xFF95C6FF)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(
-                              0xFF1E63FF,
-                            ).withValues(alpha: 0.15),
-                            blurRadius: 15,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
+                        boxShadow: [BoxShadow(color: const Color(0xFF1E63FF).withValues(alpha: 0.15), blurRadius: 15, offset: const Offset(0, 5))],
                       ),
                       child: Column(
                         children: [
-                          Obx(
-                            () => Text(
-                              controller.displayResult.value,
-                              style: GoogleFonts.poppins(
-                                fontSize: 32,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF1E63FF),
-                                height: 1.2,
-                              ),
-                            ),
-                          ),
+                          Obx(() => Text(
+                                controller.displayResult.value,
+                                style: _getStyle(fontSize: 32, fontWeight: FontWeight.w700, color: const Color(0xFF1E63FF), height: 1.2),
+                              )),
                           const SizedBox(height: 4),
-                          Text(
-                            'Estimated Amount',
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: const Color(0xFF3575FF),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          Text('Estimated Amount', style: _getStyle(fontSize: 12, color: const Color(0xFF3575FF), fontWeight: FontWeight.w500)),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-
               const SizedBox(height: 24),
-
-              // Note Box
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFFDF5),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: const Color(0xFFFFD700).withValues(alpha: 0.3),
-                  ),
+                  border: Border.all(color: const Color(0xFFFFD700).withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.info_outline_rounded,
-                      color: Color(0xFFFFB300),
-                      size: 20,
-                    ),
+                    const Icon(Icons.info_outline_rounded, color: Color(0xFFFFB300), size: 20),
                     const SizedBox(width: 12),
                     Expanded(
                       child: RichText(
                         text: TextSpan(
                           children: [
-                            TextSpan(
-                              text: 'Note: ',
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFFD48806),
-                                fontSize: 13,
-                              ),
-                            ),
-                            TextSpan(
-                              text:
-                                  'Commission rates may vary by location. Standard commission is 20 Tk per thousand.',
-                              style: GoogleFonts.poppins(
-                                color: const Color(0xFF2C2C2C),
-                                fontSize: 13,
-                                height: 1.5,
-                              ),
-                            ),
+                            TextSpan(text: 'Note: ', style: _getStyle(fontWeight: FontWeight.w700, color: const Color(0xFFD48806), fontSize: 13)),
+                            TextSpan(text: 'Commission rates may vary by location. Standard commission is 20 Tk per thousand.', style: _getStyle(color: const Color(0xFF2C2C2C), fontSize: 13, height: 1.5)),
                           ],
                         ),
                       ),
@@ -517,12 +253,7 @@ class BkashRateView extends GetView<BkashRateController> {
     );
   }
 
-  Widget _buildAnimatedTab(
-    String title,
-    RxBool selectedProp,
-    bool isTaka,
-    VoidCallback onTap,
-  ) {
+  Widget _buildAnimatedTab(String title, RxBool selectedProp, bool isTaka, VoidCallback onTap) {
     return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -532,13 +263,7 @@ class BkashRateView extends GetView<BkashRateController> {
             final isSelected = selectedProp.value == isTaka;
             return AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 300),
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: isSelected
-                    ? const Color(0xFF1E63FF)
-                    : const Color(0xFF9E9E9E),
-              ),
+              style: _getStyle(fontSize: 14, fontWeight: FontWeight.w600, color: isSelected ? const Color(0xFF1E63FF) : const Color(0xFF9E9E9E)),
               child: Text(title),
             );
           }),
@@ -552,28 +277,14 @@ class BkashRateView extends GetView<BkashRateController> {
       onTap: () => controller.setAmount(label),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey.shade200),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.05),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.grey.shade200), boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.05), blurRadius: 6, offset: const Offset(0, 2))]),
         alignment: Alignment.center,
-        child: Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF616161),
-          ),
-        ),
+        child: Text(label, style: _getStyle(fontSize: 14, fontWeight: FontWeight.w600, color: const Color(0xFF616161))),
       ),
     );
+  }
+
+  TextStyle _getStyle({double? fontSize, FontWeight? fontWeight, Color? color, double? height}) {
+    return GoogleFonts.hindSiliguri(fontSize: fontSize, fontWeight: fontWeight, color: color, height: height, textStyle: GoogleFonts.poppins());
   }
 }

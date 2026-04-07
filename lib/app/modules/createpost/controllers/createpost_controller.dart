@@ -31,15 +31,49 @@ class CreatepostController extends GetxController {
   }
 
   Future<void> pickImages() async {
+    if (selectedImages.length >= 4) {
+      Get.snackbar('Limit Reached', 'You can only select up to 4 images');
+      return;
+    }
+    
     final ImagePicker picker = ImagePicker();
     final List<XFile> images = await picker.pickMultiImage();
+    
     if (images.isNotEmpty) {
-      selectedImages.addAll(images);
+      // Calculate how many more we can add
+      final int remaining = 4 - selectedImages.length;
+      if (images.length > remaining) {
+        selectedImages.addAll(images.take(remaining));
+        Get.snackbar('Limit Applied', 'Only the first $remaining selected images were added to reach the limit of 4');
+      } else {
+        selectedImages.addAll(images);
+      }
     }
   }
 
   void removeImage(int index) {
     selectedImages.removeAt(index);
+  }
+
+  void handleKeyboardContent(KeyboardInsertedContent content) {
+    if (selectedImages.length >= 4) {
+      Get.snackbar('Limit Reached', 'You can only select up to 4 images');
+      return;
+    }
+
+    // Attempt to add the keyboard content if it's a supported type
+    if (content.data != null) {
+       // Since it's from the keyboard, it's often a GIF or PNG
+       // We can use XFile.fromData to add it to our list
+       selectedImages.add(XFile.fromData(
+         content.data!, 
+         mimeType: content.mimeType,
+         name: 'keyboard_media_${DateTime.now().millisecondsSinceEpoch}',
+       ));
+    } else if (content.uri.isNotEmpty) {
+       // If it provides a URI (like a file path on some devices)
+       selectedImages.add(XFile(content.uri, mimeType: content.mimeType));
+    }
   }
 
   Future<void> createPost() async {

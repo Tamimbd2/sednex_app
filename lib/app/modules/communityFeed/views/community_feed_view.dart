@@ -25,16 +25,11 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
         title: Text(
           'Community Feed',
           style: GoogleFonts.poppins(
-            color: const Color(0xFF101727),
-            fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF101727)),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
         ),
       ),

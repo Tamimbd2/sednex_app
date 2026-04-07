@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../controllers/createpost_controller.dart';
+import '../../../core/theme/app_colors.dart';
 
 class CreatepostView extends GetView<CreatepostController> {
   const CreatepostView({super.key});
@@ -14,314 +13,182 @@ class CreatepostView extends GetView<CreatepostController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        toolbarHeight: 70,
-        backgroundColor: const Color(0xFF1E63FF), // Deep Red
+        backgroundColor: AppColors.primary,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.white, size: 28),
+          icon: const Icon(Icons.close, color: Colors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
           'Create Post',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.poppins(
             color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
-            // Category Selection (Horizontal List)
-            SizedBox(
-              height: 40,
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                scrollDirection: Axis.horizontal,
-                itemCount: controller.categories.length,
-                separatorBuilder: (context, index) => const SizedBox(width: 12),
-                itemBuilder: (context, index) {
-                  return Obx(() {
-                    final category = controller.categories[index];
-                    final isSelected = controller.selectedCategory.value == category;
-                    return GestureDetector(
-                      onTap: () => controller.selectCategory(category),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: isSelected ? const Color(0xFF4285F4) : Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: isSelected ? const Color(0xFF4285F4) : Colors.grey[300]!,
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            category.capitalizeFirst!,
-                            style: GoogleFonts.inter(
-                              color: isSelected ? Colors.white : Colors.black87,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
+      body: Column(
+        children: [
+          // Minimal Category Selector
+          Container(
+            height: 50,
+            color: Colors.white,
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              scrollDirection: Axis.horizontal,
+              itemCount: controller.categories.length,
+              separatorBuilder: (context, index) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final category = controller.categories[index];
+                return Obx(() {
+                  final isSelected = controller.selectedCategory.value == category;
+                  return GestureDetector(
+                    onTap: () => controller.selectCategory(category),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: isSelected ? AppColors.primary : const Color(0xFFF3F4F6),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Center(
+                        child: Text(
+                          category.capitalizeFirst!,
+                          style: GoogleFonts.poppins(
+                            color: isSelected ? Colors.white : Colors.black54,
+                            fontSize: 13,
+                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                           ),
                         ),
                       ),
-                    );
-                  });
-                },
-              ),
+                    ),
+                  );
+                });
+              },
             ),
-            
-            const SizedBox(height: 24),
-  
-            // Text Input Area
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                controller: controller.textController,
-                onChanged: (value) => controller.postText.value = value,
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
-                decoration: InputDecoration(
-                  hintText: 'What do you want to share?',
-                  hintStyle: GoogleFonts.inter(
-                    color: Colors.grey[400],
-                    fontSize: 16,
-                  ),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-  
-            // Images Grid
-            Expanded(
-              child: Obx(() {
-                if (controller.selectedImages.isEmpty) return const SizedBox.shrink();
-                
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: _buildImageGrid(),
-                );
-              }),
-            ),
-  
-            // Bottom Action Bar
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
+          ),
+          
+          const Divider(height: 1),
+
+          // Content Area
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
                 children: [
-                  _buildActionIcon(Icons.image_outlined, 'Image', controller.pickImages), // Updated to pickImages
-                  const SizedBox(width: 24),
-                  _buildActionIcon(Icons.gif_box_outlined, 'GIF', () {}),
-                  const Spacer(),
-                  SizedBox(
-                    height: 45,
-                    width: 100,
-                    child: Obx(() {
-                      final isEnabled = (controller.postText.value.isNotEmpty || 
-                                        controller.selectedImages.isNotEmpty) && !controller.isLoading.value;
-                      return ElevatedButton(
-                        onPressed: isEnabled ? controller.createPost : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isEnabled ? const Color(0xFF1E63FF) : Colors.grey[200],
-                          foregroundColor: isEnabled ? Colors.white : Colors.grey[400],
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                        ),
-                        child: controller.isLoading.value 
-                          ? const SizedBox(
-                              height: 20, 
-                              width: 20, 
-                              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                            )
-                          : Text(
-                              'Post',
-                              style: GoogleFonts.inter(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                      );
-                    }),
+                  TextField(
+                    controller: controller.textController,
+                    onChanged: (value) => controller.postText.value = value,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      hintText: "What's on your mind?",
+                      hintStyle: GoogleFonts.poppins(color: Colors.grey),
+                      border: InputBorder.none,
+                    ),
+                    style: GoogleFonts.poppins(fontSize: 16),
+                    contentInsertionConfiguration: ContentInsertionConfiguration(
+                      onContentInserted: (content) => controller.handleKeyboardContent(content),
+                      allowedMimeTypes: const ['image/gif', 'image/png', 'image/jpeg'],
+                    ),
                   ),
+
+                  const SizedBox(height: 16),
+
+                  // Image Grid (Max 4)
+                  Obx(() {
+                    if (controller.selectedImages.isEmpty) return const SizedBox.shrink();
+                    return _buildSimpleImageGrid();
+                  }),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
+          ),
 
-  Widget _buildImageGrid() {
-    final images = controller.selectedImages;
-    int count = images.length;
-
-    if (count == 1) {
-      return _buildImageItem(0, height: 300);
-    } else if (count == 2) {
-      return Row(
-        children: [
-          Expanded(child: _buildImageItem(0, height: 300)),
-          const SizedBox(width: 4),
-          Expanded(child: _buildImageItem(1, height: 300)),
-        ],
-      );
-    } else if (count == 3) {
-      return Column(
-        children: [
-          Expanded(flex: 2, child: _buildImageItem(0)),
-          const SizedBox(height: 4),
-          Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Expanded(child: _buildImageItem(1)),
-                const SizedBox(width: 4),
-                Expanded(child: _buildImageItem(2)),
-              ],
+          // Simple Bottom Actions
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(top: BorderSide(color: Colors.grey.shade200)),
             ),
-          ),
-        ],
-      );
-    } else if (count == 4) {
-      return Column(
-        children: [
-          Expanded(
             child: Row(
               children: [
-                Expanded(child: _buildImageItem(0)),
-                const SizedBox(width: 4),
-                Expanded(child: _buildImageItem(1)),
-              ],
-            ),
-          ),
-          const SizedBox(height: 4),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(child: _buildImageItem(2)),
-                const SizedBox(width: 4),
-                Expanded(child: _buildImageItem(3)),
-              ],
-            ),
-          ),
-        ],
-      );
-    } else {
-      // 5 or more images
-      return Column(
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(child: _buildImageItem(0)),
-                const SizedBox(width: 4),
-                Expanded(child: _buildImageItem(1)),
-              ],
-            ),
-          ),
-          const SizedBox(height: 4),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(child: _buildImageItem(2)),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      _buildImageItem(3),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '+${count - 3}', // Should be count - 4 actually if we display 4 items, but logic here displays 4 items total in grid
-                            // Wait, logic: Items 0, 1, 2, 3. Item 3 has overlay.
-                            // So we display 3 + 1(with +X).
-                            // Correct math: Total 5. Display 0,1,2. Item 3 covers remaining (4, etc).
-                            // So + (5-4) = +1. Correct.
-                            style: GoogleFonts.inter(
+                IconButton(
+                  onPressed: controller.pickImages,
+                  icon: const Icon(Icons.image_outlined, color: AppColors.primary, size: 30),
+                ),
+                const Spacer(),
+                Obx(() {
+                  final isEnabled = (controller.postText.value.isNotEmpty || 
+                                    controller.selectedImages.isNotEmpty) && !controller.isLoading.value;
+                  return ElevatedButton(
+                    onPressed: isEnabled ? controller.createPost : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      disabledBackgroundColor: Colors.grey.shade300,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                    child: controller.isLoading.value 
+                        ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                        : Text(
+                            'Post',
+                            style: GoogleFonts.poppins(
                               color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                  );
+                }),
               ],
             ),
           ),
         ],
-      );
-    }
-  }
-
-  Widget _buildImageItem(int index, {double? height}) {
-    return Stack(
-      children: [
-        Container(
-          height: height,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            image: DecorationImage(
-              image: FileImage(File(controller.selectedImages[index].path)),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        Positioned(
-          top: 8,
-          right: 8,
-          child: GestureDetector(
-            onTap: () => controller.removeImage(index),
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: const BoxDecoration(
-                color: Colors.black54,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.close, color: Colors.white, size: 16),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  Widget _buildActionIcon(IconData icon, String label, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: Colors.grey[700], size: 28),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
-          ),
-        ],
+  Widget _buildSimpleImageGrid() {
+    final images = controller.selectedImages;
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
       ),
+      itemCount: images.length,
+      itemBuilder: (context, index) {
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.file(
+                  File(images[index].path),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 5,
+              right: 5,
+              child: GestureDetector(
+                onTap: () => controller.removeImage(index),
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.close, color: Colors.white, size: 16),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
-

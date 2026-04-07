@@ -59,7 +59,6 @@ class _SuraDetailsViewState extends State<SuraDetailsView> {
             Text(
               widget.englishName,
               style: GoogleFonts.poppins(
-                color: const Color(0xFF101727),
                 fontWeight: FontWeight.w600,
                 fontSize: 18,
               ),
@@ -67,23 +66,16 @@ class _SuraDetailsViewState extends State<SuraDetailsView> {
             Text(
               widget.name,
               style: GoogleFonts.amiri(
-                color: const Color(0xFF10A37F),
+                color: Colors.white.withValues(alpha: 0.9),
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
               ),
             ),
           ],
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF101727)),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: Colors.grey.shade200, height: 1),
         ),
       ),
       body: Obx(() {

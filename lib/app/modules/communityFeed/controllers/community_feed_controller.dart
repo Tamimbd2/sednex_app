@@ -473,15 +473,14 @@ class CommunityFeedController extends GetxController {
     void addCount(String lang) => counts[lang] = (counts[lang] ?? 0) + 1;
 
     for (final rune in text.runes) {
-      if (rune >= 0x0980 && rune <= 0x09FF) addCount('bn-BD');       // Bengali / Bangla
-      else if (rune >= 0x0600 && rune <= 0x06FF) addCount('ar-SA');  // Arabic
-      else if (rune >= 0x3040 && rune <= 0x30FF) addCount('ja-JP');  // Hiragana + Katakana
-      else if (rune >= 0x4E00 && rune <= 0x9FFF) addCount('zh-CN');  // CJK Unified Ideographs
-      else if (rune >= 0xAC00 && rune <= 0xD7AF) addCount('ko-KR');  // Hangul
-      else if (rune >= 0x0400 && rune <= 0x04FF) addCount('ru-RU');  // Cyrillic
-      else if (rune >= 0x0900 && rune <= 0x097F) addCount('hi-IN');  // Devanagari (Hindi)
-      else if (rune >= 0x0E00 && rune <= 0x0E7F) addCount('th-TH');  // Thai
-      else if (rune >= 0x0900 && rune <= 0x097F) addCount('hi-IN');  // Devanagari
+      if (rune >= 0x0980 && rune <= 0x09FF) { addCount('bn-BD'); }       // Bengali / Bangla
+      else if (rune >= 0x0600 && rune <= 0x06FF) { addCount('ar-SA'); }  // Arabic
+      else if (rune >= 0x3040 && rune <= 0x30FF) { addCount('ja-JP'); }  // Hiragana + Katakana
+      else if (rune >= 0x4E00 && rune <= 0x9FFF) { addCount('zh-CN'); }  // CJK Unified Ideographs
+      else if (rune >= 0xAC00 && rune <= 0xD7AF) { addCount('ko-KR'); }  // Hangul
+      else if (rune >= 0x0400 && rune <= 0x04FF) { addCount('ru-RU'); }  // Cyrillic
+      else if (rune >= 0x0900 && rune <= 0x097F) { addCount('hi-IN'); }  // Devanagari (Hindi)
+      else if (rune >= 0x0E00 && rune <= 0x0E7F) { addCount('th-TH'); }  // Thai
     }
 
     if (counts.isEmpty) return 'en-US';

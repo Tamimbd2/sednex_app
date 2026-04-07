@@ -14,27 +14,15 @@ class EditprofileView extends GetView<EditprofileController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
         title: Text(
           'Edit Profile',
-          style: GoogleFonts.arimo(
-            color: const Color(0xFF101727),
-            fontSize: 20,
-            fontWeight: FontWeight.w400,
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF101727)),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: const Color(0xFFF2F4F6),
-            height: 1.0,
-          ),
         ),
       ),
       body: SafeArea(

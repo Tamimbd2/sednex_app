@@ -32,18 +32,17 @@ class AppTheme {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
-        centerTitle: false,
+        centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle.light,
-        titleTextStyle: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          letterSpacing: -0.3,
-        ).copyWith(
-          fontFamilyFallback: [
-            GoogleFonts.hindSiliguri().fontFamily!,
-          ],
-        ),
+        titleTextStyle:
+            GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.3,
+            ).copyWith(
+              fontFamilyFallback: [GoogleFonts.hindSiliguri().fontFamily!],
+            ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
 
@@ -121,8 +120,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          padding:
-              const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           textStyle: GoogleFonts.poppins(
             fontSize: 15,
             fontWeight: FontWeight.w600,
@@ -149,8 +147,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          padding:
-              const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           textStyle: GoogleFonts.poppins(
             fontSize: 15,
             fontWeight: FontWeight.w600,
@@ -162,8 +159,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.inputField,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
@@ -180,14 +179,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: AppColors.error, width: 1),
         ),
-        hintStyle: GoogleFonts.poppins(
-          fontSize: 14,
-          color: AppColors.hintText,
-        ),
-        labelStyle: GoogleFonts.poppins(
-          fontSize: 14,
-          color: AppColors.text,
-        ),
+        hintStyle: GoogleFonts.poppins(fontSize: 14, color: AppColors.hintText),
+        labelStyle: GoogleFonts.poppins(fontSize: 14, color: AppColors.text),
       ),
 
       // ── Card ──────────────────────────────────────────────────────
@@ -215,9 +208,7 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         side: const BorderSide(color: AppColors.cardBorder),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       ),
@@ -271,21 +262,24 @@ class AppTheme {
       // ── Switch ───────────────────────────────────────────────────
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.selected)
-                ? AppColors.primary
-                : Colors.white),
+          (s) => s.contains(WidgetState.selected)
+              ? AppColors.primary
+              : Colors.white,
+        ),
         trackColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.selected)
-                ? AppColors.blue3
-                : AppColors.cardBorder),
+          (s) => s.contains(WidgetState.selected)
+              ? AppColors.blue3
+              : AppColors.cardBorder,
+        ),
       ),
 
       // ── Checkbox ─────────────────────────────────────────────────
       checkboxTheme: CheckboxThemeData(
         fillColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.selected)
-                ? AppColors.primary
-                : Colors.transparent),
+          (s) => s.contains(WidgetState.selected)
+              ? AppColors.primary
+              : Colors.transparent,
+        ),
         checkColor: WidgetStateProperty.all(Colors.white),
         side: const BorderSide(color: AppColors.blue4, width: 2),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),

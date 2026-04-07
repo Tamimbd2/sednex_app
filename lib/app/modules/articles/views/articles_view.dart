@@ -45,12 +45,17 @@ class ArticlesView extends GetView<ArticlesController> {
                   fontSize: 15,
                   fontWeight: FontWeight.w400,
                 ),
-                prefixIcon: Icon(Icons.search_rounded,
-                    color: Colors.grey[500], size: 22),
+                prefixIcon: Icon(
+                  Icons.search_rounded,
+                  color: Colors.grey[500],
+                  size: 22,
+                ),
                 filled: true,
                 fillColor: Colors.grey[100],
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 14,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,
@@ -183,27 +188,7 @@ class ArticlesView extends GetView<ArticlesController> {
                   // Articles List
                   Expanded(
                     child: Obx(() {
-                      final isFilterMode =
-                          controller.selectedFilterCategories.isNotEmpty;
-
-                      final filteredArticles = controller.articles.where((a) {
-                        final matchesSearch = controller.searchQuery.isEmpty ||
-                            a.title.toLowerCase().contains(
-                                controller.searchQuery.value.toLowerCase()) ||
-                            a.category.toLowerCase().contains(
-                                controller.searchQuery.value.toLowerCase());
-
-                        if (!matchesSearch) return false;
-
-                        if (isFilterMode) {
-                          return controller.selectedFilterCategories
-                              .contains(a.category);
-                        }
-                        if (controller.selectedCategory.value == 'All') {
-                          return true;
-                        }
-                        return a.category == controller.selectedCategory.value;
-                      }).toList();
+                      final filteredArticles = controller.filteredArticles;
 
                       if (filteredArticles.isEmpty) {
                         return Center(
@@ -519,7 +504,11 @@ class ArticlesView extends GetView<ArticlesController> {
                   // Date
                   Row(
                     children: [
-                      Icon(Icons.access_time_rounded, size: 13, color: Colors.grey[400]),
+                      Icon(
+                        Icons.access_time_rounded,
+                        size: 13,
+                        color: Colors.grey[400],
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         _smartDate(article.date),
@@ -598,8 +587,20 @@ class ArticlesView extends GetView<ArticlesController> {
     if (diff == 0) return 'Today';
     if (diff == 1) return 'Yesterday';
 
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]} ${date.year}';
   }
 }

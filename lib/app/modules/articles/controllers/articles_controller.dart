@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:sednexapp/app/services/api_service.dart';
 
 class Article {
   final String id;
@@ -30,6 +30,7 @@ class Article {
 }
 
 class ArticlesController extends GetxController {
+  final apiService = Get.find<ApiService>();
   final categories = <String>['All'].obs;
   final categoriesMap = <String, String>{}.obs; // ID -> Name map
   final selectedCategory = 'All'.obs;
@@ -39,10 +40,31 @@ class ArticlesController extends GetxController {
 
   final selectedFilterCategories = <String>[].obs;
 
+  List<Article> get filteredArticles {
+    final isFilterMode = selectedFilterCategories.isNotEmpty;
+    return articles.where((a) {
+      final matchesSearch =
+          searchQuery.isEmpty ||
+          a.title.toLowerCase().contains(searchQuery.value.toLowerCase()) ||
+          a.category.toLowerCase().contains(searchQuery.value.toLowerCase());
+
+      if (!matchesSearch) return false;
+
+      if (isFilterMode) {
+        return selectedFilterCategories.contains(a.category);
+      }
+      if (selectedCategory.value == 'All') {
+        return true;
+      }
+      return a.category == selectedCategory.value;
+    }).toList();
+  }
+
   @override
   void onInit() {
     super.onInit();
-    _initializeData();
+    // Use a slight delay to allow navigation transition to complete smoothly
+    Future.microtask(() => _initializeData());
   }
 
   void search(String query) {
@@ -51,9 +73,12 @@ class ArticlesController extends GetxController {
 
   Future<void> _initializeData() async {
     isLoading.value = true;
-    await fetchCategories();
-    await fetchArticles();
-    isLoading.value = false;
+    try {
+      await fetchCategories();
+      await fetchArticles();
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   String _stripHtmlTags(String htmlString) {
@@ -64,15 +89,14 @@ class ArticlesController extends GetxController {
 
   Future<void> fetchCategories() async {
     try {
-      final connect = GetConnect();
-      final response = await connect.get('${AppUrl.baseUrl}api/article/category');
+      final response = await apiService.getData('api/article/category');
 
       if (response.statusCode == 200) {
         final body = response.body;
         if (body is Map && body['categories'] is List) {
           final List rawCats = body['categories'];
           final Map<String, String> newMap = {};
-          
+
           for (var cat in rawCats) {
             final id = cat['_id']?.toString();
             final name = cat['name']?.toString();
@@ -81,7 +105,6 @@ class ArticlesController extends GetxController {
             }
           }
           categoriesMap.assignAll(newMap);
-          debugPrint('Categories mapped: ${categoriesMap.length} categories found.');
         }
       }
     } catch (e) {
@@ -90,10 +113,8 @@ class ArticlesController extends GetxController {
   }
 
   Future<void> fetchArticles() async {
-    if (!isLoading.value) isLoading.value = true;
     try {
-      final connect = GetConnect();
-      final response = await connect.get('${AppUrl.baseUrl}api/article/');
+      final response = await apiService.getData('api/article/');
 
       if (response.statusCode == 200) {
         var body = response.body;
@@ -106,36 +127,37 @@ class ArticlesController extends GetxController {
           }
         }
 
-        if (body is Map && body['articles'] is List) {
-          final List rawArticles = body['articles'];
+        if (body is Map && (body['articles'] is List || body['data'] is List)) {
+          final List rawArticles = body['articles'] ?? body['data'] ?? [];
 
           // Map API data to Article objects
           final List<Article> mappedArticles = rawArticles.map<Article>((item) {
             final author = item['author'];
             final createdAt = item['createdAt'] ?? '';
-            final List contentList = item['content'] is List ? item['content'] : [];
-            
+            final List contentList = item['content'] is List
+                ? item['content']
+                : [];
+
             DateTime parsedDate;
             try {
               parsedDate = DateTime.parse(createdAt).toLocal();
             } catch (_) {
               parsedDate = DateTime.now();
             }
-            
+
             // Resolve Category Name from ID
             String catValue = item['category']?.toString() ?? '';
             String catName = 'General';
-            
+
             if (categoriesMap.containsKey(catValue)) {
               catName = categoriesMap[catValue]!;
             } else if (item['category'] is Map) {
               catName = item['category']['name'] ?? 'General';
-            } else if (catValue.isNotEmpty && !catValue.contains(RegExp(r'^[0-9a-fA-F]{24}$'))) {
-              // If it's already a name (not a 24-char hex ID), use it
+            } else if (catValue.isNotEmpty &&
+                !catValue.contains(RegExp(r'^[0-9a-fA-F]{24}$'))) {
               catName = catValue;
             }
 
-            // Extract first image URL and first paragraph for preview
             String extractedImageUrl = '';
             String extractedDescription = '';
 
@@ -143,7 +165,8 @@ class ArticlesController extends GetxController {
               if (content['type'] == 'image' && extractedImageUrl.isEmpty) {
                 extractedImageUrl = content['url'] ?? '';
               }
-              if (content['type'] == 'paragraph' && extractedDescription.isEmpty) {
+              if (content['type'] == 'paragraph' &&
+                  extractedDescription.isEmpty) {
                 extractedDescription = _stripHtmlTags(content['data'] ?? '');
               }
             }
@@ -151,8 +174,8 @@ class ArticlesController extends GetxController {
             return Article(
               id: item['_id'] ?? '',
               title: item['title'] ?? 'Untitled',
-              description: extractedDescription.isNotEmpty 
-                  ? extractedDescription 
+              description: extractedDescription.isNotEmpty
+                  ? extractedDescription
                   : (item['description'] ?? ''),
               imageUrl: extractedImageUrl,
               date: parsedDate,
@@ -162,12 +185,10 @@ class ArticlesController extends GetxController {
             );
           }).toList();
 
-          // Sort articles by date descending (recent first)
           mappedArticles.sort((a, b) => b.date.compareTo(a.date));
 
           articles.assignAll(mappedArticles);
 
-          // Extract unique categories from API data (now with names) and build chips
           final Set<String> uniqueCategoryNames = {};
           for (var article in mappedArticles) {
             if (article.category.isNotEmpty) {
@@ -175,10 +196,10 @@ class ArticlesController extends GetxController {
             }
           }
 
-          // Build categories list: "All" + unique category names
-          categories.assignAll(['All', ...uniqueCategoryNames.toList()..sort()]);
-
-          debugPrint('Articles loaded with category names: ${mappedArticles.length}');
+          categories.assignAll([
+            'All',
+            ...uniqueCategoryNames.toList()..sort(),
+          ]);
         }
       }
     } catch (e) {
@@ -225,4 +246,3 @@ class ArticlesController extends GetxController {
     article.isSaved.value = !article.isSaved.value;
   }
 }
-

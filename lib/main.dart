@@ -9,11 +9,8 @@ import 'app/routes/app_pages.dart';
 import 'app/bindings/initial_binding.dart';
 import 'app/core/theme/app_theme.dart';
 
-import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await langdetect.initLangDetect();
   await Firebase.initializeApp();
   await GetStorage.init();
 

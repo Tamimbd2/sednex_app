@@ -60,6 +60,7 @@ class CommunityFeedController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _initTts();
     fetchPosts();
 
     // Listen to filter changes
@@ -68,6 +69,23 @@ class CommunityFeedController extends GetxController {
       posts.clear();
       fetchPosts();
     });
+  }
+
+  void _initTts() async {
+    try {
+      if (GetPlatform.isAndroid) {
+         // Dynamically find an available engine (important for non-Google devices like Chinese HyperOS)
+         final dynamic engines = await flutterTts.getEngines;
+         if (engines != null && (engines as List).isNotEmpty) {
+            // Pick the first available engine (like XiaoAi or the default)
+            await flutterTts.setEngine(engines.first as String);
+         }
+      }
+      // Warm up the engine to prevent "not bound" errors on first use
+      await flutterTts.awaitSpeakCompletion(true);
+    } catch (e) {
+      debugPrint("TTS Warmup Error: $e");
+    }
   }
 
   Future<void> fetchPosts({bool loadMore = false}) async {

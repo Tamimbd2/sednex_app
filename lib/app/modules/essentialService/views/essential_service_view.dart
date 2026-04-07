@@ -174,6 +174,12 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               const Color(0xFF00BCD4),
               () => Get.toNamed('/localtour'),
             ),
+            _buildServiceCard(
+              'Maker',
+              'assets/newessential/Shield-.svg',
+              const Color(0xFF1565C0),
+              () => Get.toNamed('/general-section', arguments: {'slug': 'maker', 'title': 'Maker'}),
+            ),
           ],
         ),
       ),

@@ -497,29 +497,7 @@ class HomePageContent extends StatelessWidget {
             );
           }),
 
-          // More in Community Footer
-          Padding(
-            padding: const EdgeInsets.only(bottom: 24, top: 8),
-            child: Center(
-              child: Column(
-                children: [
-                  const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Color(0xFF8F95A1),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Scroll up to see more in community',
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      color: const Color(0xFF8F95A1),
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+
         ],
       ),
     );

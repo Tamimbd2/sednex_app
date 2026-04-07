@@ -38,90 +38,92 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
           onPressed: () => Get.back(),
         ),
       ),
-      body: RefreshIndicator(
-        color: const Color(0xFF1E63FF),
-        onRefresh: () => controller.refreshPosts(),
-        child: Obx(() {
-          if (controller.isLoading.value && controller.posts.isEmpty) {
-            return const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
-              ),
-            );
-          }
-
-          if (!controller.isLoading.value && controller.posts.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.article_outlined, size: 64, color: Colors.grey[300]),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No posts found',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      color: Colors.grey[400],
-                      fontWeight: FontWeight.w500,
+      body: SafeArea(
+        child: RefreshIndicator(
+          color: const Color(0xFF1E63FF),
+          onRefresh: () => controller.refreshPosts(),
+          child: Obx(() {
+            if (controller.isLoading.value && controller.posts.isEmpty) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
+                ),
+              );
+            }
+  
+            if (!controller.isLoading.value && controller.posts.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.article_outlined, size: 64, color: Colors.grey[300]),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No posts found',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        color: Colors.grey[400],
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+  
+            return CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                // Filter Chips (Sliver)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: _buildFilterChips(),
+                  ),
+                ),
+                
+                // Posts List (Sliver)
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: CommunityPostCard(
+                            post: controller.posts[index],
+                            index: index,
+                            controller: controller,
+                          ),
+                        );
+                      },
+                      childCount: controller.posts.length,
                     ),
                   ),
-                ],
-              ),
-            );
-          }
-
-          return CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              // Filter Chips (Sliver)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: _buildFilterChips(),
                 ),
-              ),
-              
-              // Posts List (Sliver)
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: CommunityPostCard(
-                          post: controller.posts[index],
-                          index: index,
-                          controller: controller,
+  
+                // Loading more indicator
+                if (controller.isLoadingMore.value)
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
+                          strokeWidth: 2,
                         ),
-                      );
-                    },
-                    childCount: controller.posts.length,
-                  ),
-                ),
-              ),
-
-              // Loading more indicator
-              if (controller.isLoadingMore.value)
-                const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
-                        strokeWidth: 2,
                       ),
                     ),
                   ),
+  
+                // Bottom spacing
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: 16),
                 ),
-
-              // Bottom spacing
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 16),
-              ),
-            ],
-          );
-        }),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }

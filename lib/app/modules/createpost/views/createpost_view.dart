@@ -31,131 +31,133 @@ class CreatepostView extends GetView<CreatepostController> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 16),
-          // Category Selection (Horizontal List)
-          SizedBox(
-            height: 40,
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              scrollDirection: Axis.horizontal,
-              itemCount: controller.categories.length,
-              separatorBuilder: (context, index) => const SizedBox(width: 12),
-              itemBuilder: (context, index) {
-                return Obx(() {
-                  final category = controller.categories[index];
-                  final isSelected = controller.selectedCategory.value == category;
-                  return GestureDetector(
-                    onTap: () => controller.selectCategory(category),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: isSelected ? const Color(0xFF4285F4) : Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: isSelected ? const Color(0xFF4285F4) : Colors.grey[300]!,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          category.capitalizeFirst!,
-                          style: GoogleFonts.inter(
-                            color: isSelected ? Colors.white : Colors.black87,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            // Category Selection (Horizontal List)
+            SizedBox(
+              height: 40,
+              child: ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                scrollDirection: Axis.horizontal,
+                itemCount: controller.categories.length,
+                separatorBuilder: (context, index) => const SizedBox(width: 12),
+                itemBuilder: (context, index) {
+                  return Obx(() {
+                    final category = controller.categories[index];
+                    final isSelected = controller.selectedCategory.value == category;
+                    return GestureDetector(
+                      onTap: () => controller.selectCategory(category),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: isSelected ? const Color(0xFF4285F4) : Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: isSelected ? const Color(0xFF4285F4) : Colors.grey[300]!,
                           ),
                         ),
-                      ),
-                    ),
-                  );
-                });
-              },
-            ),
-          ),
-          
-          const SizedBox(height: 24),
-
-          // Text Input Area
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              controller: controller.textController,
-              onChanged: (value) => controller.postText.value = value,
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                color: Colors.black87,
-              ),
-              decoration: InputDecoration(
-                hintText: 'What do you want to share?',
-                hintStyle: GoogleFonts.inter(
-                  color: Colors.grey[400],
-                  fontSize: 16,
-                ),
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-
-          // Images Grid
-          Expanded(
-            child: Obx(() {
-              if (controller.selectedImages.isEmpty) return const SizedBox.shrink();
-              
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: _buildImageGrid(),
-              );
-            }),
-          ),
-
-          // Bottom Action Bar
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                _buildActionIcon(Icons.image_outlined, 'Image', controller.pickImages), // Updated to pickImages
-                const SizedBox(width: 24),
-                _buildActionIcon(Icons.gif_box_outlined, 'GIF', () {}),
-                const Spacer(),
-                SizedBox(
-                  height: 45,
-                  width: 100,
-                  child: Obx(() {
-                    final isEnabled = (controller.postText.value.isNotEmpty || 
-                                      controller.selectedImages.isNotEmpty) && !controller.isLoading.value;
-                    return ElevatedButton(
-                      onPressed: isEnabled ? controller.createPost : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isEnabled ? const Color(0xFF1E63FF) : Colors.grey[200],
-                        foregroundColor: isEnabled ? Colors.white : Colors.grey[400],
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
-                      child: controller.isLoading.value 
-                        ? const SizedBox(
-                            height: 20, 
-                            width: 20, 
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                          )
-                        : Text(
-                            'Post',
+                        child: Center(
+                          child: Text(
+                            category.capitalizeFirst!,
                             style: GoogleFonts.inter(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                              color: isSelected ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
                             ),
                           ),
+                        ),
+                      ),
                     );
-                  }),
-                ),
-              ],
+                  });
+                },
+              ),
             ),
-          ),
-        ],
+            
+            const SizedBox(height: 24),
+  
+            // Text Input Area
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                controller: controller.textController,
+                onChanged: (value) => controller.postText.value = value,
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  color: Colors.black87,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'What do you want to share?',
+                  hintStyle: GoogleFonts.inter(
+                    color: Colors.grey[400],
+                    fontSize: 16,
+                  ),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+  
+            // Images Grid
+            Expanded(
+              child: Obx(() {
+                if (controller.selectedImages.isEmpty) return const SizedBox.shrink();
+                
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: _buildImageGrid(),
+                );
+              }),
+            ),
+  
+            // Bottom Action Bar
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  _buildActionIcon(Icons.image_outlined, 'Image', controller.pickImages), // Updated to pickImages
+                  const SizedBox(width: 24),
+                  _buildActionIcon(Icons.gif_box_outlined, 'GIF', () {}),
+                  const Spacer(),
+                  SizedBox(
+                    height: 45,
+                    width: 100,
+                    child: Obx(() {
+                      final isEnabled = (controller.postText.value.isNotEmpty || 
+                                        controller.selectedImages.isNotEmpty) && !controller.isLoading.value;
+                      return ElevatedButton(
+                        onPressed: isEnabled ? controller.createPost : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isEnabled ? const Color(0xFF1E63FF) : Colors.grey[200],
+                          foregroundColor: isEnabled ? Colors.white : Colors.grey[400],
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                        ),
+                        child: controller.isLoading.value 
+                          ? const SizedBox(
+                              height: 20, 
+                              width: 20, 
+                              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                            )
+                          : Text(
+                              'Post',
+                              style: GoogleFonts.inter(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                      );
+                    }),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

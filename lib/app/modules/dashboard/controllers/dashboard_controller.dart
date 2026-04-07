@@ -54,7 +54,7 @@ class DashboardController extends GetxController {
     
     // Seamless scroll for community feed
     homeScrollController.addListener(() {
-      if (homeScrollController.offset > homeScrollController.position.maxScrollExtent + 50) {
+      if (homeScrollController.offset >= homeScrollController.position.maxScrollExtent) {
         // Debounce or ensure we only navigate once
         if (Get.currentRoute != '/community-feed') {
           Get.toNamed(

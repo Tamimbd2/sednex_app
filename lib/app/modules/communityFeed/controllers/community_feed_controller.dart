@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../../../services/api_service.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 
 class CommunityFeedController extends GetxController {
   final apiService = Get.find<ApiService>();
@@ -436,39 +435,8 @@ class CommunityFeedController extends GetxController {
       // Stop any current speech
       await flutterTts.stop();
       
-      // Universal Auto-detect language
-      String lang = "en-US";
-      try {
-        final String detectedLang = langdetect.detect(text);
-        
-        // Map common 2-char codes to full locales commonly required by TTS engines
-        switch (detectedLang) {
-          case 'bn': lang = "bn-BD"; break;
-          case 'ar': lang = "ar-SA"; break;
-          case 'ja': lang = "ja-JP"; break;
-          case 'zh': lang = "zh-CN"; break;
-          case 'ko': lang = "ko-KR"; break;
-          case 'es': lang = "es-ES"; break;
-          case 'hi': lang = "hi-IN"; break;
-          case 'fr': lang = "fr-FR"; break;
-          case 'de': lang = "de-DE"; break;
-          case 'pt': lang = "pt-PT"; break;
-          case 'it': lang = "it-IT"; break;
-          case 'ru': lang = "ru-RU"; break;
-          default:
-            // Check for Bangla regex as a high-confidence fallback if short text
-            if (RegExp(r"[\u0980-\u09FF]").hasMatch(text)) {
-              lang = "bn-BD";
-            } else {
-              lang = detectedLang; 
-            }
-        }
-      } catch (e) {
-        // Fallback for short snippets or error
-        if (RegExp(r"[\u0980-\u09FF]").hasMatch(text)) {
-          lang = "bn-BD";
-        }
-      }
+      // Universal Auto-detect language using Unicode script ranges
+      String lang = _detectLanguage(text);
       
       await flutterTts.setLanguage(lang);
       
@@ -493,6 +461,33 @@ class CommunityFeedController extends GetxController {
   void onClose() {
     flutterTts.stop();
     super.onClose();
+  }
+
+  /// Detects the primary language/script in [text] using Unicode block ranges.
+  /// Falls back to 'en-US' for Latin or unknown scripts.
+  String _detectLanguage(String text) {
+    if (text.isEmpty) return 'en-US';
+
+    final counts = <String, int>{};
+
+    void addCount(String lang) => counts[lang] = (counts[lang] ?? 0) + 1;
+
+    for (final rune in text.runes) {
+      if (rune >= 0x0980 && rune <= 0x09FF) addCount('bn-BD');       // Bengali / Bangla
+      else if (rune >= 0x0600 && rune <= 0x06FF) addCount('ar-SA');  // Arabic
+      else if (rune >= 0x3040 && rune <= 0x30FF) addCount('ja-JP');  // Hiragana + Katakana
+      else if (rune >= 0x4E00 && rune <= 0x9FFF) addCount('zh-CN');  // CJK Unified Ideographs
+      else if (rune >= 0xAC00 && rune <= 0xD7AF) addCount('ko-KR');  // Hangul
+      else if (rune >= 0x0400 && rune <= 0x04FF) addCount('ru-RU');  // Cyrillic
+      else if (rune >= 0x0900 && rune <= 0x097F) addCount('hi-IN');  // Devanagari (Hindi)
+      else if (rune >= 0x0E00 && rune <= 0x0E7F) addCount('th-TH');  // Thai
+      else if (rune >= 0x0900 && rune <= 0x097F) addCount('hi-IN');  // Devanagari
+    }
+
+    if (counts.isEmpty) return 'en-US';
+
+    // Return the language with the highest character count
+    return counts.entries.reduce((a, b) => a.value >= b.value ? a : b).key;
   }
 }
 

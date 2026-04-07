@@ -85,7 +85,7 @@ class NotificationsView extends GetView<NotificationsController> {
         style: GoogleFonts.poppins(
           fontSize: 11,
           fontWeight: FontWeight.w700,
-          color: AppColors.text.withOpacity(0.4),
+          color: AppColors.text.withValues(alpha: 0.4),
           letterSpacing: 1.2,
         ),
       ),
@@ -151,7 +151,7 @@ class NotificationsView extends GetView<NotificationsController> {
                           style: (isBangla ? GoogleFonts.hindSiliguri : GoogleFonts.poppins)(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.mainText.withOpacity(0.9),
+                            color: AppColors.mainText.withValues(alpha: 0.9),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -162,7 +162,7 @@ class NotificationsView extends GetView<NotificationsController> {
                         _getRelativeTime(notification.createdAt),
                         style: GoogleFonts.poppins(
                           fontSize: 11,
-                          color: AppColors.text.withOpacity(0.4),
+                          color: AppColors.text.withValues(alpha: 0.4),
                         ),
                       ),
                     ],
@@ -172,7 +172,7 @@ class NotificationsView extends GetView<NotificationsController> {
                     notification.message,
                     style: (isBangla ? GoogleFonts.hindSiliguri : GoogleFonts.poppins)(
                       fontSize: 13,
-                      color: AppColors.text.withOpacity(0.6),
+                      color: AppColors.text.withValues(alpha: 0.6),
                       height: 1.4,
                     ),
                     maxLines: 3,
@@ -191,7 +191,7 @@ class NotificationsView extends GetView<NotificationsController> {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: _getIconColor(notification.type).withOpacity(0.1),
+        color: _getIconColor(notification.type).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Icon(
@@ -244,8 +244,8 @@ class NotificationsView extends GetView<NotificationsController> {
           children: [
             Container(
               padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.04), shape: BoxShape.circle),
-              child: Icon(icon, size: 48, color: AppColors.primary.withOpacity(0.2)),
+              decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.04), shape: BoxShape.circle),
+              child: Icon(icon, size: 48, color: AppColors.primary.withValues(alpha: 0.2)),
             ),
             const SizedBox(height: 24),
             Text(
@@ -255,7 +255,7 @@ class NotificationsView extends GetView<NotificationsController> {
             const SizedBox(height: 10),
             Text(
               subtitle,
-              style: GoogleFonts.poppins(fontSize: 13, color: AppColors.text.withOpacity(0.5)),
+              style: GoogleFonts.poppins(fontSize: 13, color: AppColors.text.withValues(alpha: 0.5)),
               textAlign: TextAlign.center,
             ),
           ],

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:sednexapp/app/services/api_service.dart';
 import 'package:sednexapp/app/core/constants/url.dart';
@@ -89,7 +90,7 @@ class NotificationsController extends GetxController {
         );
       }
     } catch (e) {
-      print('Error marking as read: $e');
+      debugPrint('Error marking as read: $e');
     }
   }
 
@@ -100,7 +101,7 @@ class NotificationsController extends GetxController {
         notifications.removeWhere((element) => element.id == id);
       }
     } catch (e) {
-       print('Error deleting notification: $e');
+       debugPrint('Error deleting notification: $e');
     }
   }
 

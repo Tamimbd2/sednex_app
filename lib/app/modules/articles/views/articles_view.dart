@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -450,7 +449,7 @@ class ArticlesView extends GetView<ArticlesController> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1E63FF).withOpacity(0.06),
+                          color: const Color(0xFF1E63FF).withValues(alpha: 0.06),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
@@ -517,7 +516,7 @@ class ArticlesView extends GetView<ArticlesController> {
                         child: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1E63FF).withOpacity(0.05),
+                            color: const Color(0xFF1E63FF).withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Icon(

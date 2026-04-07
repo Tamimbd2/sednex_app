@@ -84,7 +84,7 @@ class ArticleDetailsView extends StatelessWidget {
                   vertical: 7,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1E63FF).withOpacity(0.08),
+                  color: const Color(0x141E63FF),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -117,8 +117,8 @@ class ArticleDetailsView extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1E63FF).withOpacity(0.05),
-                    border: Border.all(color: const Color(0xFF1E63FF).withOpacity(0.1)),
+                    color: const Color(0x0D1E63FF),
+                    border: Border.all(color: const Color(0x1A1E63FF)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(Icons.share_outlined, size: 20, color: Color(0xFF1E63FF)),

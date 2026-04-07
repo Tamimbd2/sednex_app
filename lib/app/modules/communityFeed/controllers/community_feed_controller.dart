@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../../../services/api_service.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 
 class CommunityFeedController extends GetxController {
   final apiService = Get.find<ApiService>();
@@ -435,13 +436,41 @@ class CommunityFeedController extends GetxController {
       // Stop any current speech
       await flutterTts.stop();
       
-      // Auto-detect language (Simple check for Bangla characters)
-      final bool hasBangla = RegExp(r"[\u0980-\u09FF]").hasMatch(text);
-      if (hasBangla) {
-        await flutterTts.setLanguage("bn-BD");
-      } else {
-        await flutterTts.setLanguage("en-US");
+      // Universal Auto-detect language
+      String lang = "en-US";
+      try {
+        final String detectedLang = langdetect.detect(text);
+        
+        // Map common 2-char codes to full locales commonly required by TTS engines
+        switch (detectedLang) {
+          case 'bn': lang = "bn-BD"; break;
+          case 'ar': lang = "ar-SA"; break;
+          case 'ja': lang = "ja-JP"; break;
+          case 'zh': lang = "zh-CN"; break;
+          case 'ko': lang = "ko-KR"; break;
+          case 'es': lang = "es-ES"; break;
+          case 'hi': lang = "hi-IN"; break;
+          case 'fr': lang = "fr-FR"; break;
+          case 'de': lang = "de-DE"; break;
+          case 'pt': lang = "pt-PT"; break;
+          case 'it': lang = "it-IT"; break;
+          case 'ru': lang = "ru-RU"; break;
+          default:
+            // Check for Bangla regex as a high-confidence fallback if short text
+            if (RegExp(r"[\u0980-\u09FF]").hasMatch(text)) {
+              lang = "bn-BD";
+            } else {
+              lang = detectedLang; 
+            }
+        }
+      } catch (e) {
+        // Fallback for short snippets or error
+        if (RegExp(r"[\u0980-\u09FF]").hasMatch(text)) {
+          lang = "bn-BD";
+        }
       }
+      
+      await flutterTts.setLanguage(lang);
       
       // Configure TTS
       await flutterTts.setPitch(1.0);

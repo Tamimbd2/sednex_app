@@ -32,44 +32,60 @@ class ArticleDetailsView extends StatelessWidget {
       return '$title\n\n$shareTextContent';
     }
 
+    // Internal helper for social actions to keep UI code clean
+    void performCopy() {
+      Clipboard.setData(ClipboardData(text: getShareText()));
+      Get.snackbar(
+        'Copied!',
+        'Article text copied to clipboard',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: const Color(0xFF101727),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+        margin: const EdgeInsets.all(16),
+        borderRadius: 12,
+      );
+    }
+
+    void performShare() {
+      SharePlus.instance.share(ShareParams(text: getShareText()));
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF1E63FF),
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF101727)),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
           'Article Details',
           style: GoogleFonts.poppins(
-            color: const Color(0xFF101727),
+            color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
       ),
-      // Optimized: Using ListView.builder for lazy loading of complex Content (Html widgets)
-      // preventing ANRs and main thread blocking.
       body: ListView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         children: [
-          const SizedBox(height: 10),
-          // Category & Date
+          // Premium Header: Category and Actions
           Row(
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 6,
+                  horizontal: 12,
+                  vertical: 7,
                 ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF1E63FF).withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   category,
@@ -80,35 +96,71 @@ class ArticleDetailsView extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
-              Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]),
-              const SizedBox(width: 4),
-              Text(
-                formattedDate,
-                style: GoogleFonts.poppins(
-                  color: Colors.grey[600],
-                  fontSize: 12,
+              const Spacer(),
+              // Copy Button
+              GestureDetector(
+                onTap: performCopy,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    border: Border.all(color: Colors.grey[200]!),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(Icons.copy_all_rounded, size: 20, color: Colors.grey[700]),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Share Button
+              GestureDetector(
+                onTap: performShare,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1E63FF).withOpacity(0.05),
+                    border: Border.all(color: const Color(0xFF1E63FF).withOpacity(0.1)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.share_outlined, size: 20, color: Color(0xFF1E63FF)),
                 ),
               ),
             ],
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
+
+          // Date Row
+          Row(
+            children: [
+              Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey[500]),
+              const SizedBox(width: 6),
+              Text(
+                formattedDate,
+                style: GoogleFonts.poppins(
+                  color: Colors.grey[500],
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
 
           // Title
           Text(
             title,
             style: GoogleFonts.hindSiliguri(
-              fontSize: 24,
+              fontSize: 26,
               fontWeight: FontWeight.w700,
               color: Colors.black,
-              height: 1.3,
+              height: 1.25,
             ),
           ),
 
-          const SizedBox(height: 16),
-          const Divider(height: 1),
           const SizedBox(height: 20),
+          const Divider(height: 1, thickness: 1.2, color: Color(0xFFF1F1F1)),
+          const SizedBox(height: 24),
 
           // Content Rendering
           if (fullContent.isEmpty)
@@ -124,92 +176,6 @@ class ArticleDetailsView extends StatelessWidget {
             ..._groupContent(fullContent),
 
           const SizedBox(height: 40),
-
-          // Copy & Share buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Copy button
-              GestureDetector(
-                onTap: () {
-                  Clipboard.setData(ClipboardData(text: getShareText()));
-                  Get.snackbar(
-                    'Copied!',
-                    'Article text copied to clipboard',
-                    snackPosition: SnackPosition.BOTTOM,
-                    backgroundColor: const Color(0xFF101727),
-                    colorText: Colors.white,
-                    duration: const Duration(seconds: 2),
-                    margin: const EdgeInsets.all(16),
-                    borderRadius: 12,
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.copy, size: 20, color: Colors.grey[700]),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Copy',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(width: 16),
-
-              // Share button
-              GestureDetector(
-                onTap: () {
-                  SharePlus.instance.share(ShareParams(text: getShareText()));
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E63FF).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.share,
-                        size: 20,
-                        color: Color(0xFF1E63FF),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Share',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF1E63FF),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
 
           const SizedBox(height: 50),
         ],
@@ -277,8 +243,15 @@ class ArticleDetailsView extends StatelessWidget {
   }
 
   Widget _buildHtmlWidget(String data) {
+    // Optimized: Sanitize data to remove any 'font-feature-settings' which can cause an assertion crash 
+    // in flutter_html 3.0.0 if the tag is not exactly 4 characters (e.g. empty or invalid).
+    String sanitizedData = data.replaceAll(
+      RegExp(r'font-feature-settings\s*:\s*[^;"]+;?'), 
+      '',
+    );
+
     return Html(
-      data: data,
+      data: sanitizedData,
       style: {
         "body": Style(
           fontSize: FontSize(17),

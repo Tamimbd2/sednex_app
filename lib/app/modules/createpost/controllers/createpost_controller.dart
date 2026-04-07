@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../communityFeed/controllers/community_feed_controller.dart';
 import '../../../services/api_service.dart';
 
@@ -31,6 +32,17 @@ class CreatepostController extends GetxController {
   }
 
   Future<void> pickImages() async {
+    // Request permissions based on Android version
+    if (GetPlatform.isAndroid) {
+      if (await Permission.photos.request().isGranted || 
+          await Permission.storage.request().isGranted) {
+        // Permission granted
+      } else {
+        Get.snackbar('Permission Denied', 'Please grant storage permission to select images');
+        return;
+      }
+    }
+
     if (selectedImages.length >= 4) {
       Get.snackbar('Limit Reached', 'You can only select up to 4 images');
       return;

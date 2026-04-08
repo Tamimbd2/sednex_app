@@ -33,6 +33,10 @@ class ProductDetailsView extends GetView<ShopController> {
     // Safety check for seller (API might not include this or send different format)
     final Map<String, dynamic> seller = product['seller'] is Map ? (product['seller'] as Map<String, dynamic>) : {};
 
+    final String categoryName = product['category'] is Map 
+        ? (product['category']['name']?.toString() ?? 'General') 
+        : (product['category']?.toString() ?? 'General');
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -175,7 +179,7 @@ class ProductDetailsView extends GetView<ShopController> {
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
-                            product['category']?.toString().toUpperCase() ?? '',
+                            categoryName.toUpperCase(),
                             style: GoogleFonts.outfit(
                               color: const Color(0xFF1E63FF),
                               fontSize: 10,

@@ -31,7 +31,7 @@ class FavoritesView extends GetView<DashboardController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'My Cart',
+          'my_cart'.tr,
           style: GoogleFonts.outfit(
             color: Colors.white,
             fontSize: 20,

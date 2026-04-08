@@ -116,7 +116,7 @@ class ProfileView extends GetView<ProfileController> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  'Other settings',
+                  'other_settings'.tr,
                   style: GoogleFonts.arimo(
                     fontSize: 14,
                     color: const Color(0xFF495565),
@@ -127,33 +127,33 @@ class ProfileView extends GetView<ProfileController> {
 
               // Settings Group 1
               _buildSettingsGroup([
-                _buildSettingsItem('My Post', 'assets/profile/post.svg',
+                _buildSettingsItem('my_post'.tr, 'assets/profile/post.svg',
                   onTap: () => Get.toNamed('/mypost'),
                 ),
                 Obx(() => _buildSettingsItem(
-                  'Cart',
+                  'my_cart'.tr,
                   'assets/profile/cart.svg',
                   badgeCount: dashboardController.lovedProducts.length,
                   onTap: () => Get.toNamed(Routes.FAVORITES),
                 )),
                 _buildSettingsItem(
-                  'Edit Profile',
+                  'edit_profile'.tr,
                   'assets/profile/editprofile.svg',
                   onTap: () => Get.toNamed('/editprofile'),
                 ),
                 _buildSettingsItem(
-                  'Password',
+                  'password'.tr,
                   'assets/profile/password.svg',
                   onTap: () => Get.toNamed('/change-password'),
                 ),
                 _buildSettingsItem(
-                  'Language',
+                  'language'.tr,
                   'assets/profile/language.svg',
                   onTap: () => Get.toNamed('/language'),
                 ),
 
                 _buildSettingsItem(
-                  'Saved Post',
+                  'saved_post'.tr,
                   'assets/profile/savepost.svg',
                   isLast: true,
                   onTap: () => Get.toNamed('/savepost'),
@@ -165,31 +165,31 @@ class ProfileView extends GetView<ProfileController> {
               // Settings Group 2
               _buildSettingsGroup([
                 _buildSettingsItem(
-                  'Terms and Condition',
+                  'terms_condition'.tr,
                   'assets/profile/termsandconditions.svg',
                   onTap: () => Get.toNamed('/termsandcondition'),
                 ),
                 _buildSettingsItem(
-                  'Help/FAQ',
+                  'help_faq'.tr,
                   'assets/profile/help.svg',
                   onTap: () => Get.toNamed('/help'),
                 ),
                 _buildSettingsItem(
-                  'About Us',
+                  'about_us'.tr,
                   'assets/profile/aboutus.svg',
                   onTap: () => Get.toNamed('/aboutus'),
                 ),
                 _buildSettingsItem(
-                  'Logout',
+                  'logout'.tr,
                   'assets/profile/logout.svg',
                   isLast: true,
                   isDestructive: true,
                   onTap: () {
                     Get.defaultDialog(
-                      title: 'Logout',
-                      middleText: 'Are you sure you want to log out?',
-                      textConfirm: 'Yes',
-                      textCancel: 'No',
+                      title: 'logout_confirm_title'.tr,
+                      middleText: 'logout_confirm_desc'.tr,
+                      textConfirm: 'yes'.tr,
+                      textCancel: 'no'.tr,
                       confirmTextColor: Colors.white,
                       buttonColor: AppColors.primary,
                       cancelTextColor: const Color(0xFF101727),

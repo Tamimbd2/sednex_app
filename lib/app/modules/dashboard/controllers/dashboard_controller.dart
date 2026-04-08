@@ -31,13 +31,13 @@ class DashboardController extends GetxController {
   // Global Search State
   var isSearchLoading = false.obs;
   var searchResults = <String, List<dynamic>>{}.obs; // Section -> List of items
-  
+
   // Community Post interactions in search
   final expandedPosts = <int>{}.obs;
   final currentlySpeakingIndex = (-1).obs;
   // Initialize lazily or during search
   dynamic get flutterTts => Get.find<CommunityFeedController>().flutterTts;
-  
+
   Worker? _searchDebouncer;
 
   // Controllers for auto-scrolling
@@ -257,24 +257,73 @@ class DashboardController extends GetxController {
       expandedPosts.clear();
       return;
     }
-    
+
     expandedPosts.clear(); // Reset expands on new search
     isSearchLoading.value = true;
     final results = <String, List<dynamic>>{};
-    
+
     try {
       // Parallel fetching for better performance
       await Future.wait([
-        _searchSection('Articles', 'api/article/', query, (data) => data['articles'] ?? data['data'] ?? []),
-        _searchSection('Products', 'api/products/', query, (data) => data['products'] ?? (data is List ? data : [])),
-        _searchSection('Community Posts', 'api/post/', query, (data) => data['posts'] ?? []),
-        _searchSection('Hospitals', 'api/sections/hospitals/items', query, (data) => data['items'] ?? []),
-        _searchSection('Restaurants', 'api/sections/restaurents/items', query, (data) => data['items'] ?? []),
-        _searchSection('Organizations', 'api/sections/organization/items', query, (data) => data['items'] ?? []),
-        _searchSection('Embassies', 'api/sections/embassy/items', query, (data) => data['items'] ?? []),
-        _searchSection('Local Tours', 'api/local-tour/', query, (data) => data['tours'] ?? []),
+        _searchSection(
+          'Articles',
+          'api/article/',
+          query,
+          (data) => data['articles'] ?? data['data'] ?? [],
+        ),
+        _searchSection(
+          'Products',
+          'api/products/',
+          query,
+          (data) => data['products'] ?? (data is List ? data : []),
+        ),
+        _searchSection(
+          'Community Posts',
+          'api/post/',
+          query,
+          (data) => data['posts'] ?? [],
+        ),
+        _searchSection(
+          'Hospitals',
+          'api/sections/hospitals/items',
+          query,
+          (data) => data['items'] ?? [],
+        ),
+        _searchSection(
+          'Restaurants',
+          'api/sections/restaurents/items',
+          query,
+          (data) => data['items'] ?? [],
+        ),
+        _searchSection(
+          'Organizations',
+          'api/sections/organization/items',
+          query,
+          (data) => data['items'] ?? [],
+        ),
+        _searchSection(
+          'Embassies',
+          'api/sections/embassy/items',
+          query,
+          (data) => data['items'] ?? [],
+        ),
+        _searchSection(
+          'Local Tours',
+          'api/local-tour/',
+          query,
+          (data) => data['tours'] ?? [],
+        ),
       ]).then((lists) {
-        final sections = ['Articles', 'Products', 'Community Posts', 'Hospitals', 'Restaurants', 'Organizations', 'Embassies', 'Local Tours'];
+        final sections = [
+          'Articles',
+          'Products',
+          'Community Posts',
+          'Hospitals',
+          'Restaurants',
+          'Organizations',
+          'Embassies',
+          'Local Tours',
+        ];
         for (int i = 0; i < lists.length; i++) {
           if (lists[i].isNotEmpty) {
             results[sections[i]] = lists[i];
@@ -284,7 +333,9 @@ class DashboardController extends GetxController {
 
       // Search in Essential Services (locally available)
       final services = servicesList.where((s) {
-        final name = (s['title'] ?? s['name'] ?? s['label'] ?? '').toString().toLowerCase();
+        final name = (s['title'] ?? s['name'] ?? s['label'] ?? '')
+            .toString()
+            .toLowerCase();
         return name.contains(query.toLowerCase());
       }).toList();
       if (services.isNotEmpty) results['Essential Services'] = services;
@@ -297,26 +348,46 @@ class DashboardController extends GetxController {
     }
   }
 
-  Future<List<dynamic>> _searchSection(String section, String url, String query, List<dynamic> Function(dynamic) extractor) async {
+  Future<List<dynamic>> _searchSection(
+    String section,
+    String url,
+    String query,
+    List<dynamic> Function(dynamic) extractor,
+  ) async {
     try {
       final response = await apiService.getData(url);
       if (response.statusCode == 200) {
         var body = response.body;
         if (body is String) body = jsonDecode(body);
-        
+
         final List raw = extractor(body);
         final filtered = raw.where((item) {
-          final mainText = (item['title'] ?? item['name'] ?? item['description'] ?? item['content'] ?? '').toString().toLowerCase();
-          final authorName = (item['author'] is Map ? (item['author']['name'] ?? '') : '').toString().toLowerCase();
+          final mainText =
+              (item['title'] ??
+                      item['name'] ??
+                      item['description'] ??
+                      item['content'] ??
+                      '')
+                  .toString()
+                  .toLowerCase();
+          final authorName =
+              (item['author'] is Map ? (item['author']['name'] ?? '') : '')
+                  .toString()
+                  .toLowerCase();
           final queryLower = query.toLowerCase();
-          return mainText.contains(queryLower) || authorName.contains(queryLower);
+          return mainText.contains(queryLower) ||
+              authorName.contains(queryLower);
         }).toList();
-        
+
         // Match the model expected by the UI for consistent display
-        return filtered.map((item) => {
-          ...item,
-          '_search_section': section, // Metadata for navigation if needed
-        }).toList();
+        return filtered
+            .map(
+              (item) => {
+                ...item,
+                '_search_section': section, // Metadata for navigation if needed
+              },
+            )
+            .toList();
       }
     } catch (e) {
       debugPrint("Error searching section $section: $e");
@@ -325,7 +396,7 @@ class DashboardController extends GetxController {
   }
 
   // --- Post Interaction Proxies for Search Results ---
-  
+
   String? get userId {
     final userData = _box.read('user');
     if (userData != null) {
@@ -346,13 +417,13 @@ class DashboardController extends GetxController {
   Future<void> toggleLike(int index) async {
     final posts = searchResults['Community Posts'];
     if (posts == null || index >= posts.length) return;
-    
+
     final post = posts[index];
     final postId = post['_id'];
     final currentUserId = userId;
 
     if (currentUserId == null) {
-      Get.snackbar('Login Required', 'Please login to react to posts');
+      Get.snackbar('login_required'.tr, 'please_login_to_react'.tr);
       return;
     }
 
@@ -364,7 +435,7 @@ class DashboardController extends GetxController {
         if (body is Map && body['post'] != null) {
           final updatedPost = body['post'];
           final lovedBy = (updatedPost['lovedBy'] as List?) ?? [];
-          
+
           post['likes'] = updatedPost['loveCount'] ?? 0;
           post['isLiked'] = lovedBy.contains(currentUserId);
           posts[index] = Map<String, dynamic>.from(post);
@@ -397,20 +468,30 @@ class DashboardController extends GetxController {
   }
 
   // Placeholder methods for card buttons (can be fully implemented if needed)
-  void fetchComments(int index) => Get.find<CommunityFeedController>().fetchComments(index);
-  dynamic get isLoadingComments => Get.find<CommunityFeedController>().isLoadingComments;
-  dynamic get replyTargetCommentId => Get.find<CommunityFeedController>().replyTargetCommentId;
-  dynamic get replyTargetName => Get.find<CommunityFeedController>().replyTargetName;
-  void addComment(int index, String text) => Get.find<CommunityFeedController>().addComment(index, text);
-  void setReplyTarget(String id, String name) => Get.find<CommunityFeedController>().setReplyTarget(id, name);
-  void clearReplyTarget() => Get.find<CommunityFeedController>().clearReplyTarget();
-  void savePost(int index) => Get.find<CommunityFeedController>().savePost(index);
-  void updatePost(int index, String text) => Get.find<CommunityFeedController>().updatePost(index, text);
-  void deletePost(int index) => Get.find<CommunityFeedController>().deletePost(index);
+  void fetchComments(int index) =>
+      Get.find<CommunityFeedController>().fetchComments(index);
+  dynamic get isLoadingComments =>
+      Get.find<CommunityFeedController>().isLoadingComments;
+  dynamic get replyTargetCommentId =>
+      Get.find<CommunityFeedController>().replyTargetCommentId;
+  dynamic get replyTargetName =>
+      Get.find<CommunityFeedController>().replyTargetName;
+  void addComment(int index, String text) =>
+      Get.find<CommunityFeedController>().addComment(index, text);
+  void setReplyTarget(String id, String name) =>
+      Get.find<CommunityFeedController>().setReplyTarget(id, name);
+  void clearReplyTarget() =>
+      Get.find<CommunityFeedController>().clearReplyTarget();
+  void savePost(int index) =>
+      Get.find<CommunityFeedController>().savePost(index);
+  void updatePost(int index, String text) =>
+      Get.find<CommunityFeedController>().updatePost(index, text);
+  void deletePost(int index) =>
+      Get.find<CommunityFeedController>().deletePost(index);
 
   void fetchLovedProducts() async {
     try {
-      const path = 'api/products/all/loved';
+      const path = 'api/products/love/';
       final fullUrl = '${apiService.httpClient.baseUrl}$path';
       debugPrint("Favorites Full URL: $fullUrl");
       final response = await apiService.getData(path);
@@ -483,7 +564,7 @@ class DashboardController extends GetxController {
         lovedProducts.removeAt(removedIndex);
 
         final response = await apiService.patchData(
-          'api/products/$productId/love/',
+          'api/products/$productId/love',
           {},
         );
 

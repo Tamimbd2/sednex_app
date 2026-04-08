@@ -27,7 +27,7 @@ class ShopView extends GetView<ShopController> {
           ),
         ),
         title: Text(
-          'Premium Shop',
+          'premium_shop'.tr,
           style: GoogleFonts.outfit( // Using Outfit for a more modern, premium feel
             fontWeight: FontWeight.w700,
             fontSize: 22,
@@ -63,7 +63,7 @@ class ShopContent extends GetView<ShopController> {
             child: TextField(
               onChanged: (val) => controller.searchQuery.value = val,
               decoration: InputDecoration(
-                hintText: 'Search products...',
+                hintText: 'search_products'.tr + '...',
                 hintStyle: GoogleFonts.inter(
                   color: Colors.grey[500],
                   fontSize: 15,
@@ -140,7 +140,7 @@ class ShopContent extends GetView<ShopController> {
                       vertical: 12,
                     ),
                     child: Text(
-                      'Search Results',
+                      'search_results'.tr,
                       style: GoogleFonts.poppins(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -151,7 +151,7 @@ class ShopContent extends GetView<ShopController> {
 
                   if (filteredCats.isNotEmpty) ...[
                     _buildSectionHeader(
-                      title: 'Categories',
+                      title: 'categories'.tr,
                       actionText: '', // Hide action for search
                       onActionTap: () {},
                     ),
@@ -186,7 +186,7 @@ class ShopContent extends GetView<ShopController> {
 
                   if (filteredProds.isNotEmpty) ...[
                     _buildSectionHeader(
-                      title: 'Products',
+                      title: 'products'.tr,
                       actionText: '',
                       onActionTap: () {},
                     ),
@@ -238,7 +238,7 @@ class ShopContent extends GetView<ShopController> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Featured Collections',
+                              'featured_collections'.tr,
                               style: GoogleFonts.outfit(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -279,7 +279,7 @@ class ShopContent extends GetView<ShopController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Exclusive Picks',
+                        'exclusive_picks'.tr,
                         style: GoogleFonts.outfit(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
@@ -295,7 +295,7 @@ class ShopContent extends GetView<ShopController> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            'View All',
+                            'view_all'.tr,
                             style: GoogleFonts.outfit(
                               color: const Color(0xFF1E63FF),
                               fontWeight: FontWeight.w600,

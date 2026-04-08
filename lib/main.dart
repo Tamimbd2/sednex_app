@@ -8,6 +8,7 @@ import 'app/core/constants/app_constants.dart';
 import 'app/routes/app_pages.dart';
 import 'app/bindings/initial_binding.dart';
 import 'app/core/theme/app_theme.dart';
+import 'app/core/translations/app_translations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,18 @@ void main() async {
   await GoogleSignIn.instance.initialize(
     serverClientId: serverClientId.isEmpty ? null : serverClientId,
   );
+
+  final box = GetStorage();
+  String? savedLanguage = box.read('language');
+  Locale initialLocale;
+  if (savedLanguage == 'Bangla') {
+    initialLocale = const Locale('bn', 'BD');
+  } else if (savedLanguage == 'Arabic') {
+    initialLocale = const Locale('ar', 'AE');
+  } else {
+    initialLocale = const Locale('en', 'US');
+  }
+
   runApp(
     GetMaterialApp(
       title: "Sednex",
@@ -25,11 +38,15 @@ void main() async {
       initialBinding: InitialBinding(),
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
+      translations: AppTranslations(),
+      locale: initialLocale,
+      fallbackLocale: const Locale('en', 'US'),
       theme: AppTheme.lightTheme.copyWith(
         // Global font fallback: Poppins for Latin, Hind Siliguri for Bengali
         textTheme: AppTheme.lightTheme.textTheme.apply(
           fontFamilyFallback: [
             GoogleFonts.hindSiliguri().fontFamily ?? 'HindSiliguri',
+            'Roboto', // Fallback for Arabic if needed, or specify an Arabic font
           ],
         ),
       ),

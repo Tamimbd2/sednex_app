@@ -51,11 +51,32 @@ class DashboardView extends GetView<DashboardController> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  // Logo
-                  Image.asset(
-                    'assets/logo/Sednex Website Logo Eng@3x.png',
-                    height: 28,
-                    fit: BoxFit.contain,
+                  // Logo & Dynamic Title
+                  Row(
+                    children: [
+                      Image.asset(
+                        'assets/logo/Sednex Website Logo Eng@3x.png',
+                        height: 28,
+                        fit: BoxFit.contain,
+                      ),
+                      if (Get.locale?.languageCode != 'en' || controller.currentIndex.value != 0) ...[
+                        const SizedBox(width: 12),
+                        Container(
+                          width: 1,
+                          height: 20,
+                          color: Colors.white.withValues(alpha: 0.3),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          _getAppBarTitle(controller.currentIndex.value),
+                          style: GoogleFonts.outfit(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   const Spacer(),
                   // Notification Icon with Badge
@@ -165,6 +186,21 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
+  String _getAppBarTitle(int index) {
+    switch (index) {
+      case 0:
+        return 'home'.tr;
+      case 1:
+        return 'search'.tr;
+      case 2:
+        return 'shop'.tr;
+      case 3:
+        return 'profile'.tr;
+      default:
+        return 'home'.tr;
+    }
+  }
+
   Widget _getPage(int index) {
     switch (index) {
       case 0:
@@ -195,7 +231,7 @@ class DashboardView extends GetView<DashboardController> {
             child: TextField(
               onChanged: (val) => controller.searchQuery.value = val,
               decoration: InputDecoration(
-                hintText: 'Search Anything...',
+                hintText: 'search'.tr + '...',
                 hintStyle: GoogleFonts.inter(
                   color: Colors.grey[500],
                   fontSize: 15,
@@ -272,7 +308,7 @@ class DashboardView extends GetView<DashboardController> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Search Anything',
+            'search_anything'.tr,
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -281,7 +317,7 @@ class DashboardView extends GetView<DashboardController> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Find posts, products, articles and more',
+            'search_placeholder_desc'.tr,
             style: GoogleFonts.inter(
               fontSize: 14,
               color: Colors.grey[600],
@@ -300,7 +336,7 @@ class DashboardView extends GetView<DashboardController> {
           Icon(Icons.search_off_rounded, size: 64, color: Colors.grey[300]),
           const SizedBox(height: 16),
           Text(
-            'No results found',
+            'no_results_found'.tr,
             style: GoogleFonts.inter(
               fontSize: 16,
               fontWeight: FontWeight.w500,

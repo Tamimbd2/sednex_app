@@ -410,7 +410,7 @@ class DashboardView extends GetView<DashboardController> {
             child: TextButton(
               onPressed: () => _navigateToListView(title),
               child: Text(
-                'View all ${title}',
+                'View all $title',
                 style: GoogleFonts.inter(fontSize: 13, color: const Color(0xFF1E63FF), fontWeight: FontWeight.w600),
               ),
             ),

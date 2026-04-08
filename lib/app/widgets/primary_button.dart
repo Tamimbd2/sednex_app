@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../core/theme/app_colors.dart';
 
@@ -9,6 +9,7 @@ class PrimaryButton extends StatelessWidget {
   final double height;
   final Color? color;
   final TextStyle? textStyle;
+  final double? borderRadius;
 
   const PrimaryButton({
     super.key,
@@ -18,6 +19,7 @@ class PrimaryButton extends StatelessWidget {
     this.height = 56,
     this.color,
     this.textStyle,
+    this.borderRadius,
   });
 
   @override
@@ -29,7 +31,7 @@ class PrimaryButton extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           color: color ?? AppColors.primary,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(borderRadius ?? 14),
           boxShadow: [
             BoxShadow(
               color: (color ?? AppColors.primary).withValues(alpha: 0.3),

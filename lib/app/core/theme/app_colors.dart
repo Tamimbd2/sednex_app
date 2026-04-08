@@ -25,14 +25,14 @@ class AppColors {
   static const Color blue6 = Color(0xFF95C6FF);
 
   // ── Backgrounds ──────────────────────────────────────────────────────
-  static const Color background  = Color(0xFFEDF4FF); // BG 2
+  static const Color background  = Color(0xFFF5F5F5); // Main Background
   static const Color backgroundAlt = Color(0xFFE3EEFF); // BG 1
   static const Color surface    = Color(0xFFFFFFFF);
 
   // ── Text ────────────────────────────────────────────────────────────
   static const Color mainText   = Color(0xFF0D1B3E);
   static const Color text       = Color(0xFF4A5568);
-  static const Color hintText   = Color(0xFF95C6FF);
+  static const Color hintText   = Color(0xFF64748B);
 
   // ── Input / Cards ───────────────────────────────────────────────────
   static const Color inputField = Color(0xFFEDF4FF);

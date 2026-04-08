@@ -11,7 +11,9 @@ class ArticleDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args = Get.arguments as Map<String, dynamic>? ?? {};
+    final Map<String, dynamic> args = Get.arguments is Map 
+        ? Map<String, dynamic>.from(Get.arguments as Map) 
+        : {};
     final String title = args['title'] ?? 'Article Title';
     final String description = args['description'] ?? '';
     final String category = args['category'] ?? 'General';
@@ -71,7 +73,8 @@ class ArticleDetailsView extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: ListView(
+      body: SafeArea(
+        child: ListView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         children: [
@@ -180,8 +183,9 @@ class ArticleDetailsView extends StatelessWidget {
           const SizedBox(height: 50),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   // Optimized logic to group contiguous paragraphs into single Html widgets
   // and efficiently render images to prevent ANR.

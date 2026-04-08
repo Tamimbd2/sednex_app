@@ -3,13 +3,16 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../controllers/shop_controller.dart';
+import '../../../core/constants/url.dart';
 
 class ProductDetailsView extends GetView<ShopController> {
   const ProductDetailsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> product = Get.arguments as Map<String, dynamic>? ?? {};
+    final Map<String, dynamic> product = Get.arguments is Map 
+        ? Map<String, dynamic>.from(Get.arguments as Map) 
+        : {};
 
     if (product.isEmpty) {
       return const Scaffold(
@@ -17,8 +20,12 @@ class ProductDetailsView extends GetView<ShopController> {
       );
     }
     
-    // Fallbacks for data to avoid null errors
-    final List<String> images = (product['images'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [product['image'] ?? ''];
+    // Fallbacks for data to avoid null errors and format image URLs
+    final List<String> rawImages = (product['images'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [product['image']?.toString() ?? ''];
+    final List<String> images = rawImages.map((img) {
+      if (img.isEmpty || img.startsWith('http')) return img;
+      return '${AppUrl.baseUrl}$img';
+    }).toList();
     
     // Safety check for specifications (API might send list or map)
     final Map<String, dynamic> specs = product['specifications'] is Map ? (product['specifications'] as Map<String, dynamic>) : {};
@@ -81,7 +88,7 @@ class ProductDetailsView extends GetView<ShopController> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(24),
                         child: Image.network(
-                          product['image'] ?? '',
+                          images.isNotEmpty ? images[0] : '',
                           width: double.infinity,
                           height: double.infinity,
                           fit: BoxFit.cover,
@@ -189,7 +196,7 @@ class ProductDetailsView extends GetView<ShopController> {
                     ),
                   ),
                   Text(
-                    product['price'] ?? '৳0',
+                    product['price']?.toString() ?? '৳0',
                     style: GoogleFonts.outfit(
                       color: const Color(0xFF1E63FF),
                       fontSize: 24,

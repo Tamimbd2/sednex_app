@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,19 +12,17 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: const Color(0xFF1A73E8),
+        elevation: 0,
         title: Text(
           'Ramadan Calendar',
           style: GoogleFonts.poppins(
-            color: const Color(0xFF101727),
             fontWeight: FontWeight.w600,
-            fontSize: 20,
+            color: Colors.white,
           ),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF101727)),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
       ),

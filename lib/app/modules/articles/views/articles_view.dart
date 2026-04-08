@@ -534,10 +534,7 @@ class ArticlesView extends GetView<ArticlesController> {
                           onTap: () => controller.toggleSaved(article),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
-                            ),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: isSaved
                                   ? const Color(0xFF1E63FF)
@@ -547,24 +544,10 @@ class ArticlesView extends GetView<ArticlesController> {
                                 color: isSaved ? Colors.transparent : Colors.grey[200]!,
                               ),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  isSaved ? Icons.bookmark : Icons.bookmark_border,
-                                  size: 16,
-                                  color: isSaved ? Colors.white : Colors.grey[700],
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  isSaved ? 'Saved' : 'Save',
-                                  style: GoogleFonts.poppins(
-                                    color: isSaved ? Colors.white : Colors.grey[700],
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
+                            child: Icon(
+                              isSaved ? Icons.bookmark : Icons.bookmark_border,
+                              size: 18,
+                              color: isSaved ? Colors.white : Colors.grey[700],
                             ),
                           ),
                         );

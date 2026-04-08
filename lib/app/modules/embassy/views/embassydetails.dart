@@ -59,7 +59,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
   }
 
   Future<void> _fetchDetails() async {
-    final args = Get.arguments as Map<String, dynamic>? ?? {};
+    final args = Get.arguments is Map ? Map<String, dynamic>.from(Get.arguments as Map) : <String, dynamic>{};
     final Embassy? embassy = args['embassy'];
 
     // Support both: Embassy object (from embassy list) OR plain id/name/logoPath (from informations)
@@ -186,7 +186,8 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      body: _isLoading
+      body: SafeArea(
+        child: _isLoading
           ? const Center(
               child: CircularProgressIndicator(
                 color: AppColors.primary,
@@ -214,6 +215,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
                 ),
               ),
             ),
+      ),
     );
   }
 

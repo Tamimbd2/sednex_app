@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../communityFeed/controllers/community_feed_controller.dart';
 import '../../../services/api_service.dart';
 
@@ -31,15 +32,60 @@ class CreatepostController extends GetxController {
   }
 
   Future<void> pickImages() async {
+    // Request permissions based on Android version
+    if (GetPlatform.isAndroid) {
+      if (await Permission.photos.request().isGranted || 
+          await Permission.storage.request().isGranted) {
+        // Permission granted
+      } else {
+        Get.snackbar('Permission Denied', 'Please grant storage permission to select images');
+        return;
+      }
+    }
+
+    if (selectedImages.length >= 4) {
+      Get.snackbar('Limit Reached', 'You can only select up to 4 images');
+      return;
+    }
+    
     final ImagePicker picker = ImagePicker();
     final List<XFile> images = await picker.pickMultiImage();
+    
     if (images.isNotEmpty) {
-      selectedImages.addAll(images);
+      // Calculate how many more we can add
+      final int remaining = 4 - selectedImages.length;
+      if (images.length > remaining) {
+        selectedImages.addAll(images.take(remaining));
+        Get.snackbar('Limit Applied', 'Only the first $remaining selected images were added to reach the limit of 4');
+      } else {
+        selectedImages.addAll(images);
+      }
     }
   }
 
   void removeImage(int index) {
     selectedImages.removeAt(index);
+  }
+
+  void handleKeyboardContent(KeyboardInsertedContent content) {
+    if (selectedImages.length >= 4) {
+      Get.snackbar('Limit Reached', 'You can only select up to 4 images');
+      return;
+    }
+
+    // Attempt to add the keyboard content if it's a supported type
+    if (content.data != null) {
+       // Since it's from the keyboard, it's often a GIF or PNG
+       // We can use XFile.fromData to add it to our list
+       selectedImages.add(XFile.fromData(
+         content.data!, 
+         mimeType: content.mimeType,
+         name: 'keyboard_media_${DateTime.now().millisecondsSinceEpoch}',
+       ));
+    } else if (content.uri.isNotEmpty) {
+       // If it provides a URI (like a file path on some devices)
+       selectedImages.add(XFile(content.uri, mimeType: content.mimeType));
+    }
   }
 
   Future<void> createPost() async {
@@ -61,11 +107,9 @@ class CreatepostController extends GetxController {
       if (selectedImages.isNotEmpty) {
         final List<MultipartFile> files = [];
         for (var image in selectedImages) {
-          // Using the path directly often works better with GetConnect for multi-part files
-          files.add(MultipartFile(image.path, filename: image.name));
+          final bytes = await image.readAsBytes();
+          files.add(MultipartFile(bytes, filename: image.name));
         }
-        // Send as 'images' key. If the server expects repeated keys, 
-        // GetConnect usually handles List<MultipartFile> by repeating the key or using images[]
         body['images'] = files;
       }
 

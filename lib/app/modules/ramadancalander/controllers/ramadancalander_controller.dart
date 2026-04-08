@@ -1,14 +1,158 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../services/api_service.dart';
+import '../../../core/constants/url.dart';
 
 class RamadancalanderController extends GetxController {
-  
   var ramadanData = <Map<String, dynamic>>[].obs;
   var isLoading = false.obs;
+  var isRamadanActive = false.obs;
+  var location = 'Beirut, Lebanon'.obs;
+
+  final ApiService _apiService = Get.find<ApiService>();
 
   @override
   void onInit() {
     super.onInit();
-    loadStaticData();
+    isRamadanActive.value = false;
+    fetchRamadanData();
+  }
+
+  Future<void> fetchRamadanData() async {
+    isLoading.value = true;
+    try {
+      final response = await _apiService.getData(AppUrl.ramadanTimes);
+      debugPrint('Ramadan API Status: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        var body = response.body;
+        if (body is String) {
+          try {
+            body = jsonDecode(body);
+          } catch (e) {
+            debugPrint('Error decoding Ramadan JSON: $e');
+          }
+        }
+
+        debugPrint('Ramadan API Body Type: ${body.runtimeType}');
+
+        List items = [];
+        if (body is List) {
+          items = body;
+        } else if (body is Map) {
+          // Robust check for isActive
+          isRamadanActive.value = _findActiveStatus(body);
+          // Recursively find the largest list in the object
+          items = _findLargestList(body);
+
+          if (body['location'] != null) {
+            location.value = body['location'].toString();
+          } else if (body['data'] is Map && body['data']['location'] != null) {
+            location.value = body['data']['location'].toString();
+          }
+        }
+
+        if (items.isNotEmpty) {
+          final List<Map<String, dynamic>> mapped = [];
+          for (var item in items) {
+            if (item is Map) {
+              String dateStr = item['date'] ?? '';
+              mapped.add({
+                'no': item['no']?.toString() ?? (mapped.length + 1).toString(),
+                'seheri': item['seheri'] ?? item['sehri'] ?? '',
+                'iftar': item['iftar'] ?? item['ifter'] ?? '',
+                'date': dateStr,
+                'day': item['day'] ?? '',
+                'isToday': _isToday(dateStr),
+                'isActive': item['isActive'] == true,
+              });
+            }
+          }
+
+          if (mapped.isNotEmpty) {
+            ramadanData.assignAll(mapped);
+            // Re-check active status from items if not already found
+            if (!isRamadanActive.value) {
+              isRamadanActive.value = mapped.any((e) => e['isActive'] == true);
+            }
+          } else {
+            loadStaticData();
+          }
+        } else {
+          loadStaticData();
+        }
+      } else {
+        debugPrint(
+          'Ramadan API failed with ${response.statusCode}: ${response.statusText}',
+        );
+        loadStaticData();
+      }
+    } catch (e) {
+      debugPrint('Error fetching ramadan times: $e');
+      loadStaticData();
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  bool _findActiveStatus(dynamic data) {
+    if (data is Map) {
+      if (data.containsKey('isActive')) {
+        return data['isActive'].toString() == 'true';
+      }
+      for (var value in data.values) {
+        if (value is Map || value is List) {
+          if (_findActiveStatus(value)) return true;
+        }
+      }
+    } else if (data is List) {
+      for (var item in data) {
+        if (_findActiveStatus(item)) return true;
+      }
+    }
+    return false;
+  }
+
+  List _findLargestList(Map data) {
+    List largestList = [];
+
+    // Check direct children
+    for (var value in data.values) {
+      if (value is List) {
+        if (value.length > largestList.length) {
+          largestList = value;
+        }
+      }
+    }
+
+    // If no list found, check nested (one level deep is usually enough for most APIs)
+    if (largestList.isEmpty) {
+      for (var value in data.values) {
+        if (value is Map) {
+          for (var innerValue in value.values) {
+            if (innerValue is List) {
+              if (innerValue.length > largestList.length) {
+                largestList = innerValue;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return largestList;
+  }
+
+  bool _isToday(String dateStr) {
+    if (dateStr.isEmpty) return false;
+    try {
+      final now = DateTime.now();
+      final dt = DateTime.parse(dateStr);
+      return now.day == dt.day && now.month == dt.month && now.year == dt.year;
+    } catch (e) {
+      return false;
+    }
   }
 
   void loadStaticData() {
@@ -54,16 +198,25 @@ class RamadancalanderController extends GetxController {
       final day = int.parse(parts[0]);
       final monthStr = parts[1];
       final year = int.parse(parts[2]);
-      
+
       final month = _getMonthNumber(monthStr);
       final dt = DateTime(year, month, day);
-      
+
       // Determine weekday
-      final weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      final weekdays = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+      ];
       final weekdayName = weekdays[dt.weekday - 1];
-      
+
       // Check if today
-      final isToday = (now.day == day && now.month == month && now.year == year);
+      final isToday =
+          (now.day == day && now.month == month && now.year == year);
 
       mapped.add({
         'no': row[0].padLeft(2, '0'),
@@ -80,17 +233,19 @@ class RamadancalanderController extends GetxController {
 
   Map<String, String> get todayRamadanData {
     // Default fallback
-    Map<String, dynamic> todayItem = ramadanData.isNotEmpty ? ramadanData.first : {
-      'date': '18 Feb',
-      'day': 'Wednesday',
-      'seheri': '04:55 AM',
-      'iftar': '5:26 PM'
-    };
+    Map<String, dynamic> todayItem = ramadanData.isNotEmpty
+        ? ramadanData.first
+        : {
+            'date': '18 Feb',
+            'day': 'Wednesday',
+            'seheri': '04:55 AM',
+            'iftar': '5:26 PM',
+          };
 
     // Find actual today
     final found = ramadanData.firstWhere(
-      (item) => item['isToday'] == true, 
-      orElse: () => todayItem
+      (item) => item['isToday'] == true,
+      orElse: () => todayItem,
     );
 
     return {
@@ -98,25 +253,38 @@ class RamadancalanderController extends GetxController {
       'day': found['day'].toString(),
       'seheri': found['seheri'].toString(),
       'iftar': found['iftar'].toString(),
-      'location': 'Beirut',
+      'location': location.value,
     };
   }
 
   int _getMonthNumber(String m) {
     switch (m) {
-      case 'Jan': return 1;
-      case 'Feb': return 2;
-      case 'Mar': return 3;
-      case 'Apr': return 4;
-      case 'May': return 5;
-      case 'Jun': return 6;
-      case 'Jul': return 7;
-      case 'Aug': return 8;
-      case 'Sep': return 9;
-      case 'Oct': return 10;
-      case 'Nov': return 11;
-      case 'Dec': return 12;
-      default: return 1;
+      case 'Jan':
+        return 1;
+      case 'Feb':
+        return 2;
+      case 'Mar':
+        return 3;
+      case 'Apr':
+        return 4;
+      case 'May':
+        return 5;
+      case 'Jun':
+        return 6;
+      case 'Jul':
+        return 7;
+      case 'Aug':
+        return 8;
+      case 'Sep':
+        return 9;
+      case 'Oct':
+        return 10;
+      case 'Nov':
+        return 11;
+      case 'Dec':
+        return 12;
+      default:
+        return 1;
     }
   }
 }

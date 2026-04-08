@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../communityFeed/controllers/community_feed_controller.dart';
 import '../controllers/dashboard_controller.dart';
 import '../../namaj/controllers/namaj_controller.dart';
+import '../../ramadancalander/controllers/ramadancalander_controller.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../communityFeed/widgets/community_post_card.dart';
@@ -212,25 +213,25 @@ class HomePageContent extends StatelessWidget {
           Column(
             children: [
               SizedBox(
-                height: 170,
+                height: 175,
                 child: Obx(() {
                   final dController = Get.find<DashboardController>();
                   final services = dController.servicesList;
 
                   // Construct static + dynamic items
-                  final List<Widget> items = [
+                  final List<Widget> items = [];
 
-
-                    // Namaj Card
+                  // 1. Namaj Card
+                  items.add(
                     SizedBox(
                       width: 120,
                       child: Obx(() {
-                        NamajController? controller;
+                        NamajController? nController;
                         try {
-                          controller = Get.find<NamajController>();
+                          nController = Get.find<NamajController>();
                         } catch (e) {}
                         final nextPrayer =
-                            controller?.nextPrayerDisplay ??
+                            nController?.nextPrayerDisplay ??
                             {'name': 'Fazar', 'time': '05:45 AM'};
                         return _buildServiceCard(
                           title: nextPrayer['name']!,
@@ -244,8 +245,26 @@ class HomePageContent extends StatelessWidget {
                         );
                       }),
                     ),
+                  );
 
-                    ...services.map((service) {
+                  // 2. Sehri Iftar Compact Card
+                  RamadancalanderController? rController;
+                  try {
+                    rController = Get.find<RamadancalanderController>();
+                  } catch (e) {
+                    rController = Get.put(RamadancalanderController());
+                  }
+
+                  if (rController?.isRamadanActive.value ?? false) {
+                    items.add(_buildSehriIftarCompactCard());
+                  }
+
+                  // 3. Dynamic Services (Filtering generic ramadan cards)
+                  items.addAll(
+                    services.where((service) {
+                      String name = (service['name'] ?? '').toString().toLowerCase();
+                      return !name.contains('ramadan');
+                    }).map((service) {
                       String name = service['name']?.toString() ?? 'Service';
                       String image =
                           service['icon']?.toString() ??
@@ -289,15 +308,30 @@ class HomePageContent extends StatelessWidget {
                           isBkash && name.toLowerCase().contains('gold')
                           ? 'bKash Rate'
                           : name;
-                      String rawDate = service['time']?.toString() ?? 
-                                       service['updatedAt']?.toString() ?? 
-                                       service['createdAt']?.toString() ?? '';
+                      String rawDate =
+                          service['time']?.toString() ??
+                          service['updatedAt']?.toString() ??
+                          service['createdAt']?.toString() ??
+                          '';
                       String formattedDate = 'today';
                       if (rawDate.isNotEmpty) {
                         try {
                           // Standardize format (4 Apr 26) manually
                           DateTime dt = DateTime.parse(rawDate);
-                          final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                          final months = [
+                            'Jan',
+                            'Feb',
+                            'Mar',
+                            'Apr',
+                            'May',
+                            'Jun',
+                            'Jul',
+                            'Aug',
+                            'Sep',
+                            'Oct',
+                            'Nov',
+                            'Dec',
+                          ];
                           String d = dt.day.toString();
                           String m = months[dt.month - 1];
                           String y = dt.year.toString().substring(2);
@@ -306,7 +340,7 @@ class HomePageContent extends StatelessWidget {
                           formattedDate = 'today';
                         }
                       }
-                      
+
                       return SizedBox(
                         width: 120,
                         child: _buildServiceCard(
@@ -323,7 +357,7 @@ class HomePageContent extends StatelessWidget {
                         ),
                       );
                     }),
-                  ];
+                  );
 
                   return ListView.separated(
                     controller: dController.infoScrollController,
@@ -496,9 +530,167 @@ class HomePageContent extends StatelessWidget {
               },
             );
           }),
-
-
         ],
+      ),
+    );
+  }
+
+  Widget _buildSehriIftarCompactCard() {
+    return GestureDetector(
+      onTap: () => Get.toNamed(Routes.RAMADANCALANDER),
+      child: Container(
+        width: 120,
+        height: 175,
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: const Color(0xFFD4F3D8),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Obx(() {
+          RamadancalanderController? rController;
+          try {
+            rController = Get.find<RamadancalanderController>();
+          } catch (e) {
+            rController = Get.put(RamadancalanderController());
+          }
+
+          final data =
+              rController?.todayRamadanData ??
+              {
+                'date': '18 Feb',
+                'seheri': '04:55 AM',
+                'iftar': '5:26 PM',
+                'location': 'Beirut',
+              };
+
+          return Column(
+            children: [
+              // Date and Location Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.history, size: 8, color: Colors.black),
+                        const SizedBox(width: 2),
+                        Text(
+                          data['date']!.split(' 2026')[0],
+                          style: GoogleFonts.poppins(
+                            fontSize: 7,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              // Sehri Card
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/sheheri.png',
+                            width: 22,
+                            height: 22,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Seheri',
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        data['seheri']!,
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF2E7D32),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Iftar Card
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/ifter.png',
+                            width: 22,
+                            height: 22,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Ifter',
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        data['iftar']!,
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF2E7D32),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }

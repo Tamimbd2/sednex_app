@@ -218,8 +218,7 @@ class SignupView extends GetView<SignupController> {
             ),
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
-            filled: true,
-            fillColor: AppColors.inputField.withValues(alpha: 0.5),
+            filled: false,
             contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -227,7 +226,7 @@ class SignupView extends GetView<SignupController> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.white, width: 1.15),
+              borderSide: const BorderSide(color: Color(0xFFCBD5E1), width: 1.15),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -265,16 +264,15 @@ class SignupView extends GetView<SignupController> {
         Obx(() => DropdownButtonFormField<String>(
           initialValue: controller.selectedCountry.value,
           decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
+            filled: false,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Color(0xFFDAD9D9), width: 0.5),
+              borderSide: const BorderSide(color: Color(0xFFCBD5E1), width: 1.15),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Color(0xFFDAD9D9), width: 0.5),
+              borderSide: const BorderSide(color: Color(0xFFCBD5E1), width: 1.15),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),

@@ -227,8 +227,7 @@ class SigninView extends GetView<SigninController> {
             ),
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
-            filled: true,
-            fillColor: AppColors.inputField.withValues(alpha: 0.5),
+            filled: false,
             contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -236,7 +235,7 @@ class SigninView extends GetView<SigninController> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.white, width: 1.15),
+              borderSide: const BorderSide(color: Color(0xFFCBD5E1), width: 1.15),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

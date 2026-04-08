@@ -77,21 +77,20 @@ class SendotpView extends GetView<SendotpController> {
                       decoration: InputDecoration(
                         hintText: 'Enter your email',
                         hintStyle: GoogleFonts.poppins(
-                          color: const Color(0x7F0A0A0A),
+                          color: AppColors.hintText,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
                         prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF6E6E6E), size: 20),
-                        filled: true,
-                        fillColor: AppColors.inputField.withValues(alpha: 0.5),
+                        filled: false,
                         contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.white, width: 1.15),
+                          borderSide: const BorderSide(color: Color(0xFFCBD5E1), width: 1.15),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.white, width: 1.15),
+                          borderSide: const BorderSide(color: Color(0xFFCBD5E1), width: 1.15),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),

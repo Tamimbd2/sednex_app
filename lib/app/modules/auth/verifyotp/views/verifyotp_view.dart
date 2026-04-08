@@ -118,11 +118,11 @@ class VerifyotpView extends GetView<VerifyotpController> {
       width: 48,
       height: 56,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: const Color(0xFFDADADA),
-          width: 1.11,
+          color: const Color(0xFFCBD5E1),
+          width: 1.15,
         ),
       ),
       child: TextFormField(

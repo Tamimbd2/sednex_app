@@ -75,7 +75,7 @@ class OnboardView extends GetView<OnboardController> {
                         Text(
                           onboardingData[index]['subtitle']!,
                           style: GoogleFonts.poppins(
-                            color: const Color(0xFF001A4F).withOpacity(0.8),
+                            color: const Color(0xFF001A4F).withValues(alpha: 0.8),
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),

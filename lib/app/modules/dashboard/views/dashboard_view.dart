@@ -231,7 +231,7 @@ class DashboardView extends GetView<DashboardController> {
             child: TextField(
               onChanged: (val) => controller.searchQuery.value = val,
               decoration: InputDecoration(
-                hintText: 'search'.tr + '...',
+                hintText: '${'search'.tr}...',
                 hintStyle: GoogleFonts.inter(
                   color: Colors.grey[500],
                   fontSize: 15,

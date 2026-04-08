@@ -63,7 +63,7 @@ class ShopContent extends GetView<ShopController> {
             child: TextField(
               onChanged: (val) => controller.searchQuery.value = val,
               decoration: InputDecoration(
-                hintText: 'search_products'.tr + '...',
+                hintText: '${'search_products'.tr}...',
                 hintStyle: GoogleFonts.inter(
                   color: Colors.grey[500],
                   fontSize: 15,

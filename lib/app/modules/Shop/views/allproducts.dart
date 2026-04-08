@@ -34,7 +34,7 @@ class AllProductsView extends GetView<ShopController> {
           ),
         ),
         title: Text(
-          category ?? 'All Products',
+          category ?? 'all_products'.tr,
           style: GoogleFonts.outfit(
             color: Colors.white,
             fontSize: 20,
@@ -51,7 +51,7 @@ class AllProductsView extends GetView<ShopController> {
       body: products.isEmpty
           ? Center(
               child: Text(
-                'No Items Found',
+                'no_items_found'.tr,
                 style: GoogleFonts.poppins(
                   color: const Color(0xFF9CA3AF),
                   fontSize: 16,
@@ -226,7 +226,7 @@ class AllProductsView extends GetView<ShopController> {
                           ],
                         ),
                         child: Text(
-                          'Details',
+                          'view_details'.tr,
                           style: GoogleFonts.outfit(
                             color: Colors.white,
                             fontSize: 11,

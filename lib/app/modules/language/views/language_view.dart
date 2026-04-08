@@ -13,7 +13,7 @@ class LanguageView extends GetView<LanguageController> {
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
         title: Text(
-          'Language',
+          'language'.tr,
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
           ),
@@ -40,7 +40,7 @@ class LanguageView extends GetView<LanguageController> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        'Select your preferred language. The app will restart to apply changes.',
+                        'select_preferred_language'.tr,
                         style: GoogleFonts.arimo(
                           color: const Color(0xFF1D4ED8), // Blue text
                           fontSize: 14,
@@ -140,7 +140,7 @@ class LanguageView extends GetView<LanguageController> {
                         elevation: 0,
                       ),
                       child: Text(
-                        'Apply Language',
+                        'apply_language'.tr,
                         style: GoogleFonts.arimo(
                           color: Colors.white,
                           fontSize: 16,
@@ -151,7 +151,7 @@ class LanguageView extends GetView<LanguageController> {
                   ),
                   const SizedBox(height: 16),
                   Obx(() => Text(
-                    'Currently selected: ${controller.selectedLanguage.value}',
+                    '${'currently_selected'.tr}: ${controller.selectedLanguage.value}',
                     style: GoogleFonts.arimo(
                       color: const Color(0xFF697282),
                       fontSize: 12,

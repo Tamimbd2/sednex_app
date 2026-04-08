@@ -423,7 +423,7 @@ class DashboardController extends GetxController {
     final currentUserId = userId;
 
     if (currentUserId == null) {
-      Get.snackbar('Login Required', 'Please login to react to posts');
+      Get.snackbar('login_required'.tr, 'please_login_to_react'.tr);
       return;
     }
 

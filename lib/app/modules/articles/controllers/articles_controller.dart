@@ -91,14 +91,14 @@ class ArticlesController extends GetxController {
       if (response.statusCode == 200) {
         final body = response.body;
         final List savedData = body['articles'] ?? body['data'] ?? [];
-        
+
         final List<Article> mappedSaved = savedData.map<Article>((item) {
           final articleData = item['article'] ?? item;
           return _mapToArticle(articleData, isSaved: true);
         }).toList();
-        
+
         savedArticles.assignAll(mappedSaved);
-        
+
         // Update isSaved state in the main articles list
         final savedIds = mappedSaved.map((e) => e.id).toSet();
         for (var article in articles) {
@@ -131,7 +131,8 @@ class ArticlesController extends GetxController {
       catName = categoriesMap[catValue]!;
     } else if (item['category'] is Map) {
       catName = item['category']['name'] ?? 'General';
-    } else if (catValue.isNotEmpty && !catValue.contains(RegExp(r'^[0-9a-fA-F]{24}$'))) {
+    } else if (catValue.isNotEmpty &&
+        !catValue.contains(RegExp(r'^[0-9a-fA-F]{24}$'))) {
       catName = catValue;
     }
 
@@ -150,7 +151,9 @@ class ArticlesController extends GetxController {
     return Article(
       id: item['_id'] ?? '',
       title: item['title'] ?? 'Untitled',
-      description: extractedDescription.isNotEmpty ? extractedDescription : (item['description'] ?? ''),
+      description: extractedDescription.isNotEmpty
+          ? extractedDescription
+          : (item['description'] ?? ''),
       imageUrl: extractedImageUrl,
       date: parsedDate,
       fullContent: contentList,
@@ -211,7 +214,7 @@ class ArticlesController extends GetxController {
 
           // Map API data to Article objects
           final List<Article> mappedArticles = rawArticles.map<Article>((item) {
-             return _mapToArticle(item);
+            return _mapToArticle(item);
           }).toList();
 
           mappedArticles.sort((a, b) => b.date.compareTo(a.date));
@@ -275,13 +278,18 @@ class ArticlesController extends GetxController {
     final originalState = article.isSaved.value;
     // Optimistic Update
     article.isSaved.value = !article.isSaved.value;
-    
+
     try {
-      final response = await apiService.postData('api/article/${article.id}/save', {});
+      final response = await apiService.postData(
+        'api/article/${article.id}/save',
+        {},
+      );
       if (response.statusCode != 200 && response.statusCode != 201) {
         // Revert if failed
         article.isSaved.value = originalState;
-        Get.snackbar('Error', 'Failed to update article status', 
+        Get.snackbar(
+          'Error',
+          'Failed to update article status',
           backgroundColor: Colors.red.withValues(alpha: 0.8),
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM,
@@ -289,7 +297,11 @@ class ArticlesController extends GetxController {
       } else {
         // Sync the savedArticles list
         await fetchSavedArticles();
-        Get.snackbar('Success', article.isSaved.value ? 'Article saved successfully' : 'Article removed from saved',
+        Get.snackbar(
+          'Success',
+          article.isSaved.value
+              ? 'Article saved successfully'
+              : 'Article removed from saved',
           backgroundColor: const Color(0xFF1E63FF),
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM,

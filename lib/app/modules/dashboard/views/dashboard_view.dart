@@ -9,6 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../profile/views/profile_view.dart';
 import '../../Shop/views/shop_view.dart';
+import '../../notifications/controllers/notifications_controller.dart';
 import 'home_page_content.dart';
 
 class DashboardView extends GetView<DashboardController> {
@@ -57,7 +58,10 @@ class DashboardView extends GetView<DashboardController> {
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          onPressed: () => Get.toNamed(Routes.NOTIFICATIONS),
+                          onPressed: () {
+                            Get.find<NotificationsController>().markAllAsRead();
+                            Get.toNamed(Routes.NOTIFICATIONS);
+                          },
                           icon: SvgPicture.asset(
                             'assets/icons/Icon.svg',
                             width: 26,
@@ -69,41 +73,38 @@ class DashboardView extends GetView<DashboardController> {
                           ),
                         ),
                       ),
-                      Positioned(
-                        right: 4,
-                        top: 4,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: AppColors.crimson,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.crimson.withValues(
-                                  alpha: 0.25,
+                      Obx(() {
+                        final nController = Get.find<NotificationsController>();
+                        final unreadCount = nController.unreadCount;
+                        if (unreadCount == 0) return const SizedBox.shrink();
+                        
+                        return Positioned(
+                          right: 5,
+                          top: 5,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: AppColors.crimson,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 1.5),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 16,
+                              minHeight: 16,
+                            ),
+                            child: Center(
+                              child: Text(
+                                unreadCount > 9 ? '9+' : unreadCount.toString(),
+                                style: GoogleFonts.inter(
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 18,
-                            minHeight: 18,
-                          ),
-                          child: Center(
-                            child: Text(
-                              '3',
-                              style: GoogleFonts.inter(
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
                               ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                     ],
                   ),
                   const SizedBox(width: 8),

@@ -28,7 +28,8 @@ class CreatepostView extends GetView<CreatepostController> {
         ),
         centerTitle: true,
       ),
-      body: Column(
+      body: SafeArea(
+        child: Column(
         children: [
           // Minimal Category Selector
           Container(
@@ -145,7 +146,8 @@ class CreatepostView extends GetView<CreatepostController> {
           ),
         ],
       ),
-    );
+    ),
+);
   }
 
   Widget _buildSimpleImageGrid() {

@@ -19,6 +19,24 @@ class NotificationsView extends GetView<NotificationsController> {
           icon: const Icon(Icons.arrow_back_ios_new, size: 18),
           onPressed: () => Get.back(),
         ),
+        actions: [
+          Obx(() {
+            if (controller.unreadCount > 0) {
+              return TextButton(
+                onPressed: () => controller.markAllAsRead(),
+                child: Text(
+                  'Mark all read',
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.primary,
+                  ),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          }),
+        ],
       ),
       body: Obx(() {
         if (controller.isLoading.value && controller.notifications.isEmpty) {

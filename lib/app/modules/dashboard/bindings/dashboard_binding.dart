@@ -5,6 +5,7 @@ import '../../namaj/controllers/namaj_controller.dart';
 import '../../ramadancalander/controllers/ramadancalander_controller.dart';
 import '../../profile/controllers/profile_controller.dart';
 import '../../Shop/controllers/shop_controller.dart';
+import '../../notifications/controllers/notifications_controller.dart';
 
 class DashboardBinding extends Bindings {
   @override
@@ -17,5 +18,6 @@ class DashboardBinding extends Bindings {
     // Needed for Dashboard tabs
     Get.put<ProfileController>(ProfileController(), permanent: true);
     Get.put<ShopController>(ShopController(), permanent: true);
+    Get.put<NotificationsController>(NotificationsController(), permanent: true);
   }
 }

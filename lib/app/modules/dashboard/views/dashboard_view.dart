@@ -30,13 +30,16 @@ class DashboardView extends GetView<DashboardController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80),
+        preferredSize: Size.fromHeight(
+          MediaQuery.of(context).padding.top + 60,
+        ),
         child: Obx(() {
           // Show header consistently across all tabs
+          final statusBarHeight = MediaQuery.of(context).padding.top;
 
           return Container(
-            height: 80,
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            height: statusBarHeight + 60,
+            padding: EdgeInsets.only(top: statusBarHeight),
             decoration: BoxDecoration(
               color: const Color(0xFF1E63FF),
               boxShadow: [
@@ -56,10 +59,11 @@ class DashboardView extends GetView<DashboardController> {
                     children: [
                       Image.asset(
                         'assets/logo/Sednex Website Logo Eng@3x.png',
-                        height: 28,
+                        height: 30, // Slightly increased for better visibility
                         fit: BoxFit.contain,
                       ),
-                      if (Get.locale?.languageCode != 'en' || controller.currentIndex.value != 0) ...[
+                      if (Get.locale?.languageCode != 'en' ||
+                          controller.currentIndex.value != 0) ...[
                         const SizedBox(width: 12),
                         Container(
                           width: 1,
@@ -336,10 +340,7 @@ class DashboardView extends GetView<DashboardController> {
           const SizedBox(height: 8),
           Text(
             'Find posts, products, articles and more',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: GoogleFonts.inter(fontSize: 14, color: Colors.grey[600]),
           ),
         ],
       ),

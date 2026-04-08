@@ -261,102 +261,107 @@ class HomePageContent extends StatelessWidget {
 
                   // 3. Dynamic Services (Filtering generic ramadan cards)
                   items.addAll(
-                    services.where((service) {
-                      String name = (service['name'] ?? '').toString().toLowerCase();
-                      return !name.contains('ramadan');
-                    }).map((service) {
-                      String name = service['name']?.toString() ?? 'Service';
-                      String image =
-                          service['icon']?.toString() ??
-                          service['image']?.toString() ??
-                          '';
-                      var rawRate =
-                          service['rate'] ??
-                          service['price'] ??
-                          service['value'];
-                      String rateStr = rawRate?.toString() ?? '';
-                      bool isBkash =
-                          name.toLowerCase().contains('bkash') ||
-                          image.toLowerCase().contains('bkash') ||
-                          rateStr.startsWith('124') ||
-                          (name.toLowerCase() == 'gold rate' &&
-                              !image.toLowerCase().contains('gold'));
-                      bool isGold =
-                          !isBkash && name.toLowerCase().contains('gold');
-                      String subtitle =
-                          (service['price'] ??
-                                  service['rate'] ??
-                                  service['value'] ??
-                                  '0')
-                              .toString();
-                      if (isBkash) {
-                        subtitle += '৳';
-                      } else if (isGold) {
-                        subtitle += '£';
-                      }
-                      Color bgColor = isBkash
-                          ? const Color(0xFFFCE4EC)
-                          : (isGold
-                                ? const Color(0xFFFFF3E0)
-                                : const Color(0xFFE3F2FD));
-                      Color subColor = isBkash
-                          ? const Color(0xFFC2185B)
-                          : (isGold
-                                ? const Color(0xFF101727)
-                                : const Color(0xFF1565C0));
-                      String displayName =
-                          isBkash && name.toLowerCase().contains('gold')
-                          ? 'bKash Rate'
-                          : name;
-                      String rawDate =
-                          service['time']?.toString() ??
-                          service['updatedAt']?.toString() ??
-                          service['createdAt']?.toString() ??
-                          '';
-                      String formattedDate = 'today';
-                      if (rawDate.isNotEmpty) {
-                        try {
-                          // Standardize format (4 Apr 26) manually
-                          DateTime dt = DateTime.parse(rawDate);
-                          final months = [
-                            'Jan',
-                            'Feb',
-                            'Mar',
-                            'Apr',
-                            'May',
-                            'Jun',
-                            'Jul',
-                            'Aug',
-                            'Sep',
-                            'Oct',
-                            'Nov',
-                            'Dec',
-                          ];
-                          String d = dt.day.toString();
-                          String m = months[dt.month - 1];
-                          String y = dt.year.toString().substring(2);
-                          formattedDate = '$d $m $y';
-                        } catch (e) {
-                          formattedDate = 'today'.tr;
-                        }
-                      }
+                    services
+                        .where((service) {
+                          String name = (service['name'] ?? '')
+                              .toString()
+                              .toLowerCase();
+                          return !name.contains('ramadan');
+                        })
+                        .map((service) {
+                          String name =
+                              service['name']?.toString() ?? 'Service';
+                          String image =
+                              service['icon']?.toString() ??
+                              service['image']?.toString() ??
+                              '';
+                          var rawRate =
+                              service['rate'] ??
+                              service['price'] ??
+                              service['value'];
+                          String rateStr = rawRate?.toString() ?? '';
+                          bool isBkash =
+                              name.toLowerCase().contains('bkash') ||
+                              image.toLowerCase().contains('bkash') ||
+                              rateStr.startsWith('124') ||
+                              (name.toLowerCase() == 'gold rate' &&
+                                  !image.toLowerCase().contains('gold'));
+                          bool isGold =
+                              !isBkash && name.toLowerCase().contains('gold');
+                          String subtitle =
+                              (service['price'] ??
+                                      service['rate'] ??
+                                      service['value'] ??
+                                      '0')
+                                  .toString();
+                          if (isBkash) {
+                            subtitle += '৳';
+                          } else if (isGold) {
+                            subtitle += '£';
+                          }
+                          Color bgColor = isBkash
+                              ? const Color(0xFFFCE4EC)
+                              : (isGold
+                                    ? const Color(0xFFFFF3E0)
+                                    : const Color(0xFFE3F2FD));
+                          Color subColor = isBkash
+                              ? const Color(0xFFC2185B)
+                              : (isGold
+                                    ? const Color(0xFF101727)
+                                    : const Color(0xFF1565C0));
+                          String displayName =
+                              isBkash && name.toLowerCase().contains('gold')
+                              ? 'bKash Rate'
+                              : name;
+                          String rawDate =
+                              service['time']?.toString() ??
+                              service['updatedAt']?.toString() ??
+                              service['createdAt']?.toString() ??
+                              '';
+                          String formattedDate = 'today';
+                          if (rawDate.isNotEmpty) {
+                            try {
+                              // Standardize format (4 Apr 26) manually
+                              DateTime dt = DateTime.parse(rawDate);
+                              final months = [
+                                'Jan',
+                                'Feb',
+                                'Mar',
+                                'Apr',
+                                'May',
+                                'Jun',
+                                'Jul',
+                                'Aug',
+                                'Sep',
+                                'Oct',
+                                'Nov',
+                                'Dec',
+                              ];
+                              String d = dt.day.toString();
+                              String m = months[dt.month - 1];
+                              String y = dt.year.toString().substring(2);
+                              formattedDate = '$d $m $y';
+                            } catch (e) {
+                              formattedDate = 'today'.tr;
+                            }
+                          }
 
-                      return SizedBox(
-                        width: 120,
-                        child: _buildServiceCard(
-                          title: displayName,
-                          subtitle: subtitle,
-                          subtitleColor: subColor,
-                          footerText: formattedDate,
-                          imagePath: image,
-                          bgColor: bgColor,
-                          iconSize: 50,
-                          onTap: () => Get.toNamed(
-                            isBkash ? Routes.BKASH_RATE : Routes.GOLD_RATE,
-                          ),
-                        ),
-                      );
-                    }),
+                          return SizedBox(
+                            width: 120,
+                            child: _buildServiceCard(
+                              title: displayName,
+                              subtitle: subtitle,
+                              subtitleColor: subColor,
+                              footerText: formattedDate,
+                              imagePath: image,
+                              bgColor: bgColor,
+                              iconSize: 50,
+                              onTap: () => Get.toNamed(
+                                isBkash ? Routes.BKASH_RATE : Routes.GOLD_RATE,
+                              ),
+                            ),
+                          );
+                        }),
                   );
 
                   return ListView.separated(

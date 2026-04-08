@@ -83,7 +83,6 @@ flutter:
     - assets/post/
     - assets/logo/
     - assets/images/
-    - assets/essentialService/
     - assets/profile/
     - assets/icons/
     - assets/newessential/

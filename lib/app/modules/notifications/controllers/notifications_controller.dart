@@ -79,18 +79,59 @@ class NotificationsController extends GetxController {
       // Refresh local state if needed
       final index = notifications.indexWhere((element) => element.id == id);
       if (index != -1) {
+        final old = notifications[index];
         notifications[index] = NotificationModel(
-          id: notifications[index].id,
-          title: notifications[index].title,
-          message: notifications[index].message,
-          type: notifications[index].type,
-          createdAt: notifications[index].createdAt,
+          id: old.id,
+          title: old.title,
+          message: old.message,
+          type: old.type,
+          createdAt: old.createdAt,
           isRead: true,
-          data: notifications[index].data,
+          data: old.data,
         );
+        notifications.refresh();
       }
     } catch (e) {
       debugPrint('Error marking as read: $e');
+    }
+  }
+
+  Future<void> markAllAsRead() async {
+    final unreadIds = notifications.where((n) => !n.isRead).map((n) => n.id).toList();
+    if (unreadIds.isEmpty) return;
+
+    try {
+      // Optimistically update local state for better UX
+      for (int i = 0; i < notifications.length; i++) {
+        if (!notifications[i].isRead) {
+          final old = notifications[i];
+          notifications[i] = NotificationModel(
+            id: old.id,
+            title: old.title,
+            message: old.message,
+            type: old.type,
+            createdAt: old.createdAt,
+            isRead: true,
+            data: old.data,
+          );
+        }
+      }
+      notifications.refresh();
+
+      // Call API - If there's no bulk endpoint, we hit them in parallel/batches
+      // Assuming a potential bulk endpoint api/notifications/read-all
+      final response = await apiService.patchData('${AppUrl.notifications}read-all', {});
+      
+      if (response.statusCode != 200) {
+        // Fallback: If bulk endpoint fails, try individual ones (or just refresh)
+        for (final id in unreadIds) {
+          await apiService.patchData('${AppUrl.notifications}read/$id', {});
+        }
+      }
+    } catch (e) {
+      debugPrint('Error marking all as read: $e');
+      // If error occurs, maybe refresh to get correct state from server
+      fetchNotifications();
     }
   }
 
@@ -106,4 +147,6 @@ class NotificationsController extends GetxController {
   }
 
   void refreshNotifications() => fetchNotifications();
+
+  int get unreadCount => notifications.where((n) => !n.isRead).length;
 }

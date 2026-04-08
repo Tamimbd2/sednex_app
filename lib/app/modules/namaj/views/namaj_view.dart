@@ -33,7 +33,7 @@ class NamajView extends GetView<NamajController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'নামাজের সময়সূচি',
+          'prayer_schedule'.tr,
           style: GoogleFonts.hindSiliguri(
             color: Colors.white,
             fontSize: 20,
@@ -69,7 +69,7 @@ class NamajView extends GetView<NamajController> {
                     const Icon(Icons.access_time_rounded, size: 14, color: Color(0xFF6F6F6F)),
                     const SizedBox(width: 6),
                     Obx(() => Text(
-                      'Last Update: ${controller.schedule['lastUpdate']}',
+                      '${'last_update'.tr}: ${controller.schedule['lastUpdate']}',
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: const Color(0xFF6F6F6F),
@@ -88,7 +88,7 @@ class NamajView extends GetView<NamajController> {
             const SizedBox(height: 28),
 
             // Prayer Learning Header
-            _buildSectionHeader('নামাজ শিক্ষা (সংক্ষেপে)', 'assets/icons/book.svg'), // Using fallback icon logic
+            _buildSectionHeader('prayer_learning'.tr, 'assets/icons/book.svg'), // Using fallback icon logic
             
             const SizedBox(height: 16),
 
@@ -98,7 +98,7 @@ class NamajView extends GetView<NamajController> {
             const SizedBox(height: 28),
 
             // Essential Duas Header
-             _buildSectionHeader('প্রয়োজনীয় দোয়া', 'assets/icons/heart.svg'),
+             _buildSectionHeader('essential_duas'.tr, 'assets/icons/heart.svg'),
 
             const SizedBox(height: 16),
 
@@ -221,11 +221,11 @@ class NamajView extends GetView<NamajController> {
                    Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildScheduleColumnHeader('ফজর', isHighlight: currentIndex == 0),
-                      _buildScheduleColumnHeader('যোহর', isHighlight: currentIndex == 1),
-                      _buildScheduleColumnHeader('আছর', isHighlight: currentIndex == 2),
-                      _buildScheduleColumnHeader('মাগরিব', isHighlight: currentIndex == 3),
-                      _buildScheduleColumnHeader('ঈশা', isHighlight: currentIndex == 4),
+                      _buildScheduleColumnHeader('fajar'.tr, isHighlight: currentIndex == 0),
+                      _buildScheduleColumnHeader('zohar'.tr, isHighlight: currentIndex == 1),
+                      _buildScheduleColumnHeader('asar'.tr, isHighlight: currentIndex == 2),
+                      _buildScheduleColumnHeader('magrib'.tr, isHighlight: currentIndex == 3),
+                      _buildScheduleColumnHeader('esha'.tr, isHighlight: currentIndex == 4),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -495,8 +495,8 @@ class NamajView extends GetView<NamajController> {
                                onTap: () {
                                  Clipboard.setData(ClipboardData(text: dua['arabic']!));
                                  Get.snackbar(
-                                   'Copied', 
-                                   'Dua copied to clipboard',
+                                   'copied'.tr, 
+                                   'dua_copied'.tr,
                                    snackPosition: SnackPosition.BOTTOM,
                                    margin: const EdgeInsets.all(16),
                                    backgroundColor: const Color(0xFF333333),
@@ -512,7 +512,7 @@ class NamajView extends GetView<NamajController> {
                                      Icon(Icons.copy_rounded, size: 14, color: const Color(0xFF1E63FF).withValues(alpha: 0.7)),
                                      const SizedBox(width: 4),
                                      Text(
-                                       'Copy',
+                                       'copy'.tr,
                                        style: GoogleFonts.poppins(
                                          fontSize: 10,
                                          color: const Color(0xFF1E63FF).withValues(alpha: 0.7),

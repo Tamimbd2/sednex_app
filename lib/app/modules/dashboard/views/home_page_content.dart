@@ -190,7 +190,7 @@ class HomePageContent extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  'Information & Services',
+                  'information_services'.tr,
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -237,7 +237,7 @@ class HomePageContent extends StatelessWidget {
                           title: nextPrayer['name']!,
                           subtitle: nextPrayer['time']!,
                           subtitleColor: const Color(0xFF2E7D32),
-                          footerText: 'today',
+                          footerText: 'today'.tr,
                           imagePath: 'assets/logo/mosque.png',
                           bgColor: const Color(0xFFE0F2F1),
                           iconSize: 60,
@@ -337,7 +337,7 @@ class HomePageContent extends StatelessWidget {
                           String y = dt.year.toString().substring(2);
                           formattedDate = '$d $m $y';
                         } catch (e) {
-                          formattedDate = 'today';
+                          formattedDate = 'today'.tr;
                         }
                       }
 
@@ -383,7 +383,7 @@ class HomePageContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Essential Services',
+                  'essential_services'.tr,
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -393,7 +393,7 @@ class HomePageContent extends StatelessWidget {
                 GestureDetector(
                   onTap: () => Get.toNamed('/essential-service'),
                   child: Text(
-                    'View All',
+                    'view_all'.tr,
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -477,7 +477,7 @@ class HomePageContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Community Feed',
+                  'community_feed'.tr,
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -487,7 +487,7 @@ class HomePageContent extends StatelessWidget {
                 GestureDetector(
                   onTap: () => Get.toNamed('/community-feed'),
                   child: Text(
-                    'View All',
+                    'view_all'.tr,
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -504,9 +504,9 @@ class HomePageContent extends StatelessWidget {
           // Community Feeds List
           Obx(() {
             if (feedController.posts.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Center(child: Text('No posts available')),
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(child: Text('no_posts_available'.tr)),
               );
             }
 

@@ -23,7 +23,7 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'Community Feed',
+          'community_feed'.tr,
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
           ),

@@ -10,6 +10,7 @@ class CommunityPostCard extends StatelessWidget {
   final int index;
   final dynamic controller; // Changed to dynamic for reuse with MypostController
   final bool isDashboard;
+  final bool showFooter;
 
   const CommunityPostCard({
     super.key,
@@ -17,6 +18,7 @@ class CommunityPostCard extends StatelessWidget {
     required this.index,
     required this.controller,
     this.isDashboard = false,
+    this.showFooter = true,
   });
 
   @override
@@ -158,100 +160,107 @@ class CommunityPostCard extends StatelessWidget {
               child: _buildPostImages(post['images']),
             ),
 
-          const SizedBox(height: 4),
-
-          // Footer
-          Row(
-            children: [
-              // Like
-              GestureDetector(
-                onTap: () => controller.toggleLike(index),
-                child: Container(
-                  color: Colors.transparent,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 4,
-                    vertical: 4,
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.favorite,
-                        size: 24,
-                        color: post['isLiked'] ?? false
-                            ? const Color(0xFF1E63FF)
-                            : Colors.grey[400],
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        '${post['likes'] ?? 0}',
-                        style: GoogleFonts.poppins(
+          if (showFooter) ...[
+            const SizedBox(height: 4),
+            // Footer
+            Row(
+              children: [
+                // Like
+                GestureDetector(
+                  onTap: () => controller.toggleLike(index),
+                  child: Container(
+                    color: Colors.transparent,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 4,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.favorite,
+                          size: 24,
                           color: post['isLiked'] ?? false
                               ? const Color(0xFF1E63FF)
-                              : Colors.grey[600],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
+                              : Colors.grey[400],
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-
-              // Comment
-              GestureDetector(
-                onTap: () => _showCommentsBottomSheet(context),
-                child: Container(
-                  color: Colors.transparent,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 4,
-                    vertical: 4,
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        'assets/post/comment.svg',
-                        width: 22,
-                        height: 22,
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF495565),
-                          BlendMode.srcIn,
+                        const SizedBox(width: 6),
+                        Text(
+                          '${post['likes'] ?? 0}',
+                          style: GoogleFonts.poppins(
+                            color: post['isLiked'] ?? false
+                                ? const Color(0xFF1E63FF)
+                                : Colors.grey[600],
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        '${post['comments'] ?? 0}',
-                        style: GoogleFonts.poppins(
-                          color: const Color(0xFF495565),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const Spacer(),
-
-              // Speaker
-              Obx(() {
-                final isSpeaking = controller.currentlySpeakingIndex.value == index;
-                return GestureDetector(
-                  onTap: () => controller.speakPost(index, post['content'] ?? ''),
-                  behavior: HitTestBehavior.opaque,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      isSpeaking ? Icons.stop_circle_rounded : Icons.volume_up_outlined,
-                      size: 24,
-                      color: isSpeaking ? const Color(0xFF1E63FF) : const Color(0xFF495565),
+                      ],
                     ),
                   ),
-                );
-              }),
-            ],
-          ),
+                ),
+                const SizedBox(width: 12),
+
+                // Comment
+                GestureDetector(
+                  onTap: () => _showCommentsBottomSheet(context),
+                  child: Container(
+                    color: Colors.transparent,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 4,
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/post/comment.svg',
+                          width: 22,
+                          height: 22,
+                          colorFilter: const ColorFilter.mode(
+                            Color(0xFF495565),
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          '${post['comments'] ?? 0}',
+                          style: GoogleFonts.poppins(
+                            color: const Color(0xFF495565),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const Spacer(),
+
+                // Speaker
+                Obx(() {
+                  final isSpeaking =
+                      controller.currentlySpeakingIndex.value == index;
+                  return GestureDetector(
+                    onTap: () =>
+                        controller.speakPost(index, post['content'] ?? ''),
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        isSpeaking
+                            ? Icons.stop_circle_rounded
+                            : Icons.volume_up_outlined,
+                        size: 24,
+                        color: isSpeaking
+                            ? const Color(0xFF1E63FF)
+                            : const Color(0xFF495565),
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ],
         ],
       ),
     );

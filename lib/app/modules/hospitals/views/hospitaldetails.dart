@@ -57,7 +57,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
   }
 
   Future<void> _fetchDetails() async {
-    final args = Get.arguments as Map<String, dynamic>? ?? {};
+    final args = Get.arguments is Map ? Map<String, dynamic>.from(Get.arguments as Map) : <String, dynamic>{};
     final String id = args['id'] ?? '';
 
     // Set basic info from list arguments immediately
@@ -176,7 +176,8 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      body: _isLoading
+      body: SafeArea(
+        child: _isLoading
           ? const Center(
               child: CircularProgressIndicator(
                 color: AppColors.primary,
@@ -204,6 +205,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
                 ),
               ),
             ),
+      ),
     );
   }
 

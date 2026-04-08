@@ -10,12 +10,14 @@ class LocalTourDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the data passed from previous screen
-    final String title = Get.arguments['title'] ?? 'Local Tour';
-    final String image = Get.arguments['image'] ?? '';
-    final String locationDetails = Get.arguments['locationDetails'] ?? '';
-    final List<String> includedWithTickets = Get.arguments['includedWithTickets'] ?? [];
-    final Map<String, dynamic> info = Get.arguments['info'] ?? {};
+    // Get the data passed from previous screen safely
+    final args = Get.arguments is Map ? Map<String, dynamic>.from(Get.arguments as Map) : {};
+    
+    final String title = args['title'] ?? 'Local Tour';
+    final String image = args['image'] ?? '';
+    final String locationDetails = args['locationDetails'] ?? '';
+    final List<String> includedWithTickets = List<String>.from(args['includedWithTickets'] ?? []);
+    final Map<String, dynamic> info = args['info'] is Map ? Map<String, dynamic>.from(args['info']) : {};
 
     final date = info['date'] ?? 'N/A';
     final distance = info['distance'] ?? 'N/A';
@@ -48,7 +50,8 @@ class LocalTourDetailsView extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
+      body: SafeArea(
+        child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -371,8 +374,9 @@ class LocalTourDetailsView extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildInfoCard(IconData icon, String label, String value, Color color) {
     return Container(

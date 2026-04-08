@@ -48,6 +48,7 @@ abstract class Routes {
   static const FAVORITES = _Paths.FAVORITES;
   static const ORGANIZATION = _Paths.ORGANIZATION;
   static const GENERAL_SECTION = _Paths.GENERAL_SECTION;
+  static const SAVED_ARTICLES = _Paths.SAVED_ARTICLES;
 }
 
 abstract class _Paths {
@@ -97,4 +98,5 @@ abstract class _Paths {
   static const FAVORITES = '/favorites';
   static const ORGANIZATION = '/organization';
   static const GENERAL_SECTION = '/general-section';
+  static const SAVED_ARTICLES = '/saved-articles';
 }

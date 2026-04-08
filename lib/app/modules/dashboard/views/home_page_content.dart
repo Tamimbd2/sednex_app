@@ -709,10 +709,8 @@ class HomePageContent extends StatelessWidget {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: const Color(0xFFEDF4FF),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(30),
-              ),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),

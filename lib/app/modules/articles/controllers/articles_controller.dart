@@ -36,7 +36,9 @@ class ArticlesController extends GetxController {
   final selectedCategory = 'All'.obs;
   final searchQuery = ''.obs;
   final articles = <Article>[].obs;
+  final savedArticles = <Article>[].obs;
   final isLoading = true.obs;
+  final isLoadingSaved = false.obs;
 
   final selectedFilterCategories = <String>[].obs;
 
@@ -76,9 +78,86 @@ class ArticlesController extends GetxController {
     try {
       await fetchCategories();
       await fetchArticles();
+      await fetchSavedArticles();
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> fetchSavedArticles() async {
+    try {
+      isLoadingSaved.value = true;
+      final response = await apiService.getData('api/article/save/unsave');
+      if (response.statusCode == 200) {
+        final body = response.body;
+        final List savedData = body['articles'] ?? body['data'] ?? [];
+        
+        final List<Article> mappedSaved = savedData.map<Article>((item) {
+          final articleData = item['article'] ?? item;
+          return _mapToArticle(articleData, isSaved: true);
+        }).toList();
+        
+        savedArticles.assignAll(mappedSaved);
+        
+        // Update isSaved state in the main articles list
+        final savedIds = mappedSaved.map((e) => e.id).toSet();
+        for (var article in articles) {
+          article.isSaved.value = savedIds.contains(article.id);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching saved articles: $e');
+    } finally {
+      isLoadingSaved.value = false;
+    }
+  }
+
+  Article _mapToArticle(dynamic item, {bool isSaved = false}) {
+    final author = item['author'];
+    final createdAt = item['createdAt'] ?? '';
+    final List contentList = item['content'] is List ? item['content'] : [];
+
+    DateTime parsedDate;
+    try {
+      parsedDate = DateTime.parse(createdAt).toLocal();
+    } catch (_) {
+      parsedDate = DateTime.now();
+    }
+
+    String catValue = item['category']?.toString() ?? '';
+    String catName = 'General';
+
+    if (categoriesMap.containsKey(catValue)) {
+      catName = categoriesMap[catValue]!;
+    } else if (item['category'] is Map) {
+      catName = item['category']['name'] ?? 'General';
+    } else if (catValue.isNotEmpty && !catValue.contains(RegExp(r'^[0-9a-fA-F]{24}$'))) {
+      catName = catValue;
+    }
+
+    String extractedImageUrl = '';
+    String extractedDescription = '';
+
+    for (var content in contentList) {
+      if (content['type'] == 'image' && extractedImageUrl.isEmpty) {
+        extractedImageUrl = content['url'] ?? '';
+      }
+      if (content['type'] == 'paragraph' && extractedDescription.isEmpty) {
+        extractedDescription = _stripHtmlTags(content['data'] ?? '');
+      }
+    }
+
+    return Article(
+      id: item['_id'] ?? '',
+      title: item['title'] ?? 'Untitled',
+      description: extractedDescription.isNotEmpty ? extractedDescription : (item['description'] ?? ''),
+      imageUrl: extractedImageUrl,
+      date: parsedDate,
+      fullContent: contentList,
+      category: catName,
+      authorName: author != null ? author['name'] : null,
+      isSaved: isSaved,
+    );
   }
 
   String _stripHtmlTags(String htmlString) {
@@ -132,57 +211,7 @@ class ArticlesController extends GetxController {
 
           // Map API data to Article objects
           final List<Article> mappedArticles = rawArticles.map<Article>((item) {
-            final author = item['author'];
-            final createdAt = item['createdAt'] ?? '';
-            final List contentList = item['content'] is List
-                ? item['content']
-                : [];
-
-            DateTime parsedDate;
-            try {
-              parsedDate = DateTime.parse(createdAt).toLocal();
-            } catch (_) {
-              parsedDate = DateTime.now();
-            }
-
-            // Resolve Category Name from ID
-            String catValue = item['category']?.toString() ?? '';
-            String catName = 'General';
-
-            if (categoriesMap.containsKey(catValue)) {
-              catName = categoriesMap[catValue]!;
-            } else if (item['category'] is Map) {
-              catName = item['category']['name'] ?? 'General';
-            } else if (catValue.isNotEmpty &&
-                !catValue.contains(RegExp(r'^[0-9a-fA-F]{24}$'))) {
-              catName = catValue;
-            }
-
-            String extractedImageUrl = '';
-            String extractedDescription = '';
-
-            for (var content in contentList) {
-              if (content['type'] == 'image' && extractedImageUrl.isEmpty) {
-                extractedImageUrl = content['url'] ?? '';
-              }
-              if (content['type'] == 'paragraph' &&
-                  extractedDescription.isEmpty) {
-                extractedDescription = _stripHtmlTags(content['data'] ?? '');
-              }
-            }
-
-            return Article(
-              id: item['_id'] ?? '',
-              title: item['title'] ?? 'Untitled',
-              description: extractedDescription.isNotEmpty
-                  ? extractedDescription
-                  : (item['description'] ?? ''),
-              imageUrl: extractedImageUrl,
-              date: parsedDate,
-              fullContent: contentList,
-              category: catName,
-              authorName: author != null ? author['name'] : null,
-            );
+             return _mapToArticle(item);
           }).toList();
 
           mappedArticles.sort((a, b) => b.date.compareTo(a.date));
@@ -242,7 +271,34 @@ class ArticlesController extends GetxController {
     Get.back();
   }
 
-  void toggleSaved(Article article) {
+  Future<void> toggleSaved(Article article) async {
+    final originalState = article.isSaved.value;
+    // Optimistic Update
     article.isSaved.value = !article.isSaved.value;
+    
+    try {
+      final response = await apiService.postData('api/article/${article.id}/save', {});
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        // Revert if failed
+        article.isSaved.value = originalState;
+        Get.snackbar('Error', 'Failed to update article status', 
+          backgroundColor: Colors.red.withValues(alpha: 0.8),
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      } else {
+        // Sync the savedArticles list
+        await fetchSavedArticles();
+        Get.snackbar('Success', article.isSaved.value ? 'Article saved successfully' : 'Article removed from saved',
+          backgroundColor: const Color(0xFF1E63FF),
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 1),
+        );
+      }
+    } catch (e) {
+      article.isSaved.value = originalState;
+      debugPrint('Error toggling article save: $e');
+    }
   }
 }

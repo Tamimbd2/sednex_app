@@ -388,6 +388,7 @@ class ArticlesView extends GetView<ArticlesController> {
         Get.to(
           () => const ArticleDetailsView(),
           arguments: {
+            'id': article.id,
             'title': article.title,
             'description': article.description,
             'imageUrl': article.imageUrl,

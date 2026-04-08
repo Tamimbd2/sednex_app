@@ -35,7 +35,7 @@ class DashboardView extends GetView<DashboardController> {
           // Show header consistently across all tabs
 
           return Container(
-            height: 110,
+            height: 80,
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             decoration: BoxDecoration(
               color: const Color(0xFF1E63FF),
@@ -201,10 +201,17 @@ class DashboardView extends GetView<DashboardController> {
                   fontSize: 15,
                   fontWeight: FontWeight.w400,
                 ),
-                prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF1E63FF), size: 22),
+                prefixIcon: const Icon(
+                  Icons.search_rounded,
+                  color: Color(0xFF1E63FF),
+                  size: 22,
+                ),
                 filled: true,
                 fillColor: Colors.grey[100],
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 14,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,
@@ -215,7 +222,10 @@ class DashboardView extends GetView<DashboardController> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: Color(0xFF1E63FF), width: 1.5),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF1E63FF),
+                    width: 1.5,
+                  ),
                 ),
               ),
               style: GoogleFonts.inter(
@@ -232,20 +242,24 @@ class DashboardView extends GetView<DashboardController> {
               if (controller.searchQuery.isEmpty) {
                 return _buildSearchPlaceholder();
               }
-              
+
               if (controller.isSearchLoading.value) {
-                return const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF)));
+                return const Center(
+                  child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
+                );
               }
-              
+
               if (controller.searchResults.isEmpty) {
                 return _buildNoResultsState();
               }
-              
+
               return ListView.builder(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 itemCount: controller.searchResults.length,
                 itemBuilder: (context, index) {
-                  final section = controller.searchResults.keys.elementAt(index);
+                  final section = controller.searchResults.keys.elementAt(
+                    index,
+                  );
                   final items = controller.searchResults[section]!;
                   return _buildSearchSection(section, items);
                 },
@@ -268,7 +282,11 @@ class DashboardView extends GetView<DashboardController> {
               color: const Color(0xFF1E63FF).withValues(alpha: 0.05),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.search_rounded, size: 48, color: Color(0xFF1E63FF)),
+            child: const Icon(
+              Icons.search_rounded,
+              size: 48,
+              color: Color(0xFF1E63FF),
+            ),
           ),
           const SizedBox(height: 24),
           Text(
@@ -282,10 +300,7 @@ class DashboardView extends GetView<DashboardController> {
           const SizedBox(height: 8),
           Text(
             'Find posts, products, articles and more',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: GoogleFonts.inter(fontSize: 14, color: Colors.grey[600]),
           ),
         ],
       ),
@@ -341,23 +356,29 @@ class DashboardView extends GetView<DashboardController> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: items.length > 5 ? 5 : items.length,
-          separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey[100], indent: 16),
+          separatorBuilder: (context, index) =>
+              Divider(height: 1, color: Colors.grey[100], indent: 16),
           itemBuilder: (context, index) {
             final item = items[index];
-            
+
             // Special handling for Community Posts to show the full card
             if (title == 'Community Posts') {
               // Map the item into the format expected by CommunityPostCard if needed
               // The search result already contains the correct fields from _searchSection
-              
+
               // Map author name to post structure if it's missing in search data
               final Map<String, dynamic> mappedPost = {
                 ...Map<String, dynamic>.from(item),
-                'avatar': item['author'] is Map 
-                    ? item['author']['profileImage'] ?? 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(item['author']['name'] ?? 'U')}'
+                'avatar': item['author'] is Map
+                    ? item['author']['profileImage'] ??
+                          'https://ui-avatars.com/api/?name=${Uri.encodeComponent(item['author']['name'] ?? 'U')}'
                     : item['avatar'] ?? 'https://ui-avatars.com/api/?name=U',
-                'name': item['author'] is Map ? item['author']['name'] : item['name'] ?? 'Unknown',
-                'time': item['createdAt'] != null ? _timeAgo(item['createdAt']) : '',
+                'name': item['author'] is Map
+                    ? item['author']['name']
+                    : item['name'] ?? 'Unknown',
+                'time': item['createdAt'] != null
+                    ? _timeAgo(item['createdAt'])
+                    : '',
                 'content': item['description'] ?? item['content'] ?? '',
                 'likes': item['loveCount'] ?? 0,
                 'comments': item['commentsCount'] ?? 0,
@@ -365,7 +386,10 @@ class DashboardView extends GetView<DashboardController> {
               };
 
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: CommunityPostCard(
                   post: mappedPost,
                   index: index,
@@ -377,27 +401,40 @@ class DashboardView extends GetView<DashboardController> {
             }
 
             return ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 4,
+              ),
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: _buildItemImage(item),
               ),
               title: Text(
-                item['title'] ?? 
-                item['name'] ?? 
-                (item['author'] is Map ? item['author']['name'] : null) ?? 
-                'No Title',
+                item['title'] ??
+                    item['name'] ??
+                    (item['author'] is Map ? item['author']['name'] : null) ??
+                    'No Title',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500),
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               subtitle: Text(
-                item['description'] ?? item['content'] ?? item['category'] ?? '',
+                item['description'] ??
+                    item['content'] ??
+                    item['category'] ??
+                    '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.inter(fontSize: 12, color: Colors.grey[500]),
               ),
-              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: Colors.grey),
+              trailing: const Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 12,
+                color: Colors.grey,
+              ),
               onTap: () {
                 _navigateToDetail(title, item);
               },
@@ -411,7 +448,11 @@ class DashboardView extends GetView<DashboardController> {
               onPressed: () => _navigateToListView(title),
               child: Text(
                 'View all $title',
-                style: GoogleFonts.inter(fontSize: 13, color: const Color(0xFF1E63FF), fontWeight: FontWeight.w600),
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  color: const Color(0xFF1E63FF),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -432,10 +473,14 @@ class DashboardView extends GetView<DashboardController> {
             'title': item['title'],
             'description': item['description'],
             'imageUrl': item['image'] ?? item['imageUrl'],
-            'date': item['createdAt'] != null ? DateTime.parse(item['createdAt']) : DateTime.now(),
+            'date': item['createdAt'] != null
+                ? DateTime.parse(item['createdAt'])
+                : DateTime.now(),
             'fullContent': item['fullContent'] ?? [],
             'category': item['category'] ?? 'General',
-            'authorName': item['author'] is Map ? item['author']['name'] : 'Admin',
+            'authorName': item['author'] is Map
+                ? item['author']['name']
+                : 'Admin',
           },
         );
         break;
@@ -490,23 +535,29 @@ class DashboardView extends GetView<DashboardController> {
             'title': item['title'],
             'image': item['image'],
             'locationDetails': item['locationDetails'] ?? '',
-            'includedWithTickets': List<String>.from(item['includedWithTickets'] ?? []),
+            'includedWithTickets': List<String>.from(
+              item['includedWithTickets'] ?? [],
+            ),
             'info': {
-               'date': item['info']?['date'] ?? item['date'] ?? 'N/A',
-               'distance': item['info']?['distance'] ?? 'N/A',
-               'duration': item['info']?['duration'] ?? 'N/A',
-               'ticketPrice': item['info']?['ticketPrice'] ?? item['ticketPrice'] ?? '0',
-               'ticketPriceTag': item['info']?['ticketPriceTag'] ?? item['ticketPriceTag'] ?? '',
-               'begins': item['info']?['begins'] ?? 'N/A',
-               'returnTime': item['info']?['returnTime'] ?? 'N/A',
+              'date': item['info']?['date'] ?? item['date'] ?? 'N/A',
+              'distance': item['info']?['distance'] ?? 'N/A',
+              'duration': item['info']?['duration'] ?? 'N/A',
+              'ticketPrice':
+                  item['info']?['ticketPrice'] ?? item['ticketPrice'] ?? '0',
+              'ticketPriceTag':
+                  item['info']?['ticketPriceTag'] ??
+                  item['ticketPriceTag'] ??
+                  '',
+              'begins': item['info']?['begins'] ?? 'N/A',
+              'returnTime': item['info']?['returnTime'] ?? 'N/A',
             },
           },
         );
         break;
       case 'Essential Services':
-         // Navigate to full view for specific service
-         Get.toNamed(Routes.ESSENTIAL_SERVICE);
-         break;
+        // Navigate to full view for specific service
+        Get.toNamed(Routes.ESSENTIAL_SERVICE);
+        break;
     }
   }
 
@@ -541,7 +592,7 @@ class DashboardView extends GetView<DashboardController> {
         break;
     }
   }
-  
+
   String _timeAgo(String dateString) {
     if (dateString.isEmpty) return '';
     try {
@@ -565,13 +616,15 @@ class DashboardView extends GetView<DashboardController> {
     String? imageUrl;
     if (item['image'] != null && item['image'].toString().isNotEmpty) {
       imageUrl = item['image'].toString();
-    } else if (item['imageUrl'] != null && item['imageUrl'].toString().isNotEmpty) {
+    } else if (item['imageUrl'] != null &&
+        item['imageUrl'].toString().isNotEmpty) {
       imageUrl = item['imageUrl'].toString();
     } else if (item['images'] is List && (item['images'] as List).isNotEmpty) {
       imageUrl = item['images'][0].toString();
     } else if (item['icon'] != null && item['icon'].toString().isNotEmpty) {
       imageUrl = item['icon'].toString();
-    } else if (item['logoPath'] != null && item['logoPath'].toString().isNotEmpty) {
+    } else if (item['logoPath'] != null &&
+        item['logoPath'].toString().isNotEmpty) {
       imageUrl = item['logoPath'].toString();
     }
 
@@ -598,7 +651,11 @@ class DashboardView extends GetView<DashboardController> {
       width: 48,
       height: 48,
       color: Colors.grey[100],
-      child: const Icon(Icons.image_not_supported_outlined, size: 20, color: Colors.grey),
+      child: const Icon(
+        Icons.image_not_supported_outlined,
+        size: 20,
+        color: Colors.grey,
+      ),
     );
   }
 

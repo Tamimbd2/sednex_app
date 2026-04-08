@@ -127,15 +127,19 @@ class ProfileView extends GetView<ProfileController> {
 
               // Settings Group 1
               _buildSettingsGroup([
-                _buildSettingsItem('My Post', 'assets/profile/post.svg',
+                _buildSettingsItem(
+                  'My Post',
+                  'assets/profile/post.svg',
                   onTap: () => Get.toNamed('/mypost'),
                 ),
-                Obx(() => _buildSettingsItem(
-                  'Cart',
-                  'assets/profile/cart.svg',
-                  badgeCount: dashboardController.lovedProducts.length,
-                  onTap: () => Get.toNamed(Routes.FAVORITES),
-                )),
+                Obx(
+                  () => _buildSettingsItem(
+                    'Cart',
+                    'assets/profile/cart.svg',
+                    badgeCount: dashboardController.lovedProducts.length,
+                    onTap: () => Get.toNamed(Routes.FAVORITES),
+                  ),
+                ),
                 _buildSettingsItem(
                   'Edit Profile',
                   'assets/profile/editprofile.svg',
@@ -155,8 +159,13 @@ class ProfileView extends GetView<ProfileController> {
                 _buildSettingsItem(
                   'Saved Post',
                   'assets/profile/savepost.svg',
-                  isLast: true,
                   onTap: () => Get.toNamed('/savepost'),
+                ),
+                _buildSettingsItem(
+                  'Saved Articles',
+                  'assets/profile/savepost.svg', // Reusing icon for now
+                  isLast: true,
+                  onTap: () => Get.toNamed(Routes.SAVED_ARTICLES),
                 ),
               ]),
 
@@ -299,11 +308,7 @@ class ProfileView extends GetView<ProfileController> {
                     ),
                   ),
                 const SizedBox(width: 8),
-                Icon(
-                  Icons.chevron_right,
-                  color: Colors.grey[400],
-                  size: 20,
-                ),
+                Icon(Icons.chevron_right, color: Colors.grey[400], size: 20),
               ],
             ),
           ),

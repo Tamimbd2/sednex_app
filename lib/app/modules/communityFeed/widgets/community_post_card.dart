@@ -8,7 +8,8 @@ import '../../../core/theme/app_colors.dart';
 class CommunityPostCard extends StatelessWidget {
   final Map<String, dynamic> post;
   final int index;
-  final dynamic controller; // Changed to dynamic for reuse with MypostController
+  final dynamic
+  controller; // Changed to dynamic for reuse with MypostController
   final bool isDashboard;
   final bool showFooter;
 
@@ -587,22 +588,183 @@ class CommunityPostCard extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 6),
-                              GestureDetector(
-                                onTap: () {
-                                  controller.setReplyTarget(
-                                    comment['_id'],
-                                    comment['name'],
-                                  );
-                                },
-                                child: Text(
-                                  'Reply',
-                                  style: GoogleFonts.poppins(
-                                    color: const Color(0xFF101727),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      controller.setReplyTarget(
+                                        comment['_id'],
+                                        comment['name'],
+                                      );
+                                    },
+                                    child: Text(
+                                      'Reply',
+                                      style: GoogleFonts.poppins(
+                                        color: const Color(0xFF101727),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(width: 16),
+                                  Obx(() {
+                                    if (comment['replies'].isEmpty &&
+                                        !comment['isRepliesLoading'].value) {
+                                      return GestureDetector(
+                                        onTap: () => controller.fetchReplies(
+                                          index,
+                                          commentIndex,
+                                        ),
+                                        child: Text(
+                                          'View Replies',
+                                          style: GoogleFonts.poppins(
+                                            color: const Color(0xFF697282),
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    return const SizedBox.shrink();
+                                  }),
+                                ],
                               ),
+                              // Replies Section
+                              Obx(() {
+                                if (comment['isRepliesLoading'].value) {
+                                  return const Padding(
+                                    padding: EdgeInsets.only(top: 8.0),
+                                    child: SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                if (comment['replies'].isNotEmpty) {
+                                  return Column(
+                                    children: [
+                                      if (!comment['showReplies'].value)
+                                        GestureDetector(
+                                          onTap: () =>
+                                              comment['showReplies'].value =
+                                                  true,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 8.0,
+                                            ),
+                                            child: Text(
+                                              'Show ${comment['replies'].length} replies',
+                                              style: GoogleFonts.poppins(
+                                                color: AppColors.primary,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      else ...[
+                                        const SizedBox(height: 12),
+                                        ListView.separated(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount: comment['replies'].length,
+                                          separatorBuilder: (_, __) =>
+                                              const SizedBox(height: 12),
+                                          itemBuilder: (context, rIndex) {
+                                            final reply =
+                                                comment['replies'][rIndex];
+                                            return Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 12,
+                                                  backgroundImage:
+                                                      CachedNetworkImageProvider(
+                                                        reply['avatar'],
+                                                      ),
+                                                ),
+                                                const SizedBox(width: 10),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            reply['name'],
+                                                            style:
+                                                                GoogleFonts.poppins(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontSize: 13,
+                                                                ),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 6,
+                                                          ),
+                                                          Text(
+                                                            reply['time'],
+                                                            style:
+                                                                GoogleFonts.poppins(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontSize: 11,
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(height: 2),
+                                                      Text(
+                                                        reply['text'],
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                              color:
+                                                                  const Color(
+                                                                    0xFF354152,
+                                                                  ),
+                                                              fontSize: 13,
+                                                            ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                        GestureDetector(
+                                          onTap: () =>
+                                              comment['showReplies'].value =
+                                                  false,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 12.0,
+                                            ),
+                                            child: Text(
+                                              'Hide replies',
+                                              style: GoogleFonts.poppins(
+                                                color: const Color(0xFF697282),
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  );
+                                }
+                                return const SizedBox.shrink();
+                              }),
                             ],
                           ),
                         ),

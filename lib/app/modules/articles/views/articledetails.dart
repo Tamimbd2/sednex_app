@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sednexapp/app/modules/articles/controllers/articles_controller.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ArticleDetailsView extends StatelessWidget {
@@ -19,6 +20,11 @@ class ArticleDetailsView extends StatelessWidget {
     final String category = args['category'] ?? 'General';
     final DateTime date = args['date'] ?? DateTime.now();
     final List<dynamic> fullContent = args['fullContent'] ?? [];
+    
+    // Find articles controller to handle saving
+    final controller = Get.find<ArticlesController>();
+    final articleId = args['id'] ?? '';
+    final article = controller.articles.firstWhereOrNull((a) => a.id == articleId);
 
     final String formattedDate = _formatDate(date);
 
@@ -127,6 +133,28 @@ class ArticleDetailsView extends StatelessWidget {
                   child: const Icon(Icons.share_outlined, size: 20, color: Color(0xFF1E63FF)),
                 ),
               ),
+              if (article != null) ...[
+                const SizedBox(width: 8),
+                Obx(() {
+                  final isSaved = article.isSaved.value;
+                  return GestureDetector(
+                    onTap: () => controller.toggleSaved(article),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: isSaved ? const Color(0xFF1E63FF) : Colors.grey[50],
+                        border: Border.all(color: isSaved ? Colors.transparent : Colors.grey[200]!),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        isSaved ? Icons.bookmark : Icons.bookmark_border,
+                        size: 20,
+                        color: isSaved ? Colors.white : Colors.grey[700],
+                      ),
+                    ),
+                  );
+                }),
+              ],
             ],
           ),
 

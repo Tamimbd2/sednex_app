@@ -81,24 +81,29 @@ class MypostController extends GetxController {
 
           final List rawPosts = body['posts'] ?? [];
           final currentUserId = userId;
-          
-          final List<Map<String, dynamic>> mappedPosts = rawPosts.map<Map<String, dynamic>>((post) {
+
+          final List<Map<String, dynamic>>
+          mappedPosts = rawPosts.map<Map<String, dynamic>>((post) {
             final author = post['author'] ?? {};
             final images = (post['images'] as List?)?.cast<String>() ?? [];
             final createdAt = post['createdAt'] ?? '';
             final lovedBy = (post['lovedBy'] as List?) ?? [];
-            
+
             return {
               '_id': post['_id'] ?? '',
               'authorId': author['_id'] ?? '',
               'name': author['name'] ?? 'Unknown',
               'time': _timeAgo(createdAt),
               'content': post['description'] ?? '',
-              'avatar': author['profileImage'] ?? 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=80',
+              'avatar':
+                  author['profileImage'] ??
+                  'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=80',
               'likes': post['loveCount'] ?? 0,
               'comments': post['commentsCount'] ?? 0,
-              'isLiked': currentUserId != null && lovedBy.contains(currentUserId),
-              'category': (post['category']?.toString() ?? 'General').capitalizeFirst,
+              'isLiked':
+                  currentUserId != null && lovedBy.contains(currentUserId),
+              'category':
+                  (post['category']?.toString() ?? 'General').capitalizeFirst,
               'images': images,
               'lovedBy': lovedBy,
               'commentsList': <Map<String, dynamic>>[].obs,
@@ -123,23 +128,29 @@ class MypostController extends GetxController {
   Future<void> fetchComments(int index) async {
     final post = posts[index];
     final postId = post['_id'];
-    
+
     try {
       isLoadingComments.value = true;
       final response = await apiService.getData('api/post/comment/$postId');
-      
+
       if (response.statusCode == 200) {
         final body = response.body;
         final List rawComments = body['comments'] ?? [];
-        
-        final List<Map<String, dynamic>> mappedComments = rawComments.map<Map<String, dynamic>>((c) {
+
+        final List<Map<String, dynamic>>
+        mappedComments = rawComments.map<Map<String, dynamic>>((c) {
           final author = c['author'] ?? {};
           return {
             '_id': c['_id'] ?? '',
             'name': author['name'] ?? 'Unknown',
             'text': c['content'] ?? '',
-            'avatar': author['profileImage'] ?? 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=60',
+            'avatar':
+                author['profileImage'] ??
+                'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=60',
             'time': _timeAgo(c['createdAt'] ?? ''),
+            'replies': <Map<String, dynamic>>[].obs,
+            'isRepliesLoading': false.obs,
+            'showReplies': false.obs,
           };
         }).toList();
 
@@ -151,6 +162,50 @@ class MypostController extends GetxController {
       debugPrint('Error fetching comments: $e');
     } finally {
       isLoadingComments.value = false;
+    }
+  }
+
+  Future<void> fetchReplies(int postIndex, int commentIndex) async {
+    final comment = (posts[postIndex]['commentsList'] as RxList)[commentIndex];
+    final commentId = comment['_id'];
+
+    try {
+      comment['isRepliesLoading'].value = true;
+      final response = await apiService.getData(
+        'api/post/comment/replies/$commentId',
+      );
+
+      if (response.statusCode == 200) {
+        final body = response.body;
+        final List rawReplies = body['replies'] ?? [];
+
+        final List<Map<String, dynamic>>
+        mappedReplies = rawReplies.map<Map<String, dynamic>>((r) {
+          final author = r['author'] ?? {};
+          return {
+            '_id': r['_id'] ?? '',
+            'name': author['name'] ?? 'Unknown',
+            'text': r['content'] ?? '',
+            'avatar':
+                author['profileImage'] ??
+                'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=50',
+            'time': _timeAgo(r['createdAt'] ?? ''),
+          };
+        }).toList();
+
+        if (comment['replies'] is RxList) {
+          (comment['replies'] as RxList<Map<String, dynamic>>).assignAll(
+            mappedReplies,
+          );
+        } else {
+          comment['replies'] = RxList<Map<String, dynamic>>(mappedReplies);
+        }
+        comment['showReplies'].value = true;
+      }
+    } catch (e) {
+      debugPrint('Error fetching replies: $e');
+    } finally {
+      comment['isRepliesLoading'].value = false;
     }
   }
 
@@ -176,11 +231,15 @@ class MypostController extends GetxController {
 
     try {
       final isReply = replyTargetCommentId.value != null;
-      final url = isReply 
-          ? 'api/post/comment/replies/${replyTargetCommentId.value}' 
-          : 'api/post/comment/$postId';
+      final url = 'api/post/comment/$postId';
 
-      final response = await apiService.postData(url, {'content': text.trim()});
+      final Map<String, dynamic> body = {'content': text.trim()};
+
+      if (isReply) {
+        body['parentCommentId'] = replyTargetCommentId.value;
+      }
+
+      final response = await apiService.postData(url, body);
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         clearReplyTarget();
@@ -216,7 +275,9 @@ class MypostController extends GetxController {
         if (body is Map && body['post'] != null) {
           final updatedPost = body['post'];
           post['likes'] = updatedPost['loveCount'] ?? 0;
-          post['isLiked'] = (updatedPost['lovedBy'] as List?)?.contains(currentUserId) ?? false;
+          post['isLiked'] =
+              (updatedPost['lovedBy'] as List?)?.contains(currentUserId) ??
+              false;
           posts[index] = Map<String, dynamic>.from(post);
         }
       }
@@ -230,12 +291,17 @@ class MypostController extends GetxController {
     final postId = post['_id'];
 
     try {
-      Get.dialog(const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF))), barrierDismissible: false);
+      Get.dialog(
+        const Center(
+          child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
+        ),
+        barrierDismissible: false,
+      );
 
       final response = await apiService.patchData('api/post/$postId', {
         'description': newDescription.trim(),
       });
-      
+
       if (Get.isDialogOpen ?? false) Get.back();
 
       if (response.statusCode == 200) {
@@ -253,10 +319,15 @@ class MypostController extends GetxController {
     final postId = post['_id'];
 
     try {
-      Get.dialog(const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF))), barrierDismissible: false);
+      Get.dialog(
+        const Center(
+          child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
+        ),
+        barrierDismissible: false,
+      );
 
       final response = await apiService.deleteData('api/post/$postId');
-      
+
       if (Get.isDialogOpen ?? false) Get.back();
 
       if (response.statusCode == 200 || response.statusCode == 204) {

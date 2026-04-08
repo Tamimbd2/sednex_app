@@ -8,7 +8,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 class CommunityFeedController extends GetxController {
   final apiService = Get.find<ApiService>();
   final box = GetStorage();
-  
+
   final count = 0.obs;
 
   final List<String> filters = [
@@ -20,7 +20,7 @@ class CommunityFeedController extends GetxController {
     "Question",
     "Announcement",
     "Information",
-    "Rentals"
+    "Rentals",
   ];
   final selectedFilter = "Recent".obs;
 
@@ -31,7 +31,7 @@ class CommunityFeedController extends GetxController {
   final currentPage = 1.obs;
   final totalPages = 1.obs;
   final expandedPosts = <int>{}.obs;
-  
+
   // TTS State
   final flutterTts = FlutterTts();
   final currentlySpeakingIndex = (-1).obs;
@@ -74,12 +74,12 @@ class CommunityFeedController extends GetxController {
   void _initTts() async {
     try {
       if (GetPlatform.isAndroid) {
-         // Dynamically find an available engine (important for non-Google devices like Chinese HyperOS)
-         final dynamic engines = await flutterTts.getEngines;
-         if (engines != null && (engines as List).isNotEmpty) {
-            // Pick the first available engine (like XiaoAi or the default)
-            await flutterTts.setEngine(engines.first as String);
-         }
+        // Dynamically find an available engine (important for non-Google devices like Chinese HyperOS)
+        final dynamic engines = await flutterTts.getEngines;
+        if (engines != null && (engines as List).isNotEmpty) {
+          // Pick the first available engine (like XiaoAi or the default)
+          await flutterTts.setEngine(engines.first as String);
+        }
       }
       // Warm up the engine to prevent "not bound" errors on first use
       await flutterTts.awaitSpeakCompletion(true);
@@ -129,15 +129,18 @@ class CommunityFeedController extends GetxController {
 
           final List rawPosts = body['posts'] ?? [];
           final currentUserId = userId;
-          
-          final List<Map<String, dynamic>> mappedPosts = rawPosts.map<Map<String, dynamic>>((post) {
+
+          final List<Map<String, dynamic>>
+          mappedPosts = rawPosts.map<Map<String, dynamic>>((post) {
             final author = post['author'] ?? {};
             final images = (post['images'] as List?)?.cast<String>() ?? [];
             final createdAt = post['createdAt'] ?? '';
             final lovedBy = (post['lovedBy'] as List?) ?? [];
-            
+
             // Map API category to display category
-            String displayCategory = _mapCategory(post['category'] ?? 'general');
+            String displayCategory = _mapCategory(
+              post['category'] ?? 'general',
+            );
 
             return {
               '_id': post['_id'] ?? '',
@@ -145,10 +148,13 @@ class CommunityFeedController extends GetxController {
               'name': author['name'] ?? 'Unknown',
               'time': _timeAgo(createdAt),
               'content': post['description'] ?? '',
-              'avatar': author['profileImage'] ?? 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=80',
+              'avatar':
+                  author['profileImage'] ??
+                  'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=80',
               'likes': post['loveCount'] ?? 0,
               'comments': post['commentsCount'] ?? 0,
-              'isLiked': currentUserId != null && lovedBy.contains(currentUserId),
+              'isLiked':
+                  currentUserId != null && lovedBy.contains(currentUserId),
               'hasSave': false,
               'category': displayCategory,
               'images': images,
@@ -164,7 +170,9 @@ class CommunityFeedController extends GetxController {
           }
         }
       } else {
-        debugPrint('Failed to fetch posts: ${response.statusCode} - ${response.statusText}');
+        debugPrint(
+          'Failed to fetch posts: ${response.statusCode} - ${response.statusText}',
+        );
       }
     } catch (e) {
       debugPrint("Error fetching posts: $e");
@@ -177,23 +185,29 @@ class CommunityFeedController extends GetxController {
   Future<void> fetchComments(int index) async {
     final post = posts[index];
     final postId = post['_id'];
-    
+
     try {
       isLoadingComments.value = true;
       final response = await apiService.getData('api/post/comment/$postId');
-      
+
       if (response.statusCode == 200) {
         final body = response.body;
         final List rawComments = body['comments'] ?? [];
-        
-        final List<Map<String, dynamic>> mappedComments = rawComments.map<Map<String, dynamic>>((c) {
+
+        final List<Map<String, dynamic>>
+        mappedComments = rawComments.map<Map<String, dynamic>>((c) {
           final author = c['author'] ?? {};
           return {
             '_id': c['_id'] ?? '',
             'name': author['name'] ?? 'Unknown',
             'text': c['content'] ?? '',
-            'avatar': author['profileImage'] ?? 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=60',
+            'avatar':
+                author['profileImage'] ??
+                'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=60',
             'time': _timeAgo(c['createdAt'] ?? ''),
+            'replies': <Map<String, dynamic>>[].obs,
+            'isRepliesLoading': false.obs,
+            'showReplies': false.obs,
           };
         }).toList();
 
@@ -205,6 +219,50 @@ class CommunityFeedController extends GetxController {
       debugPrint('Error fetching comments: $e');
     } finally {
       isLoadingComments.value = false;
+    }
+  }
+
+  Future<void> fetchReplies(int postIndex, int commentIndex) async {
+    final comment = (posts[postIndex]['commentsList'] as RxList)[commentIndex];
+    final commentId = comment['_id'];
+
+    try {
+      comment['isRepliesLoading'].value = true;
+      final response = await apiService.getData(
+        'api/post/comment/replies/$commentId',
+      );
+
+      if (response.statusCode == 200) {
+        final body = response.body;
+        final List rawReplies = body['replies'] ?? [];
+
+        final List<Map<String, dynamic>>
+        mappedReplies = rawReplies.map<Map<String, dynamic>>((r) {
+          final author = r['author'] ?? {};
+          return {
+            '_id': r['_id'] ?? '',
+            'name': author['name'] ?? 'Unknown',
+            'text': r['content'] ?? '',
+            'avatar':
+                author['profileImage'] ??
+                'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=50',
+            'time': _timeAgo(r['createdAt'] ?? ''),
+          };
+        }).toList();
+
+        if (comment['replies'] is RxList) {
+          (comment['replies'] as RxList<Map<String, dynamic>>).assignAll(
+            mappedReplies,
+          );
+        } else {
+          comment['replies'] = RxList<Map<String, dynamic>>(mappedReplies);
+        }
+        comment['showReplies'].value = true;
+      }
+    } catch (e) {
+      debugPrint('Error fetching replies: $e');
+    } finally {
+      comment['isRepliesLoading'].value = false;
     }
   }
 
@@ -220,7 +278,7 @@ class CommunityFeedController extends GetxController {
 
   Future<void> addComment(int index, String text) async {
     if (text.trim().isEmpty) return;
-    
+
     final post = posts[index];
     final postId = post['_id'];
 
@@ -231,19 +289,25 @@ class CommunityFeedController extends GetxController {
 
     try {
       final isReply = replyTargetCommentId.value != null;
-      final url = isReply 
-          ? 'api/post/comment/replies/${replyTargetCommentId.value}' 
-          : 'api/post/comment/$postId';
+      final url =
+          'api/post/comment/$postId'; // Same URL for both as per your Postman
 
-      final response = await apiService.postData(url, {
-        'content': text.trim(),
-      });
+      final Map<String, dynamic> body = {'content': text.trim()};
+
+      if (isReply) {
+        body['parentCommentId'] = replyTargetCommentId.value;
+      }
+
+      final response = await apiService.postData(url, body);
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         clearReplyTarget();
         fetchComments(index); // Refresh comments list
       } else {
-        Get.snackbar('Error', 'Failed to post ${isReply ? 'reply' : 'comment'}');
+        Get.snackbar(
+          'Error',
+          'Failed to post ${isReply ? 'reply' : 'comment'}',
+        );
       }
     } catch (e) {
       debugPrint('Error posting comment: $e');
@@ -312,13 +376,13 @@ class CommunityFeedController extends GetxController {
 
     try {
       final response = await apiService.patchData('api/post/$postId/love', {});
-      
+
       if (response.statusCode == 200) {
         final body = response.body;
         if (body is Map && body['post'] != null) {
           final updatedPost = body['post'];
           final lovedBy = (updatedPost['lovedBy'] as List?) ?? [];
-          
+
           post['likes'] = updatedPost['loveCount'] ?? 0;
           post['isLiked'] = lovedBy.contains(currentUserId);
           posts[index] = Map<String, dynamic>.from(post);
@@ -356,14 +420,16 @@ class CommunityFeedController extends GetxController {
     try {
       // Show loading
       Get.dialog(
-        const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF))),
+        const Center(
+          child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
+        ),
         barrierDismissible: false,
       );
 
       final response = await apiService.patchData('api/post/$postId', {
         'description': newDescription.trim(),
       });
-      
+
       if (Get.isDialogOpen ?? false) Get.back(); // Close loading dialog
 
       if (response.statusCode == 200) {
@@ -387,12 +453,14 @@ class CommunityFeedController extends GetxController {
     try {
       // Show loading
       Get.dialog(
-        const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF))),
+        const Center(
+          child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
+        ),
         barrierDismissible: false,
       );
 
       final response = await apiService.deleteData('api/post/$postId');
-      
+
       if (Get.isDialogOpen ?? false) Get.back(); // Close loading dialog
 
       if (response.statusCode == 200 || response.statusCode == 204) {
@@ -415,19 +483,23 @@ class CommunityFeedController extends GetxController {
     try {
       // Show loading
       Get.dialog(
-        const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF))),
+        const Center(
+          child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
+        ),
         barrierDismissible: false,
       );
 
       final response = await apiService.postData('api/post/save/$postId', {});
-      
+
       if (Get.isDialogOpen ?? false) Get.back(); // Close loading dialog
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar('Success', 'Post saved successfully');
       } else {
         var body = response.body;
-        String message = body is Map ? (body['message'] ?? 'Failed to save post') : 'Failed to save post';
+        String message = body is Map
+            ? (body['message'] ?? 'Failed to save post')
+            : 'Failed to save post';
         Get.snackbar('Info', message);
       }
     } catch (e) {
@@ -436,8 +508,6 @@ class CommunityFeedController extends GetxController {
       Get.snackbar('Error', 'An unexpected error occurred');
     }
   }
-
-
 
   void increment() => count.value++;
 
@@ -452,12 +522,12 @@ class CommunityFeedController extends GetxController {
 
       // Stop any current speech
       await flutterTts.stop();
-      
+
       // Universal Auto-detect language using Unicode script ranges
       String lang = _detectLanguage(text);
-      
+
       await flutterTts.setLanguage(lang);
-      
+
       // Configure TTS
       await flutterTts.setPitch(1.0);
       await flutterTts.setSpeechRate(0.5);
@@ -491,14 +561,30 @@ class CommunityFeedController extends GetxController {
     void addCount(String lang) => counts[lang] = (counts[lang] ?? 0) + 1;
 
     for (final rune in text.runes) {
-      if (rune >= 0x0980 && rune <= 0x09FF) { addCount('bn-BD'); }       // Bengali / Bangla
-      else if (rune >= 0x0600 && rune <= 0x06FF) { addCount('ar-SA'); }  // Arabic
-      else if (rune >= 0x3040 && rune <= 0x30FF) { addCount('ja-JP'); }  // Hiragana + Katakana
-      else if (rune >= 0x4E00 && rune <= 0x9FFF) { addCount('zh-CN'); }  // CJK Unified Ideographs
-      else if (rune >= 0xAC00 && rune <= 0xD7AF) { addCount('ko-KR'); }  // Hangul
-      else if (rune >= 0x0400 && rune <= 0x04FF) { addCount('ru-RU'); }  // Cyrillic
-      else if (rune >= 0x0900 && rune <= 0x097F) { addCount('hi-IN'); }  // Devanagari (Hindi)
-      else if (rune >= 0x0E00 && rune <= 0x0E7F) { addCount('th-TH'); }  // Thai
+      if (rune >= 0x0980 && rune <= 0x09FF) {
+        addCount('bn-BD');
+      } // Bengali / Bangla
+      else if (rune >= 0x0600 && rune <= 0x06FF) {
+        addCount('ar-SA');
+      } // Arabic
+      else if (rune >= 0x3040 && rune <= 0x30FF) {
+        addCount('ja-JP');
+      } // Hiragana + Katakana
+      else if (rune >= 0x4E00 && rune <= 0x9FFF) {
+        addCount('zh-CN');
+      } // CJK Unified Ideographs
+      else if (rune >= 0xAC00 && rune <= 0xD7AF) {
+        addCount('ko-KR');
+      } // Hangul
+      else if (rune >= 0x0400 && rune <= 0x04FF) {
+        addCount('ru-RU');
+      } // Cyrillic
+      else if (rune >= 0x0900 && rune <= 0x097F) {
+        addCount('hi-IN');
+      } // Devanagari (Hindi)
+      else if (rune >= 0x0E00 && rune <= 0x0E7F) {
+        addCount('th-TH');
+      } // Thai
     }
 
     if (counts.isEmpty) return 'en-US';
@@ -507,4 +593,3 @@ class CommunityFeedController extends GetxController {
     return counts.entries.reduce((a, b) => a.value >= b.value ? a : b).key;
   }
 }
-

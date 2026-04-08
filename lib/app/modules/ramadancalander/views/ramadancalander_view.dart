@@ -47,35 +47,20 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.access_time, size: 20, color: Colors.black87),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Ramadan Schedule',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
+                  const Icon(
+                    Icons.access_time,
+                    size: 20,
+                    color: Colors.black87,
                   ),
-                  Row(
-                    children: [
-                      const Icon(Icons.location_on_outlined, size: 20, color: Colors.black87),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Beirut, Lebanon',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(width: 8),
+                  Text(
+                    'Ramadan Schedule',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87,
+                    ),
                   ),
                 ],
               ),
@@ -83,22 +68,25 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
 
             const SizedBox(height: 16),
 
-            // Header
+            // Table Header
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF00A651), Color(0xFF66BB6A)], // Green Gradient
+                  colors: [
+                    Color(0xFF00A651),
+                    Color(0xFF66BB6A),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
+                    color: const Color(0xFF00A651).withValues(alpha: 0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
@@ -107,24 +95,24 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      'Day',
+                      'Roza',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                   ),
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: Text(
-                      'Date',
+                      'Date & Day',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                   ),
@@ -136,7 +124,7 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                   ),
@@ -148,7 +136,7 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                   ),
@@ -160,131 +148,175 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
 
             // Calendar List
             Obx(() {
-               if (controller.isLoading.value) {
-                 return const Center(child: CircularProgressIndicator());
-               }
-               return ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: controller.ramadanData.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final item = controller.ramadanData[index];
-                final isToday = item['isToday'] as bool;
-                
-                return Container(
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-                  decoration: BoxDecoration(
-                    color: isToday ? const Color(0xFFE8F5E9) : Colors.white, // Highlight with soft green if today
-                    borderRadius: BorderRadius.circular(12),
-                    border: isToday ? Border.all(color: const Color(0xFF4CAF50), width: 1.5) : null,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.03),
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: isToday ? const Color(0xFF00A651) : const Color(0xFFF5F5F5),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            item['no'],
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                              color: isToday ? Colors.white : Colors.black54,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              item['date'],
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13,
-                                color: const Color(0xFF101727),
-                                height: 1.2,
-                              ),
-                            ),
-                            Text(
-                              item['day'],
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 11,
-                                color: const Color(0xFF757575),
-                                height: 1.2,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if(isToday)
-                              const Padding(
-                                padding: EdgeInsets.only(right: 4.0),
-                                child: Icon(Icons.wb_sunny_outlined, size: 14, color: Colors.orange),
-                              ),
-                            Text(
-                              item['seheri'],
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13,
-                                color: const Color(0xFF101727),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if(isToday)
-                              const Padding(
-                                padding: EdgeInsets.only(right: 4.0),
-                                child: Icon(Icons.nightlight_round, size: 14, color: Colors.indigo),
-                              ),
-                            Text(
-                              item['iftar'],
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13,
-                                color: const Color(0xFF101727),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+              if (controller.isLoading.value) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(40.0),
+                    child: CircularProgressIndicator(color: Color(0xFF00A651)),
                   ),
                 );
-              },
-            );
+              }
+
+              if (controller.ramadanData.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(40.0),
+                    child: Text(
+                      'No data available',
+                      style: GoogleFonts.poppins(color: Colors.grey),
+                    ),
+                  ),
+                );
+              }
+
+              return ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: controller.ramadanData.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 8),
+                itemBuilder: (context, index) {
+                  final item = controller.ramadanData[index];
+                  final isToday = item['isToday'] as bool;
+
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isToday ? const Color(0xFFF1F8E9) : Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: isToday
+                            ? const Color(0xFF00A651).withValues(alpha: 0.3)
+                            : Colors.grey.withValues(alpha: 0.1),
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.02),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Roza Number
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                            child: Container(
+                              width: 28,
+                              height: 28,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: isToday
+                                    ? const Color(0xFF00A651)
+                                    : const Color(0xFFF5F7FA),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(
+                                item['no'],
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                  color:
+                                      isToday ? Colors.white : const Color(0xFF475569),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Date & Day
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                item['date'],
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                  color: const Color(0xFF1E293B),
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                item['day'],
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 11,
+                                  color: const Color(0xFF64748B),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Seheri Time
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (isToday)
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 4),
+                                  child: Icon(
+                                    Icons.wb_sunny_outlined,
+                                    size: 14,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                              Text(
+                                item['seheri'],
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                  color: const Color(0xFF1E293B),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Iftar Time
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (isToday)
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 4),
+                                  child: Icon(
+                                    Icons.nightlight_round,
+                                    size: 14,
+                                    color: Colors.indigo,
+                                  ),
+                                ),
+                              Text(
+                                item['iftar'],
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                  color: const Color(0xFF1E293B),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
             }),
             const SizedBox(height: 20),
           ],
@@ -293,4 +325,3 @@ class RamadancalanderView extends GetView<RamadancalanderController> {
     );
   }
 }
-

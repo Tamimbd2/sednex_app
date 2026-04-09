@@ -118,6 +118,7 @@ class SavepostController extends GetxController {
                   .capitalizeFirst,
               'images': images,
               'commentsList': <Map<String, dynamic>>[].obs,
+              'isCompleted': postData['isCompleted'] ?? false,
             };
           }).toList();
 
@@ -362,6 +363,38 @@ class SavepostController extends GetxController {
       if (rune >= 0x0980 && rune <= 0x09FF) return 'bn-BD';
     }
     return 'en-US';
+  }
+
+  Future<void> markAsCompleted(int index) async {
+    final post = posts[index];
+    final postId = post['_id'];
+
+    try {
+      Get.dialog(
+        const Center(
+          child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
+        ),
+        barrierDismissible: false,
+      );
+
+      final response =
+          await apiService.patchData('api/post/$postId/completion', {
+        'isCompleted': true,
+      });
+
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      if (response.statusCode == 200) {
+        post['isCompleted'] = true;
+        posts[index] = Map<String, dynamic>.from(post);
+        Get.snackbar('Success', 'Post marked as completed');
+      } else {
+        Get.snackbar('Error', 'Failed to update post status');
+      }
+    } catch (e) {
+      if (Get.isDialogOpen ?? false) Get.back();
+      debugPrint('Completion error: $e');
+    }
   }
 
   @override

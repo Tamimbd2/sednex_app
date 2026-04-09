@@ -159,6 +159,7 @@ class CommunityFeedController extends GetxController {
               'category': displayCategory,
               'images': images,
               'lovedBy': lovedBy,
+              'isCompleted': post['isCompleted'] ?? false,
               'commentsList': <Map<String, dynamic>>[].obs,
             };
           }).toList();
@@ -506,6 +507,38 @@ class CommunityFeedController extends GetxController {
       if (Get.isDialogOpen ?? false) Get.back(); // Close loading dialog
       debugPrint('Save error: $e');
       Get.snackbar('Error', 'An unexpected error occurred');
+    }
+  }
+
+  Future<void> markAsCompleted(int index) async {
+    final post = posts[index];
+    final postId = post['_id'];
+
+    try {
+      Get.dialog(
+        const Center(
+          child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
+        ),
+        barrierDismissible: false,
+      );
+
+      final response =
+          await apiService.patchData('api/post/$postId/completion', {
+        'isCompleted': true,
+      });
+
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      if (response.statusCode == 200) {
+        post['isCompleted'] = true;
+        posts[index] = Map<String, dynamic>.from(post);
+        Get.snackbar('Success', 'Post marked as completed');
+      } else {
+        Get.snackbar('Error', 'Failed to update post status');
+      }
+    } catch (e) {
+      if (Get.isDialogOpen ?? false) Get.back();
+      debugPrint('Completion error: $e');
     }
   }
 

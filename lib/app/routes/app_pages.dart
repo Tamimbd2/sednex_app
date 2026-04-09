@@ -86,6 +86,8 @@ import '../modules/touristSpot/views/tourist_spot_view.dart';
 import '../modules/favorites/views/favorites_view.dart';
 import '../modules/generalsection/bindings/generalsection_binding.dart';
 import '../modules/generalsection/views/generalsection_view.dart';
+import '../modules/savedArticles/bindings/saved_articles_binding.dart';
+import '../modules/savedArticles/views/saved_articles_view.dart';
 
 part 'app_routes.dart';
 
@@ -319,6 +321,11 @@ class AppPages {
       name: _Paths.GENERAL_SECTION,
       page: () => const GeneralSectionView(),
       binding: GeneralSectionBinding(),
+    ),
+    GetPage(
+      name: _Paths.SAVED_ARTICLES,
+      page: () => const SavedArticlesView(),
+      binding: SavedArticlesBinding(),
     ),
   ];
 }

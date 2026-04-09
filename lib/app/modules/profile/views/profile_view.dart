@@ -225,7 +225,8 @@ class ProfileView extends GetView<ProfileController> {
                 ),
                 _buildSettingsItem(
                   'Saved Articles',
-                  'assets/profile/savepost.svg', // Reusing icon for now
+                  '', // No SVG path
+                  icon: Icons.newspaper,
                   isLast: true,
                   onTap: () => Get.toNamed(Routes.SAVED_ARTICLES),
                 ),
@@ -312,6 +313,7 @@ class ProfileView extends GetView<ProfileController> {
     bool isDestructive = false,
     VoidCallback? onTap,
     int? badgeCount,
+    IconData? icon,
   }) {
     return Column(
       children: [
@@ -323,14 +325,20 @@ class ProfileView extends GetView<ProfileController> {
           leading: SizedBox(
             width: 24,
             height: 24,
-            child: SvgPicture.asset(
-              iconPath,
-              width: 24,
-              height: 24,
-              colorFilter: isDestructive
-                  ? null
-                  : null, // SVG handles color or allow original
-            ),
+            child: icon != null
+                ? Icon(
+                    icon,
+                    size: 24,
+                    color: isDestructive
+                        ? const Color(0xFFEF4444)
+                        : const Color(0xFF354152),
+                  )
+                : SvgPicture.asset(
+                    iconPath,
+                    width: 24,
+                    height: 24,
+                    colorFilter: isDestructive ? null : null,
+                  ),
           ),
           title: Text(
             title,

@@ -489,6 +489,9 @@ class DashboardController extends GetxController {
   void deletePost(int index) =>
       Get.find<CommunityFeedController>().deletePost(index);
 
+  void markAsCompleted(int index) =>
+      Get.find<CommunityFeedController>().markAsCompleted(index);
+
   void fetchLovedProducts() async {
     try {
       const path = 'api/products/love/';

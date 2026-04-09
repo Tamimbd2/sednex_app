@@ -78,6 +78,10 @@ class CommunityPostCard extends StatelessWidget {
                           const SizedBox(width: 8),
                           _buildCategoryTag(post['category']),
                         ],
+                        if (post['isCompleted'] == true) ...[
+                          const SizedBox(width: 8),
+                          _buildCompletedBadge(),
+                        ],
                       ],
                     ),
                   ],
@@ -341,6 +345,7 @@ class CommunityPostCard extends StatelessWidget {
                     color: const Color(0xFF00C853),
                     onTap: () {
                       Get.back();
+                      controller.markAsCompleted(index);
                     },
                   ),
                   const SizedBox(height: 24),
@@ -1002,6 +1007,32 @@ class CommunityPostCard extends StatelessWidget {
           color: Colors.grey[200],
           child: const Icon(Icons.broken_image, color: Colors.grey),
         ),
+      ),
+    );
+  }
+
+  Widget _buildCompletedBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: const Color(0xFFDCFCE7),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF22C55E), width: 0.5),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.check_circle, size: 10, color: Color(0xFF166534)),
+          const SizedBox(width: 4),
+          Text(
+            'Completed',
+            style: GoogleFonts.poppins(
+              color: const Color(0xFF166534),
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }

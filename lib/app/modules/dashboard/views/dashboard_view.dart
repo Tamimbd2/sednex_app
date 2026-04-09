@@ -62,8 +62,11 @@ class DashboardView extends GetView<DashboardController> {
                         height: 30, // Slightly increased for better visibility
                         fit: BoxFit.contain,
                       ),
-                      if (Get.locale?.languageCode != 'en' ||
-                          controller.currentIndex.value != 0) ...[
+                      if (controller.currentIndex.value != 1 &&
+                          controller.currentIndex.value != 2 &&
+                          controller.currentIndex.value != 3 &&
+                          (Get.locale?.languageCode != 'en' ||
+                              controller.currentIndex.value != 0)) ...[
                         const SizedBox(width: 12),
                         Container(
                           width: 1,

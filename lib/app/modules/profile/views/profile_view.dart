@@ -41,30 +41,64 @@ class ProfileView extends GetView<ProfileController> {
                 ),
                 child: Column(
                   children: [
-                    // Avatar with Gradient Border
-                    Container(
-                      padding: const EdgeInsets.all(3), // Border width
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: AppColors.primaryGradient,
-                      ),
-                      child: Obx(() {
-                        final imgUrl = controller.userProfileImage.value;
-                        return CircleAvatar(
-                          radius: 42,
-                          backgroundColor: Colors.grey[200],
-                          backgroundImage: imgUrl != null
-                              ? CachedNetworkImageProvider(imgUrl)
-                              : null,
-                          child: imgUrl == null
-                              ? const Icon(
-                                  Icons.person,
-                                  size: 40,
-                                  color: Colors.grey,
-                                )
-                              : null,
-                        );
-                      }),
+                    // Avatar with Gradient Border and Warning Badge
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(3), // Border width
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: AppColors.primaryGradient,
+                          ),
+                          child: Obx(() {
+                            final imgUrl = controller.userProfileImage.value;
+                            return CircleAvatar(
+                              radius: 42,
+                              backgroundColor: Colors.grey[200],
+                              backgroundImage: imgUrl != null
+                                  ? CachedNetworkImageProvider(imgUrl)
+                                  : null,
+                              child: imgUrl == null
+                                  ? const Icon(
+                                      Icons.person,
+                                      size: 40,
+                                      color: Colors.grey,
+                                    )
+                                  : null,
+                            );
+                          }),
+                        ),
+                        // Warning Triangle Badge
+                        Obx(() {
+                          if (controller.userWarning.value.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          return Positioned(
+                            right: -5,
+                            top: -5,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEF4444), // Critical Red
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.2),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.warning_rounded,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                          );
+                        }),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     // Name
@@ -111,6 +145,38 @@ class ProfileView extends GetView<ProfileController> {
                 ),
               ),
               const SizedBox(height: 24),
+
+              // Warning Section
+              Obx(() {
+                if (controller.userWarning.value.isEmpty) return const SizedBox.shrink();
+                return Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(bottom: 24),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF7ED), // Light orange
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFFED7AA)), // Orange border
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.warning_amber_rounded,
+                          color: Color(0xFFEA580C)),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          controller.userWarning.value,
+                          style: GoogleFonts.arimo(
+                            fontSize: 14,
+                            color: const Color(0xFF9A3412),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
 
               // "Other settings" Label
               Padding(

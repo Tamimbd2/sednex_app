@@ -300,10 +300,40 @@ class SavepostController extends GetxController {
     }
   }
 
+  Future<void> unsavePost(int index) async {
+    final post = posts[index];
+    final postId = post['_id'];
+
+    try {
+      // Show loading
+      Get.dialog(
+        const Center(
+          child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
+        ),
+        barrierDismissible: false,
+      );
+
+      // The same endpoint toggles save/unsave
+      final response = await apiService.postData('api/post/save/$postId', {});
+
+      if (Get.isDialogOpen ?? false) Get.back(); // Close loading dialog
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        posts.removeAt(index);
+        Get.snackbar('Success', 'Post removed from saved collection');
+      } else {
+        Get.snackbar('Error', 'Failed to unsave post');
+      }
+    } catch (e) {
+      if (Get.isDialogOpen ?? false) Get.back(); // Close loading dialog
+      debugPrint('Unsave error: $e');
+      Get.snackbar('Error', 'An unexpected error occurred');
+    }
+  }
+
   Future<void> savePost(int index) async {
     // Post is already saved if it's in this list, but user might want to unsave?
-    // For now, let's just implement the snackbar
-    Get.snackbar('Info', 'Post is already in your saved collection');
+    unsavePost(index);
   }
 
   Future<void> speakPost(int index, String text) async {

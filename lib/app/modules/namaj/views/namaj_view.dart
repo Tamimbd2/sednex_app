@@ -33,7 +33,7 @@ class NamajView extends GetView<NamajController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'prayer_schedule'.tr,
+          'নামাজের সময়সূচি',
           style: GoogleFonts.hindSiliguri(
             color: Colors.white,
             fontSize: 20,
@@ -69,7 +69,7 @@ class NamajView extends GetView<NamajController> {
                     const Icon(Icons.access_time_rounded, size: 14, color: Color(0xFF6F6F6F)),
                     const SizedBox(width: 6),
                     Obx(() => Text(
-                      '${'last_update'.tr}: ${controller.schedule['lastUpdate']}',
+                      'সর্বশেষ আপডেট: ${controller.schedule['lastUpdate']}',
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: const Color(0xFF6F6F6F),
@@ -88,7 +88,7 @@ class NamajView extends GetView<NamajController> {
             const SizedBox(height: 28),
 
             // Prayer Learning Header
-            _buildSectionHeader('prayer_learning'.tr, 'assets/icons/book.svg'), // Using fallback icon logic
+            _buildSectionHeader('নামাজ শিক্ষা', 'assets/icons/book.svg'), // Using fallback icon logic
             
             const SizedBox(height: 16),
 
@@ -98,7 +98,7 @@ class NamajView extends GetView<NamajController> {
             const SizedBox(height: 28),
 
             // Essential Duas Header
-             _buildSectionHeader('essential_duas'.tr, 'assets/icons/heart.svg'),
+             _buildSectionHeader('প্রয়োজনীয় দোয়া', 'assets/icons/heart.svg'),
 
             const SizedBox(height: 16),
 
@@ -221,11 +221,11 @@ class NamajView extends GetView<NamajController> {
                    Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildScheduleColumnHeader('fajar'.tr, isHighlight: currentIndex == 0),
-                      _buildScheduleColumnHeader('zohar'.tr, isHighlight: currentIndex == 1),
-                      _buildScheduleColumnHeader('asar'.tr, isHighlight: currentIndex == 2),
-                      _buildScheduleColumnHeader('magrib'.tr, isHighlight: currentIndex == 3),
-                      _buildScheduleColumnHeader('esha'.tr, isHighlight: currentIndex == 4),
+                      _buildScheduleColumnHeader('ফজর', isHighlight: currentIndex == 0),
+                      _buildScheduleColumnHeader('যোহর', isHighlight: currentIndex == 1),
+                      _buildScheduleColumnHeader('আছর', isHighlight: currentIndex == 2),
+                      _buildScheduleColumnHeader('মাগরিব', isHighlight: currentIndex == 3),
+                      _buildScheduleColumnHeader('ঈশা', isHighlight: currentIndex == 4),
                     ],
                   ),
                   const SizedBox(height: 12),

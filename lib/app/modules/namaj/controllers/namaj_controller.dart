@@ -57,7 +57,7 @@ class NamajController extends GetxController with WidgetsBindingObserver {
   void _updateScheduleDate() {
     final now = DateTime.now();
     schedule['day'] = _getBengaliDay(now.weekday);
-    schedule['lastUpdate'] = 'Today';
+    schedule['lastUpdate'] = 'আজ';
   }
 
   void fetchPrayerTimes() async {

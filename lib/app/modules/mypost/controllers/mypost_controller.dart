@@ -29,7 +29,7 @@ class MypostController extends GetxController {
   String? get userId {
     final userData = box.read('user');
     if (userData != null) {
-      final user = jsonDecode(userData);
+      final user = userData is String ? jsonDecode(userData) : userData;
       return user['_id'];
     }
     return null;

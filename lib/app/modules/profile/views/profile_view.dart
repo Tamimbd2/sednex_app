@@ -24,149 +24,146 @@ class ProfileView extends GetView<ProfileController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Profile Card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    // Avatar with Gradient Border and Warning Badge
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(3), // Border width
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: AppColors.primaryGradient,
-                          ),
-                          child: Obx(() {
+              // New Redesigned Profile Header
+              GestureDetector(
+                onTap: () => Get.toNamed(Routes.PROFILEINFODETAILS),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 15,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      // Avatar (No Camera Badge)
+                      Stack(
+                        children: [
+                          Obx(() {
                             final imgUrl = controller.userProfileImage.value;
-                            return CircleAvatar(
-                              radius: 42,
-                              backgroundColor: Colors.grey[200],
-                              backgroundImage: imgUrl != null
-                                  ? CachedNetworkImageProvider(imgUrl)
-                                  : null,
-                              child: imgUrl == null
-                                  ? const Icon(
-                                      Icons.person,
-                                      size: 40,
-                                      color: Colors.grey,
-                                    )
-                                  : null,
+                            return Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.grey[100]!,
+                                  width: 2,
+                                ),
+                              ),
+                              child: CircleAvatar(
+                                radius: 45,
+                                backgroundColor: const Color(0xFFF3F4F6),
+                                backgroundImage: imgUrl != null
+                                    ? CachedNetworkImageProvider(imgUrl)
+                                    : null,
+                                child: imgUrl == null
+                                    ? const Icon(
+                                        Icons.person,
+                                        size: 40,
+                                        color: Colors.grey,
+                                      )
+                                    : null,
+                              ),
                             );
                           }),
-                        ),
-                        // Warning Triangle Badge
-                        Obx(() {
-                          if (controller.userWarning.value.isEmpty) {
-                            return const SizedBox.shrink();
-                          }
-                          return Positioned(
-                            right: -5,
-                            top: -5,
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFEF4444), // Critical Red
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.2),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(
-                                Icons.warning_rounded,
-                                color: Colors.white,
-                                size: 24,
+                        ],
+                      ),
+                      const SizedBox(width: 20),
+                      // Info and Button
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Obx(
+                              () => Text(
+                                controller.userName.value.isNotEmpty
+                                    ? controller.userName.value
+                                    : 'User',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF111827),
+                                ),
                               ),
                             ),
-                          );
-                        }),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    // Name
-                    Obx(
-                      () => Text(
-                        controller.userName.value.isNotEmpty
-                            ? controller.userName.value
-                            : 'User',
-                        style: GoogleFonts.arimo(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xFF101727),
+                            Obx(
+                              () => Text(
+                                controller.userEmail.value.isNotEmpty
+                                    ? controller.userEmail.value
+                                    : '',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  color: const Color(0xFF6B7280),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: 140, // Match the compact button width
+                              child: ElevatedButton(
+                                onPressed: () => Get.toNamed('/editprofile'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(
+                                    0xFF1E63FF,
+                                  ), // Primary Blue Theme Color
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Edit Profile',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    // Handle
-                    Obx(
-                      () => Text(
-                        controller.userHandle.value.isNotEmpty
-                            ? controller.userHandle.value
-                            : '',
-                        style: GoogleFonts.arimo(
-                          fontSize: 14,
-                          color: const Color(0xFF697282),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    // Email as bio fallback until real bio field is added
-                    Obx(
-                      () => Text(
-                        controller.userEmail.value.isNotEmpty
-                            ? controller.userEmail.value
-                            : '',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.arimo(
-                          fontSize: 14,
-                          color: const Color(0xFF495565),
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
 
               // Warning Section
               Obx(() {
-                if (controller.userWarning.value.isEmpty) return const SizedBox.shrink();
+                if (controller.userWarning.value.isEmpty) {
+                  return const SizedBox.shrink();
+                }
                 return Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(bottom: 24),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFF7ED), // Light orange
+                    color: const Color(0xFFFFF7ED),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFFFED7AA)), // Orange border
+                    border: Border.all(color: const Color(0xFFFED7AA)),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.warning_amber_rounded,
-                          color: Color(0xFFEA580C)),
+                      const Icon(
+                        Icons.warning_amber_rounded,
+                        color: Color(0xFFEA580C),
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           controller.userWarning.value,
-                          style: GoogleFonts.arimo(
+                          style: GoogleFonts.poppins(
                             fontSize: 14,
                             color: const Color(0xFF9A3412),
                             fontWeight: FontWeight.w500,
@@ -183,7 +180,7 @@ class ProfileView extends GetView<ProfileController> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   'other_settings'.tr,
-                  style: GoogleFonts.arimo(
+                  style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: const Color(0xFF495565),
                   ),
@@ -193,20 +190,20 @@ class ProfileView extends GetView<ProfileController> {
 
               // Settings Group 1
               _buildSettingsGroup([
-                _buildSettingsItem('My Post', 'assets/profile/post.svg',
+                _buildSettingsItem(
+                  'My Post',
+                  'assets/profile/post.svg',
                   onTap: () => Get.toNamed('/mypost'),
                 ),
-                Obx(() => _buildSettingsItem(
-                  'Cart',
-                  'assets/profile/cart.svg',
-                  badgeCount: dashboardController.lovedProducts.length,
-                  onTap: () => Get.toNamed(Routes.FAVORITES),
-                )),
-                _buildSettingsItem(
-                  'edit_profile'.tr,
-                  'assets/profile/editprofile.svg',
-                  onTap: () => Get.toNamed('/editprofile'),
+                Obx(
+                  () => _buildSettingsItem(
+                    'Cart',
+                    'assets/profile/cart.svg',
+                    badgeCount: dashboardController.lovedProducts.length,
+                    onTap: () => Get.toNamed(Routes.FAVORITES),
+                  ),
                 ),
+
                 _buildSettingsItem(
                   'password'.tr,
                   'assets/profile/password.svg',
@@ -342,7 +339,7 @@ class ProfileView extends GetView<ProfileController> {
           ),
           title: Text(
             title,
-            style: GoogleFonts.arimo(
+            style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w400,
               color: isDestructive

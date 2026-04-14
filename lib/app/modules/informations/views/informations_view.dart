@@ -98,17 +98,6 @@ class InformationsView extends GetView<InformationsController> {
                       color: Colors.black,
                     ),
                   ),
-                  TextButton(
-                    onPressed: () => Get.toNamed('/essential-service'),
-                    child: Text(
-                      'View All',
-                      style: GoogleFonts.poppins(
-                        color: const Color(0xFF4169E1),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -133,7 +122,7 @@ class InformationsView extends GetView<InformationsController> {
                     service.backgroundColor,
                     () {
                       if (service.route != null) {
-                        Get.toNamed(service.route!);
+                        Get.toNamed(service.route!, arguments: service.arguments);
                       } else {
                         _showComingSoonDialog(context, service.label);
                       }
@@ -142,22 +131,7 @@ class InformationsView extends GetView<InformationsController> {
                 },
               )),
               
-              const SizedBox(height: 12),
-
-              // "All" Section Header
-              Text(
-                'All',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ).copyWith(
-                  fontFamilyFallback: [
-                    GoogleFonts.hindSiliguri().fontFamily!,
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 20),
 
               // Mixed Live Cards Grid (3 columns × max 2 rows)
               Obx(() {

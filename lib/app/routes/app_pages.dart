@@ -39,6 +39,9 @@ import '../modules/embassy/bindings/embassy_binding.dart';
 import '../modules/embassy/views/embassy_view.dart';
 import '../modules/essentialService/bindings/essential_service_binding.dart';
 import '../modules/essentialService/views/essential_service_view.dart';
+import '../modules/favorites/views/favorites_view.dart';
+import '../modules/generalsection/bindings/generalsection_binding.dart';
+import '../modules/generalsection/views/generalsection_view.dart';
 import '../modules/goldRate/bindings/gold_rate_binding.dart';
 import '../modules/goldRate/views/gold_rate_view.dart';
 import '../modules/help/bindings/help_binding.dart';
@@ -67,10 +70,14 @@ import '../modules/organization/bindings/organization_binding.dart';
 import '../modules/organization/views/organization_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/profileinfodetails/bindings/profileinfodetails_binding.dart';
+import '../modules/profileinfodetails/views/profileinfodetails_view.dart';
 import '../modules/ramadancalander/bindings/ramadancalander_binding.dart';
 import '../modules/ramadancalander/views/ramadancalander_view.dart';
 import '../modules/restaurents/bindings/restaurents_binding.dart';
 import '../modules/restaurents/views/restaurents_view.dart';
+import '../modules/savedArticles/bindings/saved_articles_binding.dart';
+import '../modules/savedArticles/views/saved_articles_view.dart';
 import '../modules/savepost/bindings/savepost_binding.dart';
 import '../modules/savepost/views/savepost_view.dart';
 import '../modules/sendotp/bindings/sendotp_binding.dart';
@@ -83,11 +90,6 @@ import '../modules/termsandconditions/bindings/termsandconditions_binding.dart';
 import '../modules/termsandconditions/views/termsandconditions_view.dart';
 import '../modules/touristSpot/bindings/tourist_spot_binding.dart';
 import '../modules/touristSpot/views/tourist_spot_view.dart';
-import '../modules/favorites/views/favorites_view.dart';
-import '../modules/generalsection/bindings/generalsection_binding.dart';
-import '../modules/generalsection/views/generalsection_view.dart';
-import '../modules/savedArticles/bindings/saved_articles_binding.dart';
-import '../modules/savedArticles/views/saved_articles_view.dart';
 
 part 'app_routes.dart';
 
@@ -326,6 +328,11 @@ class AppPages {
       name: _Paths.SAVED_ARTICLES,
       page: () => const SavedArticlesView(),
       binding: SavedArticlesBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILEINFODETAILS,
+      page: () => const ProfileinfodetailsView(),
+      binding: ProfileinfodetailsBinding(),
     ),
   ];
 }

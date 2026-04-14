@@ -15,13 +15,11 @@ class CreatepostController extends GetxController {
   
   final categories = [
     'general',
+    'Jobs',
+    'buy & sell',
+    'questions',
+    'rental',
     'help',
-    'sell',
-    'job',
-    'question',
-    'announcement',
-    'information',
-    'rentals',
   ];
 
   final RxList<XFile> selectedImages = <XFile>[].obs;

@@ -103,7 +103,7 @@ class EditprofileView extends GetView<EditprofileController> {
                 onTap: controller.pickImage,
                 child: Text(
                   'Change Photo',
-                  style: GoogleFonts.arimo(
+                  style: GoogleFonts.poppins(
                     color: const Color(0xFF1E63FF),
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
@@ -112,8 +112,10 @@ class EditprofileView extends GetView<EditprofileController> {
               ),
               const SizedBox(height: 32),
 
-              // Form Fields
-              _buildLabel('Name'),
+              // Identity Section
+              _buildSectionTitle('Identity'),
+              const SizedBox(height: 16),
+              _buildLabel('Full Name'),
               const SizedBox(height: 8),
               _buildTextField(
                 controller: controller.nameController,
@@ -127,9 +129,12 @@ class EditprofileView extends GetView<EditprofileController> {
               _buildTextField(
                 controller: controller.bioController,
                 hint: 'Tell us about yourself...',
-                maxLines: 4,
+                maxLines: 3,
               ),
 
+              const SizedBox(height: 24),
+              // Contact Information
+              _buildSectionTitle('Contact Information'),
               const SizedBox(height: 16),
               _buildLabel('Phone Number'),
               const SizedBox(height: 8),
@@ -141,12 +146,149 @@ class EditprofileView extends GetView<EditprofileController> {
               ),
 
               const SizedBox(height: 16),
-              _buildLabel('Location'),
+              _buildLabel('Country/Location'),
               const SizedBox(height: 8),
               _buildTextField(
                 controller: controller.locationController,
                 hint: 'City, Country',
                 icon: Icons.location_on_outlined,
+              ),
+
+              const SizedBox(height: 16),
+              _buildLabel('Website Link'),
+              const SizedBox(height: 8),
+              _buildTextField(
+                controller: controller.websiteLinkController,
+                hint: 'https://example.com',
+                icon: Icons.link,
+              ),
+
+              const SizedBox(height: 24),
+              // Personal Information
+              _buildSectionTitle('Personal Information'),
+              const SizedBox(height: 16),
+              _buildLabel('Birth Address'),
+              const SizedBox(height: 8),
+              _buildTextField(
+                controller: controller.birthAddressController,
+                hint: 'Village, District',
+                icon: Icons.home_outlined,
+              ),
+
+              const SizedBox(height: 16),
+              _buildLabel('Current Address'),
+              const SizedBox(height: 8),
+              _buildTextField(
+                controller: controller.currentAddressController,
+                hint: 'Street, House No',
+                icon: Icons.map_outlined,
+              ),
+
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        _buildLabel('Birth Date'),
+                        const SizedBox(height: 8),
+                        _buildTextField(
+                          controller: controller.birthDateController,
+                          hint: 'YYYY-MM-DD',
+                          icon: Icons.calendar_today_outlined,
+                          readOnly: true,
+                          onTap: controller.chooseDate,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        _buildLabel('Gender'),
+                        const SizedBox(height: 8),
+                        _buildDropdown(
+                          controller: controller.genderController,
+                          hint: 'Select Gender',
+                          icon: Icons.people_outline,
+                          items: ['Male', 'Female', 'Other'],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        _buildLabel('Marital Status'),
+                        const SizedBox(height: 8),
+                        _buildDropdown(
+                          controller: controller.maritalStatusController,
+                          hint: 'Select Status',
+                          items: ['Single', 'Married', 'Divorced', 'Widowed'],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        _buildLabel('Blood Group'),
+                        const SizedBox(height: 8),
+                        _buildDropdown(
+                          controller: controller.bloodGroupController,
+                          hint: 'Select Group',
+                          items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+              _buildLabel('Nationality'),
+              const SizedBox(height: 8),
+              _buildTextField(
+                controller: controller.nationalityController,
+                hint: 'Bangladeshi',
+              ),
+
+              const SizedBox(height: 24),
+              // Professional Information
+              _buildSectionTitle('Professional Information'),
+              const SizedBox(height: 16),
+              _buildLabel('Job Title'),
+              const SizedBox(height: 8),
+              _buildTextField(
+                controller: controller.jobTitleController,
+                hint: 'Software Engineer',
+                icon: Icons.work_outline,
+              ),
+
+              const SizedBox(height: 16),
+              _buildLabel('Company Name'),
+              const SizedBox(height: 8),
+              _buildTextField(
+                controller: controller.companyNameController,
+                hint: 'Example Ltd.',
+                icon: Icons.business_outlined,
+              ),
+
+              const SizedBox(height: 16),
+              _buildLabel('Work Address'),
+              const SizedBox(height: 8),
+              _buildTextField(
+                controller: controller.workAddressController,
+                hint: 'Office Location',
+                icon: Icons.store_outlined,
               ),
 
               const SizedBox(height: 40),
@@ -172,7 +314,7 @@ class EditprofileView extends GetView<EditprofileController> {
                         )
                       : Text(
                           'Save Changes',
-                          style: GoogleFonts.arimo(
+                          style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
@@ -187,15 +329,79 @@ class EditprofileView extends GetView<EditprofileController> {
     );
   }
 
+  Widget _buildSectionTitle(String title) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Color(0xFFE5E7EB), width: 1),
+        ),
+      ),
+      child: Text(
+        title.toUpperCase(),
+        style: GoogleFonts.poppins(
+          color: const Color(0xFF1E63FF),
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1,
+        ),
+      ),
+    );
+  }
+
   Widget _buildLabel(String text) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Text(
         text,
-        style: GoogleFonts.arimo(
+        style: GoogleFonts.poppins(
           color: const Color(0xFF495565),
           fontSize: 14,
           fontWeight: FontWeight.w400,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdown({
+    required TextEditingController controller,
+    required String hint,
+    required List<String> items,
+    IconData? icon,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF3F8FF),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE1E8F5), width: 1),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: items.contains(controller.text) ? controller.text : null,
+          hint: Text(hint, style: GoogleFonts.poppins(color: const Color(0xFF9CA3AF), fontSize: 16)),
+          icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF9CA3AF)),
+          isExpanded: true,
+          items: items.map((String item) {
+            return DropdownMenuItem<String>(
+              value: item,
+              child: Row(
+                children: [
+                  if (icon != null) ...[
+                    Icon(icon, color: const Color(0xFF9CA3AF), size: 22),
+                    const SizedBox(width: 12),
+                  ],
+                  Text(item, style: GoogleFonts.poppins(color: const Color(0xFF101727), fontSize: 16)),
+                ],
+              ),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              controller.text = newValue;
+            }
+          },
         ),
       ),
     );
@@ -207,11 +413,15 @@ class EditprofileView extends GetView<EditprofileController> {
     IconData? icon,
     int maxLines = 1,
     TextInputType? keyboardType,
+    bool readOnly = false,
+    VoidCallback? onTap,
   }) {
     return TextField(
       controller: controller,
       maxLines: maxLines,
       keyboardType: keyboardType,
+      readOnly: readOnly,
+      onTap: onTap,
       style: GoogleFonts.arimo(
         color: const Color(0xFF101727),
         fontSize: 16,

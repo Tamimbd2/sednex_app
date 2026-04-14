@@ -10,12 +10,14 @@ class ServiceItem {
   final String imagePath;
   final Color backgroundColor;
   final String? route;
+  final dynamic arguments;
 
   ServiceItem({
     required this.label,
     required this.imagePath,
     required this.backgroundColor,
     this.route,
+    this.arguments,
   });
 }
 
@@ -74,6 +76,8 @@ class InformationsController extends GetxController {
       label: 'Grocery Store',
       imagePath: 'assets/newessential/Store-1--Streamline-Core-Gradient.svg',
       backgroundColor: const Color(0xFFFF9800),
+      route: '/general-section',
+      arguments: {'slug': 'grocery-store', 'title': 'Grocery Store'},
     ),
     ServiceItem(
       label: 'Tourist spot',
@@ -103,16 +107,96 @@ class InformationsController extends GetxController {
       label: 'Local Business',
       imagePath: 'assets/newessential/Briefcase-Dollar--Streamline-Core-Gradient.svg',
       backgroundColor: const Color(0xFFFFD700),
+      route: '/general-section',
+      arguments: {'slug': 'local-business', 'title': 'Local Business'},
     ),
     ServiceItem(
       label: 'Jewellery shop',
       imagePath: 'assets/newessential/Gift-2--Streamline-Core-Gradient.svg',
       backgroundColor: const Color(0xFF00C853),
+      route: '/general-section',
+      arguments: {'slug': 'jewellery-shop', 'title': 'Jewellery shop'},
     ),
     ServiceItem(
       label: 'Clothing shop',
       imagePath: 'assets/newessential/Shopping-Bag-Hand-Bag-2--Streamline-Core-Gradient.svg',
       backgroundColor: const Color(0xFF4169E1),
+      route: '/general-section',
+      arguments: {'slug': 'clothing-shop', 'title': 'Clothing shop'},
+    ),
+    ServiceItem(
+      label: 'Organization',
+      imagePath: 'assets/newessential/Business-Profession-Home-Office--Streamline-Core-Gradient.svg',
+      backgroundColor: const Color(0xFF3F51B5),
+      route: '/organization',
+    ),
+    ServiceItem(
+      label: 'Sports team',
+      imagePath: 'assets/newessential/Flash-3--Streamline-Core-Gradient.svg',
+      backgroundColor: const Color(0xFF8BC34A),
+      route: '/general-section',
+      arguments: {'slug': 'sports-team', 'title': 'Sports team'},
+    ),
+    ServiceItem(
+      label: 'Drivers',
+      imagePath: 'assets/newessential/Car-Taxi-1--Streamline-Core-Gradient.svg',
+      backgroundColor: const Color(0xFFFFEB3B),
+      route: '/general-section',
+      arguments: {'slug': 'texi-driver', 'title': 'Taxi Drivers'},
+    ),
+    ServiceItem(
+      label: 'Businessman',
+      imagePath: 'assets/newessential/Necktie--Streamline-Core-Gradient.svg',
+      backgroundColor: const Color(0xFF607D8B),
+      route: '/general-section',
+      arguments: {'slug': 'businessman', 'title': 'Businessman'},
+    ),
+    ServiceItem(
+      label: 'Influencer',
+      imagePath: 'assets/newessential/Megaphone-2--Streamline-Core-Gradient.svg',
+      backgroundColor: const Color(0xFFE91E63),
+      route: '/general-section',
+      arguments: {'slug': 'influencer', 'title': 'Influencer'},
+    ),
+    ServiceItem(
+      label: 'Local Market',
+      imagePath: 'assets/newessential/Shopping-Cart-1--Streamline-Core-Gradient.svg',
+      backgroundColor: const Color(0xFFFF5722),
+      route: '/general-section',
+      arguments: {'slug': 'local-market', 'title': 'Local Market'},
+    ),
+    ServiceItem(
+      label: 'Pharmacy',
+      imagePath: 'assets/newessential/Tablet-Capsule--Streamline-Core-Gradient.svg',
+      backgroundColor: const Color(0xFF009688),
+      route: '/general-section',
+      arguments: {'slug': 'pharmacy', 'title': 'Pharmacy'},
+    ),
+    ServiceItem(
+      label: 'NGO',
+      imagePath: 'assets/newessential/Decent-Work-And-Economic-Growth--Streamline-Core-Gradient.svg',
+      backgroundColor: const Color(0xFF4CAF50),
+      route: '/general-section',
+      arguments: {'slug': 'ngo', 'title': 'NGO'},
+    ),
+    ServiceItem(
+      label: 'Bus & Flight Booking',
+      imagePath: 'assets/newessential/Bus--Streamline-Core-Gradient.svg',
+      backgroundColor: const Color(0xFF2196F3),
+      route: '/busflight',
+    ),
+    ServiceItem(
+      label: 'Local Tour',
+      imagePath: 'assets/newessential/Location-Pin-3--Streamline-Core-Gradient.svg',
+      backgroundColor: const Color(0xFF00BCD4),
+      route: '/localtour',
+    ),
+    ServiceItem(
+      label: 'Maker',
+      imagePath: 'assets/newessential/Shield-.svg',
+      backgroundColor: const Color(0xFF1565C0),
+      route: '/general-section',
+      arguments: {'slug': 'maker', 'title': 'Maker'},
     ),
   ];
 

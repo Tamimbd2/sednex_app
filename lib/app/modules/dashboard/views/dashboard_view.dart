@@ -55,133 +55,158 @@ class DashboardView extends GetView<DashboardController> {
               child: Row(
                 children: [
                   // Logo & Dynamic Title
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/logo/Sednex Website Logo Eng@3x.png',
-                        height: 30, // Slightly increased for better visibility
-                        fit: BoxFit.contain,
-                      ),
-                      if (controller.currentIndex.value != 1 &&
-                          controller.currentIndex.value != 2 &&
-                          controller.currentIndex.value != 3 &&
-                          (Get.locale?.languageCode != 'en' ||
-                              controller.currentIndex.value != 0)) ...[
-                        const SizedBox(width: 12),
-                        Container(
-                          width: 1,
-                          height: 20,
-                          color: Colors.white.withValues(alpha: 0.3),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          _getAppBarTitle(controller.currentIndex.value),
-                          style: GoogleFonts.outfit(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: (controller.currentIndex.value == 1 ||
+                              controller.currentIndex.value == 2)
+                          ? MainAxisAlignment.center
+                          : MainAxisAlignment.start,
+                      children: [
+                        if (controller.currentIndex.value != 1 &&
+                            controller.currentIndex.value != 2)
+                          Image.asset(
+                            'assets/logo/Sednex Website Logo Eng@3x.png',
+                            height: 30,
+                            fit: BoxFit.contain,
                           ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  const Spacer(),
-                  // Notification Icon with Badge
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.0),
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            Get.find<NotificationsController>().markAllAsRead();
-                            Get.toNamed(Routes.NOTIFICATIONS);
-                          },
-                          icon: SvgPicture.asset(
-                            'assets/icons/Icon.svg',
-                            width: 26,
-                            height: 28,
-                            colorFilter: const ColorFilter.mode(
-                              Colors.white,
-                              BlendMode.srcIn,
+                        if (controller.currentIndex.value == 1 ||
+                            controller.currentIndex.value == 2)
+                          Text(
+                            controller.currentIndex.value == 1
+                                ? 'search'.tr
+                                : 'shop'.tr,
+                            style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                        ),
-                      ),
-                      Obx(() {
-                        final nController = Get.find<NotificationsController>();
-                        final unreadCount = nController.unreadCount;
-                        if (unreadCount == 0) return const SizedBox.shrink();
-
-                        return Positioned(
-                          right: 5,
-                          top: 5,
-                          child: Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: AppColors.crimson,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 1.5,
+                        if (controller.currentIndex.value != 1 &&
+                            controller.currentIndex.value != 2 &&
+                            controller.currentIndex.value != 3 &&
+                            (Get.locale?.languageCode != 'en' ||
+                                controller.currentIndex.value != 0)) ...[
+                          const SizedBox(width: 12),
+                          Container(
+                            width: 1,
+                            height: 20,
+                            color: Colors.white.withValues(alpha: 0.3),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            _getAppBarTitle(controller.currentIndex.value),
+                            style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  if (controller.currentIndex.value != 1 &&
+                      controller.currentIndex.value != 2) ...[
+                    // Notification Icon with Badge
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.0),
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            onPressed: () {
+                              Get.find<NotificationsController>().markAllAsRead();
+                              Get.toNamed(Routes.NOTIFICATIONS);
+                            },
+                            icon: SvgPicture.asset(
+                              'assets/icons/Icon.svg',
+                              width: 26,
+                              height: 28,
+                              colorFilter: const ColorFilter.mode(
+                                Colors.white,
+                                BlendMode.srcIn,
                               ),
                             ),
-                            constraints: const BoxConstraints(
-                              minWidth: 16,
-                              minHeight: 16,
-                            ),
-                            child: Center(
-                              child: Text(
-                                unreadCount > 9 ? '9+' : unreadCount.toString(),
-                                style: GoogleFonts.inter(
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Obx(() {
+                          final nController =
+                              Get.find<NotificationsController>();
+                          final unreadCount = nController.unreadCount;
+                          if (unreadCount == 0) return const SizedBox.shrink();
+
+                          return Positioned(
+                            right: 5,
+                            top: 5,
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: AppColors.crimson,
+                                shape: BoxShape.circle,
+                                border: Border.all(
                                   color: Colors.white,
+                                  width: 1.5,
+                                ),
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 16,
+                                minHeight: 16,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  unreadCount > 9
+                                      ? '9+'
+                                      : unreadCount.toString(),
+                                  style: GoogleFonts.inter(
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
-                  const SizedBox(width: 8),
-                  // Profile Picture
-                  GestureDetector(
-                    onTap: () => controller.changePage(3),
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: controller.currentIndex.value == 3
-                              ? AppColors.crimson
-                              : Colors.transparent,
-                          width: 2,
-                        ),
-                      ),
-                      child: Obx(() {
-                        final imgUrl = controller.userProfileImage.value;
-                        return CircleAvatar(
-                          radius: 18,
-                          backgroundColor: Colors.grey[100],
-                          backgroundImage: imgUrl != null
-                              ? CachedNetworkImageProvider(imgUrl)
-                              : null,
-                          child: imgUrl == null
-                              ? const Icon(
-                                  Icons.person,
-                                  size: 20,
-                                  color: Color(0xFF9CA3AF),
-                                )
-                              : null,
-                        );
-                      }),
+                          );
+                        }),
+                      ],
                     ),
-                  ),
+                    const SizedBox(width: 8),
+                    // Profile Picture
+                    GestureDetector(
+                      onTap: () => controller.changePage(3),
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: controller.currentIndex.value == 3
+                                ? AppColors.crimson
+                                : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                        child: Obx(() {
+                          final imgUrl = controller.userProfileImage.value;
+                          return CircleAvatar(
+                            radius: 18,
+                            backgroundColor: Colors.grey[100],
+                            backgroundImage: imgUrl != null
+                                ? CachedNetworkImageProvider(imgUrl)
+                                : null,
+                            child: imgUrl == null
+                                ? const Icon(
+                                    Icons.person,
+                                    size: 20,
+                                    color: Color(0xFF9CA3AF),
+                                  )
+                                : null,
+                          );
+                        }),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

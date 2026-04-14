@@ -111,7 +111,7 @@ class DashboardController extends GetxController {
   void fetchUserProfile() {
     final userData = _box.read('user');
     if (userData != null) {
-      final user = jsonDecode(userData);
+      final user = userData is String ? jsonDecode(userData) : userData;
       userProfileImage.value = user['profileImage'];
     }
   }
@@ -400,7 +400,7 @@ class DashboardController extends GetxController {
   String? get userId {
     final userData = _box.read('user');
     if (userData != null) {
-      final user = jsonDecode(userData);
+      final user = userData is String ? jsonDecode(userData) : userData;
       return user['_id'];
     }
     return null;

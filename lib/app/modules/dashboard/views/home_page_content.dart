@@ -217,6 +217,9 @@ class HomePageContent extends StatelessWidget {
                 child: Obx(() {
                   final dController = Get.find<DashboardController>();
                   final services = dController.servicesList;
+                  final screenWidth = MediaQuery.of(context).size.width;
+                  // 32 for total horizontal padding (16*2), 24 for two separators (12*2)
+                  final cardWidth = (screenWidth - 32 - 24) / 3;
 
                   // Construct static + dynamic items
                   final List<Widget> items = [];
@@ -224,7 +227,7 @@ class HomePageContent extends StatelessWidget {
                   // 1. Namaj Card
                   items.add(
                     SizedBox(
-                      width: 120,
+                      width: cardWidth,
                       child: Obx(() {
                         NamajController? nController;
                         try {
@@ -256,7 +259,7 @@ class HomePageContent extends StatelessWidget {
                   }
 
                   if (rController?.isRamadanActive.value ?? false) {
-                    items.add(_buildSehriIftarCompactCard());
+                    items.add(_buildSehriIftarCompactCard(cardWidth));
                   }
 
                   // 3. Dynamic Services (Filtering generic ramadan cards)
@@ -347,7 +350,7 @@ class HomePageContent extends StatelessWidget {
                           }
 
                           return SizedBox(
-                            width: 120,
+                            width: cardWidth,
                             child: _buildServiceCard(
                               title: displayName,
                               subtitle: subtitle,
@@ -385,7 +388,6 @@ class HomePageContent extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'essential_services'.tr,
@@ -395,83 +397,72 @@ class HomePageContent extends StatelessWidget {
                     color: const Color(0xFF2C2C2C),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () => Get.toNamed('/essential-service'),
-                  child: Text(
-                    'view_all'.tr,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF8F95A1),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
 
           const SizedBox(height: 16),
 
-          // Essential Services Carousel
-          SizedBox(
-            height: 120,
-            child: Builder(
-              builder: (context) {
-                final services = [
-                  {
-                    'title': 'Informations',
-                    'icon': 'assets/newessential/info.svg',
-                    'color': const Color(0xFFFF5722),
-                    'route': '/informations',
-                  },
-                  {
-                    'title': 'Embassy',
-                    'icon':
-                        'assets/newessential/City-Hall--Streamline-Core-Gradient.svg',
-                    'color': const Color(0xFF9C27B0),
-                    'route': '/embassy',
-                  },
-                  {
-                    'title': 'Article',
-                    'icon':
-                        'assets/newessential/Multiple-File-2--Streamline-Core-Gradient.svg',
-                    'color': const Color(0xFF00BFA5),
-                    'route': '/articles',
-                  },
-                  {
-                    'title': 'Basic Goods',
-                    'icon':
-                        'assets/newessential/Shopping-Basket-2--Streamline-Core-Gradient.svg',
-                    'color': const Color(0xFF448AFF),
-                    'route': '/basicgoods',
-                  },
-                  {
-                    'title': 'Community',
-                    'icon':
-                        'assets/newessential/User-Multiple-Group--Streamline-Core-Gradient.svg',
-                    'color': const Color(0xFF4CAF50),
-                    'route': '/community',
-                  },
-                ];
-                return ListView.separated(
-                  controller:
-                      Get.find<DashboardController>().essentialScrollController,
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: services.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 16),
-                  itemBuilder: (context, index) {
-                    final item = services[index];
-                    return _buildEssentialServiceItem(
-                      item['title'] as String,
-                      item['icon'] as String,
-                      item['color'] as Color,
-                      () => Get.toNamed(item['route'] as String),
-                    );
-                  },
-                );
-              },
+          // Essential Services Grid (2 rows x 4 columns)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: GridView.count(
+              crossAxisCount: 4,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 0.8,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                _buildEssentialServiceItem(
+                  'Informations',
+                  'assets/newessential/info.svg',
+                  const Color(0xFFFF5722),
+                  () => Get.toNamed('/informations'),
+                ),
+                _buildEssentialServiceItem(
+                  'Embassy',
+                  'assets/newessential/City-Hall--Streamline-Core-Gradient.svg',
+                  const Color(0xFF9C27B0),
+                  () => Get.toNamed('/embassy'),
+                ),
+                _buildEssentialServiceItem(
+                  'Article',
+                  'assets/newessential/Multiple-File-2--Streamline-Core-Gradient.svg',
+                  const Color(0xFF00BFA5),
+                  () => Get.toNamed('/articles'),
+                ),
+                _buildEssentialServiceItem(
+                  'Basic Goods',
+                  'assets/newessential/Shopping-Basket-2--Streamline-Core-Gradient.svg',
+                  const Color(0xFF448AFF),
+                  () => Get.toNamed('/basicgoods'),
+                ),
+                _buildEssentialServiceItem(
+                  'Community',
+                  'assets/newessential/User-Multiple-Group--Streamline-Core-Gradient.svg',
+                  const Color(0xFF4CAF50),
+                  () => Get.toNamed('/community'),
+                ),
+                _buildEssentialServiceItem(
+                  'Tourist spot',
+                  'assets/newessential/Beach--Streamline-Core-Gradient.svg',
+                  const Color(0xFF00BCD4),
+                  () => Get.toNamed('/tourist-spot'),
+                ),
+                _buildEssentialServiceItem(
+                  'Learn Arabic',
+                  'assets/newessential/Dictionary-Language-Book--Streamline-Core-Gradient.svg',
+                  const Color(0xFF795548),
+                  () => Get.toNamed('/learnarabic'),
+                ),
+                _buildEssentialServiceItem(
+                  'Bus & Flight',
+                  'assets/newessential/Bus--Streamline-Core-Gradient.svg',
+                  const Color(0xFF2196F3),
+                  () => Get.toNamed('/busflight'),
+                ),
+              ],
             ),
           ),
 
@@ -540,11 +531,11 @@ class HomePageContent extends StatelessWidget {
     );
   }
 
-  Widget _buildSehriIftarCompactCard() {
+  Widget _buildSehriIftarCompactCard(double cardWidth) {
     return GestureDetector(
       onTap: () => Get.toNamed(Routes.RAMADANCALANDER),
       child: Container(
-        width: 120,
+        width: cardWidth,
         height: 175,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(

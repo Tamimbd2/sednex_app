@@ -49,6 +49,7 @@ abstract class Routes {
   static const ORGANIZATION = _Paths.ORGANIZATION;
   static const GENERAL_SECTION = _Paths.GENERAL_SECTION;
   static const SAVED_ARTICLES = _Paths.SAVED_ARTICLES;
+  static const PROFILEINFODETAILS = _Paths.PROFILEINFODETAILS;
 }
 
 abstract class _Paths {
@@ -99,4 +100,5 @@ abstract class _Paths {
   static const ORGANIZATION = '/organization';
   static const GENERAL_SECTION = '/general-section';
   static const SAVED_ARTICLES = '/saved-articles';
+  static const PROFILEINFODETAILS = '/profileinfodetails';
 }

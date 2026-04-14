@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:share_plus/share_plus.dart';
+
 
 import '../controllers/articles_controller.dart';
 import 'articledetails.dart';
@@ -22,7 +22,7 @@ class ArticlesView extends GetView<ArticlesController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Legal Help',
+          'Articles',
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 20,
@@ -90,11 +90,12 @@ class ArticlesView extends GetView<ArticlesController> {
                         cursorColor: const Color(0xFF1E63FF),
                       ),
                     ),
-  
+
                     // Categories Section
                     Obx(() {
-                      if (controller.isLoading.value) return const SizedBox.shrink();
-                      
+                      if (controller.isLoading.value)
+                        return const SizedBox.shrink();
+
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -106,7 +107,11 @@ class ArticlesView extends GetView<ArticlesController> {
                               children: [
                                 Row(
                                   children: [
-                                    const Icon(Icons.filter_list, size: 18, color: Colors.grey),
+                                    const Icon(
+                                      Icons.filter_list,
+                                      size: 18,
+                                      color: Colors.grey,
+                                    ),
                                     const SizedBox(width: 8),
                                     Text(
                                       'Categories',
@@ -126,41 +131,62 @@ class ArticlesView extends GetView<ArticlesController> {
                                       color: Colors.grey[50],
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: const Icon(Icons.tune, size: 18, color: Color(0xFF1E63FF)),
+                                    child: const Icon(
+                                      Icons.tune,
+                                      size: 18,
+                                      color: Color(0xFF1E63FF),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-  
+
                           // Categories Chips
                           SizedBox(
                             height: 38,
                             child: ListView.separated(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
                               scrollDirection: Axis.horizontal,
                               itemCount: controller.categories.length,
-                              separatorBuilder: (context, index) => const SizedBox(width: 8),
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(width: 8),
                               itemBuilder: (context, index) {
                                 final category = controller.categories[index];
                                 return Obx(() {
-                                  final isSelected = controller.selectedCategory.value == category;
+                                  final isSelected =
+                                      controller.selectedCategory.value ==
+                                      category;
                                   return GestureDetector(
-                                    onTap: () => controller.selectCategory(category),
+                                    onTap: () =>
+                                        controller.selectCategory(category),
                                     child: AnimatedContainer(
-                                      duration: const Duration(milliseconds: 200),
-                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                      duration: const Duration(
+                                        milliseconds: 200,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 8,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: isSelected ? const Color(0xFF1E63FF) : Colors.grey[100],
+                                        color: isSelected
+                                            ? const Color(0xFF1E63FF)
+                                            : Colors.grey[100],
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Center(
                                         child: Text(
                                           category,
                                           style: GoogleFonts.poppins(
-                                            color: isSelected ? Colors.white : Colors.black87,
+                                            color: isSelected
+                                                ? Colors.white
+                                                : Colors.black87,
                                             fontSize: 13,
-                                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                            fontWeight: isSelected
+                                                ? FontWeight.w600
+                                                : FontWeight.w500,
                                           ),
                                         ),
                                       ),
@@ -177,28 +203,34 @@ class ArticlesView extends GetView<ArticlesController> {
                   ],
                 ),
               ),
-  
+
               // Article list section
               Obx(() {
                 if (controller.isLoading.value) {
                   return const SliverFillRemaining(
                     child: Center(
                       child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E63FF)),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(0xFF1E63FF),
+                        ),
                       ),
                     ),
                   );
                 }
-  
+
                 final filteredArticles = controller.filteredArticles;
-  
+
                 if (filteredArticles.isEmpty) {
                   return SliverFillRemaining(
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.article_outlined, size: 64, color: Colors.grey[200]),
+                          Icon(
+                            Icons.article_outlined,
+                            size: 64,
+                            color: Colors.grey[200],
+                          ),
                           const SizedBox(height: 16),
                           Text(
                             'No articles found',
@@ -213,16 +245,13 @@ class ArticlesView extends GetView<ArticlesController> {
                     ),
                   );
                 }
-  
+
                 return SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return _buildArticleCard(filteredArticles[index]);
-                      },
-                      childCount: filteredArticles.length,
-                    ),
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      return _buildArticleCard(filteredArticles[index]);
+                    }, childCount: filteredArticles.length),
                   ),
                 );
               }),
@@ -432,7 +461,11 @@ class ArticlesView extends GetView<ArticlesController> {
                           fit: BoxFit.cover,
                           errorWidget: (context, url, error) => Container(
                             color: Colors.grey[50],
-                            child: Icon(Icons.image_not_supported_outlined, color: Colors.grey[300], size: 40),
+                            child: Icon(
+                              Icons.image_not_supported_outlined,
+                              color: Colors.grey[300],
+                              size: 40,
+                            ),
                           ),
                         )
                       : Image.asset(article.imageUrl, fit: BoxFit.cover),
@@ -448,9 +481,14 @@ class ArticlesView extends GetView<ArticlesController> {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1E63FF).withValues(alpha: 0.06),
+                          color: const Color(
+                            0xFF1E63FF,
+                          ).withValues(alpha: 0.06),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
@@ -479,7 +517,7 @@ class ArticlesView extends GetView<ArticlesController> {
 
                   // Title
                   Text(
-                    article.title,
+                    _parseHtml(article.title),
                     style: GoogleFonts.hindSiliguri(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -493,7 +531,7 @@ class ArticlesView extends GetView<ArticlesController> {
 
                   // Description
                   Text(
-                    article.description,
+                    _parseHtml(article.description),
                     style: GoogleFonts.hindSiliguri(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -504,26 +542,55 @@ class ArticlesView extends GetView<ArticlesController> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Actions Row: Share and Save
+                  // Actions Row: Read More and Save
                   Row(
                     children: [
-                      // Share Button (Icon only style for list view)
+                      // Read More Button
                       GestureDetector(
                         onTap: () {
-                          SharePlus.instance.share(ShareParams(
-                            text: '${article.title}\n\n${article.description}',
-                          ));
+                          Get.to(
+                            () => const ArticleDetailsView(),
+                            arguments: {
+                              'id': article.id,
+                              'title': article.title,
+                              'description': article.description,
+                              'imageUrl': article.imageUrl,
+                              'date': article.date,
+                              'fullContent': article.fullContent,
+                              'category': article.category,
+                              'authorName': article.authorName,
+                            },
+                          );
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1E63FF).withValues(alpha: 0.05),
-                            borderRadius: BorderRadius.circular(10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
                           ),
-                          child: const Icon(
-                            Icons.share_outlined,
-                            size: 18,
-                            color: Color(0xFF1E63FF),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1E63FF).withValues(
+                              alpha: 0.08,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Read More',
+                                style: GoogleFonts.poppins(
+                                  color: const Color(0xFF1E63FF),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Icon(
+                                Icons.arrow_forward_rounded,
+                                size: 14,
+                                color: Color(0xFF1E63FF),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -542,7 +609,9 @@ class ArticlesView extends GetView<ArticlesController> {
                                   : Colors.grey[50],
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: isSaved ? Colors.transparent : Colors.grey[200]!,
+                                color: isSaved
+                                    ? Colors.transparent
+                                    : Colors.grey[200]!,
                               ),
                             ),
                             child: Icon(
@@ -588,5 +657,13 @@ class ArticlesView extends GetView<ArticlesController> {
       'Dec',
     ];
     return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]} ${date.year}';
+  }
+
+  String _parseHtml(String htmlString) {
+    if (htmlString.isEmpty) return "";
+    return htmlString
+        .replaceAll('&nbsp;', ' ')
+        .replaceAll(RegExp(r'<[^>]*>'), '')
+        .trim();
   }
 }

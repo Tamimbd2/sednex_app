@@ -6,7 +6,7 @@ import '../controllers/essential_service_controller.dart';
 
 class EssentialServiceView extends GetView<EssentialServiceController> {
   const EssentialServiceView({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +70,10 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Grocery Store',
               'assets/newessential/Store-1--Streamline-Core-Gradient.svg',
               const Color(0xFFFF9800),
-              () => Get.toNamed('/general-section', arguments: {'slug': 'grocery-store', 'title': 'Grocery Store'}),
+              () => Get.toNamed(
+                '/general-section',
+                arguments: {'slug': 'grocery-store', 'title': 'Grocery Store'},
+              ),
             ),
             _buildServiceCard(
               'Tourist spot',
@@ -100,19 +103,34 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Local Business',
               'assets/newessential/Briefcase-Dollar--Streamline-Core-Gradient.svg',
               const Color(0xFF607D8B),
-              () => Get.toNamed('/general-section', arguments: {'slug': 'local-business', 'title': 'Local Business'}),
+              () => Get.toNamed(
+                '/general-section',
+                arguments: {
+                  'slug': 'local-business',
+                  'title': 'Local Business',
+                },
+              ),
             ),
             _buildServiceCard(
               'Jewellery shop',
               'assets/newessential/Gift-2--Streamline-Core-Gradient.svg',
               const Color(0xFFFFC107),
-              () => Get.toNamed('/general-section', arguments: {'slug': 'jewellery-shop', 'title': 'Jewellery shop'}),
+              () => Get.toNamed(
+                '/general-section',
+                arguments: {
+                  'slug': 'jewellery-shop',
+                  'title': 'Jewellery shop',
+                },
+              ),
             ),
             _buildServiceCard(
               'Clothing shop',
               'assets/newessential/Shopping-Bag-Hand-Bag-2--Streamline-Core-Gradient.svg',
               const Color(0xFF9C27B0),
-              () => Get.toNamed('/general-section', arguments: {'slug': 'clothing-shop', 'title': 'Clothing shop'}),
+              () => Get.toNamed(
+                '/general-section',
+                arguments: {'slug': 'clothing-shop', 'title': 'Clothing shop'},
+              ),
             ),
             _buildServiceCard(
               'Organization',
@@ -124,43 +142,64 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Sports team',
               'assets/newessential/Flash-3--Streamline-Core-Gradient.svg',
               const Color(0xFF8BC34A),
-              () => Get.toNamed('/general-section', arguments: {'slug': 'sports-team', 'title': 'Sports team'}),
+              () => Get.toNamed(
+                '/general-section',
+                arguments: {'slug': 'sports-team', 'title': 'Sports team'},
+              ),
             ),
             _buildServiceCard(
-              'Taxi Drivers',
+              'Drivers',
               'assets/newessential/Car-Taxi-1--Streamline-Core-Gradient.svg',
               const Color(0xFFFFEB3B),
-              () => Get.toNamed('/general-section', arguments: {'slug': 'texi-driver', 'title': 'Taxi Drivers'}),
+              () => Get.toNamed(
+                '/general-section',
+                arguments: {'slug': 'texi-driver', 'title': 'Taxi Drivers'},
+              ),
             ),
             _buildServiceCard(
               'Businessman',
               'assets/newessential/Necktie--Streamline-Core-Gradient.svg',
               const Color(0xFF607D8B),
-              () => Get.toNamed('/general-section', arguments: {'slug': 'businessman', 'title': 'Businessman'}),
+              () => Get.toNamed(
+                '/general-section',
+                arguments: {'slug': 'businessman', 'title': 'Businessman'},
+              ),
             ),
             _buildServiceCard(
               'Influencer',
               'assets/newessential/Megaphone-2--Streamline-Core-Gradient.svg',
               const Color(0xFFE91E63),
-              () => Get.toNamed('/general-section', arguments: {'slug': 'influencer', 'title': 'Influencer'}),
+              () => Get.toNamed(
+                '/general-section',
+                arguments: {'slug': 'influencer', 'title': 'Influencer'},
+              ),
             ),
             _buildServiceCard(
               'Local Market',
               'assets/newessential/Shopping-Cart-1--Streamline-Core-Gradient.svg',
               const Color(0xFFFF5722),
-              () => Get.toNamed('/general-section', arguments: {'slug': 'local-market', 'title': 'Local Market'}),
+              () => Get.toNamed(
+                '/general-section',
+                arguments: {'slug': 'local-market', 'title': 'Local Market'},
+              ),
             ),
             _buildServiceCard(
               'Pharmacy',
               'assets/newessential/Tablet-Capsule--Streamline-Core-Gradient.svg',
               const Color(0xFF009688),
-              () => Get.toNamed('/general-section', arguments: {'slug': 'pharmacy', 'title': 'Pharmacy'}),
+              () => Get.toNamed(
+                '/general-section',
+                arguments: {'slug': 'pharmacy', 'title': 'Pharmacy'},
+              ),
             ),
             _buildServiceCard(
               'NGO',
               'assets/newessential/Decent-Work-And-Economic-Growth--Streamline-Core-Gradient.svg',
               const Color(0xFF4CAF50),
-              () => Get.toNamed('/general-section', arguments: {'slug': 'ngo', 'title': 'NGO'}),
+              () => Get.toNamed(
+                '/general-section',
+                arguments: {'slug': 'ngo', 'title': 'NGO'},
+              ),
             ),
             _buildServiceCard(
               'Bus & Flight Booking',
@@ -178,7 +217,10 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'Maker',
               'assets/newessential/Shield-.svg',
               const Color(0xFF1565C0),
-              () => Get.toNamed('/general-section', arguments: {'slug': 'maker', 'title': 'Maker'}),
+              () => Get.toNamed(
+                '/general-section',
+                arguments: {'slug': 'maker', 'title': 'Maker'},
+              ),
             ),
           ],
         ),
@@ -235,14 +277,18 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    _fadeAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeOut),
-    );
-    _scaleAnim = Tween<double>(begin: 0.6, end: 1.0).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.elasticOut),
-    );
+    _fadeAnim = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
+    _scaleAnim = Tween<double>(
+      begin: 0.6,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.elasticOut));
     // slight stagger based on hashCode so each card enters a bit differently
-    final delay = Duration(milliseconds: (widget.label.hashCode.abs() % 10) * 30);
+    final delay = Duration(
+      milliseconds: (widget.label.hashCode.abs() % 10) * 30,
+    );
     Future.delayed(delay, () {
       if (mounted) _ctrl.forward();
     });
@@ -283,7 +329,9 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: widget.color.withValues(alpha: _pressed ? 0.2 : 0.08),
+                        color: widget.color.withValues(
+                          alpha: _pressed ? 0.2 : 0.08,
+                        ),
                         blurRadius: _pressed ? 12 : 20,
                         spreadRadius: _pressed ? 0 : 2,
                         offset: Offset(0, _pressed ? 4 : 8),
@@ -300,11 +348,12 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
                             width: 38,
                             height: 38,
                             fit: BoxFit.contain,
-                            placeholderBuilder: (BuildContext context) => const Icon(
-                              Icons.grid_view_rounded,
-                              color: Colors.grey,
-                              size: 28,
-                            ),
+                            placeholderBuilder: (BuildContext context) =>
+                                const Icon(
+                                  Icons.grid_view_rounded,
+                                  color: Colors.grey,
+                                  size: 28,
+                                ),
                           );
                         } else {
                           // Fallback for png
@@ -348,5 +397,3 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
     );
   }
 }
-
-

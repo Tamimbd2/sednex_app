@@ -360,7 +360,9 @@ class CommunityPostCard extends StatelessWidget {
                   ),
                 ] else ...[
                   _buildOptionItem(
-                    label: controller.runtimeType.toString() == 'SavepostController'
+                    label:
+                        controller.runtimeType.toString() ==
+                            'SavepostController'
                         ? 'Unsave post'
                         : 'Save post',
                     iconSrc: 'assets/post/saves.svg',

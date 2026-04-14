@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sednexapp/app/modules/articles/controllers/articles_controller.dart';
-import 'package:share_plus/share_plus.dart';
 
 class ArticleDetailsView extends StatelessWidget {
   const ArticleDetailsView({super.key});
@@ -27,37 +26,6 @@ class ArticleDetailsView extends StatelessWidget {
     final article = controller.articles.firstWhereOrNull((a) => a.id == articleId);
 
     final String formattedDate = _formatDate(date);
-
-    // Optimized: Moved share text calculation to a private helper called on-demand to prevent UI hangs.
-    String getShareText() {
-      String shareTextContent = description;
-      if (fullContent.isNotEmpty) {
-        shareTextContent = fullContent
-            .where((e) => e is Map && e['type'] == 'paragraph')
-            .map((e) => e['data'].toString().replaceAll(RegExp(r"<[^>]*>"), ""))
-            .join('\n\n');
-      }
-      return '$title\n\n$shareTextContent';
-    }
-
-    // Internal helper for social actions to keep UI code clean
-    void performCopy() {
-      Clipboard.setData(ClipboardData(text: getShareText()));
-      Get.snackbar(
-        'Copied!',
-        'Article text copied to clipboard',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: const Color(0xFF101727),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 12,
-      );
-    }
-
-    void performShare() {
-      SharePlus.instance.share(ShareParams(text: getShareText()));
-    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -106,33 +74,7 @@ class ArticleDetailsView extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              // Copy Button
-              GestureDetector(
-                onTap: performCopy,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    border: Border.all(color: Colors.grey[200]!),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(Icons.copy_all_rounded, size: 20, color: Colors.grey[700]),
-                ),
-              ),
-              const SizedBox(width: 8),
-              // Share Button
-              GestureDetector(
-                onTap: performShare,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color(0x0D1E63FF),
-                    border: Border.all(color: const Color(0x1A1E63FF)),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(Icons.share_outlined, size: 20, color: Color(0xFF1E63FF)),
-                ),
-              ),
+
               if (article != null) ...[
                 const SizedBox(width: 8),
                 Obx(() {
@@ -180,7 +122,7 @@ class ArticleDetailsView extends StatelessWidget {
 
           // Title
           Text(
-            title,
+            _parseHtml(title),
             style: GoogleFonts.hindSiliguri(
               fontSize: 26,
               fontWeight: FontWeight.w700,
@@ -318,5 +260,13 @@ class ArticleDetailsView extends StatelessWidget {
       'Dec',
     ];
     return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]} ${date.year}';
+  }
+
+  String _parseHtml(String htmlString) {
+    if (htmlString.isEmpty) return "";
+    return htmlString
+        .replaceAll('&nbsp;', ' ')
+        .replaceAll(RegExp(r'<[^>]*>'), '')
+        .trim();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:get/get.dart';
 import '../controllers/dashboard_controller.dart';
 import '../../../routes/app_pages.dart';
@@ -312,9 +313,7 @@ class DashboardView extends GetView<DashboardController> {
               }
 
               if (controller.isSearchLoading.value) {
-                return const Center(
-                  child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
-                );
+                return _buildSearchSkeleton();
               }
 
               if (controller.searchResults.isEmpty) {
@@ -829,6 +828,53 @@ class DashboardView extends GetView<DashboardController> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSearchSkeleton() {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      itemCount: 6,
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[200]!,
+          highlightColor: Colors.grey[50]!,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 14,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        width: 150,
+                        height: 10,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

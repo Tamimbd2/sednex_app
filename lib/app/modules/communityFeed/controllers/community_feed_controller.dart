@@ -12,17 +12,14 @@ class CommunityFeedController extends GetxController {
   final count = 0.obs;
 
   final List<String> filters = [
-    "Recent",
     "General",
+    "Jobs",
+    "Buy & Sell",
+    "Questions",
+    "Rental",
     "Help",
-    "Sell",
-    "Job",
-    "Question",
-    "Announcement",
-    "Information",
-    "Rentals",
   ];
-  final selectedFilter = "Recent".obs;
+  final selectedFilter = "General".obs;
 
   final posts = <Map<String, dynamic>>[].obs;
   final isLoading = true.obs;
@@ -100,11 +97,17 @@ class CommunityFeedController extends GetxController {
     try {
       // Build base URL
       String url;
-      if (selectedFilter.value == "Recent") {
+      if (selectedFilter.value == "General") {
         url = 'api/post/';
       } else {
-        // Correct endpoint for category filtering
-        url = 'api/post/category/${selectedFilter.value.toLowerCase()}';
+        // Map UI filter to API category
+        String category = selectedFilter.value.toLowerCase();
+        if (category == "buy & sell") category = "sell";
+        if (category == "rental") category = "rentals";
+        if (category == "jobs") category = "job";
+        if (category == "questions") category = "question";
+        
+        url = 'api/post/category/$category';
       }
 
       // Add pagination params

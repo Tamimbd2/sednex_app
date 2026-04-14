@@ -317,72 +317,73 @@ class CommunityPostCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.bottomSheet(
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
+          SafeArea(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
+                ),
               ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (isOwnPost) ...[
-                  _buildOptionItem(
-                    icon: Icons.edit_outlined,
-                    label: 'Edit post',
-                    onTap: () {
-                      Get.back();
-                      _showEditPostDialog();
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  _buildOptionItem(
-                    icon: Icons.check_circle_outline,
-                    label: 'Completed',
-                    color: const Color(0xFF00C853),
-                    onTap: () {
-                      Get.back();
-                      controller.markAsCompleted(index);
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  _buildOptionItem(
-                    icon: Icons.delete_outline,
-                    label: 'Delete post',
-                    color: const Color(0xFFEF4444),
-                    onTap: () {
-                      Get.back();
-                      _showDeleteConfirmation();
-                    },
-                  ),
-                ] else ...[
-                  _buildOptionItem(
-                    label:
-                        controller.runtimeType.toString() ==
-                            'SavepostController'
-                        ? 'Unsave post'
-                        : 'Save post',
-                    iconSrc: 'assets/post/saves.svg',
-                    onTap: () {
-                      Get.back();
-                      controller.savePost(index);
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  _buildOptionItem(
-                    label: 'Report',
-                    iconSrc: 'assets/post/report.svg',
-                    color: const Color(0xFFEF4444),
-                    onTap: () {
-                      Get.back();
-                    },
-                  ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (isOwnPost) ...[
+                    _buildOptionItem(
+                      icon: Icons.edit_outlined,
+                      label: 'Edit post',
+                      onTap: () {
+                        Get.back();
+                        _showEditPostDialog();
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    _buildOptionItem(
+                      icon: Icons.check_circle_outline,
+                      label: 'Completed',
+                      color: const Color(0xFF00C853),
+                      onTap: () {
+                        Get.back();
+                        controller.markAsCompleted(index);
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    _buildOptionItem(
+                      icon: Icons.delete_outline,
+                      label: 'Delete post',
+                      color: const Color(0xFFEF4444),
+                      onTap: () {
+                        Get.back();
+                        _showDeleteConfirmation();
+                      },
+                    ),
+                  ] else ...[
+                    _buildOptionItem(
+                      label:
+                          controller.runtimeType.toString() ==
+                                  'SavepostController'
+                              ? 'Unsave post'
+                              : 'Save post',
+                      iconSrc: 'assets/post/saves.svg',
+                      onTap: () {
+                        Get.back();
+                        controller.savePost(index);
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    _buildOptionItem(
+                      label: 'Report',
+                      iconSrc: 'assets/post/report.svg',
+                      color: const Color(0xFFEF4444),
+                      onTap: () {
+                        Get.back();
+                      },
+                    ),
+                  ],
                 ],
-                const SizedBox(height: 16),
-              ],
+              ),
             ),
           ),
           backgroundColor: Colors.transparent,

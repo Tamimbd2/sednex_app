@@ -88,24 +88,34 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
               SizedBox(
                 width: double.infinity,
                 height: 56,
-                child: ElevatedButton(
-                  onPressed: controller.updatePassword,
+                child: Obx(() => ElevatedButton(
+                  onPressed: controller.isLoading.value ? null : controller.updatePassword,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1E63FF), // Red
+                    backgroundColor: const Color(0xFF1E63FF),
+                    disabledBackgroundColor: const Color(0xFF1E63FF).withValues(alpha: 0.6),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     elevation: 0,
                   ),
-                  child: Text(
-                    'Update Password',
-                    style: GoogleFonts.arimo(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
+                  child: controller.isLoading.value
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Text(
+                          'Update Password',
+                          style: GoogleFonts.arimo(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                )),
               ),
 
               const SizedBox(height: 24),

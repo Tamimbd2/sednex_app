@@ -25,14 +25,18 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
       appBar: AppBar(
         title: Text(
           'community_feed'.tr,
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-          ),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Get.toNamed('/createpost'),
+        backgroundColor: const Color(0xFF1E63FF),
+        elevation: 4,
+        child: const Icon(Icons.add, color: Colors.white, size: 28),
       ),
       body: SafeArea(
         child: RefreshIndicator(
@@ -304,11 +308,20 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
             return GestureDetector(
               onTap: () => controller.selectedFilter.value = filter,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF1E63FF) : Colors.transparent, // Red if selected
+                  color: isSelected
+                      ? const Color(0xFF1E63FF)
+                      : Colors.transparent, // Red if selected
                   borderRadius: BorderRadius.circular(24),
-                  border: isSelected ? null : Border.all(color: Colors.transparent), // Clean look for unselected
+                  border: isSelected
+                      ? null
+                      : Border.all(
+                          color: Colors.transparent,
+                        ), // Clean look for unselected
                 ),
                 alignment: Alignment.center,
                 child: Text(
@@ -327,4 +340,3 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
     );
   }
 }
-

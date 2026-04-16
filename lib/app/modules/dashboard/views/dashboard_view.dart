@@ -31,9 +31,7 @@ class DashboardView extends GetView<DashboardController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          MediaQuery.of(context).padding.top + 60,
-        ),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 60),
         child: Obx(() {
           // Show header consistently across all tabs
           final statusBarHeight = MediaQuery.of(context).padding.top;
@@ -58,7 +56,8 @@ class DashboardView extends GetView<DashboardController> {
                   // Logo & Dynamic Title
                   Expanded(
                     child: Row(
-                      mainAxisAlignment: (controller.currentIndex.value == 1 ||
+                      mainAxisAlignment:
+                          (controller.currentIndex.value == 1 ||
                               controller.currentIndex.value == 2)
                           ? MainAxisAlignment.center
                           : MainAxisAlignment.start,
@@ -119,7 +118,8 @@ class DashboardView extends GetView<DashboardController> {
                           ),
                           child: IconButton(
                             onPressed: () {
-                              Get.find<NotificationsController>().markAllAsRead();
+                              Get.find<NotificationsController>()
+                                  .markAllAsRead();
                               Get.toNamed(Routes.NOTIFICATIONS);
                             },
                             icon: SvgPicture.asset(
@@ -862,11 +862,7 @@ class DashboardView extends GetView<DashboardController> {
                         color: Colors.white,
                       ),
                       const SizedBox(height: 8),
-                      Container(
-                        width: 150,
-                        height: 10,
-                        color: Colors.white,
-                      ),
+                      Container(width: 150, height: 10, color: Colors.white),
                     ],
                   ),
                 ),

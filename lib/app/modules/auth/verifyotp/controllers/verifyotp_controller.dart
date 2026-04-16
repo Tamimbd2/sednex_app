@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../routes/app_pages.dart';
@@ -7,7 +8,13 @@ class VerifyotpController extends GetxController {
   final _apiService = Get.find<ApiService>();
   final List<TextEditingController> otpControllers = List.generate(6, (index) => TextEditingController());
   final List<FocusNode> focusNodes = List.generate(6, (index) => FocusNode());
+  final focusedIndex = 0.obs;
   final isLoading = false.obs;
+  
+  // Timer related
+  final resendSeconds = 30.obs;
+  final canResend = true.obs;
+  Timer? _timer;
   
   late String email;
 
@@ -15,6 +22,28 @@ class VerifyotpController extends GetxController {
   void onInit() {
     super.onInit();
     email = Get.arguments ?? '';
+    for (int i = 0; i < focusNodes.length; i++) {
+      focusNodes[i].addListener(() {
+        if (focusNodes[i].hasFocus) {
+          focusedIndex.value = i;
+        }
+      });
+    }
+    startResendTimer();
+  }
+
+  void startResendTimer() {
+    canResend.value = false;
+    resendSeconds.value = 30;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (resendSeconds.value > 0) {
+        resendSeconds.value--;
+      } else {
+        canResend.value = true;
+        _timer?.cancel();
+      }
+    });
   }
 
   void verifyCode() async {
@@ -63,7 +92,7 @@ class VerifyotpController extends GetxController {
   }
 
   void resendCode() async {
-    if (email.isEmpty) return;
+    if (email.isEmpty || !canResend.value) return;
     
     try {
       final response = await _apiService.postData('api/auth/forgot-password/', {
@@ -78,6 +107,7 @@ class VerifyotpController extends GetxController {
           backgroundColor: Colors.green.withValues(alpha: 0.1),
           colorText: Colors.green,
         );
+        startResendTimer();
       } else {
         Get.snackbar(
           'Error',
@@ -94,12 +124,7 @@ class VerifyotpController extends GetxController {
 
   @override
   void onClose() {
-    for (var controller in otpControllers) {
-      controller.dispose();
-    }
-    for (var node in focusNodes) {
-      node.dispose();
-    }
+    _timer?.cancel();
     super.onClose();
   }
 }

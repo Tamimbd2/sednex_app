@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../services/api_service.dart';
@@ -25,9 +24,6 @@ class SavedArticlesController extends GetxController {
         final body = response.body;
         final List savedData = body['articles'] ?? body['data'] ?? [];
 
-        final artsController = Get.isRegistered<ArticlesController>() 
-          ? Get.find<ArticlesController>() 
-          : null;
 
         final List<Article> mappedSaved = savedData.map<Article>((item) {
           final articleData = item['article'] ?? item;

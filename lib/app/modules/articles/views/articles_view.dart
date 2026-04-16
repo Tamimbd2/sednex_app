@@ -93,8 +93,9 @@ class ArticlesView extends GetView<ArticlesController> {
 
                     // Categories Section
                     Obx(() {
-                      if (controller.isLoading.value)
+                      if (controller.isLoading.value) {
                         return const SizedBox.shrink();
+                      }
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

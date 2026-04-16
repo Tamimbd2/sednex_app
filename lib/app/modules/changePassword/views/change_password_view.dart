@@ -150,35 +150,46 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
     required bool isVisible,
     required VoidCallback onToggleVisibility,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+    return TextFormField(
+      controller: controller,
+      obscureText: !isVisible,
+      style: GoogleFonts.poppins(
+        color: const Color(0xFF101727),
+        fontSize: 15,
       ),
-      child: TextField(
-        controller: controller,
-        obscureText: !isVisible,
-        style: GoogleFonts.arimo(
-          color: const Color(0xFF101727),
-          fontSize: 16,
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: GoogleFonts.poppins(
+          color: const Color(0xFF9CA3AF),
+          fontSize: 15,
         ),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: GoogleFonts.arimo(
+        prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF9CA3AF), size: 20),
+        suffixIcon: IconButton(
+          icon: Icon(
+            isVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
             color: const Color(0xFF9CA3AF),
-            fontSize: 16,
+            size: 20,
           ),
-          prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF9CA3AF)),
-          suffixIcon: IconButton(
-            icon: Icon(
-              isVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-              color: const Color(0xFF9CA3AF),
-            ),
-            onPressed: onToggleVisibility,
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          onPressed: onToggleVisibility,
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 1),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF1E63FF), width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red, width: 1),
         ),
       ),
     );

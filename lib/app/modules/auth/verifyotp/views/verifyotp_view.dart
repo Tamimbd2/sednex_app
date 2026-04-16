@@ -50,15 +50,18 @@ class VerifyotpView extends GetView<VerifyotpController> {
               const SizedBox(height: 50),
               // OTP Fields
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                   6,
-                  (index) => _buildOTPField(context, index),
+                  (index) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: _buildOTPField(context, index),
+                  ),
                 ),
               ),
               const SizedBox(height: 30),
               // Resend Text
-              Row(
+              Obx(() => Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
@@ -70,18 +73,21 @@ class VerifyotpView extends GetView<VerifyotpController> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => controller.resendCode(),
+                    onTap: controller.canResend.value ? () => controller.resendCode() : null,
                     child: Text(
-                      'Resend',
+                      controller.canResend.value 
+                          ? 'Resend' 
+                          : 'Resend in ${controller.resendSeconds.value}s',
                       style: GoogleFonts.poppins(
-                        color: AppColors.primary,
+                        color: controller.canResend.value ? AppColors.primary : const Color(0xFF6E6E6E),
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
+                        decoration: controller.canResend.value ? TextDecoration.underline : TextDecoration.none,
                       ),
                     ),
                   ),
                 ],
-              ),
+              )),
               const SizedBox(height: 50),
               // Verify Button
               Obx(() => controller.isLoading.value 
@@ -114,44 +120,64 @@ class VerifyotpView extends GetView<VerifyotpController> {
   }
 
   Widget _buildOTPField(BuildContext context, int index) {
-    return Container(
-      width: 48,
-      height: 56,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: const Color(0xFFCBD5E1),
-          width: 1.15,
+    return Obx(() {
+      final isFocused = controller.focusedIndex.value == index;
+      final hasValue = controller.otpControllers[index].text.isNotEmpty;
+
+      return SizedBox(
+        width: 44,
+        height: 54,
+        child: TextFormField(
+          controller: controller.otpControllers[index],
+          focusNode: controller.focusNodes[index],
+          onChanged: (value) {
+            if (value.length == 1 && index < 5) {
+              FocusScope.of(context).requestFocus(controller.focusNodes[index + 1]);
+            }
+            if (value.isEmpty && index > 0) {
+              FocusScope.of(context).requestFocus(controller.focusNodes[index - 1]);
+            }
+            controller.focusedIndex.refresh();
+          },
+          keyboardType: TextInputType.number,
+          textAlign: TextAlign.center,
+          cursorColor: AppColors.primary,
+          style: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF1C1C1C),
+          ),
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(1),
+            FilteringTextInputFormatter.digitsOnly,
+          ],
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: isFocused ? Colors.white : const Color(0xFFF8FAFC),
+            contentPadding: EdgeInsets.zero,
+            counterText: '',
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: hasValue 
+                  ? AppColors.primary.withValues(alpha: 0.5) 
+                  : const Color(0xFFE2E8F0),
+                width: 1,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: AppColors.primary,
+                width: 1.5,
+              ),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
         ),
-      ),
-      child: TextFormField(
-        controller: controller.otpControllers[index],
-        focusNode: controller.focusNodes[index],
-        onChanged: (value) {
-          if (value.length == 1 && index < 5) {
-            FocusScope.of(context).requestFocus(controller.focusNodes[index + 1]);
-          }
-          if (value.isEmpty && index > 0) {
-            FocusScope.of(context).requestFocus(controller.focusNodes[index - 1]);
-          }
-        },
-        keyboardType: TextInputType.number,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: const Color(0xFF1C1C1C),
-        ),
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(1),
-          FilteringTextInputFormatter.digitsOnly,
-        ],
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.zero,
-        ),
-      ),
-    );
+      );
+    });
   }
 }

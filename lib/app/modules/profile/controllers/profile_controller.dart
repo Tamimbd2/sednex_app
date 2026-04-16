@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../../../core/constants/url.dart';
@@ -94,7 +95,7 @@ class ProfileController extends GetxController {
         _box.write('user', jsonEncode(user));
       }
     } catch (e) {
-      print('Error fetching profile: $e');
+      debugPrint('Error fetching profile: $e');
     } finally {
       isLoading.value = false;
     }

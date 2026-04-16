@@ -66,16 +66,16 @@ class NamajView extends GetView<NamajController> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.access_time_rounded, size: 14, color: Color(0xFF6F6F6F)),
+                    const Icon(Icons.location_on_rounded, size: 14, color: Color(0xFF6F6F6F)),
                     const SizedBox(width: 6),
-                    Obx(() => Text(
-                      'সর্বশেষ আপডেট: ${controller.schedule['lastUpdate']}',
+                    Text(
+                      'Beirut, Lebanon',
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: const Color(0xFF6F6F6F),
                         fontWeight: FontWeight.w500,
                       ),
-                    )),
+                    ),
                   ],
                 ),
               ),

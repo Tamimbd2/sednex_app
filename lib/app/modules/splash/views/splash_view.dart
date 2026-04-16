@@ -16,12 +16,8 @@ class SplashView extends GetView<SplashController> {
         decoration: const BoxDecoration(color: AppColors.primary),
         child: Center(
           child: SvgPicture.asset(
-            'assets/logo/Sednex Logo For App Home.svg',
-            width: 250,
-            colorFilter: const ColorFilter.mode(
-              Color(0xFFF5F5F5),
-              BlendMode.srcIn,
-            ),
+            'assets/logo/sednex-app-2874647.svg',
+            width: 120,
             fit: BoxFit.contain,
           ),
         ),

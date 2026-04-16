@@ -9,6 +9,35 @@ import 'package:get_storage/get_storage.dart';
 import '../controllers/generalsection_controller.dart';
 import '../../../core/theme/app_colors.dart';
 
+// ── Font Helper ──────────────────────────────────────────────────
+TextStyle _getStyle({
+  required double fontSize,
+  required FontWeight fontWeight,
+  required Color color,
+  String? text,
+  double? height,
+  double? letterSpacing,
+}) {
+  final bool hasBangla =
+      text != null && RegExp(r'[\u0980-\u09FF]').hasMatch(text);
+  if (hasBangla) {
+    return GoogleFonts.hindSiliguri(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
+      height: height ?? 1.4,
+      letterSpacing: letterSpacing,
+    );
+  }
+  return GoogleFonts.poppins(
+    fontSize: fontSize,
+    fontWeight: fontWeight,
+    color: color,
+    height: height,
+    letterSpacing: letterSpacing,
+  );
+}
+
 class GeneralSectionDetailsView extends StatefulWidget {
   const GeneralSectionDetailsView({super.key});
 
@@ -18,20 +47,39 @@ class GeneralSectionDetailsView extends StatefulWidget {
 
 class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
     with TickerProviderStateMixin {
-  late TabController _tabController;
   late AnimationController _animCtrl;
   late Animation<double> _fadeAnim;
   late Animation<Offset> _slideAnim;
 
+  int _selectedTabIndex = 0;
   bool _isLoading = true;
   String _name = '';
+  String _tagline = '';
   String _imageUrl = '';
+  String _coverPhoto = '';
   String _category = '';
   String _about = '';
+  String _bio = '';
+  
+  // Top Official
+  String _officialName = '';
+  String _officialDesignation = '';
+  String _officialTagline = '';
+  String _officialImage = '';
+
+  // Social
+  String _facebook = '';
+  String _twitter = '';
+  String _linkedin = '';
+  String _instagram = '';
+  String _youtube = '';
+
   String _phone = '';
   String _email = '';
   String _website = '';
   String _address = '';
+  String _direction = '';
+  String _mapUrl = '';
   List<String> _services = [];
   List<String> _offDays = [];
   
@@ -41,12 +89,6 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(() {
-      if (!_tabController.indexIsChanging) {
-        setState(() {});
-      }
-    });
     _animCtrl = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
@@ -61,7 +103,6 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
 
   @override
   void dispose() {
-    _tabController.dispose();
     _animCtrl.dispose();
     super.dispose();
   }
@@ -123,26 +164,79 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
         
         final itemData = body['item'] ?? {};
         final List detailsList = body['details'] ?? [];
-        final detail = detailsList.isNotEmpty ? detailsList[0] : {};
+        // Pick the most complete detail entry
+        final detail = detailsList.isNotEmpty
+            ? detailsList.firstWhere(
+                (d) => d['contact'] != null || d['about'] != null,
+                orElse: () => detailsList[0],
+              )
+            : {};
         final contact = detail['contact'] ?? {};
         final location = detail['location'] ?? {};
         final about = detail['about'] ?? {};
+        final official = detail['topOfficial'] ?? {};
+        final social = detail['socialLinks'] ?? {};
         final List offSchedules = detail['offDaySchedules'] ?? [];
+
+        // Find coverPhoto from any detail entry
+        String coverPhoto = '';
+        for (final d in detailsList) {
+          if (d['coverPhoto'] != null && d['coverPhoto'].toString().isNotEmpty) {
+            coverPhoto = d['coverPhoto'].toString();
+            break;
+          }
+        }
 
         setState(() {
           _name = itemData['name'] ?? fallbackName;
           _imageUrl = itemData['image'] ?? itemData['icon'] ?? fallbackImage;
+          _coverPhoto = coverPhoto;
+          
+          // Essential Tagline
+          _tagline = detail['tagline'] ?? detail['note'] ?? detail['shortBio'] ?? '';
+          
           _category = itemData['category'] ?? fallbackCategory;
-          _about = about['description'] ?? _about;
-          _phone = contact['mobile'] ?? contact['phone'] ?? _phone;
+          _about = about['description'] ?? '';
+          _bio = detail['bio'] ?? detail['history'] ?? detail['description'] ?? '';
+          
+          // Top Official Mapping
+          _officialName = official['name'] ?? official['fullName'] ?? '';
+          _officialDesignation = official['designation'] ?? official['position'] ?? '';
+          _officialTagline = official['tagline'] ?? official['bio'] ?? official['shortBio'] ?? '';
+          _officialImage = official['image'] ?? official['profileImage'] ?? '';
+
+          // Social Link Mapping
+          _facebook = social['facebook'] ?? '';
+          _twitter = social['twitter'] ?? social['xProfile'] ?? social['x'] ?? '';
+          _linkedin = social['linkedin'] ?? '';
+          _instagram = social['instagram'] ?? '';
+          _youtube = social['youtube'] ?? '';
+
+          _phone = contact['mobile'] ?? contact['phone'] ?? contact['hotline'] ?? _phone;
           _email = contact['email'] ?? _email;
           _website = contact['website'] ?? _website;
-          _address = location['address'] ?? contact['direction'] ?? _address;
+          _address = location['address'] ?? location['fullPhysicalAddress'] ?? _address;
+          _direction = contact['direction'] ?? _direction;
+          _mapUrl = location['mapUrl'] ?? location['googleMapsUrl'] ?? _mapUrl;
           _services = List<String>.from(about['services'] ?? _services);
-          final days = offSchedules
-              .map<String>((e) => e['day']?.toString() ?? '')
-              .where((d) => d.isNotEmpty)
-              .toList();
+
+          // Handle potentially nested or simple offSchedules
+          final List<String> days = [];
+          for (var e in offSchedules) {
+            String d = e['day']?.toString() ?? '';
+            if (d.startsWith('[') && d.endsWith(']')) {
+              try {
+                final List nested = jsonDecode(d);
+                for (var n in nested) {
+                  if (n is Map && n['day'] != null) {
+                    days.add(n['day'].toString());
+                  }
+                }
+                continue;
+              } catch (_) {}
+            }
+            if (d.isNotEmpty) days.add(d);
+          }
           _offDays = days.isEmpty ? _offDays : days;
         });
       }
@@ -174,7 +268,7 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1E63FF),
         elevation: 0,
@@ -190,14 +284,11 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
         ),
         title: Text(
           _name.isEmpty ? _sectionTitle : _name,
-          style: GoogleFonts.inter(
-            color: Colors.white,
+          style: _getStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,
-          ).copyWith(
-            fontFamilyFallback: [
-              GoogleFonts.hindSiliguri().fontFamily!,
-            ],
+            color: Colors.white,
+            text: _name,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -218,14 +309,10 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
                   physics: const BouncingScrollPhysics(),
                   child: Column(
                     children: [
-                      _profileCard(),
-                      if (_address.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        _locationRow(),
-                      ],
-                      const SizedBox(height: 16),
-                      _tabCard(),
+                      _premiumHeader(),
                       const SizedBox(height: 20),
+                      _tabCard(),
+                      const SizedBox(height: 40),
                     ],
                   ),
                 ),
@@ -234,235 +321,323 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
     );
   }
 
-  Widget _profileCard() {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 60,
-            height: 60,
-            child: _imageUrl.isNotEmpty
-                ? Image.network(
-                    _imageUrl,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.business_rounded, size: 40, color: Colors.grey),
-                  )
-                : const Icon(Icons.business_rounded, size: 40, color: Colors.grey),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _name,
-                  style: GoogleFonts.inter(
-                    color: const Color(0xFF2C2C2C),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    height: 1.2,
-                  ).copyWith(
-                    fontFamilyFallback: [
-                      GoogleFonts.hindSiliguri().fontFamily!,
-                    ],
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 6),
+  // ── Premium Header ──────────────────────────────────────────────
+  Widget _premiumHeader() {
+    final hasCover = _coverPhoto.isNotEmpty;
+    final hasAvatar = _imageUrl.isNotEmpty;
+
+    if (!hasCover && !hasAvatar && _name.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (hasCover || hasAvatar)
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // Cover Photo
+              if (hasCover)
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 3,
+                  height: 180,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF1F5F9),
                   ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(6),
+                  child: Image.network(
+                    _coverPhoto,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                   ),
-                  child: Text(
-                    _category.isEmpty ? _sectionTitle : _category,
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
+                )
+              else if (hasAvatar)
+                const SizedBox(height: 100),
+
+              // Profile Avatar (on one side - left)
+              if (hasAvatar)
+                Positioned(
+                  bottom: hasCover ? -40 : 0,
+                  left: 20,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.08),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        color: const Color(0xFFF8FAFC),
+                        child: Image.network(
+                          _imageUrl,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => const Icon(Icons.business_rounded, size: 40, color: Color(0xFF94A3B8)),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ],
-            ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
+        
+        SizedBox(height: (hasCover && hasAvatar) ? 50 : (hasAvatar ? 10 : 20)),
 
-  Widget _locationRow() {
-    return GestureDetector(
-      onTap: () => _launchUrl(
-        'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}',
-      ),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(
-                Icons.location_on_rounded,
-                color: AppColors.primary,
-                size: 18,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                _address,
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF2C2C2C),
-                  height: 1.4,
-                ).copyWith(
-                  fontFamilyFallback: [
-                    GoogleFonts.hindSiliguri().fontFamily!,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (_name.isNotEmpty)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _name,
+                        style: _getStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF0F172A),
+                          letterSpacing: -0.5,
+                          text: _name,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.verified_rounded, color: AppColors.accent, size: 20),
                   ],
                 ),
-              ),
-            ),
-            const Icon(
-              Icons.chevron_right_rounded,
-              color: Color(0xFFD1D5DB),
-              size: 20,
-            ),
-          ],
+              if (_tagline.isNotEmpty) ...[
+                const SizedBox(height: 2),
+                Text(
+                  _tagline,
+                  style: _getStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF64748B),
+                    text: _tagline,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+              if (_category.isNotEmpty || _name.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Text(
+                  _category.isEmpty ? _sectionTitle : _category,
+                  style: _getStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.primary,
+                    text: _category,
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
+  // ── Tab Card ──────────────────────────────────────────────────────
   Widget _tabCard() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: const Color(0xFFFFFFFF),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Custom Tab bar
           Container(
-            margin: const EdgeInsets.all(10),
-            padding: const EdgeInsets.all(3),
+            margin: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               color: const Color(0xFFF1F5F9),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(14),
             ),
-            child: TabBar(
-              controller: _tabController,
-              indicator: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(9),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.12),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              dividerColor: Colors.transparent,
-              labelColor: AppColors.primary,
-              unselectedLabelColor: const Color(0xFF9CA3AF),
-              labelStyle: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-              ),
-              unselectedLabelStyle: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-              ),
-              tabs: const [
-                Tab(text: 'About'),
-                Tab(text: 'Contact'),
+            child: Row(
+              children: [
+                _tabItem('About', 0),
+                _tabItem('Contact', 1),
               ],
             ),
           ),
-          Container(
-            constraints: const BoxConstraints(minHeight: 400),
-            child: [
-              _aboutTab(),
-              _contactTab(),
-            ][_tabController.index],
+          // Dynamic content area (No fixed height)
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: _selectedTabIndex == 0 ? _aboutTab() : _contactTab(),
           ),
         ],
       ),
     );
   }
 
+  Widget _tabItem(String title, int index) {
+    bool isSelected = _selectedTabIndex == index;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedTabIndex = index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    )
+                  ]
+                : [],
+          ),
+          child: Center(
+            child: Text(
+              title,
+              style: _getStyle(
+                fontSize: 14,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                color: isSelected ? AppColors.primary : const Color(0xFF64748B),
+                text: title,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _aboutTab() {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+    return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (_about.isNotEmpty) ...[
             _sectionLabel('About'),
             const SizedBox(height: 8),
             Text(
               _about,
-              style: GoogleFonts.inter(
+              style: _getStyle(
                 fontSize: 14,
                 color: const Color(0xFF4B5563),
                 height: 1.75,
                 fontWeight: FontWeight.w400,
-              ).copyWith(
-                fontFamilyFallback: [
-                  GoogleFonts.hindSiliguri().fontFamily!,
+                text: _about,
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+
+          if (_bio.isNotEmpty) ...[
+            _sectionLabel('Information'),
+            const SizedBox(height: 8),
+            Text(
+              _bio,
+              style: _getStyle(
+                fontSize: 14,
+                color: const Color(0xFF4B5563),
+                height: 1.75,
+                fontWeight: FontWeight.w400,
+                text: _bio,
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+
+          if (_officialName.isNotEmpty) ...[
+            _sectionLabel('Top Official'),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFF),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFE5EAF5)),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F5F9),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: ClipOval(
+                      child: _officialImage.isNotEmpty
+                          ? Image.network(_officialImage, fit: BoxFit.cover)
+                          : const Icon(Icons.person_rounded, color: Color(0xFF94A3B8)),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _officialName,
+                          style: _getStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF1F2937),
+                            text: _officialName,
+                          ),
+                        ),
+                        if (_officialDesignation.isNotEmpty)
+                          Text(
+                            _officialDesignation,
+                            style: _getStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primary,
+                              text: _officialDesignation,
+                            ),
+                          ),
+                        if (_officialTagline.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            _officialTagline,
+                            style: _getStyle(
+                              fontSize: 12,
+                              color: const Color(0xFF64748B),
+                              fontWeight: FontWeight.w400,
+                              text: _officialTagline,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
             const SizedBox(height: 20),
           ],
+
           if (_services.isNotEmpty) ...[
             _sectionLabel('Services'),
             const SizedBox(height: 10),
@@ -475,15 +650,71 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: _offDays
-                  .map((d) => _buildOffDayChip(d))
-                  .toList(),
+              children: _offDays.map((d) => _buildOffDayChip(d)).toList(),
+            ),
+            const SizedBox(height: 20),
+          ],
+          if (_direction.isNotEmpty) ...[
+            _sectionLabel('Direction'),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF9EB),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFFFEBB7)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.directions_rounded, color: Color(0xFFB8860B), size: 18),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      _direction,
+                      style: _getStyle(
+                        fontSize: 13,
+                        color: const Color(0xFF926C00),
+                        fontWeight: FontWeight.w500,
+                        text: _direction,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
-          if (_about.isEmpty && _services.isEmpty && _offDays.isEmpty)
+          if (_about.isEmpty && _services.isEmpty && _offDays.isEmpty && _direction.isEmpty && _officialName.isEmpty && _bio.isEmpty)
             const _EmptyStateView(),
         ],
       ),
+    );
+  }
+
+  Widget _socialLinksRow() {
+    final links = [
+      if (_facebook.isNotEmpty) {'icon': Icons.facebook, 'url': _facebook, 'color': const Color(0xFF1877F2)},
+      if (_twitter.isNotEmpty) {'icon': Icons.alternate_email_rounded, 'url': _twitter, 'color': const Color(0xFF000000)},
+      if (_linkedin.isNotEmpty) {'icon': Icons.business_center_rounded, 'url': _linkedin, 'color': const Color(0xFF0A66C2)},
+      if (_instagram.isNotEmpty) {'icon': Icons.camera_alt_rounded, 'url': _instagram, 'color': const Color(0xFFE4405F)},
+      if (_youtube.isNotEmpty) {'icon': Icons.play_circle_fill_rounded, 'url': _youtube, 'color': const Color(0xFFFF0000)},
+    ];
+
+    return Row(
+      children: links.map((l) => Padding(
+        padding: const EdgeInsets.only(right: 12),
+        child: GestureDetector(
+          onTap: () => _launchUrl(l['url'] as String),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: (l['color'] as Color).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(l['icon'] as IconData, color: l['color'] as Color, size: 22),
+          ),
+        ),
+      )).toList(),
     );
   }
 
@@ -507,14 +738,11 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.inter(
+              style: _getStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: const Color(0xFF1F2937),
-              ).copyWith(
-                fontFamilyFallback: [
-                  GoogleFonts.hindSiliguri().fontFamily!,
-                ],
+                text: text,
               ),
             ),
           ),
@@ -533,7 +761,12 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
       ),
       child: Text(
         day,
-        style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.primary),
+        style: _getStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: AppColors.primary,
+          text: day,
+        ),
       ),
     );
   }
@@ -566,63 +799,105 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
         label: 'Address',
         value: _address,
         color: AppColors.blue3,
-        onTap: () => _launchUrl('https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}'),
+        onTap: () {
+          final hasMap = _mapUrl.isNotEmpty;
+          final uriString = hasMap 
+            ? _mapUrl 
+            : 'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}';
+          launchUrl(Uri.parse(uriString), mode: LaunchMode.externalApplication);
+        },
       ),
     ];
 
-    return ListView.separated(
-      physics: const BouncingScrollPhysics(),
+    final items = contactItems.where((i) => i.value.isNotEmpty).toList();
+    if (items.isEmpty) return const _EmptyStateView();
+
+    return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-      itemCount: contactItems.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
-      itemBuilder: (_, i) {
-        final item = contactItems[i];
-        final bool hasValue = item.value.isNotEmpty;
-        return GestureDetector(
-          onTap: hasValue ? item.onTap : null,
-          child: Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF8FAFF),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: hasValue ? item.color.withValues(alpha: 0.15) : const Color(0xFFE5EAF5)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (int i = 0; i < items.length; i++) ...[
+            _buildContactCard(items[i]),
+            if (i < items.length - 1) const SizedBox(height: 10),
+          ],
+          if (_facebook.isNotEmpty || _twitter.isNotEmpty || _linkedin.isNotEmpty || _instagram.isNotEmpty) ...[
+            const SizedBox(height: 24),
+            _sectionLabel('Social Profiles'),
+            const SizedBox(height: 12),
+            _socialLinksRow(),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactCard(_DetailContactRow item) {
+    return GestureDetector(
+      onTap: item.onTap,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FAFF),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: item.color.withValues(alpha: 0.15)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: item.color.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(item.icon, color: item.color, size: 20),
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: 42,
-                  height: 42,
-                  decoration: BoxDecoration(color: item.color.withValues(alpha: 0.10), borderRadius: BorderRadius.circular(12)),
-                  child: Icon(item.icon, color: item.color, size: 20),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(item.label, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: item.color, letterSpacing: 0.6)),
-                      const SizedBox(height: 3),
-                      Text(
-                        hasValue ? item.value : '—',
-                        style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500, color: hasValue ? const Color(0xFF111827) : const Color(0xFFD1D5DB)),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.label,
+                    style: _getStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: item.color,
+                      letterSpacing: 0.6,
+                    ),
                   ),
-                ),
-                if (hasValue) const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: Color(0xFFD1D5DB)),
-              ],
+                  const SizedBox(height: 3),
+                  Text(
+                    item.value,
+                    style: _getStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xFF111827),
+                      text: item.value,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+            const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: Color(0xFFD1D5DB)),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _sectionLabel(String text) => Text(
     text,
-    style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700, color: const Color(0xFF9CA3AF), letterSpacing: 0.8),
+    style: _getStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w700,
+      color: const Color(0xFF9CA3AF),
+      letterSpacing: 0.8,
+      text: text,
+    ),
   );
 }
 
@@ -651,7 +926,14 @@ class _EmptyStateView extends StatelessWidget {
               child: const Icon(Icons.inbox_rounded, size: 28, color: Color(0xFFD1D5DB)),
             ),
             const SizedBox(height: 14),
-            Text('No information available', style: GoogleFonts.inter(fontSize: 14, color: const Color(0xFF9CA3AF), fontWeight: FontWeight.w500)),
+            Text(
+              'No information available',
+              style: _getStyle(
+                fontSize: 14,
+                color: const Color(0xFF9CA3AF),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       ),

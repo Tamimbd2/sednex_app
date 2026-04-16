@@ -6,6 +6,36 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sednexapp/app/core/constants/url.dart';
 import 'package:get_storage/get_storage.dart';
+import '../../../core/theme/app_colors.dart';
+
+// ── Font Helper ──────────────────────────────────────────────────
+TextStyle _getStyle({
+  required double fontSize,
+  required FontWeight fontWeight,
+  required Color color,
+  String? text,
+  double? height,
+  double? letterSpacing,
+}) {
+  final bool hasBangla =
+      text != null && RegExp(r'[\u0980-\u09FF]').hasMatch(text);
+  if (hasBangla) {
+    return GoogleFonts.hindSiliguri(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
+      height: height ?? 1.4,
+      letterSpacing: letterSpacing,
+    );
+  }
+  return GoogleFonts.poppins(
+    fontSize: fontSize,
+    fontWeight: fontWeight,
+    color: color,
+    height: height,
+    letterSpacing: letterSpacing,
+  );
+}
 
 class OrganizationDetailsView extends StatefulWidget {
   const OrganizationDetailsView({super.key});
@@ -17,35 +47,60 @@ class OrganizationDetailsView extends StatefulWidget {
 
 class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
     with TickerProviderStateMixin {
-  late TabController _tabController;
-  late AnimationController _staggerCtrl;
+  late AnimationController _animCtrl;
+  late Animation<double> _fadeAnim;
+  late Animation<Offset> _slideAnim;
 
+  int _selectedTabIndex = 0;
   bool _isLoading = true;
   String _name = '';
+  String _tagline = '';
   String _imageUrl = '';
+  String _coverPhoto = '';
+  String _category = '';
+  String _about = '';
+  String _bio = '';
+  
+  // Top Official
+  String _officialName = '';
+  String _officialDesignation = '';
+  String _officialTagline = '';
+  String _officialImage = '';
+
+  // Social
+  String _facebook = '';
+  String _twitter = '';
+  String _linkedin = '';
+  String _instagram = '';
+  String _youtube = '';
+
   String _phone = '';
   String _email = '';
   String _website = '';
   String _address = '';
-  String _about = '';
+  String _direction = '';
+  String _mapUrl = '';
   List<String> _services = [];
   List<String> _offDays = [];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    _staggerCtrl = AnimationController(
+    _animCtrl = AnimationController(
+      duration: const Duration(milliseconds: 500),
       vsync: this,
-      duration: const Duration(milliseconds: 900),
     );
+    _fadeAnim = CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
+    _slideAnim = Tween<Offset>(
+      begin: const Offset(0, 0.08),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut));
     WidgetsBinding.instance.addPostFrameCallback((_) => _fetchDetails());
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
-    _staggerCtrl.dispose();
+    _animCtrl.dispose();
     super.dispose();
   }
 
@@ -60,7 +115,7 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
 
     if (id.isEmpty) {
       setState(() => _isLoading = false);
-      _staggerCtrl.forward();
+      _animCtrl.forward();
       return;
     }
 
@@ -85,32 +140,82 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
 
         final itemData = body['item'] ?? {};
         final List detailsList = body['details'] ?? [];
-        final detail = detailsList.isNotEmpty ? detailsList[0] : {};
+        final detail = detailsList.isNotEmpty
+            ? detailsList.firstWhere(
+                (d) => d['contact'] != null || d['about'] != null,
+                orElse: () => detailsList[0],
+              )
+            : {};
         final contact = detail['contact'] ?? {};
         final location = detail['location'] ?? {};
         final about = detail['about'] ?? {};
+        final official = detail['topOfficial'] ?? {};
+        final social = detail['socialLinks'] ?? {};
         final List offSchedules = detail['offDaySchedules'] ?? [];
+
+        // Find coverPhoto from any detail entry
+        String coverPhoto = '';
+        for (final d in detailsList) {
+          if (d['coverPhoto'] != null && d['coverPhoto'].toString().isNotEmpty) {
+            coverPhoto = d['coverPhoto'].toString();
+            break;
+          }
+        }
 
         setState(() {
           _name = itemData['name'] ?? _name;
           _imageUrl = itemData['image'] ?? itemData['icon'] ?? _imageUrl;
+          _coverPhoto = coverPhoto;
+          _tagline = detail['tagline'] ?? detail['note'] ?? detail['shortBio'] ?? '';
+          _category = itemData['category'] ?? 'Organization';
+          
           _about = about['description'] ?? '';
-          _phone = contact['mobile'] ?? contact['phone'] ?? '';
+          _bio = detail['bio'] ?? detail['history'] ?? detail['description'] ?? '';
+          
+          _officialName = official['name'] ?? official['fullName'] ?? '';
+          _officialDesignation = official['designation'] ?? official['position'] ?? '';
+          _officialTagline = official['tagline'] ?? official['bio'] ?? official['shortBio'] ?? '';
+          _officialImage = official['image'] ?? official['profileImage'] ?? '';
+
+          _facebook = social['facebook'] ?? '';
+          _twitter = social['twitter'] ?? social['xProfile'] ?? social['x'] ?? '';
+          _linkedin = social['linkedin'] ?? '';
+          _instagram = social['instagram'] ?? '';
+          _youtube = social['youtube'] ?? '';
+
+          _phone = contact['mobile'] ?? contact['phone'] ?? contact['hotline'] ?? '';
           _email = contact['email'] ?? '';
           _website = contact['website'] ?? '';
-          _address = location['address'] ?? contact['direction'] ?? '';
+          _address = location['address'] ?? location['fullPhysicalAddress'] ?? '';
+          _direction = contact['direction'] ?? _direction;
+          _mapUrl = location['mapUrl'] ?? location['googleMapsUrl'] ?? '';
           _services = List<String>.from(about['services'] ?? []);
-          _offDays = offSchedules
-              .map<String>((e) => e['day']?.toString() ?? '')
-              .where((d) => d.isNotEmpty)
-              .toList();
+
+          // Handle potentially nested or simple offSchedules
+          final List<String> days = [];
+          for (var e in offSchedules) {
+            String d = e['day']?.toString() ?? '';
+            if (d.startsWith('[') && d.endsWith(']')) {
+              try {
+                final List nested = jsonDecode(d);
+                for (var n in nested) {
+                  if (n is Map && n['day'] != null) {
+                    days.add(n['day'].toString());
+                  }
+                }
+                continue;
+              } catch (_) {}
+            }
+            if (d.isNotEmpty) days.add(d);
+          }
+          _offDays = days.isEmpty ? _offDays : days;
         });
       }
     } catch (e) {
       debugPrint('Org detail error: $e');
     } finally {
       setState(() => _isLoading = false);
-      _staggerCtrl.forward();
+      _animCtrl.forward();
     }
   }
 
@@ -121,448 +226,386 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
     try { await launchUrl(uri, mode: LaunchMode.externalApplication); } catch (_) {}
   }
 
-  Animation<double> _anim(int index) => CurvedAnimation(
-    parent: _staggerCtrl,
-    curve: Interval(index * 0.1, (index * 0.1 + 0.6).clamp(0, 1),
-        curve: Curves.easeOutCubic),
-  );
-
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF7F8FC),
-        body: SafeArea(
-          child: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(
-                  color: Color(0xFF3D5AF1),
-                  strokeWidth: 2,
-                ),
-              )
-            : SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    _topHeader(),
-                    _body(),
-                  ],
-                ),
-              ),
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8FAFC),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E63FF),
+        elevation: 0,
+        centerTitle: true,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        leading: IconButton(
+          onPressed: () => Get.back(),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+            size: 18,
+          ),
+        ),
+        title: Text(
+          _name.isEmpty ? 'Details' : _name,
+          style: _getStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+            text: _name,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
-    );
-  }
-
-  // ── Top Header ────────────────────────────────────────────────────
-  Widget _topHeader() {
-    return FadeTransition(
-      opacity: _anim(0),
-      child: Container(
-        color: Colors.white,
-        child: Column(
-          children: [
-            // Status bar + back
-            SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  children: [
-                    _iconBtn(Icons.arrow_back_rounded, () => Get.back()),
-                    const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEEF2FF),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.business_rounded,
-                              size: 14, color: Color(0xFF3D5AF1)),
-                          const SizedBox(width: 5),
-                          Text('Organization',
-                              style: GoogleFonts.inter(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF3D5AF1))),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primary,
+                strokeWidth: 2,
               ),
-            ),
-
-            // Avatar + Name
-            const SizedBox(height: 12),
-            SlideTransition(
-              position: Tween<Offset>(
-                      begin: const Offset(0, 0.3), end: Offset.zero)
-                  .animate(_anim(1)),
-              child: Column(
-                children: [
-                  // Avatar with ring
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          color: const Color(0xFF3D5AF1).withValues(alpha: 0.2),
-                          width: 2),
-                    ),
-                    child: Container(
-                      width: 96,
-                      height: 96,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color(0xFFEEF2FF),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF3D5AF1).withValues(alpha: 0.15),
-                            blurRadius: 24,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: ClipOval(
-                        child: _imageUrl.isNotEmpty
-                            ? Image.network(_imageUrl,
-                                fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) => _avatarPlaceholder())
-                            : _avatarPlaceholder(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Text(
-                      _name.isEmpty ? 'Organization' : _name,
-                      style: GoogleFonts.poppins(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF111827),
-                        height: 1.2,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            )
+          : FadeTransition(
+              opacity: _fadeAnim,
+              child: SlideTransition(
+                position: _slideAnim,
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
                     children: [
-                      const Icon(Icons.verified_rounded,
-                          size: 15, color: Color(0xFFFFAB00)),
-                      const SizedBox(width: 4),
-                      Text('Verified Member',
-                          style: GoogleFonts.inter(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: const Color(0xFF6B7280))),
+                      _premiumHeader(),
+                      const SizedBox(height: 20),
+                      _tabCard(),
+                      const SizedBox(height: 40),
                     ],
                   ),
-                  const SizedBox(height: 24),
-                ],
-              ),
-            ),
-
-            // Quick Actions Row
-            FadeTransition(
-              opacity: _anim(2),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                child: Row(
-                  children: [
-                    if (_phone.isNotEmpty)
-                      Expanded(
-                          child: _primaryBtn(
-                              Icons.call_rounded, 'Call',
-                              () => _launch('tel:$_phone'))),
-                    if (_phone.isNotEmpty && (_email.isNotEmpty || _website.isNotEmpty))
-                      const SizedBox(width: 10),
-                    if (_email.isNotEmpty)
-                      Expanded(
-                          child: _outlineBtn(
-                              Icons.email_outlined, 'Email',
-                              () => _launch('mailto:$_email'))),
-                    if (_email.isNotEmpty && _website.isNotEmpty)
-                      const SizedBox(width: 10),
-                    if (_website.isNotEmpty)
-                      Expanded(
-                          child: _outlineBtn(
-                              Icons.language_rounded, 'Website',
-                              () => _launch(_website))),
-                  ],
                 ),
               ),
             ),
-
-            // Divider line
-            Container(height: 1, color: const Color(0xFFF0F1F5)),
-          ],
-        ),
-      ),
     );
   }
 
-  Widget _avatarPlaceholder() => Container(
-        color: const Color(0xFFEEF2FF),
-        child: const Icon(Icons.business_rounded,
-            size: 48, color: Color(0xFF3D5AF1)),
-      );
+  // ── Premium Header ──────────────────────────────────────────────
+  Widget _premiumHeader() {
+    final hasCover = _coverPhoto.isNotEmpty;
+    final hasAvatar = _imageUrl.isNotEmpty;
 
-  Widget _iconBtn(IconData icon, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: const Color(0xFFF3F4F6),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Icon(icon, size: 20, color: const Color(0xFF374151)),
-      ),
-    );
-  }
+    if (!hasCover && !hasAvatar && _name.isEmpty) return const SizedBox.shrink();
 
-  Widget _primaryBtn(IconData icon, String label, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 13),
-        decoration: BoxDecoration(
-          color: const Color(0xFF3D5AF1),
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF3D5AF1).withValues(alpha: 0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.white, size: 18),
-            const SizedBox(width: 7),
-            Text(label,
-                style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700)),
-          ],
-        ),
-      ),
-    );
-  }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (hasCover || hasAvatar)
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // Cover Photo
+              if (hasCover)
+                Container(
+                  height: 180,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF1F5F9),
+                  ),
+                  child: Image.network(
+                    _coverPhoto,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                  ),
+                )
+              else if (hasAvatar)
+                const SizedBox(height: 100),
 
-  Widget _outlineBtn(IconData icon, String label, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 13),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFE5E7EB), width: 1.5),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: const Color(0xFF374151), size: 18),
-            const SizedBox(width: 7),
-            Text(label,
-                style: GoogleFonts.inter(
-                    color: const Color(0xFF374151),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ── Body ──────────────────────────────────────────────────────────
-  Widget _body() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Address card
-          if (_address.isNotEmpty) ...[
-            FadeTransition(
-              opacity: _anim(3),
-              child: _addressCard(),
-            ),
-            const SizedBox(height: 16),
-          ],
-
-          // Tab card
-          FadeTransition(
-            opacity: _anim(4),
-            child: _tabCard(),
+              // Profile Avatar
+              if (hasAvatar)
+                Positioned(
+                  bottom: hasCover ? -40 : 0,
+                  left: 20,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.08),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        color: const Color(0xFFF8FAFC),
+                        child: Image.network(
+                          _imageUrl,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => const Icon(Icons.business_rounded, size: 40, color: Color(0xFF94A3B8)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
-          const SizedBox(height: 32),
-        ],
-      ),
+        
+        SizedBox(height: (hasCover && hasAvatar) ? 50 : (hasAvatar ? 10 : 20)),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (_name.isNotEmpty)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _name,
+                        style: _getStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF0F172A),
+                          letterSpacing: -0.5,
+                          text: _name,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.verified_rounded, color: AppColors.accent, size: 20),
+                  ],
+                ),
+              if (_tagline.isNotEmpty) ...[
+                const SizedBox(height: 2),
+                Text(
+                  _tagline,
+                  style: _getStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF64748B),
+                    text: _tagline,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+              if (_category.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Text(
+                  _category,
+                  style: _getStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.primary,
+                    text: _category,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _addressCard() {
-    return GestureDetector(
-      onTap: () => _launch(
-          'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}'),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFFE5E7EB)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: const Color(0xFFEEF2FF),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(Icons.location_on_rounded,
-                  color: Color(0xFF3D5AF1), size: 22),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Address',
-                      style: GoogleFonts.inter(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF9CA3AF),
-                          letterSpacing: 0.5)),
-                  const SizedBox(height: 3),
-                  Text(_address,
-                      style: GoogleFonts.inter(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF1F2937),
-                          height: 1.4),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFFEEF2FF),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text('Maps',
-                  style: GoogleFonts.inter(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF3D5AF1))),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
+  // ── Tab Card ──────────────────────────────────────────────────────
   Widget _tabCard() {
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
-      ),
-      child: Column(
-        children: [
-          // Tab Header
-          Padding(
-            padding: const EdgeInsets.all(6),
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3F4F6),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: TabBar(
-                controller: _tabController,
-                indicator: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                indicatorSize: TabBarIndicatorSize.tab,
-                dividerColor: Colors.transparent,
-                labelColor: const Color(0xFF111827),
-                unselectedLabelColor: const Color(0xFF9CA3AF),
-                labelStyle: GoogleFonts.inter(
-                    fontSize: 13, fontWeight: FontWeight.w700),
-                unselectedLabelStyle: GoogleFonts.inter(
-                    fontSize: 13, fontWeight: FontWeight.w500),
-                tabs: const [
-                  Tab(text: 'About'),
-                  Tab(text: 'Contact'),
-                ],
-              ),
-            ),
-          ),
-
-          SizedBox(
-            height: 500,
-            child: TabBarView(
-              controller: _tabController,
-              children: [_aboutTab(), _contactTab()],
-            ),
+        color: const Color(0xFFFFFFFF),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
           ),
         ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Custom Tab bar
+          Container(
+            margin: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Row(
+              children: [
+                _tabItem('About', 0),
+                _tabItem('Contact', 1),
+              ],
+            ),
+          ),
+          // Dynamic content area
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: _selectedTabIndex == 0 ? _aboutTab() : _contactTab(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _tabItem(String title, int index) {
+    bool isSelected = _selectedTabIndex == index;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedTabIndex = index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    )
+                  ]
+                : [],
+          ),
+          child: Center(
+            child: Text(
+              title,
+              style: _getStyle(
+                fontSize: 14,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                color: isSelected ? AppColors.primary : const Color(0xFF64748B),
+                text: title,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 
   // ── About Tab ─────────────────────────────────────────────────────
   Widget _aboutTab() {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (_about.isNotEmpty) ...[
             _label('About'),
+            const SizedBox(height: 8),
+            Text(
+              _about,
+              style: _getStyle(
+                fontSize: 14,
+                color: const Color(0xFF4B5563),
+                height: 1.75,
+                fontWeight: FontWeight.w400,
+                text: _about,
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+
+          if (_bio.isNotEmpty) ...[
+            _label('Information'),
+            const SizedBox(height: 8),
+            Text(
+              _bio,
+              style: _getStyle(
+                fontSize: 14,
+                color: const Color(0xFF4B5563),
+                height: 1.75,
+                fontWeight: FontWeight.w400,
+                text: _bio,
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+
+          if (_officialName.isNotEmpty) ...[
+            _label('Top Official'),
             const SizedBox(height: 10),
-            Text(_about,
-                style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: const Color(0xFF4B5563),
-                    height: 1.8)),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFF),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFE5EAF5)),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F5F9),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: ClipOval(
+                      child: _officialImage.isNotEmpty
+                          ? Image.network(_officialImage, fit: BoxFit.cover)
+                          : const Icon(Icons.person_rounded, color: Color(0xFF94A3B8)),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _officialName,
+                          style: _getStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF1F2937),
+                            text: _officialName,
+                          ),
+                        ),
+                        if (_officialDesignation.isNotEmpty)
+                          Text(
+                            _officialDesignation,
+                            style: _getStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primary,
+                              text: _officialDesignation,
+                            ),
+                          ),
+                        if (_officialTagline.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            _officialTagline,
+                            style: _getStyle(
+                              fontSize: 12,
+                              color: const Color(0xFF64748B),
+                              fontWeight: FontWeight.w400,
+                              text: _officialTagline,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 20),
           ],
 
           if (_services.isNotEmpty) ...[
             _label('Services'),
             const SizedBox(height: 10),
-            ..._services.asMap().entries.map((e) => _serviceRow(e.value, e.key)),
+            ..._services.map((s) => _buildServiceItem(s)),
             const SizedBox(height: 20),
           ],
-
           if (_offDays.isNotEmpty) ...[
             _label('Closed Days'),
             const SizedBox(height: 10),
@@ -571,187 +614,242 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
               runSpacing: 8,
               children: _offDays.map((d) => _dayChip(d)).toList(),
             ),
+            const SizedBox(height: 20),
           ],
-
-          if (_about.isEmpty && _services.isEmpty && _offDays.isEmpty)
+          if (_direction.isNotEmpty) ...[
+            _label('Direction'),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF9EB),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFFFEBB7)),
+              ),
+              child: Row(
+                children: [
+                   const Icon(Icons.directions_rounded, color: Color(0xFFB8860B), size: 18),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      _direction,
+                      style: _getStyle(
+                        fontSize: 13,
+                        color: const Color(0xFF926C00),
+                        fontWeight: FontWeight.w500,
+                        text: _direction,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          if (_about.isEmpty && _services.isEmpty && _offDays.isEmpty && _direction.isEmpty && _officialName.isEmpty && _bio.isEmpty)
             _emptyState(),
         ],
       ),
     );
   }
 
-  Widget _serviceRow(String text, int index) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: Duration(milliseconds: 300 + index * 60),
-      builder: (_, v, child) => Opacity(
-        opacity: v,
-        child: Transform.translate(offset: Offset(20 * (1 - v), 0), child: child),
+  Widget _buildServiceItem(String text) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFF),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE5EAF5)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          children: [
-            Container(
-              width: 8,
-              height: 8,
-              decoration: const BoxDecoration(
-                color: Color(0xFF3D5AF1),
-                shape: BoxShape.circle,
+      child: Row(
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: const BoxDecoration(color: AppColors.accent, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: _getStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF1F2937),
+                text: text,
               ),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(text,
-                  style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: const Color(0xFF374151),
-                      fontWeight: FontWeight.w500)),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _dayChip(String day) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF3CD),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFFFD700).withValues(alpha: 0.4)),
+        color: AppColors.primary.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.15)),
       ),
-      child: Text(day,
-          style: GoogleFonts.inter(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF856404))),
+      child: Text(
+        day,
+        style: _getStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: AppColors.primary,
+          text: day,
+        ),
+      ),
     );
   }
 
   // ── Contact Tab ───────────────────────────────────────────────────
   Widget _contactTab() {
-    final contacts = <_ContactRow>[
-      _ContactRow(
+    final contacts = [
+      _DetailRow(
         icon: Icons.call_rounded,
         label: 'Phone',
         value: _phone,
         color: const Color(0xFF3D5AF1),
-        bg: const Color(0xFFEEF2FF),
         onTap: () => _launch('tel:$_phone'),
       ),
-      _ContactRow(
+      _DetailRow(
         icon: Icons.alternate_email_rounded,
         label: 'Email',
         value: _email,
         color: const Color(0xFF059669),
-        bg: const Color(0xFFECFDF5),
         onTap: () => _launch('mailto:$_email'),
       ),
-      _ContactRow(
+      _DetailRow(
         icon: Icons.language_rounded,
         label: 'Website',
         value: _website,
         color: const Color(0xFFD97706),
-        bg: const Color(0xFFFFFBEB),
         onTap: () => _launch(_website),
       ),
-      _ContactRow(
+      _DetailRow(
         icon: Icons.location_on_rounded,
         label: 'Address',
-        value: _address,
+        value: _address.isNotEmpty ? _address : _direction,
         color: const Color(0xFF7C3AED),
-        bg: const Color(0xFFF5F3FF),
-        onTap: () => _launch(
-            'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}'),
+        onTap: () {
+          final hasMap = _mapUrl.isNotEmpty;
+          final uriString = hasMap 
+            ? _mapUrl 
+            : 'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}';
+          launchUrl(Uri.parse(uriString), mode: LaunchMode.externalApplication);
+        },
       ),
     ];
 
-    return ListView.separated(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-      itemCount: contacts.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
-      itemBuilder: (_, i) {
-        final c = contacts[i];
-        final has = c.value.isNotEmpty;
-        return TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0, end: 1),
-          duration: Duration(milliseconds: 300 + i * 70),
-          builder: (_, v, child) => Opacity(
-            opacity: v,
-            child: Transform.translate(offset: Offset(0, 15 * (1 - v)), child: child),
-          ),
-          child: GestureDetector(
-            onTap: has ? c.onTap : null,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+    final items = contacts.where((i) => i.value.isNotEmpty).toList();
+    if (items.isEmpty) return _emptyState();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (int i = 0; i < items.length; i++) ...[
+            _buildContactCard(items[i]),
+            if (i < items.length - 1) const SizedBox(height: 10),
+          ],
+          if (_facebook.isNotEmpty || _twitter.isNotEmpty || _linkedin.isNotEmpty || _instagram.isNotEmpty || _youtube.isNotEmpty) ...[
+            const SizedBox(height: 24),
+            _label('Social Profiles'),
+            const SizedBox(height: 12),
+            _socialLinksRow(),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactCard(_DetailRow item) {
+    return GestureDetector(
+      onTap: item.onTap,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FAFF),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: item.color.withValues(alpha: 0.15)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
               decoration: BoxDecoration(
-                color: has ? Colors.white : const Color(0xFFF9FAFB),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: has
-                      ? c.color.withValues(alpha: 0.15)
-                      : const Color(0xFFE5E7EB),
-                ),
+                color: item.color.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Row(
+              child: Icon(item.icon, color: item.color, size: 20),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: c.bg,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(c.icon, color: c.color, size: 20),
+                  Text(
+                    item.label,
+                    style: _getStyle(fontSize: 10, fontWeight: FontWeight.w700, color: item.color, letterSpacing: 0.6),
                   ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(c.label,
-                            style: GoogleFonts.inter(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: const Color(0xFF9CA3AF))),
-                        const SizedBox(height: 2),
-                        Text(
-                          has ? c.value : 'Not provided',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: has
-                                ? const Color(0xFF111827)
-                                : const Color(0xFFD1D5DB),
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
+                  const SizedBox(height: 3),
+                  Text(
+                    item.value,
+                    style: _getStyle(fontSize: 13, fontWeight: FontWeight.w500, color: const Color(0xFF111827), text: item.value),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  if (has)
-                    Icon(Icons.chevron_right_rounded,
-                        color: c.color.withValues(alpha: 0.5), size: 20),
                 ],
               ),
             ),
+            const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: Color(0xFFD1D5DB)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _socialLinksRow() {
+    final links = [
+      if (_facebook.isNotEmpty) {'icon': Icons.facebook, 'url': _facebook, 'color': const Color(0xFF1877F2)},
+      if (_twitter.isNotEmpty) {'icon': Icons.alternate_email_rounded, 'url': _twitter, 'color': const Color(0xFF000000)},
+      if (_linkedin.isNotEmpty) {'icon': Icons.business_center_rounded, 'url': _linkedin, 'color': const Color(0xFF0A66C2)},
+      if (_instagram.isNotEmpty) {'icon': Icons.camera_alt_rounded, 'url': _instagram, 'color': const Color(0xFFE4405F)},
+      if (_youtube.isNotEmpty) {'icon': Icons.play_circle_fill_rounded, 'url': _youtube, 'color': const Color(0xFFFF0000)},
+    ];
+
+    return Row(
+      children: links.map((l) => Padding(
+        padding: const EdgeInsets.only(right: 12),
+        child: GestureDetector(
+          onTap: () => _launch(l['url'] as String),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: (l['color'] as Color).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(l['icon'] as IconData, color: l['color'] as Color, size: 22),
           ),
-        );
-      },
+        ),
+      )).toList(),
     );
   }
 
   Widget _label(String text) => Text(
         text,
-        style: GoogleFonts.inter(
+        style: _getStyle(
           fontSize: 13,
           fontWeight: FontWeight.w700,
           color: const Color(0xFF6B7280),
           letterSpacing: 0.3,
+          text: text,
         ),
       );
 
@@ -764,9 +862,9 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
             Icon(Icons.info_outline_rounded, size: 48, color: Colors.grey[300]),
             const SizedBox(height: 12),
             Text('No information available',
-                style: GoogleFonts.inter(
+                style: _getStyle(
                     fontSize: 14,
-                    color: Colors.grey[400],
+                    color: Colors.grey[400]!,
                     fontWeight: FontWeight.w500)),
           ],
         ),
@@ -776,20 +874,18 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
 }
 
 // ── Data Classes ──────────────────────────────────────────────────────
-class _ContactRow {
+class _DetailRow {
   final IconData icon;
   final String label;
   final String value;
   final Color color;
-  final Color bg;
   final VoidCallback onTap;
 
-  const _ContactRow({
+  const _DetailRow({
     required this.icon,
     required this.label,
     required this.value,
     required this.color,
-    required this.bg,
     required this.onTap,
   });
 }

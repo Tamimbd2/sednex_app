@@ -7,8 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
-import '../../../core/theme/app_colors.dart';
 import '../../../core/constants/url.dart';
+import '../../../services/api_service.dart';
 
 // ── Font Helper ──────────────────────────────────────────────────
 TextStyle _getStyle({
@@ -42,10 +42,13 @@ class CommunityProfileDetailsView extends StatefulWidget {
   const CommunityProfileDetailsView({super.key, required this.member});
 
   @override
-  State<CommunityProfileDetailsView> createState() => _CommunityProfileDetailsViewState();
+  State<CommunityProfileDetailsView> createState() =>
+      _CommunityProfileDetailsViewState();
 }
 
-class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsView> with SingleTickerProviderStateMixin {
+class _CommunityProfileDetailsViewState
+    extends State<CommunityProfileDetailsView>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animCtrl;
   late Animation<double> _fadeAnim;
   late Animation<Offset> _slideAnim;
@@ -56,9 +59,18 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
   @override
   void initState() {
     super.initState();
-    _animCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
-    _fadeAnim = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeIn));
-    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeOutCubic));
+    _animCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _fadeAnim = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeIn));
+    _slideAnim = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeOutCubic));
 
     _fetchDetails();
   }
@@ -73,6 +85,8 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
     final member = widget.member is Map ? widget.member : {};
     final String id = (member['_id'] ?? member['id'] ?? '').toString();
 
+    debugPrint('Fetching details for user ID: $id');
+
     // Initial data from passed object
     setState(() {
       _data = Map<String, dynamic>.from(member);
@@ -85,21 +99,48 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
     }
 
     try {
-      final connect = GetConnect();
-      final box = GetStorage();
-      final token = box.read('token');
+      final apiService = Get.find<ApiService>();
 
-      final response = await connect.get(
-        '${AppUrl.baseUrl}api/users/$id',
-        headers: token != null ? {'Authorization': 'Bearer $token'} : null,
+      // 1. Try fetching individual user details
+      final response = await apiService.getData('api/users/$id');
+      debugPrint(
+        'User profile individual API response status: ${response.statusCode}',
       );
 
       if (!response.status.hasError && response.body != null) {
-        final fetched = response.body['user'] ?? response.body['data'] ?? response.body;
+        final body = response.body;
+        final fetched = body['user'] ?? body['data'] ?? body;
         if (fetched is Map) {
           setState(() {
             _data.addAll(Map<String, dynamic>.from(fetched));
           });
+        }
+      }
+
+      // 2. Fallback: If essential details are still missing, try the full users list
+      // (The backend singular endpoint might be restricted compared to the plural one)
+      if (_val('bio').isEmpty &&
+          _val('companyName').isEmpty &&
+          _val('phone').isEmpty) {
+        debugPrint(
+          'Essential details missing, trying fallback to full users list...',
+        );
+        final listResponse = await apiService.getData('api/users/');
+        if (listResponse.statusCode == 200 && listResponse.body != null) {
+          final data = listResponse.body;
+          if (data['success'] == true && data['users'] is List) {
+            final List users = data['users'];
+            final foundUser = users.firstWhere(
+              (u) => (u['_id'] ?? u['id'] ?? '').toString() == id,
+              orElse: () => null,
+            );
+            if (foundUser != null && foundUser is Map) {
+              debugPrint('Found user in full list with details');
+              setState(() {
+                _data.addAll(Map<String, dynamic>.from(foundUser));
+              });
+            }
+          }
         }
       }
     } catch (e) {
@@ -112,13 +153,29 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
 
   Future<void> _launch(String url) async {
     if (url.isEmpty) return;
-    final uri = url.startsWith('http') || url.startsWith('tel:') || url.startsWith('mailto:')
-        ? Uri.parse(url) : Uri.parse('https://$url');
-    try { await launchUrl(uri, mode: LaunchMode.externalApplication); } catch (_) {}
+    final uri =
+        url.startsWith('http') ||
+            url.startsWith('tel:') ||
+            url.startsWith('mailto:')
+        ? Uri.parse(url)
+        : Uri.parse('https://$url');
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {}
   }
 
   String _val(String key) => (_data[key]?.toString() ?? '').trim();
-  
+
+  String _formatDateShort(String dateStr) {
+    if (dateStr.isEmpty) return '';
+    try {
+      final date = DateTime.parse(dateStr);
+      return DateFormat('dd MMMM').format(date);
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
   String _formatDate(String dateStr) {
     if (dateStr.isEmpty) return '';
     try {
@@ -140,15 +197,28 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
         systemOverlayStyle: SystemUiOverlayStyle.light,
         leading: IconButton(
           onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+            size: 18,
+          ),
         ),
         title: Text(
           'Profile Details',
-          style: _getStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
+          style: _getStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
         ),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF), strokeWidth: 2))
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFF1E63FF),
+                strokeWidth: 2,
+              ),
+            )
           : FadeTransition(
               opacity: _fadeAnim,
               child: SlideTransition(
@@ -157,10 +227,7 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Column(
-                    children: [
-                      _contentArea(),
-                      const SizedBox(height: 40),
-                    ],
+                    children: [_contentArea(), const SizedBox(height: 40)],
                   ),
                 ),
               ),
@@ -169,12 +236,24 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
   }
 
   Widget _contentArea() {
-    final avatar = _val('profileImage').isNotEmpty ? _val('profileImage') : _val('image');
+    final avatar = _val('profileImage').isNotEmpty
+        ? _val('profileImage')
+        : _val('image');
     final name = _val('name').isNotEmpty ? _val('name') : _val('fullName');
-    final job = _val('jobTitle').isNotEmpty ? _val('jobTitle') : _val('designation');
-    final role = _val('role');
-    final tagline = _val('tagline').isNotEmpty ? _val('tagline') : _val('shortBio');
+    final job = _val('jobTitle').isNotEmpty
+        ? _val('jobTitle')
+        : _val('designation');
+    final username = _val('username');
+    final tagline = _val('tagline').isNotEmpty
+        ? _val('tagline')
+        : _val('shortBio');
     final bio = _val('bio').isNotEmpty ? _val('bio') : _val('about');
+    final isVerified = _data['isVerified'] == true ||
+        _data['verified'] == true ||
+        _data['isVerified'] == 'true' ||
+        _data['verified'] == 'true' ||
+        _data['isVerified'] == 1 ||
+        _data['verified'] == 1;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -186,92 +265,198 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFF1E63FF).withValues(alpha: 0.1), width: 2),
+              border: Border.all(
+                color: const Color(0xFF1E63FF).withValues(alpha: 0.1),
+                width: 2,
+              ),
             ),
             child: CircleAvatar(
               radius: 65,
               backgroundColor: const Color(0xFFF3F4F6),
-              backgroundImage: avatar.isNotEmpty ? CachedNetworkImageProvider(avatar) : null,
-              child: avatar.isEmpty ? Icon(Icons.person_rounded, size: 50, color: Colors.grey[400]) : null,
+              backgroundImage: avatar.isNotEmpty
+                  ? CachedNetworkImageProvider(avatar)
+                  : null,
+              child: avatar.isEmpty
+                  ? Icon(
+                      Icons.person_rounded,
+                      size: 50,
+                      color: Colors.grey[400],
+                    )
+                  : null,
             ),
           ),
-          const SizedBox(height: 24),
-          
+          const SizedBox(height: 8),
+
           // Name & Verified
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(name, style: _getStyle(fontSize: 24, fontWeight: FontWeight.w800, color: const Color(0xFF111827), text: name)),
-              const SizedBox(width: 6),
-              const Icon(Icons.verified_rounded, color: Color(0xFF1E63FF), size: 22),
+              Text(
+                name,
+                style: _getStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFF111827),
+                  text: name,
+                ),
+              ),
+              if (isVerified) ...[
+                const SizedBox(width: 6),
+                const Icon(
+                  Icons.verified_rounded,
+                  color: Color(0xFF1E63FF),
+                  size: 22,
+                ),
+              ],
             ],
           ),
-          
-          if (job.isNotEmpty || role.isNotEmpty) ...[
-            const SizedBox(height: 6),
+
+          if (username.isNotEmpty) ...[
+            const SizedBox(height: 4),
             Text(
-              job.isNotEmpty ? '$job • $role' : role,
-              style: _getStyle(fontSize: 15, fontWeight: FontWeight.w600, color: const Color(0xFF1E63FF)),
+              '@$username',
+              style: _getStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF6B7280),
+              ),
               textAlign: TextAlign.center,
             ),
           ],
 
-          if (tagline.isNotEmpty) ...[
-            const SizedBox(height: 12),
+          if (job.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(
+              job,
+              style: _getStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF1E63FF),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+
+          if (bio.isEmpty &&
+              !_hasPersonalInfo() &&
+              !_hasProfessionalInfo() &&
+              !_hasLocationInfo() &&
+              !_hasSocials() &&
+              _val('websiteLink').isEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.only(top: 40),
+              child: Center(
+                child: Text(
+                  'No data provided',
+                  style: _getStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF9CA3AF),
+                  ),
+                ),
+              ),
+            ),
+
+          if (bio.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Center(child: _labelAlignCenter('Bio')),
+            Align(
+              alignment: Alignment.center,
               child: Text(
-                tagline,
-                style: _getStyle(fontSize: 14, fontWeight: FontWeight.w500, color: const Color(0xFF4B5563), text: tagline),
+                bio,
+                style: _getStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xFF4B5563),
+                  text: bio,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
           ],
 
-          const SizedBox(height: 32),
-          const Divider(height: 1, color: Color(0xFFF1F5F9)),
-          const SizedBox(height: 32),
+          _buildPersonalInfoChip(),
 
-          if (bio.isNotEmpty) ...[
-            _labelAlignLeft('Biography'),
-            const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerLeft,
+          if (tagline.isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                bio,
-                style: _getStyle(fontSize: 14, fontWeight: FontWeight.w400, color: const Color(0xFF4B5563), text: bio),
+                tagline,
+                style: _getStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF4B5563),
+                  text: tagline,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 24),
           ],
 
-          _infoSection('Professional Information', [
-            _DetailItem(Icons.business_rounded, 'Company', _val('companyName'), const Color(0xFF2563EB)),
-            _DetailItem(Icons.work_rounded, 'Work Address', _val('workAddress'), const Color(0xFF4F46E5)),
-            _DetailItem(Icons.language_rounded, 'Website', _val('websiteLink'), const Color(0xFF0891B2), onTap: () => _launch(_val('websiteLink'))),
+          if (_hasProfessionalInfo() || _hasLocationInfo() || _hasSocials() || _val('websiteLink').isNotEmpty) ...[
+            const SizedBox(height: 8),
+            const Divider(height: 1, color: Color(0xFFF1F5F9)),
+            const SizedBox(height: 8),
+          ],
+
+          if (_hasProfessionalInfo()) ...[
+            const SizedBox(height: 8),
+            Center(child: _labelAlignCenter('Professional')),
+            const SizedBox(height: 4),
+          ],
+          _infoSection('', [
+            _DetailItem(
+              Icons.business_rounded,
+              'Company',
+              _val('companyName'),
+              const Color(0xFF2563EB),
+            ),
+            _DetailItem(
+              Icons.work_rounded,
+              'Work Address',
+              _val('workAddress'),
+              const Color(0xFF4F46E5),
+            ),
           ]),
 
-          _infoSection('Personal Details', [
-            _DetailItem(Icons.bloodtype_rounded, 'Blood Group', _val('bloodGroup'), const Color(0xFFDC2626)),
-            _DetailItem(Icons.cake_rounded, 'Birth Date', _formatDate(_val('birthDate')), const Color(0xFFD97706)),
-            _DetailItem(Icons.favorite_rounded, 'Marital Status', _val('maritalStatus'), const Color(0xFFE11D48)),
-            _DetailItem(Icons.flag_rounded, 'Nationality', _val('nationality'), const Color(0xFF059669)),
-            _DetailItem(Icons.person_outline_rounded, 'Gender', _val('gender'), const Color(0xFFDB2777)),
-          ]),
-
-          _infoSection('Contact & Location', [
-            _DetailItem(Icons.alternate_email_rounded, 'Email', _val('email'), const Color(0xFF059669), onTap: () => _launch('mailto:${_val('email')}')),
-            _DetailItem(Icons.call_rounded, 'Phone', _val('phone'), const Color(0xFF3B82F6), onTap: () => _launch('tel:${_val('phone')}')),
-            _DetailItem(Icons.public_rounded, 'Country', _val('country'), const Color(0xFFD97706)),
-            _DetailItem(Icons.location_city_rounded, 'Current Address', _val('currentAddress'), const Color(0xFF7C3AED)),
-            _DetailItem(Icons.home_rounded, 'Birth Place', _val('birthAddress'), const Color(0xFF6366F1)),
+          if (_hasLocationInfo()) ...[
+            const SizedBox(height: 8),
+            Center(child: _labelAlignCenter('Location')),
+            const SizedBox(height: 4),
+          ],
+          _infoSection('', [
+            _DetailItem(
+              Icons.location_city_rounded,
+              'Current Address',
+              _val('currentAddress'),
+              const Color(0xFF7C3AED),
+            ),
+            _DetailItem(
+              Icons.public_rounded,
+              'Country',
+              _val('country'),
+              const Color(0xFFD97706),
+            ),
           ]),
 
           if (_hasSocials()) ...[
-            const SizedBox(height: 32),
-            _labelAlignLeft('Social Profiles'),
-            const SizedBox(height: 16),
-            _socialLinksRow(),
+            const SizedBox(height: 4),
+            Center(child: _labelAlignCenter('Social Profiles')),
+            const SizedBox(height: 4),
+            Center(child: _socialLinksRow()),
+          ],
+
+          if (_val('websiteLink').isNotEmpty) ...[
+            const SizedBox(height: 4),
+            _infoSection('', [
+              _DetailItem(
+                Icons.language_rounded,
+                'Website',
+                _val('websiteLink'),
+                const Color(0xFF0891B2),
+                onTap: () => _launch(_val('websiteLink')),
+              ),
+            ]),
           ],
         ],
       ),
@@ -285,10 +470,25 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _labelAlignLeft(title),
-        const SizedBox(height: 12),
-        ...validItems.map((item) => _buildContactCard(item)),
-        const SizedBox(height: 24),
+        if (title.isNotEmpty) ...[
+          _labelAlignLeft(title),
+          const SizedBox(height: 4),
+        ],
+        for (var i = 0; i < validItems.length; i += 2)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: _buildContactCard(validItems[i])),
+                if (i + 1 < validItems.length) ...[
+                  const SizedBox(width: 8),
+                  Expanded(child: _buildContactCard(validItems[i + 1])),
+                ] else if (validItems.length > 1)
+                  const Expanded(child: SizedBox.shrink()),
+              ],
+            ),
+          ),
       ],
     );
   }
@@ -296,30 +496,61 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
   Widget _buildContactCard(_DetailItem item) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: GestureDetector(
+      child: InkWell(
         onTap: item.onTap,
+        borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(color: const Color(0xFFF8FAFF), borderRadius: BorderRadius.circular(14), border: Border.all(color: const Color(0xFFE5E7EB))),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
+          ),
           child: Row(
             children: [
               Container(
-                width: 42, height: 42,
-                decoration: BoxDecoration(color: item.color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                child: Icon(item.icon, color: item.color, size: 20),
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: item.color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(item.icon, color: item.color, size: 18),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.label, style: _getStyle(fontSize: 10, fontWeight: FontWeight.w700, color: item.color.withValues(alpha: 0.8), letterSpacing: 0.5)),
+                    Text(
+                      item.label,
+                      style: _getStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF6B7280),
+                      ),
+                    ),
                     const SizedBox(height: 2),
-                    Text(item.value, style: _getStyle(fontSize: 13, fontWeight: FontWeight.w600, color: const Color(0xFF111827), text: item.value)),
+                    Text(
+                      item.value,
+                      style: _getStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF111827),
+                        text: item.value,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               ),
-              if (item.onTap != null) const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: Color(0xFFD1D5DB)),
+              if (item.onTap != null)
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14,
+                  color: Color(0xFFD1D5DB),
+                ),
             ],
           ),
         ),
@@ -329,36 +560,196 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
 
   bool _hasSocials() {
     final social = _data['socialLinks'] ?? {};
-    return _val('facebook').isNotEmpty || _val('twitter').isNotEmpty || _val('linkedin').isNotEmpty ||
-           social['facebook'] != null || social['linkedin'] != null;
+    return _val('facebook').isNotEmpty ||
+        _val('twitter').isNotEmpty ||
+        _val('linkedin').isNotEmpty ||
+        social['facebook'] != null ||
+        social['linkedin'] != null;
   }
 
   Widget _socialLinksRow() {
     final social = _data['socialLinks'] ?? {};
     final links = [
-      if (_val('facebook').isNotEmpty || social['facebook'] != null) {'icon': Icons.facebook, 'url': _val('facebook').isEmpty ? social['facebook'] : _val('facebook'), 'color': const Color(0xFF1877F2)},
-      if (_val('linkedin').isNotEmpty || social['linkedin'] != null) {'icon': Icons.business_center_rounded, 'url': _val('linkedin').isEmpty ? social['linkedin'] : _val('linkedin'), 'color': const Color(0xFF0A66C2)},
+      if (_val('facebook').isNotEmpty || social['facebook'] != null)
+        {
+          'icon': Icons.facebook,
+          'url': _val('facebook').isEmpty
+              ? social['facebook']
+              : _val('facebook'),
+          'color': const Color(0xFF1877F2),
+        },
+      if (_val('linkedin').isNotEmpty || social['linkedin'] != null)
+        {
+          'icon': Icons.business_center_rounded,
+          'url': _val('linkedin').isEmpty
+              ? social['linkedin']
+              : _val('linkedin'),
+          'color': const Color(0xFF0A66C2),
+        },
     ];
 
     return Row(
-      children: links.map((l) => Padding(
-        padding: const EdgeInsets.only(right: 12),
-        child: GestureDetector(
-          onTap: () => _launch(l['url'] as String),
-          child: Container(
-            width: 44, height: 44,
-            decoration: BoxDecoration(color: (l['color'] as Color).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-            child: Icon(l['icon'] as IconData, color: l['color'] as Color, size: 22),
-          ),
-        ),
-      )).toList(),
+      children: links
+          .map(
+            (l) => Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: GestureDetector(
+                onTap: () => _launch(l['url'] as String),
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: (l['color'] as Color).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    l['icon'] as IconData,
+                    color: l['color'] as Color,
+                    size: 22,
+                  ),
+                ),
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 
+  Widget _labelAlignCenter(String text) => Text(
+    text,
+    style: _getStyle(
+      fontSize: 13,
+      fontWeight: FontWeight.w700,
+      color: const Color(0xFF1E63FF),
+      letterSpacing: 0.5,
+    ),
+  );
+
   Widget _labelAlignLeft(String text) => Align(
-        alignment: Alignment.centerLeft,
-        child: Text(text, style: _getStyle(fontSize: 13, fontWeight: FontWeight.w700, color: const Color(0xFF6B7280), letterSpacing: 0.3)),
-      );
+    alignment: Alignment.centerLeft,
+    child: Text(
+      text,
+      style: _getStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w700,
+        color: const Color(0xFF1E63FF),
+        letterSpacing: 0.5,
+      ),
+    ),
+  );
+
+  bool _hasPersonalInfo() {
+    return _val('birthDate').isNotEmpty ||
+        _val('gender').isNotEmpty ||
+        _val('maritalStatus').isNotEmpty ||
+        _val('bloodGroup').isNotEmpty;
+  }
+
+  bool _hasProfessionalInfo() {
+    return _val('companyName').isNotEmpty || _val('workAddress').isNotEmpty;
+  }
+
+  bool _hasLocationInfo() {
+    return _val('currentAddress').isNotEmpty || _val('country').isNotEmpty;
+  }
+
+  Widget _buildPersonalInfoChip() {
+    final items = [
+      if (_val('birthDate').isNotEmpty)
+        {
+          'label': 'Birthday',
+          'value': _formatDateShort(_val('birthDate')),
+          'icon': Icons.cake_rounded,
+        },
+      if (_val('gender').isNotEmpty)
+        {
+          'label': 'Gender',
+          'value': _val('gender'),
+          'icon': Icons.person_rounded,
+        },
+      if (_val('maritalStatus').isNotEmpty)
+        {
+          'label': 'Marital Status',
+          'value': _val('maritalStatus'),
+          'icon': Icons.favorite_rounded,
+        },
+      if (_val('bloodGroup').isNotEmpty)
+        {
+          'label': 'Blood Group',
+          'value': _val('bloodGroup'),
+          'icon': Icons.bloodtype_rounded,
+        },
+    ];
+
+    if (items.isEmpty) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Column(
+        children: [
+          for (var i = 0; i < items.length; i += 2)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Row(
+                children: [
+                  Expanded(child: _buildInfoItem(items[i])),
+                  if (i + 1 < items.length) ...[
+                    const SizedBox(width: 6),
+                    Expanded(child: _buildInfoItem(items[i + 1])),
+                  ] else
+                    const Expanded(child: SizedBox.shrink()),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoItem(Map<String, dynamic> item) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            item['icon'] as IconData,
+            size: 16,
+            color: const Color(0xFF1E63FF),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item['label'] as String,
+                  style: _getStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF6B7280),
+                  ),
+                ),
+                Text(
+                  item['value'] as String,
+                  style: _getStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF111827),
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _DetailItem {

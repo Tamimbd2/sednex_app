@@ -595,7 +595,7 @@ class DashboardView extends GetView<DashboardController> {
           },
         );
         break;
-      case 'Local Tours':
+      case 'Sednex Travel':
         Get.to(
           () => const LocalTourDetailsView(),
           arguments: {
@@ -621,7 +621,7 @@ class DashboardView extends GetView<DashboardController> {
           },
         );
         break;
-      case 'Essential Services':
+      case 'Services':
         // Navigate to full view for specific service
         Get.toNamed(Routes.ESSENTIAL_SERVICE);
         break;
@@ -651,10 +651,10 @@ class DashboardView extends GetView<DashboardController> {
       case 'Embassies':
         Get.toNamed(Routes.EMBASSY);
         break;
-      case 'Local Tours':
+      case 'Sednex Travel':
         Get.toNamed(Routes.LOCALTOUR);
         break;
-      case 'Essential Services':
+      case 'Services':
         Get.toNamed(Routes.ESSENTIAL_SERVICE);
         break;
     }

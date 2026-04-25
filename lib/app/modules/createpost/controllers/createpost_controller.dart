@@ -13,6 +13,99 @@ class CreatepostController extends GetxController {
   final selectedCategory = 'general'.obs;
   final isLoading = false.obs;
   
+  @override
+  void onReady() {
+    super.onReady();
+    _showCategorySelectionDialog();
+  }
+
+  void _showCategorySelectionDialog() {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        backgroundColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Select Category',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Please choose a category that best fits your post',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 24),
+              Flexible(
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  itemCount: categories.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 2.2,
+                  ),
+                  itemBuilder: (context, index) {
+                    final category = categories[index];
+                    return Obx(() {
+                      final isSelected = selectedCategory.value == category;
+                      return GestureDetector(
+                        onTap: () {
+                          selectCategory(category);
+                          Get.back(); // Close dialog after selection
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? const Color(0xFF1E63FF)
+                                : const Color(0xFFF9FAFB),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: isSelected
+                                  ? const Color(0xFF1E63FF)
+                                  : Colors.grey.shade200,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              category.capitalizeFirst!,
+                              style: GoogleFonts.poppins(
+                                color: isSelected ? Colors.white : Colors.black87,
+                                fontSize: 14,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
   final categories = [
     'general',
     'Jobs',

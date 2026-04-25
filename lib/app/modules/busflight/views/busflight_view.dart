@@ -35,63 +35,6 @@ class BusflightView extends GetView<BusflightController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16),
-            
-            // Bus and Flight Booking Card
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppColors.primary, AppColors.blue2],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.flight_takeoff,
-                      color: Colors.white,
-                      size: 32,
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Bus and Flight Booking',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Daily for Lebanon',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white.withValues(alpha: 0.9),
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
 
             // Biman Section
             Padding(
@@ -422,9 +365,9 @@ class BusflightView extends GetView<BusflightController> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'We provide reliable and affordable bus and flight booking services exclusively for Lebanon. Our experienced team ensures safe travel with major airlines and partnerships with reputed airlines. Book your journey with confidence and enjoy comfortable transportation across Lebanon and international flights to Bangladesh.',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
+                    'আমরা নির্ভরযোগ্য ও সাশ্রয়ী বাস ও ফ্লাইট বুকিং সেবা প্রদান করি। আমাদের অভিজ্ঞ টিম আপনার নিরাপদ যাত্রা নিশ্চিত করতে সবসময় প্রস্তুত।',
+                    style: GoogleFonts.hindSiliguri(
+                      fontSize: 15,
                       color: Colors.grey[700],
                       height: 1.6,
                     ),

@@ -16,7 +16,7 @@ class CommunityFeedController extends GetxController {
     "Jobs",
     "Buy & Sell",
     "Questions",
-    "Rental",
+    "Rentals",
     "Help",
   ];
   final selectedFilter = "General".obs;
@@ -106,7 +106,7 @@ class CommunityFeedController extends GetxController {
         if (category == "rental") category = "rentals";
         if (category == "jobs") category = "job";
         if (category == "questions") category = "question";
-        
+
         url = 'api/post/category/$category';
       }
 
@@ -147,6 +147,7 @@ class CommunityFeedController extends GetxController {
 
             return {
               '_id': post['_id'] ?? '',
+              'author': author,
               'authorId': author['_id'] ?? '',
               'name': author['name'] ?? 'Unknown',
               'time': _timeAgo(createdAt),
@@ -331,7 +332,12 @@ class CommunityFeedController extends GetxController {
 
   String _mapCategory(String apiCategory) {
     if (apiCategory.isEmpty) return 'General';
-    return apiCategory.capitalizeFirst ?? 'General';
+    String category = apiCategory.toLowerCase();
+    if (category == 'rental' || category == 'rentals') return 'Rentals';
+    if (category == 'job' || category == 'jobs') return 'Jobs';
+    if (category == 'question' || category == 'questions') return 'Questions';
+    if (category == 'sell') return 'Buy & Sell';
+    return category.capitalizeFirst ?? 'General';
   }
 
   String _timeAgo(String dateString) {
@@ -516,6 +522,8 @@ class CommunityFeedController extends GetxController {
   Future<void> markAsCompleted(int index) async {
     final post = posts[index];
     final postId = post['_id'];
+    final bool currentStatus = post['isCompleted'] ?? false;
+    final bool newStatus = !currentStatus;
 
     try {
       Get.dialog(
@@ -525,17 +533,20 @@ class CommunityFeedController extends GetxController {
         barrierDismissible: false,
       );
 
-      final response =
-          await apiService.patchData('api/post/$postId/completion', {
-        'isCompleted': true,
-      });
+      final response = await apiService.patchData(
+        'api/post/$postId/completion',
+        {'isCompleted': newStatus},
+      );
 
       if (Get.isDialogOpen ?? false) Get.back();
 
       if (response.statusCode == 200) {
-        post['isCompleted'] = true;
+        post['isCompleted'] = newStatus;
         posts[index] = Map<String, dynamic>.from(post);
-        Get.snackbar('Success', 'Post marked as completed');
+        Get.snackbar(
+          'Success',
+          newStatus ? 'Post closed successfully' : 'Post opened successfully',
+        );
       } else {
         Get.snackbar('Error', 'Failed to update post status');
       }

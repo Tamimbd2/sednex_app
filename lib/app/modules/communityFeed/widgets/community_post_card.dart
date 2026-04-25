@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../community/views/communityprofiledetails.dart';
 import '../../../core/theme/app_colors.dart';
 
 class CommunityPostCard extends StatelessWidget {
@@ -44,47 +45,68 @@ class CommunityPostCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundImage: CachedNetworkImageProvider(
-                  post['avatar'] ?? '',
-                ),
-              ),
-              const SizedBox(width: 12),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      post['name'] ?? 'User',
-                      style: GoogleFonts.poppins(
-                        color: const Color(0xFF101727),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        Text(
-                          post['time'] ?? '',
-                          style: GoogleFonts.poppins(
-                            color: const Color(0xFF697282),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                          ),
+                child: GestureDetector(
+                  onTap: () {
+                    final authorData =
+                        post['author'] ??
+                        {
+                          '_id': post['authorId'],
+                          'name': post['name'],
+                          'profileImage': post['avatar'],
+                        };
+                    Get.to(
+                      () => CommunityProfileDetailsView(member: authorData),
+                    );
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundImage: CachedNetworkImageProvider(
+                          post['avatar'] ?? '',
                         ),
-                        if (post['category'] != null) ...[
-                          const SizedBox(width: 8),
-                          _buildCategoryTag(post['category']),
-                        ],
-                        if (post['isCompleted'] == true) ...[
-                          const SizedBox(width: 8),
-                          _buildCompletedBadge(),
-                        ],
-                      ],
-                    ),
-                  ],
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              post['name'] ?? 'User',
+                              style: GoogleFonts.poppins(
+                                color: const Color(0xFF101727),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                Text(
+                                  post['time'] ?? '',
+                                  style: GoogleFonts.poppins(
+                                    color: const Color(0xFF697282),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                if (post['category'] != null) ...[
+                                  const SizedBox(width: 8),
+                                  _buildCategoryTag(post['category']),
+                                ],
+                                if (post['isCompleted'] == true) ...[
+                                  const SizedBox(width: 8),
+                                  _buildCompletedBadge(),
+                                ],
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               _buildMoreOptionsButton(context),
@@ -286,8 +308,12 @@ class CommunityPostCard extends StatelessWidget {
       case 'Jobs':
         bgColor = Colors.blue;
         break;
+      case 'Rental':
       case 'Rentals':
         bgColor = Colors.teal;
+        break;
+      case 'Help':
+        bgColor = const Color(0xFFF43F5E);
         break;
       default:
         bgColor = Colors.grey;
@@ -341,8 +367,12 @@ class CommunityPostCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     _buildOptionItem(
-                      icon: Icons.check_circle_outline,
-                      label: 'Completed',
+                      icon: (post['isCompleted'] ?? false)
+                          ? Icons.lock_open_outlined
+                          : Icons.check_circle_outline,
+                      label: (post['isCompleted'] ?? false)
+                          ? 'Open post'
+                          : _getCategoryActionLabel(),
                       color: const Color(0xFF00C853),
                       onTap: () {
                         Get.back();
@@ -363,9 +393,9 @@ class CommunityPostCard extends StatelessWidget {
                     _buildOptionItem(
                       label:
                           controller.runtimeType.toString() ==
-                                  'SavepostController'
-                              ? 'Unsave post'
-                              : 'Save post',
+                              'SavepostController'
+                          ? 'Unsave post'
+                          : 'Save post',
                       iconSrc: 'assets/post/saves.svg',
                       onTap: () {
                         Get.back();
@@ -1014,6 +1044,48 @@ class CommunityPostCard extends StatelessWidget {
     );
   }
 
+  String _getCategoryStatusLabel() {
+    String category = post['category'] ?? 'General';
+    switch (category) {
+      case 'Jobs':
+        return 'Filled';
+      case 'Sell':
+      case 'Buy & sell':
+        return 'Sold';
+      case 'Question':
+      case 'Questions':
+        return 'Answered';
+      case 'Rental':
+      case 'Rentals':
+        return 'Rented';
+      case 'Help':
+        return 'Resolved';
+      default:
+        return 'Closed';
+    }
+  }
+
+  String _getCategoryActionLabel() {
+    String category = post['category'] ?? 'General';
+    switch (category) {
+      case 'Jobs':
+        return 'Mark as Filled';
+      case 'Sell':
+      case 'Buy & sell':
+        return 'Mark as Sold';
+      case 'Question':
+      case 'Questions':
+        return 'Mark as Answered';
+      case 'Rental':
+      case 'Rentals':
+        return 'Mark as Rented';
+      case 'Help':
+        return 'Mark as Resolved';
+      default:
+        return 'Close post';
+    }
+  }
+
   Widget _buildCompletedBadge() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -1028,7 +1100,7 @@ class CommunityPostCard extends StatelessWidget {
           const Icon(Icons.check_circle, size: 10, color: Color(0xFF166534)),
           const SizedBox(width: 4),
           Text(
-            'Completed',
+            _getCategoryStatusLabel(),
             style: GoogleFonts.poppins(
               color: const Color(0xFF166534),
               fontSize: 10,

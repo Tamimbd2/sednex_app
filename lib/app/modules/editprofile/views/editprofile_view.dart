@@ -112,8 +112,6 @@ class EditprofileView extends GetView<EditprofileController> {
               ),
               const SizedBox(height: 32),
 
-              // Identity Section
-              _buildSectionTitle('Identity'),
               const SizedBox(height: 16),
               _buildLabel('Full Name'),
               const SizedBox(height: 8),
@@ -132,9 +130,6 @@ class EditprofileView extends GetView<EditprofileController> {
                 maxLines: 3,
               ),
 
-              const SizedBox(height: 24),
-              // Contact Information
-              _buildSectionTitle('Contact Information'),
               const SizedBox(height: 16),
               _buildLabel('Phone Number'),
               const SizedBox(height: 8),
@@ -143,45 +138,6 @@ class EditprofileView extends GetView<EditprofileController> {
                 hint: '+1 234 567 8900',
                 icon: Icons.phone_outlined,
                 keyboardType: TextInputType.phone,
-              ),
-
-              const SizedBox(height: 16),
-              _buildLabel('Country/Location'),
-              const SizedBox(height: 8),
-              _buildTextField(
-                controller: controller.locationController,
-                hint: 'City, Country',
-                icon: Icons.location_on_outlined,
-              ),
-
-              const SizedBox(height: 16),
-              _buildLabel('Website Link'),
-              const SizedBox(height: 8),
-              _buildTextField(
-                controller: controller.websiteLinkController,
-                hint: 'https://example.com',
-                icon: Icons.link,
-              ),
-
-              const SizedBox(height: 24),
-              // Personal Information
-              _buildSectionTitle('Personal Information'),
-              const SizedBox(height: 16),
-              _buildLabel('Birth Address'),
-              const SizedBox(height: 8),
-              _buildTextField(
-                controller: controller.birthAddressController,
-                hint: 'Village, District',
-                icon: Icons.home_outlined,
-              ),
-
-              const SizedBox(height: 16),
-              _buildLabel('Current Address'),
-              const SizedBox(height: 8),
-              _buildTextField(
-                controller: controller.currentAddressController,
-                hint: 'Street, House No',
-                icon: Icons.map_outlined,
               ),
 
               const SizedBox(height: 16),
@@ -209,7 +165,7 @@ class EditprofileView extends GetView<EditprofileController> {
                         _buildLabel('Gender'),
                         const SizedBox(height: 8),
                         _buildDropdown(
-                          controller: controller.genderController,
+                          value: controller.selectedGender,
                           hint: 'Select Gender',
                           icon: Icons.people_outline,
                           items: ['Male', 'Female', 'Other'],
@@ -229,7 +185,7 @@ class EditprofileView extends GetView<EditprofileController> {
                         _buildLabel('Marital Status'),
                         const SizedBox(height: 8),
                         _buildDropdown(
-                          controller: controller.maritalStatusController,
+                          value: controller.selectedMaritalStatus,
                           hint: 'Select Status',
                           items: ['Single', 'Married', 'Divorced', 'Widowed'],
                         ),
@@ -243,7 +199,7 @@ class EditprofileView extends GetView<EditprofileController> {
                         _buildLabel('Blood Group'),
                         const SizedBox(height: 8),
                         _buildDropdown(
-                          controller: controller.bloodGroupController,
+                          value: controller.selectedBloodGroup,
                           hint: 'Select Group',
                           items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
                         ),
@@ -253,17 +209,6 @@ class EditprofileView extends GetView<EditprofileController> {
                 ],
               ),
 
-              const SizedBox(height: 16),
-              _buildLabel('Nationality'),
-              const SizedBox(height: 8),
-              _buildTextField(
-                controller: controller.nationalityController,
-                hint: 'Bangladeshi',
-              ),
-
-              const SizedBox(height: 24),
-              // Professional Information
-              _buildSectionTitle('Professional Information'),
               const SizedBox(height: 16),
               _buildLabel('Job Title'),
               const SizedBox(height: 8),
@@ -289,6 +234,33 @@ class EditprofileView extends GetView<EditprofileController> {
                 controller: controller.workAddressController,
                 hint: 'Office Location',
                 icon: Icons.store_outlined,
+              ),
+
+              const SizedBox(height: 16),
+              _buildLabel('Website Link'),
+              const SizedBox(height: 8),
+              _buildTextField(
+                controller: controller.websiteLinkController,
+                hint: 'https://example.com',
+                icon: Icons.link,
+              ),
+
+              const SizedBox(height: 16),
+              _buildLabel('Current Address'),
+              const SizedBox(height: 8),
+              _buildTextField(
+                controller: controller.currentAddressController,
+                hint: 'Street, House No',
+                icon: Icons.map_outlined,
+              ),
+
+              const SizedBox(height: 16),
+              _buildLabel('Country/Location'),
+              const SizedBox(height: 8),
+              _buildTextField(
+                controller: controller.locationController,
+                hint: 'City, Country',
+                icon: Icons.location_on_outlined,
               ),
 
               const SizedBox(height: 40),
@@ -365,12 +337,12 @@ class EditprofileView extends GetView<EditprofileController> {
   }
 
   Widget _buildDropdown({
-    required TextEditingController controller,
+    required RxString value,
     required String hint,
     required List<String> items,
     IconData? icon,
   }) {
-    return Container(
+    return Obx(() => Container(
       decoration: BoxDecoration(
         color: const Color(0xFFF3F8FF),
         borderRadius: BorderRadius.circular(16),
@@ -379,7 +351,7 @@ class EditprofileView extends GetView<EditprofileController> {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          value: items.contains(controller.text) ? controller.text : null,
+          value: items.contains(value.value) ? value.value : null,
           hint: Text(hint, style: GoogleFonts.poppins(color: const Color(0xFF9CA3AF), fontSize: 16)),
           icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF9CA3AF)),
           isExpanded: true,
@@ -399,12 +371,12 @@ class EditprofileView extends GetView<EditprofileController> {
           }).toList(),
           onChanged: (String? newValue) {
             if (newValue != null) {
-              controller.text = newValue;
+              value.value = newValue;
             }
           },
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildTextField({

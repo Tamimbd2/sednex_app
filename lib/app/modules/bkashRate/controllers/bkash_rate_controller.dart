@@ -66,7 +66,7 @@ class BkashRateController extends GetxController {
   void toggleCurrency(bool isTaka) {
     isTakaSelected.value = isTaka;
     inputController.clear();
-    displayResult.value = '0';
+    displayResult.value = '৳0';
   }
 
   // Set predefined amount
@@ -83,21 +83,21 @@ class BkashRateController extends GetxController {
   void _calculateResult() {
     String text = inputController.text;
     if (text.isEmpty) {
-      displayResult.value = '0';
+      displayResult.value = '৳0';
       return;
     }
 
     double inputAmount = double.tryParse(text) ?? 0;
-    
-    // User request: Same formula for USD/BDT - Pro-rated addition per thousand
-    // Formula: inputAmount + (rate * (inputAmount / 1000))
-    double multiplier = inputAmount / 1000.0;
-    double result = inputAmount + (exchangeRate.value * multiplier);
-    
+    double result;
+
     if (isTakaSelected.value) {
-      displayResult.value = '৳${result.toStringAsFixed(2)}';
+      // If BDT is selected, the input is already in BDT
+      result = inputAmount;
     } else {
-      displayResult.value = '\$${result.toStringAsFixed(2)}';
+      // If USD is selected, multiply by exchange rate to get BDT
+      result = inputAmount * exchangeRate.value;
     }
+
+    displayResult.value = '৳${result.toStringAsFixed(0)}';
   }
 }

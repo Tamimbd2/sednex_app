@@ -308,7 +308,7 @@ class DashboardController extends GetxController {
           (data) => data['items'] ?? [],
         ),
         _searchSection(
-          'Local Tours',
+          'Sednex Travel',
           'api/local-tour/',
           query,
           (data) => data['tours'] ?? [],
@@ -322,7 +322,7 @@ class DashboardController extends GetxController {
           'Restaurants',
           'Organizations',
           'Embassies',
-          'Local Tours',
+          'Sednex Travel',
         ];
         for (int i = 0; i < lists.length; i++) {
           if (lists[i].isNotEmpty) {
@@ -331,14 +331,14 @@ class DashboardController extends GetxController {
         }
       });
 
-      // Search in Essential Services (locally available)
+      // Search in Services (locally available)
       final services = servicesList.where((s) {
         final name = (s['title'] ?? s['name'] ?? s['label'] ?? '')
             .toString()
             .toLowerCase();
         return name.contains(query.toLowerCase());
       }).toList();
-      if (services.isNotEmpty) results['Essential Services'] = services;
+      if (services.isNotEmpty) results['Services'] = services;
 
       searchResults.assignAll(results);
     } catch (e) {

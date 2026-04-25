@@ -15,7 +15,7 @@ class GoldRateController extends GetxController {
 
   // TAB State
   var selectedTabIndex = 0.obs;
-  var selectedTabName = 'Vori'.obs;
+  var selectedTabName = 'ভরি'.obs;
 
   // Measurement factors (relative to 1 Vori)
   final Map<int, double> factors = {

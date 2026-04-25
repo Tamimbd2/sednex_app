@@ -186,7 +186,7 @@ class InformationsController extends GetxController {
       route: '/busflight',
     ),
     ServiceItem(
-      label: 'Local Tour',
+      label: 'Sednex Travel',
       imagePath: 'assets/newessential/Location-Pin-3--Streamline-Core-Gradient.svg',
       backgroundColor: const Color(0xFF00BCD4),
       route: '/localtour',

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -306,19 +308,30 @@ class BusDetailsView extends StatelessWidget {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+                    backgroundColor: const Color(0xFF25D366),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     elevation: 0,
                   ),
-                  child: Text(
-                    'Book This Bus Now',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/WhatsApp.svg',
+                        width: 24,
+                        height: 24,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        contact.isNotEmpty ? contact : 'Book This Bus Now',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

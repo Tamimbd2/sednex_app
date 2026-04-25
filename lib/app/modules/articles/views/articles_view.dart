@@ -343,10 +343,9 @@ class ArticlesView extends GetView<ArticlesController> {
                                       height: 24,
                                       decoration: BoxDecoration(
                                         color: isSelected
-                                            ? const Color(0xFFFF8A80)
-                                            : const Color(
-                                                0xFFFFCDD2,
-                                              ), // Light red shades
+                                            ? const Color(0xFF1E63FF)
+                                            : const Color(0xFF1E63FF)
+                                                .withOpacity(0.1),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: isSelected

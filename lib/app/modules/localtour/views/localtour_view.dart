@@ -15,7 +15,7 @@ class LocaltourView extends GetView<LocaltourController> {
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: Text(
-          'Local Tour',
+          'Sednex Travel',
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 20,
@@ -201,6 +201,30 @@ class LocaltourView extends GetView<LocaltourController> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 12),
+                          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                          const SizedBox(height: 12),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                'See Details',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFF1E63FF),
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 14,
+                                color: Color(0xFF1E63FF),
                               ),
                             ],
                           ),

@@ -19,10 +19,10 @@ class EditprofileController extends GetxController {
   final birthAddressController = TextEditingController();
   final currentAddressController = TextEditingController();
   final birthDateController = TextEditingController();
-  final genderController = TextEditingController();
-  final maritalStatusController = TextEditingController();
-  final nationalityController = TextEditingController();
-  final bloodGroupController = TextEditingController();
+  // Reactive dropdown fields
+  var selectedGender = ''.obs;
+  var selectedMaritalStatus = ''.obs;
+  var selectedBloodGroup = ''.obs;
   final jobTitleController = TextEditingController();
   final companyNameController = TextEditingController();
   final workAddressController = TextEditingController();
@@ -52,14 +52,6 @@ class EditprofileController extends GetxController {
     birthAddressController.dispose();
     currentAddressController.dispose();
     birthDateController.dispose();
-    genderController.dispose();
-    maritalStatusController.dispose();
-    nationalityController.dispose();
-    bloodGroupController.dispose();
-    jobTitleController.dispose();
-    companyNameController.dispose();
-    workAddressController.dispose();
-    websiteLinkController.dispose();
     super.onClose();
   }
 
@@ -90,10 +82,26 @@ class EditprofileController extends GetxController {
           }
         }
 
-        genderController.text = user['gender']?.toString() ?? '';
-        maritalStatusController.text = user['maritalStatus']?.toString() ?? '';
-        nationalityController.text = user['nationality']?.toString() ?? '';
-        bloodGroupController.text = user['bloodGroup']?.toString() ?? '';
+        // Normalize and load Gender
+        String gender = user['gender']?.toString() ?? '';
+        if (gender.isNotEmpty) {
+          gender = gender[0].toUpperCase() + gender.substring(1).toLowerCase();
+          selectedGender.value = gender;
+        }
+
+        // Normalize and load Marital Status
+        String status = user['maritalStatus']?.toString() ?? '';
+        if (status.isNotEmpty) {
+          status = status[0].toUpperCase() + status.substring(1).toLowerCase();
+          selectedMaritalStatus.value = status;
+        }
+
+        // Normalize and load Blood Group (Upper Case)
+        String blood = user['bloodGroup']?.toString() ?? '';
+        if (blood.isNotEmpty) {
+          selectedBloodGroup.value = blood.toUpperCase();
+        }
+
         jobTitleController.text = user['jobTitle']?.toString() ?? '';
         companyNameController.text = user['companyName']?.toString() ?? '';
         workAddressController.text = user['workAddress']?.toString() ?? '';
@@ -152,6 +160,17 @@ class EditprofileController extends GetxController {
       final token = _box.read('token') ?? '';
       final uri = Uri.parse('${AppUrl.baseUrl}api/users/${userId.value}');
 
+      // Convert birthDate back to ISO format for the API
+      String formattedBirthDate = birthDateController.text.trim();
+      if (formattedBirthDate.isNotEmpty) {
+        try {
+          final parsedDate = DateFormat('dd MMM yyyy').parse(formattedBirthDate);
+          formattedBirthDate = DateFormat('yyyy-MM-dd').format(parsedDate);
+        } catch (_) {
+          // If parsing fails, send as is
+        }
+      }
+
       final request = http.MultipartRequest('PATCH', uri)
         ..headers['Authorization'] = 'Bearer $token'
         ..fields['name'] = nameController.text.trim()
@@ -160,11 +179,10 @@ class EditprofileController extends GetxController {
         ..fields['country'] = locationController.text.trim()
         ..fields['birthAddress'] = birthAddressController.text.trim()
         ..fields['currentAddress'] = currentAddressController.text.trim()
-        ..fields['birthDate'] = birthDateController.text.trim()
-        ..fields['gender'] = genderController.text.trim()
-        ..fields['maritalStatus'] = maritalStatusController.text.trim()
-        ..fields['nationality'] = nationalityController.text.trim()
-        ..fields['bloodGroup'] = bloodGroupController.text.trim()
+        ..fields['birthDate'] = formattedBirthDate
+        ..fields['gender'] = selectedGender.value.trim().toLowerCase()
+        ..fields['maritalStatus'] = selectedMaritalStatus.value.trim().toLowerCase()
+        ..fields['bloodGroup'] = selectedBloodGroup.value.trim()
         ..fields['jobTitle'] = jobTitleController.text.trim()
         ..fields['companyName'] = companyNameController.text.trim()
         ..fields['workAddress'] = workAddressController.text.trim()

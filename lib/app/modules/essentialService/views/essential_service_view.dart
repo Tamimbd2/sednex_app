@@ -208,7 +208,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               () => Get.toNamed('/busflight'),
             ),
             _buildServiceCard(
-              'Local Tour',
+              'Sednex Travel',
               'assets/newessential/Location-Pin-3--Streamline-Core-Gradient.svg',
               const Color(0xFF00BCD4),
               () => Get.toNamed('/localtour'),

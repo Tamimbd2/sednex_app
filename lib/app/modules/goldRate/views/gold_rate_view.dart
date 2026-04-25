@@ -21,7 +21,7 @@ class GoldRateView extends GetView<GoldRateController> {
           ),
         ),
         title: Text(
-          'Gold Rate',
+          'সোনার দাম',
           style: _getStyle(
             fontWeight: FontWeight.w700,
             fontSize: 22,
@@ -97,7 +97,7 @@ class GoldRateView extends GetView<GoldRateController> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              'Last Update: ${controller.lastUpdate.value}',
+                              'সর্বশেষ আপডেট: ${controller.lastUpdate.value}',
                               style: _getStyle(
                                 fontSize: 13,
                                 color: const Color(0xFF616161),
@@ -156,7 +156,7 @@ class GoldRateView extends GetView<GoldRateController> {
                             ),
                             const SizedBox(width: 12),
                             Text(
-                              'Current Market Rate',
+                              'বর্তমান বাজার দর',
                               style: _getStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -174,7 +174,7 @@ class GoldRateView extends GetView<GoldRateController> {
                               Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: Text(
-                                  'No data found',
+                                  'কোন তথ্য পাওয়া যায়নি',
                                   style: _getStyle(
                                     color: Colors.grey,
                                   ),
@@ -184,13 +184,13 @@ class GoldRateView extends GetView<GoldRateController> {
                               final int idx = entry.key;
                               final Map<String, dynamic> rate = entry.value;
                               final String caratLabel = rate['carat'] == '1'
-                                  ? 'Traditional'
-                                  : '${rate['carat']} Carat';
+                                  ? 'সনাতন'
+                                  : '${rate['carat']} ক্যারেট';
 
                               return Column(
                                 children: [
                                   _buildPremiumRateRow(
-                                    '1 ${controller.selectedTabName.value} $caratLabel',
+                                    '১ ${controller.selectedTabName.value} $caratLabel',
                                     rate['price'],
                                     isHighlight: idx == 0,
                                   ),
@@ -209,7 +209,7 @@ class GoldRateView extends GetView<GoldRateController> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Weight Conversion & Calculation',
+                    'ওজন রূপান্তর ও গণনা',
                     style: _getStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -233,10 +233,10 @@ class GoldRateView extends GetView<GoldRateController> {
                   ),
                   child: Row(
                     children: [
-                      _buildModernTab('Vori', 0),
-                      _buildModernTab('Ana', 1),
-                      _buildModernTab('Rati', 2),
-                      _buildModernTab('Gram', 3),
+                      _buildModernTab('ভরি', 0),
+                      _buildModernTab('আনা', 1),
+                      _buildModernTab('রতি', 2),
+                      _buildModernTab('গ্রাম', 3),
                     ],
                   ),
                 ),
@@ -266,7 +266,7 @@ class GoldRateView extends GetView<GoldRateController> {
                         children: [
                           Obx(
                             () => Text(
-                              '${controller.selectedTabName.value} Conversion Chart',
+                              '${controller.selectedTabName.value} রূপান্তর চার্ট',
                               style: _getStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -283,7 +283,7 @@ class GoldRateView extends GetView<GoldRateController> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Measurement units are given below',
+                        'পরিমাপের একক নিচে দেওয়া হলো',
                         style: _getStyle(
                           fontSize: 12,
                           color: const Color(0xFF90A4AE),
@@ -294,27 +294,27 @@ class GoldRateView extends GetView<GoldRateController> {
                         if (controller.selectedTabIndex.value == 0) {
                           return Column(
                             children: [
-                              _buildModernConversionItem('1 Vori', '16 Ana'),
-                              _buildModernConversionItem('1 Vori', '96 Rati'),
+                              _buildModernConversionItem('১ ভরি', '১৬ আনা'),
+                              _buildModernConversionItem('১ ভরি', '৯৬ রতি'),
                               _buildModernConversionItem(
-                                '1 Vori',
-                                '11.664 Gram',
+                                '১ ভরি',
+                                '১১.৬৬৪ গ্রাম',
                               ),
                             ],
                           );
                         } else if (controller.selectedTabIndex.value == 1) {
                           return Column(
                             children: [
-                              _buildModernConversionItem('1 Ana', '6 Rati'),
-                              _buildModernConversionItem('1 Ana', '0.729 Gram'),
+                              _buildModernConversionItem('১ আনা', '৬ রতি'),
+                              _buildModernConversionItem('১ আনা', '০.৭২৯ গ্রাম'),
                             ],
                           );
                         } else if (controller.selectedTabIndex.value == 2) {
                           return Column(
                             children: [
                               _buildModernConversionItem(
-                                '1 Rati',
-                                '0.1215 Gram',
+                                '১ রতি',
+                                '০.১২১৫ গ্রাম',
                               ),
                             ],
                           );
@@ -322,8 +322,8 @@ class GoldRateView extends GetView<GoldRateController> {
                           return Column(
                             children: [
                               _buildModernConversionItem(
-                                '1 Gram',
-                                '0.0857 Vori',
+                                '১ গ্রাম',
+                                '০.০৮৫৭ ভরি',
                               ),
                             ],
                           );

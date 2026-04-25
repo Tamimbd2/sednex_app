@@ -22,7 +22,7 @@ class BkashRateView extends GetView<BkashRateController> {
           ),
         ),
         title: Text(
-          'Rate Calculator',
+          'রেট ক্যালকুলেটর',
           style: _getStyle(
             fontWeight: FontWeight.w700,
             fontSize: 22,
@@ -72,36 +72,19 @@ class BkashRateView extends GetView<BkashRateController> {
                       ),
                       const SizedBox(width: 8),
                       Obx(() {
-                        String dateStr = 'Pending';
+                        String dateStr = 'অপেক্ষমান';
                         if (controller.updateDate.value.isNotEmpty) {
                           try {
                             DateTime dt = DateTime.parse(
                               controller.updateDate.value,
                             );
-                            final months = [
-                              'January',
-                              'February',
-                              'March',
-                              'April',
-                              'May',
-                              'June',
-                              'July',
-                              'August',
-                              'September',
-                              'October',
-                              'November',
-                              'December',
-                            ];
-                            String d = dt.day.toString();
-                            String m = months[dt.month - 1];
-                            String y = dt.year.toString();
-                            dateStr = '$d $m $y';
+                            dateStr = "${dt.day}/${dt.month}/${dt.year}";
                           } catch (e) {
                             dateStr = 'N/A';
                           }
                         }
                         return Text(
-                          'Last Update: $dateStr',
+                          'সর্বশেষ আপডেট: $dateStr',
                           style: _getStyle(
                             fontSize: 13,
                             color: const Color(0xFF1E63FF),
@@ -156,7 +139,7 @@ class BkashRateView extends GetView<BkashRateController> {
                         ),
                         const SizedBox(width: 14),
                         Text(
-                          'Today\'s Bkash Rate',
+                          'আজকের বিকাশ রেট',
                           style: _getStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -244,13 +227,13 @@ class BkashRateView extends GetView<BkashRateController> {
                           Row(
                             children: [
                               _buildAnimatedTab(
-                                '৳ BDT (Taka)',
+                                '৳ বিডিটি (টাকা)',
                                 controller.isTakaSelected,
                                 true,
                                 () => controller.toggleCurrency(true),
                               ),
                               _buildAnimatedTab(
-                                '\$ USD (Dollar)',
+                                '\$ ইউএসডি (ডলার)',
                                 controller.isTakaSelected,
                                 false,
                                 () => controller.toggleCurrency(false),
@@ -262,7 +245,7 @@ class BkashRateView extends GetView<BkashRateController> {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      'Amount to Send',
+                      'পাঠানোর পরিমাণ',
                       style: _getStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -284,7 +267,7 @@ class BkashRateView extends GetView<BkashRateController> {
                           color: Colors.grey.shade400,
                           size: 20,
                         ),
-                        hintText: 'Enter amount...',
+                        hintText: 'পরিমাণ লিখুন...',
                         hintStyle: _getStyle(
                           color: Colors.grey.shade400,
                           fontSize: 14,
@@ -359,7 +342,7 @@ class BkashRateView extends GetView<BkashRateController> {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      'Amount to send total',
+                      'সর্বমোট পাঠানোর পরিমাণ',
                       style: _getStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -405,7 +388,7 @@ class BkashRateView extends GetView<BkashRateController> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Estimated Amount',
+                            'আনুমানিক পরিমাণ',
                             style: _getStyle(
                               fontSize: 12,
                               color: const Color(0xFF3575FF),
@@ -443,7 +426,7 @@ class BkashRateView extends GetView<BkashRateController> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: 'Note: ',
+                              text: 'নোট: ',
                               style: _getStyle(
                                 fontWeight: FontWeight.w700,
                                 color: const Color(0xFFD48806),
@@ -452,7 +435,7 @@ class BkashRateView extends GetView<BkashRateController> {
                             ),
                             TextSpan(
                               text:
-                                  'Commission rates may vary by location. Standard commission is 20 Tk per thousand.',
+                                  'স্থান ভেদে কমিশনের হার পরিবর্তিত হতে পারে। প্রতি হাজারে স্ট্যান্ডার্ড কমিশন ২০ টাকা।',
                               style: _getStyle(
                                 color: const Color(0xFF2C2C2C),
                                 fontSize: 13,

@@ -13,7 +13,7 @@ class LocalTourDetailsView extends StatelessWidget {
     // Get the data passed from previous screen safely
     final args = Get.arguments is Map ? Map<String, dynamic>.from(Get.arguments as Map) : {};
     
-    final String title = args['title'] ?? 'Local Tour';
+    final String title = args['title'] ?? 'Sednex Travel';
     final String image = args['image'] ?? '';
     final String locationDetails = args['locationDetails'] ?? '';
     final List<String> includedWithTickets = List<String>.from(args['includedWithTickets'] ?? []);
@@ -37,7 +37,7 @@ class LocalTourDetailsView extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Local Tour',
+          'Sednex Travel',
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 18,
@@ -330,7 +330,7 @@ class LocalTourDetailsView extends StatelessWidget {
                       onPressed: () async {
                         const contactNumber = "+8801787819588";
                         final formattedPhone = contactNumber.replaceAll('+', '');
-                        final message = "Hello, I am interested in joining this local tour:\n\n*Tour Name:* $title\n*Date:* $date\n*Price:* $ticketPrice $ticketPriceTag\n\nPlease let me know the process.";
+                        final message = "Hello, I am interested in joining this travel package:\n\n*Tour Name:* $title\n*Date:* $date\n*Price:* $ticketPrice $ticketPriceTag\n\nPlease let me know the process.";
                         final encodedMessage = Uri.encodeComponent(message);
                         final uri = Uri.parse("https://wa.me/$formattedPhone?text=$encodedMessage");
 

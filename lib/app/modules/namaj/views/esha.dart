@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class EshaView extends StatelessWidget {
   const EshaView({super.key});
@@ -11,10 +11,9 @@ class EshaView extends StatelessWidget {
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
         title: Text(
-          'এশার নামাজ',
-          style: GoogleFonts.hindSiliguri(
+          'esha_prayer'.tr,
+          style: AppTextStyles.headingSmall.copyWith(
             fontWeight: FontWeight.w600,
-            fontSize: 20,
             color: Colors.white,
           ),
         ),
@@ -34,14 +33,14 @@ class EshaView extends StatelessWidget {
             // Section 1: At a Glance
             _buildSectionHeader(
               icon: Icons.info_outline_rounded,
-              title: 'এক নজরে এশার নামাজ',
+              title: 'at_a_glance'.tr,
             ),
             const SizedBox(height: 12),
             _buildInfoCard(
               items: [
-                _buildInfoRow('সময়:', 'মাগরিবের ওয়াক্ত শেষ হওয়ার পর থেকে সুবহে সাদিকের আগ পর্যন্ত।'),
-                _buildInfoRow('রাকাত:', '৪ ফরজ, ২ সুন্নাত ও ৩ বেতের (ওয়াজিব)। সাথে ৪ সুন্নাত গায়রে মুয়াক্কাদা ও ২ নফল নামাজ আছে। সর্বমোট ১৫ রাকাত।'),
-                _buildInfoRow('নিয়ত:', 'আমি কেবলামুখী হয়ে এশার (ফরজ/সুন্নাত/বেতের) নামাজ আদায় করছি।'),
+                _buildInfoRow('time_label'.tr, 'মাগরিবের ওয়াক্ত শেষ হওয়ার পর থেকে সুবহে সাদিকের আগ পর্যন্ত।'),
+                _buildInfoRow('rakat_label'.tr, '৪ ফরজ, ২ সুন্নাত ও ৩ বেতের (ওয়াজিব)। সাথে ৪ সুন্নাত গায়রে মুয়াক্কাদা ও ২ নফল নামাজ আছে। সর্বমোট ১৫ রাকাত।'),
+                _buildInfoRow('niyat_label'.tr, 'আমি কেবলামুখী হয়ে এশার (ফরজ/সুন্নাত/বেতের) নামাজ আদায় করছি।'),
             
               ],
             ),
@@ -51,7 +50,7 @@ class EshaView extends StatelessWidget {
             // Section 2: Time
             _buildSectionHeader(
               icon: Icons.access_time_filled_rounded,
-              title: 'এশার নামাজের সময়',
+              title: 'prayer_time_header'.tr,
             ),
             const SizedBox(height: 12),
             Container(
@@ -63,8 +62,7 @@ class EshaView extends StatelessWidget {
               ),
               child: Text(
                 'পশ্চিম আকাশে লালিমা দূর হওয়ার পর এশার নামাজের ওয়াক্ত শুরু হয় এবং সুবহে সাদিকের পূর্ব পর্যন্ত থাকে। এশার নামাজ রাতের প্রথম এক-তৃতীয়াংশ বা অর্ধাংশের মধ্যে আদায় করা উত্তম।',
-                style: GoogleFonts.hindSiliguri(
-                  fontSize: 14,
+                style: AppTextStyles.bodyMedium.copyWith(
                   color: Colors.black87,
                   height: 1.5,
                 ),
@@ -76,15 +74,14 @@ class EshaView extends StatelessWidget {
             // Section 3: Niyat (Arabic & Bangla)
             _buildSectionHeader(
               icon: Icons.menu_book_rounded,
-              title: 'এশা নামাজের নিয়ত',
+              title: 'prayer_niyat_header'.tr,
             ),
             
             // 4 Rakat Fard
             const SizedBox(height: 8),
             Text(
               'এশার ৪ রাকাত ফরজ নামাজের নিয়ত',
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 16,
+              style: AppTextStyles.subHeadingMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
@@ -99,8 +96,7 @@ class EshaView extends StatelessWidget {
             const SizedBox(height: 20),
             Text(
               'এশার ২ রাকাত সুন্নাত নামাজের নিয়ত',
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 16,
+              style: AppTextStyles.subHeadingMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
@@ -115,8 +111,7 @@ class EshaView extends StatelessWidget {
             const SizedBox(height: 20),
             Text(
               '৩ রাকাত বেতের নামাজের নিয়ত',
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 16,
+              style: AppTextStyles.subHeadingMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
@@ -132,7 +127,7 @@ class EshaView extends StatelessWidget {
             // Section 4: Method of Prayer
             _buildSectionHeader(
               icon: Icons.menu_book_outlined,
-              title: 'এশার নামাজের নিয়ম',
+              title: 'prayer_method_header'.tr,
             ),
             const SizedBox(height: 12),
             Container(
@@ -161,7 +156,7 @@ class EshaView extends StatelessWidget {
             // Section 5: FAQ
             _buildSectionHeader(
               icon: Icons.help_outline_rounded,
-              title: 'সচরাচর জিজ্ঞাসা',
+              title: 'faq_header'.tr,
             ),
             const SizedBox(height: 12),
             _buildFAQItem(
@@ -192,8 +187,7 @@ class EshaView extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           title,
-          style: GoogleFonts.hindSiliguri(
-            fontSize: 18,
+          style: AppTextStyles.bodyLarge.copyWith(
             fontWeight: FontWeight.w700,
             color: const Color(0xFF1E63FF),
           ),
@@ -227,9 +221,8 @@ class EshaView extends StatelessWidget {
           width: 60,
           child: Text(
             label,
-            style: GoogleFonts.hindSiliguri(
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w700,
-              fontSize: 14,
               color: Colors.black87,
             ),
           ),
@@ -238,9 +231,8 @@ class EshaView extends StatelessWidget {
         Expanded(
           child: Text(
             value,
-            style: GoogleFonts.hindSiliguri(
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w500,
-              fontSize: 14,
               color: Colors.black87,
               height: 1.4,
             ),
@@ -266,7 +258,7 @@ class EshaView extends StatelessWidget {
             child: Text(
               arabic,
               textAlign: TextAlign.right,
-              style: GoogleFonts.amiri(
+              style: AppTextStyles.arabic.copyWith(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 height: 1.6,
@@ -275,9 +267,8 @@ class EshaView extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'বাংলা উচ্চারণ:',
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 12,
+            'pronunciation_label'.tr,
+            style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
               color: Colors.grey.shade600,
             ),
@@ -285,8 +276,7 @@ class EshaView extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             pronunciation,
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 14,
+            style: AppTextStyles.bodyMedium.copyWith(
               color: Colors.black87,
               height: 1.5,
             ),
@@ -310,8 +300,7 @@ class EshaView extends StatelessWidget {
             ),
             child: Text(
               '$step',
-              style: GoogleFonts.poppins(
-                fontSize: 12,
+              style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -321,8 +310,7 @@ class EshaView extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 14,
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: Colors.black87,
                 height: 1.4,
               ),
@@ -347,8 +335,7 @@ class EshaView extends StatelessWidget {
         children: [
           Text(
             question,
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 15,
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w700,
               color: Colors.black87,
             ),
@@ -356,8 +343,7 @@ class EshaView extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             answer,
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 14,
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w400,
               color: Colors.black87,
               height: 1.5,

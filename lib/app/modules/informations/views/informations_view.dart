@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../core/theme/app_text_styles.dart';
 import '../controllers/informations_controller.dart';
 import '../../embassy/views/embassydetails.dart';
 import '../../hospitals/views/hospitaldetails.dart';
@@ -27,11 +26,9 @@ class InformationsView extends GetView<InformationsController> {
           ),
         ),
         title: Text(
-          'Information',
-          style: GoogleFonts.poppins(
+          'information'.tr,
+          style: AppTextStyles.headingMedium.copyWith(
             color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
@@ -46,16 +43,8 @@ class InformationsView extends GetView<InformationsController> {
               TextField(
                 onChanged: (val) => controller.searchQuery.value = val,
                 decoration: InputDecoration(
-                  hintText: 'Search embassy, restaurant, phar...',
-                  hintStyle: GoogleFonts.poppins(
-                    color: Colors.grey[500],
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                  ).copyWith(
-                    fontFamilyFallback: [
-                      GoogleFonts.hindSiliguri().fontFamily!,
-                    ],
-                  ),
+                  hintText: 'search_info_placeholder'.tr,
+                  hintStyle: AppTextStyles.hintText,
                   prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
                   filled: true,
                   fillColor: Colors.grey[100], // Minimalist soft grey background
@@ -73,15 +62,7 @@ class InformationsView extends GetView<InformationsController> {
                     borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
                   ),
                 ),
-                style: GoogleFonts.poppins(
-                  color: const Color(0xFF2C2C2C),
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ).copyWith(
-                  fontFamilyFallback: [
-                    GoogleFonts.hindSiliguri().fontFamily!,
-                  ],
-                ),
+                style: AppTextStyles.inputText,
                 cursorColor: const Color(0xFF1E63FF),
               ),
               const SizedBox(height: 12),
@@ -91,12 +72,8 @@ class InformationsView extends GetView<InformationsController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Information and service',
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
+                    'information_services'.tr,
+                    style: AppTextStyles.headingSmall,
                   ),
                 ],
               ),
@@ -117,14 +94,14 @@ class InformationsView extends GetView<InformationsController> {
                 itemBuilder: (context, index) {
                   final service = controller.filteredServices[index];
                   return _buildServiceCard(
-                    service.label,
+                    service.label.tr,
                     service.imagePath,
                     service.backgroundColor,
                     () {
                       if (service.route != null) {
                         Get.toNamed(service.route!, arguments: service.arguments);
                       } else {
-                        _showComingSoonDialog(context, service.label);
+                        _showComingSoonDialog(context, service.label.tr);
                       }
                     },
                   );
@@ -148,10 +125,10 @@ class InformationsView extends GetView<InformationsController> {
                   );
                 }
                 if (controller.mixedCards.isEmpty) {
-                  return const SizedBox(
+                  return SizedBox(
                     height: 100,
                     child: Center(
-                      child: Text('No data available'),
+                      child: Text('no_data_found'.tr),
                     ),
                   );
                 }
@@ -229,30 +206,14 @@ class InformationsView extends GetView<InformationsController> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Coming Soon!',
-                style: GoogleFonts.poppins(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ).copyWith(
-                  fontFamilyFallback: [
-                    GoogleFonts.hindSiliguri().fontFamily!,
-                  ],
-                ),
+                'coming_soon'.tr,
+                style: AppTextStyles.headingSmall,
               ),
               const SizedBox(height: 12),
               Text(
-                '$serviceName feature is currently under development and will be available shortly.',
+                '$serviceName ' + 'feature_under_development'.tr,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                  height: 1.5,
-                ).copyWith(
-                  fontFamilyFallback: [
-                    GoogleFonts.hindSiliguri().fontFamily!,
-                  ],
-                ),
+                style: AppTextStyles.bodyMedium,
               ),
               const SizedBox(height: 24),
               SizedBox(
@@ -267,16 +228,8 @@ class InformationsView extends GetView<InformationsController> {
                     ),
                   ),
                   child: Text(
-                    'Got it',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ).copyWith(
-                      fontFamilyFallback: [
-                        GoogleFonts.hindSiliguri().fontFamily!,
-                      ],
-                    ),
+                    'got_it'.tr,
+                    style: AppTextStyles.button,
                   ),
                 ),
               ),
@@ -340,15 +293,9 @@ class InformationsView extends GetView<InformationsController> {
                 padding: const EdgeInsets.symmetric(horizontal: 6),
                 child: Text(
                   card.name,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.label.copyWith(
                     fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF1F2937),
                     height: 1.3,
-                  ).copyWith(
-                    fontFamilyFallback: [
-                      GoogleFonts.hindSiliguri().fontFamily!,
-                    ],
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 2,
@@ -537,15 +484,10 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.poppins(
+                    style: AppTextStyles.label.copyWith(
                       fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF2C2C2C),
                       height: 1.25,
-                    ).copyWith(
-                      fontFamilyFallback: [
-                        GoogleFonts.hindSiliguri().fontFamily!,
-                      ],
+                      color: const Color(0xFF2C2C2C),
                     ),
                   ),
                 ),

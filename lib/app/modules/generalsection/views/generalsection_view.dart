@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../controllers/generalsection_controller.dart';
 import 'generalsection_details.dart';
 
@@ -27,16 +27,8 @@ class GeneralSectionView extends GetView<GeneralSectionController> {
           ),
         ),
         title: Text(
-          title,
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ).copyWith(
-            fontFamilyFallback: [
-              GoogleFonts.hindSiliguri().fontFamily!,
-            ],
-          ),
+          controller.slug.tr,
+          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
         ),
         centerTitle: true,
         bottom: PreferredSize(
@@ -58,11 +50,10 @@ class GeneralSectionView extends GetView<GeneralSectionController> {
             child: TextField(
               onChanged: (val) => controller.searchQuery.value = val,
               decoration: InputDecoration(
-                hintText: 'Search $title...',
-                hintStyle: GoogleFonts.inter(
+                hintText: '${'search'.tr} ${controller.slug.tr}...',
+                hintStyle: AppTextStyles.bodyMedium.copyWith(
                   color: Colors.grey[500],
                   fontSize: 15,
-                  fontWeight: FontWeight.w400,
                 ),
                 prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
                 filled: true,
@@ -81,7 +72,7 @@ class GeneralSectionView extends GetView<GeneralSectionController> {
                   borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5),
                 ),
               ),
-              style: GoogleFonts.inter(
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: const Color(0xFF2C2C2C),
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -95,8 +86,8 @@ class GeneralSectionView extends GetView<GeneralSectionController> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              'All $title',
-              style: GoogleFonts.inter(
+              '${'all'.tr} ${controller.slug.tr}',
+              style: AppTextStyles.headingSmall.copyWith(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color: Colors.black,
@@ -121,8 +112,8 @@ class GeneralSectionView extends GetView<GeneralSectionController> {
                         Icon(Icons.search_off_rounded, size: 60, color: Colors.grey[300]),
                         const SizedBox(height: 16),
                         Text(
-                          'No entries found',
-                          style: GoogleFonts.inter(
+                          'no_entries_found'.tr,
+                          style: AppTextStyles.bodyMedium.copyWith(
                             fontSize: 15,
                             color: Colors.grey[500],
                             fontWeight: FontWeight.w500,
@@ -210,14 +201,10 @@ class GeneralSectionView extends GetView<GeneralSectionController> {
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Text(
                 item.name,
-                style: GoogleFonts.inter(
+                style: AppTextStyles.caption.copyWith(
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
                   color: Colors.black,
-                ).copyWith(
-                  fontFamilyFallback: [
-                    GoogleFonts.hindSiliguri().fontFamily!,
-                  ],
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2,

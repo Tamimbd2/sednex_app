@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/help_controller.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class HelpView extends GetView<HelpController> {
   const HelpView({super.key});
@@ -25,8 +26,8 @@ class HelpView extends GetView<HelpController> {
           ),
         ),
         title: Text(
-          'FAQ / Help',
-          style: GoogleFonts.poppins(
+          'faq_help_title'.tr,
+          style: AppTextStyles.headingMedium.copyWith(
             fontWeight: FontWeight.w700,
             fontSize: 20,
             color: Colors.white,
@@ -46,10 +47,9 @@ class HelpView extends GetView<HelpController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Frequently Asked Questions',
-                style: GoogleFonts.poppins(
+                'frequently_asked_questions'.tr,
+                style: AppTextStyles.bodyMedium.copyWith(
                   color: const Color(0xFF495565),
-                  fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -85,10 +85,9 @@ class HelpView extends GetView<HelpController> {
                       padding: const EdgeInsets.all(32.0),
                       child: Center(
                         child: Text(
-                          'No FAQs found.',
-                          style: GoogleFonts.poppins(
+                          'no_faqs_found'.tr,
+                          style: AppTextStyles.bodyMedium.copyWith(
                             color: const Color(0xFF697282),
-                            fontSize: 16,
                           ),
                         ),
                       ),
@@ -128,9 +127,8 @@ class HelpView extends GetView<HelpController> {
                               ),
                               title: Text(
                                 faq['question'],
-                                style: GoogleFonts.hindSiliguri(
+                                style: AppTextStyles.bodyLarge.copyWith(
                                   color: const Color(0xFF101727),
-                                  fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -146,9 +144,8 @@ class HelpView extends GetView<HelpController> {
                               children: [
                                 Text(
                                   faq['answer'],
-                                  style: GoogleFonts.hindSiliguri(
+                                  style: AppTextStyles.bodyMedium.copyWith(
                                     color: const Color(0xFF697282),
-                                    fontSize: 14,
                                     height: 1.5,
                                   ),
                                 ),

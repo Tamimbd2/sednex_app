@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../controllers/community_controller.dart';
 import 'communityprofiledetails.dart';
 
@@ -20,13 +20,8 @@ class CommunityView extends GetView<CommunityController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Community',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-      
+          'community'.tr,
+          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -39,11 +34,9 @@ class CommunityView extends GetView<CommunityController> {
             child: TextField(
               onChanged: (val) => controller.searchMembers(val),
               decoration: InputDecoration(
-                hintText: 'Search members...',
-                hintStyle: GoogleFonts.inter(
+                hintText: 'search_members_hint'.tr,
+                hintStyle: AppTextStyles.bodyMedium.copyWith(
                   color: Colors.grey[500],
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
                 ),
                 prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
                 filled: true,
@@ -62,9 +55,8 @@ class CommunityView extends GetView<CommunityController> {
                   borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
                 ),
               ),
-              style: GoogleFonts.inter(
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: const Color(0xFF2C2C2C),
-                fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
               cursorColor: const Color(0xFF1E63FF),
@@ -80,11 +72,9 @@ class CommunityView extends GetView<CommunityController> {
                 const SizedBox(width: 8),
                 Obx(
                   () => Text(
-                    '${controller.filteredMembers.length} members found',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
+                    '${controller.filteredMembers.length} ${'members_found'.tr}',
+                    style: AppTextStyles.bodySmall.copyWith(
                       color: Colors.grey[600],
-                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -112,9 +102,8 @@ class CommunityView extends GetView<CommunityController> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'No members found',
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
+                        'no_members_found'.tr,
+                        style: AppTextStyles.bodyMedium.copyWith(
                           color: Colors.grey[500],
                           fontWeight: FontWeight.w500,
                         ),
@@ -140,8 +129,8 @@ class CommunityView extends GetView<CommunityController> {
   }
 
   Widget _buildMemberCard(dynamic member) {
-    final name = (member['name'] ?? 'Unknown').toString();
-    final location = (member['country'] ?? 'Unknown').toString();
+    final name = (member['name'] ?? 'unknown'.tr).toString();
+    final location = (member['country'] ?? 'unknown'.tr).toString();
     final image = (member['profileImage'] ?? '').toString();
 
     return Container(
@@ -163,8 +152,7 @@ class CommunityView extends GetView<CommunityController> {
                 child: image.isEmpty
                     ? Text(
                         name.isNotEmpty ? name[0].toUpperCase() : '?',
-                        style: GoogleFonts.inter(
-                          fontSize: 20,
+                        style: AppTextStyles.headingSmall.copyWith(
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
@@ -179,8 +167,7 @@ class CommunityView extends GetView<CommunityController> {
                   children: [
                     Text(
                       name,
-                      style: GoogleFonts.inter(
-                        fontSize: 15,
+                      style: AppTextStyles.bodyMedium.copyWith(
                         fontWeight: FontWeight.w500,
                         color: Colors.black87,
                       ),
@@ -188,8 +175,7 @@ class CommunityView extends GetView<CommunityController> {
                     const SizedBox(height: 2),
                     Text(
                       location,
-                      style: GoogleFonts.inter(
-                        fontSize: 13,
+                      style: AppTextStyles.bodySmall.copyWith(
                         fontWeight: FontWeight.w400,
                         color: Colors.grey[600],
                       ),

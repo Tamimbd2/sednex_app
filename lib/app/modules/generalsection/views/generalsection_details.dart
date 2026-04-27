@@ -2,41 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sednexapp/app/core/constants/url.dart';
 import 'package:get_storage/get_storage.dart';
 import '../controllers/generalsection_controller.dart';
 import '../../../core/theme/app_colors.dart';
-
-// ── Font Helper ──────────────────────────────────────────────────
-TextStyle _getStyle({
-  required double fontSize,
-  required FontWeight fontWeight,
-  required Color color,
-  String? text,
-  double? height,
-  double? letterSpacing,
-}) {
-  final bool hasBangla =
-      text != null && RegExp(r'[\u0980-\u09FF]').hasMatch(text);
-  if (hasBangla) {
-    return GoogleFonts.hindSiliguri(
-      fontSize: fontSize,
-      fontWeight: fontWeight,
-      color: color,
-      height: height ?? 1.4,
-      letterSpacing: letterSpacing,
-    );
-  }
-  return GoogleFonts.poppins(
-    fontSize: fontSize,
-    fontWeight: fontWeight,
-    color: color,
-    height: height,
-    letterSpacing: letterSpacing,
-  );
-}
+import '../../../core/theme/app_text_styles.dart';
 
 class GeneralSectionDetailsView extends StatefulWidget {
   const GeneralSectionDetailsView({super.key});
@@ -283,12 +254,9 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
           ),
         ),
         title: Text(
-          _name.isEmpty ? _sectionTitle : _name,
-          style: _getStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
+          _name.isEmpty ? _slug.tr : _name,
+          style: AppTextStyles.headingSmall.copyWith(
             color: Colors.white,
-            text: _name,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -401,12 +369,11 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
                     Expanded(
                       child: Text(
                         _name,
-                        style: _getStyle(
+                        style: AppTextStyles.headingMedium.copyWith(
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
                           color: const Color(0xFF0F172A),
                           letterSpacing: -0.5,
-                          text: _name,
                         ),
                       ),
                     ),
@@ -418,11 +385,10 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
                 const SizedBox(height: 2),
                 Text(
                   _tagline,
-                  style: _getStyle(
+                  style: AppTextStyles.bodySmall.copyWith(
                     fontSize: 13,
                     fontWeight: FontWeight.w400,
                     color: const Color(0xFF64748B),
-                    text: _tagline,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -431,12 +397,11 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
               if (_category.isNotEmpty || _name.isNotEmpty) ...[
                 const SizedBox(height: 6),
                 Text(
-                  _category.isEmpty ? _sectionTitle : _category,
-                  style: _getStyle(
+                  _category.isEmpty ? _slug.tr : _category.toLowerCase().tr,
+                  style: AppTextStyles.bodyMedium.copyWith(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: AppColors.primary,
-                    text: _category,
                   ),
                 ),
               ],
@@ -475,8 +440,8 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
             ),
             child: Row(
               children: [
-                _tabItem('About', 0),
-                _tabItem('Contact', 1),
+                _tabItem('about'.tr, 0),
+                _tabItem('contact'.tr, 1),
               ],
             ),
           ),
@@ -513,11 +478,10 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
           child: Center(
             child: Text(
               title,
-              style: _getStyle(
+              style: AppTextStyles.bodyMedium.copyWith(
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected ? AppColors.primary : const Color(0xFF64748B),
-                text: title,
               ),
             ),
           ),
@@ -534,39 +498,37 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
         mainAxisSize: MainAxisSize.min,
         children: [
           if (_about.isNotEmpty) ...[
-            _sectionLabel('About'),
+            _sectionLabel('about'.tr),
             const SizedBox(height: 8),
             Text(
               _about,
-              style: _getStyle(
+              style: AppTextStyles.bodyMedium.copyWith(
                 fontSize: 14,
                 color: const Color(0xFF4B5563),
                 height: 1.75,
                 fontWeight: FontWeight.w400,
-                text: _about,
               ),
             ),
             const SizedBox(height: 20),
           ],
 
           if (_bio.isNotEmpty) ...[
-            _sectionLabel('Information'),
+            _sectionLabel('information'.tr),
             const SizedBox(height: 8),
             Text(
               _bio,
-              style: _getStyle(
+              style: AppTextStyles.bodyMedium.copyWith(
                 fontSize: 14,
                 color: const Color(0xFF4B5563),
                 height: 1.75,
                 fontWeight: FontWeight.w400,
-                text: _bio,
               ),
             ),
             const SizedBox(height: 20),
           ],
 
           if (_officialName.isNotEmpty) ...[
-            _sectionLabel('Top Official'),
+            _sectionLabel('top_official'.tr),
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.all(12),
@@ -598,32 +560,29 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
                       children: [
                         Text(
                           _officialName,
-                          style: _getStyle(
+                          style: AppTextStyles.bodyLarge.copyWith(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
                             color: const Color(0xFF1F2937),
-                            text: _officialName,
                           ),
                         ),
                         if (_officialDesignation.isNotEmpty)
                           Text(
                             _officialDesignation,
-                            style: _getStyle(
+                            style: AppTextStyles.bodySmall.copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: AppColors.primary,
-                              text: _officialDesignation,
                             ),
                           ),
                         if (_officialTagline.isNotEmpty) ...[
                           const SizedBox(height: 4),
                           Text(
                             _officialTagline,
-                            style: _getStyle(
+                            style: AppTextStyles.bodySmall.copyWith(
                               fontSize: 12,
                               color: const Color(0xFF64748B),
                               fontWeight: FontWeight.w400,
-                              text: _officialTagline,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -639,13 +598,13 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
           ],
 
           if (_services.isNotEmpty) ...[
-            _sectionLabel('Services'),
+            _sectionLabel('services'.tr),
             const SizedBox(height: 10),
             ..._services.map((s) => _buildServiceItem(s)),
             const SizedBox(height: 20),
           ],
           if (_offDays.isNotEmpty) ...[
-            _sectionLabel('Closed Days'),
+            _sectionLabel('closed_days'.tr),
             const SizedBox(height: 10),
             Wrap(
               spacing: 8,
@@ -655,7 +614,7 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
             const SizedBox(height: 20),
           ],
           if (_direction.isNotEmpty) ...[
-            _sectionLabel('Direction'),
+            _sectionLabel('direction'.tr),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(12),
@@ -671,11 +630,10 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
                   Expanded(
                     child: Text(
                       _direction,
-                      style: _getStyle(
+                      style: AppTextStyles.bodyMedium.copyWith(
                         fontSize: 13,
                         color: const Color(0xFF926C00),
                         fontWeight: FontWeight.w500,
-                        text: _direction,
                       ),
                     ),
                   ),
@@ -738,11 +696,10 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
           Expanded(
             child: Text(
               text,
-              style: _getStyle(
+              style: AppTextStyles.bodyMedium.copyWith(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: const Color(0xFF1F2937),
-                text: text,
               ),
             ),
           ),
@@ -761,11 +718,10 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
       ),
       child: Text(
         day,
-        style: _getStyle(
+        style: AppTextStyles.bodySmall.copyWith(
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: AppColors.primary,
-          text: day,
         ),
       ),
     );
@@ -775,28 +731,28 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
     final contactItems = [
       _DetailContactRow(
         icon: Icons.call_rounded,
-        label: 'Phone',
+        label: 'phone'.tr,
         value: _phone,
         color: AppColors.primary,
         onTap: () => launchUrl(Uri(scheme: 'tel', path: _phone)),
       ),
       _DetailContactRow(
         icon: Icons.alternate_email_rounded,
-        label: 'Email',
+        label: 'email'.tr,
         value: _email,
         color: AppColors.secondary,
         onTap: () => launchUrl(Uri(scheme: 'mailto', path: _email)),
       ),
       _DetailContactRow(
         icon: Icons.open_in_browser_rounded,
-        label: 'Website',
+        label: 'website'.tr,
         value: _website,
         color: const Color(0xFFB8860B),
         onTap: () => _launchUrl(_website),
       ),
       _DetailContactRow(
         icon: Icons.location_on_rounded,
-        label: 'Address',
+        label: 'address'.tr,
         value: _address,
         color: AppColors.blue3,
         onTap: () {
@@ -823,7 +779,7 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
           ],
           if (_facebook.isNotEmpty || _twitter.isNotEmpty || _linkedin.isNotEmpty || _instagram.isNotEmpty) ...[
             const SizedBox(height: 24),
-            _sectionLabel('Social Profiles'),
+            _sectionLabel('social_profiles'.tr),
             const SizedBox(height: 12),
             _socialLinksRow(),
           ],
@@ -860,7 +816,7 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
                 children: [
                   Text(
                     item.label,
-                    style: _getStyle(
+                    style: AppTextStyles.caption.copyWith(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                       color: item.color,
@@ -870,11 +826,10 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
                   const SizedBox(height: 3),
                   Text(
                     item.value,
-                    style: _getStyle(
+                    style: AppTextStyles.bodyMedium.copyWith(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                       color: const Color(0xFF111827),
-                      text: item.value,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -891,12 +846,11 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
 
   Widget _sectionLabel(String text) => Text(
     text,
-    style: _getStyle(
+    style: AppTextStyles.label.copyWith(
       fontSize: 12,
       fontWeight: FontWeight.w700,
       color: const Color(0xFF9CA3AF),
       letterSpacing: 0.8,
-      text: text,
     ),
   );
 }
@@ -927,8 +881,8 @@ class _EmptyStateView extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              'No information available',
-              style: _getStyle(
+              'no_info_available'.tr,
+              style: AppTextStyles.bodyMedium.copyWith(
                 fontSize: 14,
                 color: const Color(0xFF9CA3AF),
                 fontWeight: FontWeight.w500,

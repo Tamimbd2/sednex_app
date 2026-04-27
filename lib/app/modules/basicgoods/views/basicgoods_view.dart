@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 import '../controllers/basicgoods_controller.dart';
 
@@ -19,12 +18,8 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Basic Goods',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+          'basic_goods'.tr,
+          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -38,10 +33,9 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Text(
-                'আপনার এলাকা ভিত্তিতে দাম কম বা বেশি হতে পারে',
-                style: GoogleFonts.hindSiliguri(
+                'price_disclaimer'.tr,
+                style: AppTextStyles.bodyMedium.copyWith(
                   color: const Color(0xFFD48806), // Warning / Note color
-                  fontSize: 13,
                   fontWeight: FontWeight.w600,
                 ),
                 textAlign: TextAlign.center,
@@ -85,12 +79,9 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
                             ),
                             child: Center(
                               child: Text(
-                                category,
-                                style: GoogleFonts.hindSiliguri(
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.grey[700],
-                                  fontSize: 14,
+                                category == 'All' ? 'view_all'.tr : category,
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: isSelected ? Colors.white : Colors.grey[700],
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -125,9 +116,8 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'No goods found',
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
+                          'no_items_found'.tr,
+                          style: AppTextStyles.bodyMedium.copyWith(
                             color: Colors.grey[600],
                             fontWeight: FontWeight.w500,
                           ),
@@ -196,8 +186,7 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
                               children: [
                                 Text(
                                   item.name,
-                                  style: GoogleFonts.hindSiliguri(
-                                    fontSize: 16,
+                                  style: AppTextStyles.bodyLarge.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: const Color(0xFF2C2C2C),
                                   ),
@@ -212,17 +201,15 @@ class BasicgoodsView extends GetView<BasicgoodsController> {
                             children: [
                               Text(
                                 '${controller.getCurrencySymbol(item.pricetag)} ${item.price}',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
+                                style: AppTextStyles.bodyLarge.copyWith(
                                   fontWeight: FontWeight.w700,
                                   color: const Color(0xFF3575FF),
                                 ),
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                'Updated ${controller.getTimeAgo(item.updatedAt)}',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 11,
+                                '${'updated'.tr} ${controller.getTimeAgo(item.updatedAt)}',
+                                style: AppTextStyles.caption.copyWith(
                                   color: Colors.grey[500],
                                 ),
                               ),

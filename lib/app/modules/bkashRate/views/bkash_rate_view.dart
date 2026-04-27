@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
+import '../../../core/utils/number_helper.dart';
 
 import '../controllers/bkash_rate_controller.dart';
 
@@ -22,7 +23,7 @@ class BkashRateView extends GetView<BkashRateController> {
           ),
         ),
         title: Text(
-          'রেট ক্যালকুলেটর',
+          'rate_calculator'.tr,
           style: _getStyle(
             fontWeight: FontWeight.w700,
             fontSize: 22,
@@ -72,19 +73,19 @@ class BkashRateView extends GetView<BkashRateController> {
                       ),
                       const SizedBox(width: 8),
                       Obx(() {
-                        String dateStr = 'অপেক্ষমান';
+                        String dateStr = 'pending'.tr;
                         if (controller.updateDate.value.isNotEmpty) {
                           try {
                             DateTime dt = DateTime.parse(
                               controller.updateDate.value,
                             );
-                            dateStr = "${dt.day}/${dt.month}/${dt.year}";
+                            dateStr = "${dt.day}/${dt.month}/${dt.year}".trNum;
                           } catch (e) {
                             dateStr = 'N/A';
                           }
                         }
                         return Text(
-                          'সর্বশেষ আপডেট: $dateStr',
+                          'last_update'.tr + ': $dateStr',
                           style: _getStyle(
                             fontSize: 13,
                             color: const Color(0xFF1E63FF),
@@ -139,7 +140,7 @@ class BkashRateView extends GetView<BkashRateController> {
                         ),
                         const SizedBox(width: 14),
                         Text(
-                          'আজকের বিকাশ রেট',
+                          'todays_bkash_rate'.tr,
                           style: _getStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -159,7 +160,7 @@ class BkashRateView extends GetView<BkashRateController> {
                       ),
                       child: Obx(
                         () => Text(
-                          '৳${controller.exchangeRate.value.toStringAsFixed(0)}',
+                          '৳${controller.exchangeRate.value.toStringAsFixed(0).trNum}',
                           style: _getStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
@@ -227,13 +228,13 @@ class BkashRateView extends GetView<BkashRateController> {
                           Row(
                             children: [
                               _buildAnimatedTab(
-                                '৳ বিডিটি (টাকা)',
+                                'bdt_taka'.tr,
                                 controller.isTakaSelected,
                                 true,
                                 () => controller.toggleCurrency(true),
                               ),
                               _buildAnimatedTab(
-                                '\$ ইউএসডি (ডলার)',
+                                'usd_dollar'.tr,
                                 controller.isTakaSelected,
                                 false,
                                 () => controller.toggleCurrency(false),
@@ -245,7 +246,7 @@ class BkashRateView extends GetView<BkashRateController> {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      'পাঠানোর পরিমাণ',
+                      'amount_to_send'.tr,
                       style: _getStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -267,7 +268,7 @@ class BkashRateView extends GetView<BkashRateController> {
                           color: Colors.grey.shade400,
                           size: 20,
                         ),
-                        hintText: 'পরিমাণ লিখুন...',
+                        hintText: 'enter_amount'.tr,
                         hintStyle: _getStyle(
                           color: Colors.grey.shade400,
                           fontSize: 14,
@@ -298,15 +299,15 @@ class BkashRateView extends GetView<BkashRateController> {
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: [
-                          _buildModernChip('1k'),
+                          _buildModernChip('1k'.trNum),
                           const SizedBox(width: 10),
-                          _buildModernChip('5k'),
+                          _buildModernChip('5k'.trNum),
                           const SizedBox(width: 10),
-                          _buildModernChip('10k'),
+                          _buildModernChip('10k'.trNum),
                           const SizedBox(width: 10),
-                          _buildModernChip('20k'),
+                          _buildModernChip('20k'.trNum),
                           const SizedBox(width: 10),
-                          _buildModernChip('50k'),
+                          _buildModernChip('50k'.trNum),
                         ],
                       ),
                     ),
@@ -342,7 +343,7 @@ class BkashRateView extends GetView<BkashRateController> {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      'সর্বমোট পাঠানোর পরিমাণ',
+                      'amount_to_send_total'.tr,
                       style: _getStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -377,7 +378,7 @@ class BkashRateView extends GetView<BkashRateController> {
                         children: [
                           Obx(
                             () => Text(
-                              controller.displayResult.value,
+                              '৳' + controller.displayResult.value.trNum,
                               style: _getStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.w700,
@@ -388,7 +389,7 @@ class BkashRateView extends GetView<BkashRateController> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'আনুমানিক পরিমাণ',
+                            'estimated_amount'.tr,
                             style: _getStyle(
                               fontSize: 12,
                               color: const Color(0xFF3575FF),
@@ -426,7 +427,7 @@ class BkashRateView extends GetView<BkashRateController> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: 'নোট: ',
+                              text: 'note'.tr + ': ',
                               style: _getStyle(
                                 fontWeight: FontWeight.w700,
                                 color: const Color(0xFFD48806),
@@ -434,8 +435,7 @@ class BkashRateView extends GetView<BkashRateController> {
                               ),
                             ),
                             TextSpan(
-                              text:
-                                  'স্থান ভেদে কমিশনের হার পরিবর্তিত হতে পারে। প্রতি হাজারে স্ট্যান্ডার্ড কমিশন ২০ টাকা।',
+                              text: 'bkash_commission_note'.tr,
                               style: _getStyle(
                                 color: const Color(0xFF2C2C2C),
                                 fontSize: 13,
@@ -523,12 +523,11 @@ class BkashRateView extends GetView<BkashRateController> {
     Color? color,
     double? height,
   }) {
-    return GoogleFonts.hindSiliguri(
+    return AppTextStyles.bodyMedium.copyWith(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
       height: height,
-      textStyle: GoogleFonts.poppins(),
     );
   }
 }

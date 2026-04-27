@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../controllers/namaj_controller.dart';
 import 'fazar.dart';
 import 'zohar.dart';
@@ -33,10 +33,9 @@ class NamajView extends GetView<NamajController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'নামাজের সময়সূচি',
-          style: GoogleFonts.hindSiliguri(
+          'prayer_schedule'.tr,
+          style: AppTextStyles.headingSmall.copyWith(
             color: Colors.white,
-            fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -70,8 +69,7 @@ class NamajView extends GetView<NamajController> {
                     const SizedBox(width: 6),
                     Text(
                       'Beirut, Lebanon',
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
+                      style: AppTextStyles.bodySmall.copyWith(
                         color: const Color(0xFF6F6F6F),
                         fontWeight: FontWeight.w500,
                       ),
@@ -88,7 +86,7 @@ class NamajView extends GetView<NamajController> {
             const SizedBox(height: 28),
 
             // Prayer Learning Header
-            _buildSectionHeader('নামাজ শিক্ষা', 'assets/icons/book.svg'), // Using fallback icon logic
+            _buildSectionHeader('prayer_learning'.tr, 'assets/icons/book.svg'),
             
             const SizedBox(height: 16),
 
@@ -98,7 +96,7 @@ class NamajView extends GetView<NamajController> {
             const SizedBox(height: 28),
 
             // Essential Duas Header
-             _buildSectionHeader('প্রয়োজনীয় দোয়া', 'assets/icons/heart.svg'),
+            _buildSectionHeader('essential_duas'.tr, 'assets/icons/heart.svg'),
 
             const SizedBox(height: 16),
 
@@ -122,7 +120,6 @@ class NamajView extends GetView<NamajController> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
-             // Since we don't have the exact SVG paths for generic icons, using standard Icons for now
              iconPath.contains('book') ? Icons.menu_book_rounded : Icons.favorite_rounded,
              size: 20, 
              color: const Color(0xFF1E63FF)
@@ -131,8 +128,7 @@ class NamajView extends GetView<NamajController> {
         const SizedBox(width: 12),
         Text(
           title,
-          style: GoogleFonts.hindSiliguri(
-            fontSize: 18,
+          style: AppTextStyles.bodyLarge.copyWith(
             fontWeight: FontWeight.w700,
             color: const Color(0xFF101727),
           ),
@@ -172,9 +168,8 @@ class NamajView extends GetView<NamajController> {
                     const Icon(Icons.calendar_today_rounded, size: 18, color: Color(0xFF1E63FF)),
                     const SizedBox(width: 8),
                     Obx(() => Text(
-                      '${controller.schedule['day']}',
-                      style: GoogleFonts.hindSiliguri(
-                        fontSize: 18,
+                      '${controller.schedule['day']}'.tr,
+                      style: AppTextStyles.bodyLarge.copyWith(
                         fontWeight: FontWeight.w700,
                         color: const Color(0xFF101727),
                       ),
@@ -199,9 +194,8 @@ class NamajView extends GetView<NamajController> {
                     ],
                   ),
                   child: Obx(() => Text(
-                    '${controller.schedule['status']}',
-                    style: GoogleFonts.hindSiliguri(
-                      fontSize: 12,
+                    '${controller.schedule['status']}'.tr,
+                    style: AppTextStyles.bodySmall.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
@@ -221,11 +215,11 @@ class NamajView extends GetView<NamajController> {
                    Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildScheduleColumnHeader('ফজর', isHighlight: currentIndex == 0),
-                      _buildScheduleColumnHeader('যোহর', isHighlight: currentIndex == 1),
-                      _buildScheduleColumnHeader('আছর', isHighlight: currentIndex == 2),
-                      _buildScheduleColumnHeader('মাগরিব', isHighlight: currentIndex == 3),
-                      _buildScheduleColumnHeader('ঈশা', isHighlight: currentIndex == 4),
+                      _buildScheduleColumnHeader('fajar'.tr, isHighlight: currentIndex == 0),
+                      _buildScheduleColumnHeader('zohar'.tr, isHighlight: currentIndex == 1),
+                      _buildScheduleColumnHeader('asar'.tr, isHighlight: currentIndex == 2),
+                      _buildScheduleColumnHeader('magrib'.tr, isHighlight: currentIndex == 3),
+                      _buildScheduleColumnHeader('esha'.tr, isHighlight: currentIndex == 4),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -245,7 +239,7 @@ class NamajView extends GetView<NamajController> {
                            ) : null,
                            child: Text(
                              times[index]['time'],
-                             style: GoogleFonts.poppins(
+                             style: AppTextStyles.bodySmall.copyWith(
                                fontSize: 14,
                                fontWeight: isHighlight ? FontWeight.w700 : FontWeight.w500,
                                color: isHighlight ? const Color(0xFF1E63FF) : const Color(0xFF333333),
@@ -267,8 +261,7 @@ class NamajView extends GetView<NamajController> {
   Widget _buildScheduleColumnHeader(String text, {bool isHighlight = false}) {
     return Text(
       text,
-      style: GoogleFonts.hindSiliguri(
-        fontSize: 13,
+      style: AppTextStyles.bodySmall.copyWith(
         fontWeight: isHighlight ? FontWeight.w700 : FontWeight.w500,
         color: isHighlight ? const Color(0xFF1E63FF) : const Color(0xFF828282),
       ),
@@ -307,25 +300,24 @@ class NamajView extends GetView<NamajController> {
             color: Colors.transparent,
             child: InkWell(
               onTap: () {
-                final title = item['title'];
-                if (title == 'ফজর') {
+                final titleKey = item['title'];
+                if (titleKey == 'fajar') {
                   Get.to(() => const FajarView());
-                } else if (title == 'যোহর') {
+                } else if (titleKey == 'zohar') {
                   Get.to(() => const ZoharView());
-                } else if (title == 'আছর') {
+                } else if (titleKey == 'asar') {
                   Get.to(() => const AcharView());
-                } else if (title == 'মাগরিব') {
-                   Get.to(() => const MagribView()); 
-                } else if (title == 'ঈশা') {
+                } else if (titleKey == 'magrib') {
+                  Get.to(() => const MagribView());
+                } else if (titleKey == 'esha') {
                   Get.to(() => const EshaView());
-                } else if (title == 'কুরআন') {
+                } else if (titleKey == 'quran') {
                   Get.to(() => const QuranView());
                 }
               },
               borderRadius: BorderRadius.circular(20),
               child: Stack(
                 children: [
-                  // Decorative Circle
                   Positioned(
                     right: -20,
                     top: -20,
@@ -365,17 +357,15 @@ class NamajView extends GetView<NamajController> {
                   
                         const Spacer(),
                         Text(
-                          item['title'] as String,
-                          style: GoogleFonts.hindSiliguri(
-                            fontSize: 18,
+                          (item['title'] as String).tr,
+                          style: AppTextStyles.bodyLarge.copyWith(
                             fontWeight: FontWeight.w700,
                             color: const Color(0xFF101727),
                           ),
                         ),
                         Text(
-                          item['rakat'] as String,
-                          style: GoogleFonts.hindSiliguri(
-                            fontSize: 13,
+                          (item['rakat'] as String).tr,
+                          style: AppTextStyles.bodySmall.copyWith(
                             fontWeight: FontWeight.w500,
                             color: const Color(0xFF697282),
                           ),
@@ -443,13 +433,12 @@ class NamajView extends GetView<NamajController> {
                      const SizedBox(width: 8),
                      Expanded(
                        child: Text(
-                        dua['title']!,
-                        style: GoogleFonts.hindSiliguri(
-                          fontSize: 15,
+                        (dua['title'] as String).tr,
+                        style: AppTextStyles.bodyMedium.copyWith(
                           fontWeight: FontWeight.w600,
                           color: const Color(0xFF101727),
                         ),
-                                           ),
+                      ),
                      ),
                    ],
                  ),
@@ -464,7 +453,7 @@ class NamajView extends GetView<NamajController> {
                     Container(
                       padding: const EdgeInsets.all(20),
                        decoration: BoxDecoration(
-                        color: const Color(0xFFFFF8F8), // Very light warm background
+                        color: const Color(0xFFFFF8F8),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(color: const Color(0xFF1E63FF).withValues(alpha: 0.08)),
                       ),
@@ -478,7 +467,7 @@ class NamajView extends GetView<NamajController> {
                                 child: Text(
                                   dua['arabic']!,
                                   textAlign: TextAlign.right,
-                                  style: GoogleFonts.amiri(
+                                  style: AppTextStyles.arabic.copyWith(
                                     fontSize: 22,
                                     height: 1.6,
                                     fontWeight: FontWeight.w600,
@@ -513,7 +502,7 @@ class NamajView extends GetView<NamajController> {
                                      const SizedBox(width: 4),
                                      Text(
                                        'copy'.tr,
-                                       style: GoogleFonts.poppins(
+                                       style: AppTextStyles.bodySmall.copyWith(
                                          fontSize: 10,
                                          color: const Color(0xFF1E63FF).withValues(alpha: 0.7),
                                          fontWeight: FontWeight.w500,
@@ -532,8 +521,7 @@ class NamajView extends GetView<NamajController> {
                     // Translation
                      Text(
                       dua['bangla']!,
-                      style: GoogleFonts.hindSiliguri(
-                        fontSize: 14,
+                      style: AppTextStyles.bodyMedium.copyWith(
                         fontWeight: FontWeight.w400,
                         color: const Color(0xFF495565),
                         height: 1.6,
@@ -549,5 +537,3 @@ class NamajView extends GetView<NamajController> {
     );
   }
 }
-
-

@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sednexapp/app/core/constants/url.dart';
 import 'package:sednexapp/app/core/theme/app_colors.dart';
 import 'package:get_storage/get_storage.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class HospitalDetailsView extends StatefulWidget {
   const HospitalDetailsView({super.key});
@@ -166,11 +166,9 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
           ),
         ),
         title: Text(
-          _name.isEmpty ? 'Hospital' : _name,
-          style: GoogleFonts.inter(
+          _name.isEmpty ? 'hospitals'.tr : _name,
+          style: AppTextStyles.headingSmall.copyWith(
             color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -248,10 +246,8 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
               children: [
                 Text(
                   _name,
-                  style: GoogleFonts.inter(
+                  style: AppTextStyles.headingSmall.copyWith(
                     color: const Color(0xFF2C2C2C),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
                     height: 1.2,
                   ),
                   maxLines: 2,
@@ -270,8 +266,8 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        'Hospital',
-                        style: GoogleFonts.inter(
+                        'hospitals'.tr,
+                        style: AppTextStyles.bodySmall.copyWith(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: AppColors.primary,
@@ -301,8 +297,8 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
                           ),
                           const SizedBox(width: 3),
                           Text(
-                            'Verified',
-                            style: GoogleFonts.inter(
+                            'verified'.tr,
+                            style: AppTextStyles.bodySmall.copyWith(
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
                               color: const Color(0xFFB8860B),
@@ -366,8 +362,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
             Expanded(
               child: Text(
                 _address,
-                style: GoogleFonts.inter(
-                  fontSize: 13,
+                style: AppTextStyles.bodyMedium.copyWith(
                   fontWeight: FontWeight.w500,
                   color: const Color(0xFF2C2C2C),
                   height: 1.4,
@@ -427,17 +422,15 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
               dividerColor: Colors.transparent,
               labelColor: AppColors.primary,
               unselectedLabelColor: const Color(0xFF9CA3AF),
-              labelStyle: GoogleFonts.inter(
-                fontSize: 13,
+              labelStyle: AppTextStyles.bodyMedium.copyWith(
                 fontWeight: FontWeight.w700,
               ),
-              unselectedLabelStyle: GoogleFonts.inter(
-                fontSize: 13,
+              unselectedLabelStyle: AppTextStyles.bodyMedium.copyWith(
                 fontWeight: FontWeight.w500,
               ),
-              tabs: const [
-                Tab(text: 'About'),
-                Tab(text: 'Contact'),
+              tabs: [
+                Tab(text: 'about'.tr),
+                Tab(text: 'contact'.tr),
               ],
             ),
           ),
@@ -462,22 +455,20 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (_about.isNotEmpty) ...[
-            _label('About'),
+            _label('about'.tr),
             const SizedBox(height: 8),
             Text(
               _about,
-              style: GoogleFonts.inter(
-                fontSize: 14,
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: const Color(0xFF4B5563),
                 height: 1.75,
-                fontWeight: FontWeight.w400,
               ),
             ),
             const SizedBox(height: 20),
           ],
 
           if (_services.isNotEmpty) ...[
-            _label('Services'),
+            _label('services'.tr),
             const SizedBox(height: 10),
             ..._services.asMap().entries.map((e) {
               return TweenAnimationBuilder<double>(
@@ -515,8 +506,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
                       Expanded(
                         child: Text(
                           e.value,
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
+                          style: AppTextStyles.bodyMedium.copyWith(
                             fontWeight: FontWeight.w500,
                             color: const Color(0xFF1F2937),
                           ),
@@ -531,7 +521,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
           ],
 
           if (_offDays.isNotEmpty) ...[
-            _label('Closed Days'),
+            _label('closed_days'.tr),
             const SizedBox(height: 10),
             Wrap(
               spacing: 8,
@@ -552,8 +542,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
                       ),
                       child: Text(
                         d,
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
+                        style: AppTextStyles.bodySmall.copyWith(
                           fontWeight: FontWeight.w600,
                           color: AppColors.primary,
                         ),
@@ -576,7 +565,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
     final items = [
       _ContactItem(
         icon: Icons.call_rounded,
-        label: 'Phone',
+        label: 'phone'.tr,
         value: _phone,
         color: AppColors.primary,
         onTap: () async {
@@ -587,7 +576,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
       ),
       _ContactItem(
         icon: Icons.alternate_email_rounded,
-        label: 'Email',
+        label: 'email'.tr,
         value: _email,
         color: AppColors.secondary,
         onTap: () async {
@@ -598,7 +587,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
       ),
       _ContactItem(
         icon: Icons.open_in_browser_rounded,
-        label: 'Website',
+        label: 'website'.tr,
         value: _website,
         color: const Color(0xFFB8860B),
         onTap: () async {
@@ -612,7 +601,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
       ),
       _ContactItem(
         icon: Icons.location_on_rounded,
-        label: 'Address',
+        label: 'address'.tr,
         value: _address,
         color: AppColors.primary,
         onTap: () async {
@@ -676,8 +665,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
                       children: [
                         Text(
                           item.label,
-                          style: GoogleFonts.inter(
-                            fontSize: 10,
+                          style: AppTextStyles.caption.copyWith(
                             fontWeight: FontWeight.w700,
                             color: item.color,
                             letterSpacing: 0.6,
@@ -686,8 +674,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
                         const SizedBox(height: 3),
                         Text(
                           hasValue ? item.value : '—',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
+                          style: AppTextStyles.bodyMedium.copyWith(
                             fontWeight: FontWeight.w500,
                             color: hasValue
                                 ? const Color(0xFF111827)
@@ -716,9 +703,7 @@ class _HospitalDetailsViewState extends State<HospitalDetailsView>
 
   Widget _label(String text) => Text(
         text,
-        style: GoogleFonts.inter(
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
+        style: AppTextStyles.label.copyWith(
           color: const Color(0xFF9CA3AF),
           letterSpacing: 0.8,
         ),
@@ -765,9 +750,8 @@ class _EmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              'No information available',
-              style: GoogleFonts.inter(
-                fontSize: 14,
+              'no_info_available'.tr,
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: const Color(0xFF9CA3AF),
                 fontWeight: FontWeight.w500,
               ),

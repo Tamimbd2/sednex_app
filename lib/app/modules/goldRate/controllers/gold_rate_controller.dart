@@ -15,7 +15,7 @@ class GoldRateController extends GetxController {
 
   // TAB State
   var selectedTabIndex = 0.obs;
-  var selectedTabName = 'ভরি'.obs;
+  var selectedTabName = 'vhori'.obs;
 
   // Measurement factors (relative to 1 Vori)
   final Map<int, double> factors = {
@@ -126,8 +126,8 @@ class GoldRateController extends GetxController {
 
   Future<void> refreshGoldRates() => fetchGoldRates();
 
-  void changeTab(int index, String name) {
+  void changeTab(int index, String key) {
     selectedTabIndex.value = index;
-    selectedTabName.value = name;
+    selectedTabName.value = key;
   }
 }

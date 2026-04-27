@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../controllers/hospitals_controller.dart';
 import 'hospitaldetails.dart';
 
@@ -24,12 +23,8 @@ class HospitalsView extends GetView<HospitalsController> {
           ),
         ),
         title: Text(
-          'Hospitals',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+          'hospitals'.tr,
+          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
         ),
         centerTitle: true,
         bottom: PreferredSize(
@@ -51,11 +46,10 @@ class HospitalsView extends GetView<HospitalsController> {
             child: TextField(
               onChanged: (val) => controller.searchQuery.value = val,
               decoration: InputDecoration(
-                hintText: 'Search hospitals...',
-                hintStyle: GoogleFonts.inter(
+                hintText: 'search_hospitals'.tr,
+                hintStyle: AppTextStyles.bodyMedium.copyWith(
                   color: Colors.grey[500],
                   fontSize: 15,
-                  fontWeight: FontWeight.w400,
                 ),
                 prefixIcon:
                     Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
@@ -77,7 +71,7 @@ class HospitalsView extends GetView<HospitalsController> {
                       BorderSide(color: Colors.grey[300]!, width: 1.5),
                 ),
               ),
-              style: GoogleFonts.inter(
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: const Color(0xFF2C2C2C),
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -91,8 +85,8 @@ class HospitalsView extends GetView<HospitalsController> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              'All Hospitals',
-              style: GoogleFonts.inter(
+              'all_hospitals'.tr,
+              style: AppTextStyles.headingSmall.copyWith(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color: Colors.black,
@@ -121,8 +115,8 @@ class HospitalsView extends GetView<HospitalsController> {
                             size: 60, color: Colors.grey[300]),
                         const SizedBox(height: 16),
                         Text(
-                          'No hospitals found',
-                          style: GoogleFonts.inter(
+                          'no_hospitals_found'.tr,
+                          style: AppTextStyles.bodyMedium.copyWith(
                             fontSize: 15,
                             color: Colors.grey[500],
                             fontWeight: FontWeight.w500,
@@ -203,7 +197,7 @@ class HospitalsView extends GetView<HospitalsController> {
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Text(
                 hospital.name,
-                style: GoogleFonts.inter(
+                style: AppTextStyles.caption.copyWith(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: Colors.black,

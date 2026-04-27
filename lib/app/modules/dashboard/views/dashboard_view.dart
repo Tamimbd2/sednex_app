@@ -13,7 +13,9 @@ import '../../profile/views/profile_view.dart';
 import '../../Shop/views/shop_view.dart';
 import '../../notifications/controllers/notifications_controller.dart';
 import 'home_page_content.dart';
+import '../../communityFeed/views/community_feed_view.dart';
 import '../../communityFeed/widgets/community_post_card.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 // Detail View Imports for Search Navigation
 import '../../articles/views/articledetails.dart';
@@ -39,16 +41,7 @@ class DashboardView extends GetView<DashboardController> {
           return Container(
             height: statusBarHeight + 60,
             padding: EdgeInsets.only(top: statusBarHeight),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1E63FF),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF1E63FF).withValues(alpha: 0.30),
-                  blurRadius: 15,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
+            decoration: BoxDecoration(color: const Color(0xFF1E63FF)),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -73,12 +66,10 @@ class DashboardView extends GetView<DashboardController> {
                             controller.currentIndex.value == 2)
                           Text(
                             controller.currentIndex.value == 1
-                                ? 'search'.tr
-                                : 'shop'.tr,
-                            style: GoogleFonts.outfit(
+                                ? 'community_feed'.tr
+                                : 'search'.tr,
+                            style: AppTextStyles.headingMedium.copyWith(
                               color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         if (controller.currentIndex.value != 1 &&
@@ -95,10 +86,8 @@ class DashboardView extends GetView<DashboardController> {
                           const SizedBox(width: 12),
                           Text(
                             _getAppBarTitle(controller.currentIndex.value),
-                            style: GoogleFonts.outfit(
+                            style: AppTextStyles.headingSmall.copyWith(
                               color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
@@ -123,7 +112,7 @@ class DashboardView extends GetView<DashboardController> {
                               Get.toNamed(Routes.NOTIFICATIONS);
                             },
                             icon: SvgPicture.asset(
-                              'assets/icons/Icon.svg',
+                              'assets/homeicon/notification.svg',
                               width: 26,
                               height: 28,
                               colorFilter: const ColorFilter.mode(
@@ -161,7 +150,7 @@ class DashboardView extends GetView<DashboardController> {
                                   unreadCount > 9
                                       ? '9+'
                                       : unreadCount.toString(),
-                                  style: GoogleFonts.inter(
+                                  style: AppTextStyles.caption.copyWith(
                                     fontSize: 8,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
@@ -224,9 +213,9 @@ class DashboardView extends GetView<DashboardController> {
       case 0:
         return 'home'.tr;
       case 1:
-        return 'search'.tr;
+        return 'community_feed'.tr;
       case 2:
-        return 'shop'.tr;
+        return 'search'.tr;
       case 3:
         return 'profile'.tr;
       default:
@@ -239,9 +228,9 @@ class DashboardView extends GetView<DashboardController> {
       case 0:
         return _buildHomePage();
       case 1:
-        return _buildSearchPage();
+        return const CommunityFeedView(showAppBar: false, showFAB: false);
       case 2:
-        return _buildShopPage();
+        return _buildSearchPage();
       case 3:
         return _buildProfilePage();
       default:
@@ -265,10 +254,9 @@ class DashboardView extends GetView<DashboardController> {
               onChanged: (val) => controller.searchQuery.value = val,
               decoration: InputDecoration(
                 hintText: '${'search'.tr}...',
-                hintStyle: GoogleFonts.inter(
+                hintStyle: AppTextStyles.hintText.copyWith(
                   color: Colors.grey[500],
                   fontSize: 15,
-                  fontWeight: FontWeight.w400,
                 ),
                 prefixIcon: const Icon(
                   Icons.search_rounded,
@@ -297,7 +285,7 @@ class DashboardView extends GetView<DashboardController> {
                   ),
                 ),
               ),
-              style: GoogleFonts.inter(
+              style: AppTextStyles.inputText.copyWith(
                 color: const Color(0xFF2C2C2C),
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -358,16 +346,14 @@ class DashboardView extends GetView<DashboardController> {
           const SizedBox(height: 24),
           Text(
             'search_anything'.tr,
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+            style: AppTextStyles.headingSmall.copyWith(
               color: const Color(0xFF2C2C2C),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Find posts, products, articles and more',
-            style: GoogleFonts.inter(fontSize: 14, color: Colors.grey[600]),
+            style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey[600]),
           ),
         ],
       ),
@@ -383,10 +369,9 @@ class DashboardView extends GetView<DashboardController> {
           const SizedBox(height: 16),
           Text(
             'no_results_found'.tr,
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+            style: AppTextStyles.bodyLarge.copyWith(
               color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -405,8 +390,7 @@ class DashboardView extends GetView<DashboardController> {
             children: [
               Text(
                 title.toUpperCase(),
-                style: GoogleFonts.inter(
-                  fontSize: 12,
+                style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFF1E63FF),
                   letterSpacing: 1.1,
@@ -414,7 +398,7 @@ class DashboardView extends GetView<DashboardController> {
               ),
               Text(
                 '${items.length} items',
-                style: GoogleFonts.inter(fontSize: 11, color: Colors.grey[500]),
+                style: AppTextStyles.caption.copyWith(color: Colors.grey[500]),
               ),
             ],
           ),
@@ -483,8 +467,7 @@ class DashboardView extends GetView<DashboardController> {
                     'No Title',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.inter(
-                  fontSize: 14,
+                style: AppTextStyles.bodyMedium.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -495,7 +478,7 @@ class DashboardView extends GetView<DashboardController> {
                     '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.inter(fontSize: 12, color: Colors.grey[500]),
+                style: AppTextStyles.bodySmall.copyWith(color: Colors.grey[500]),
               ),
               trailing: const Icon(
                 Icons.arrow_forward_ios_rounded,
@@ -515,7 +498,7 @@ class DashboardView extends GetView<DashboardController> {
               onPressed: () => _navigateToListView(title),
               child: Text(
                 'View all $title',
-                style: GoogleFonts.inter(
+                style: AppTextStyles.button.copyWith(
                   fontSize: 13,
                   color: const Color(0xFF1E63FF),
                   fontWeight: FontWeight.w600,
@@ -737,19 +720,7 @@ class DashboardView extends GetView<DashboardController> {
   Widget _buildBottomNavigationBar() {
     return Obx(
       () => Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.10),
-              blurRadius: 15,
-              offset: const Offset(
-                0,
-                -5,
-              ), // Negative Y for bottom bar to show shadow upwards
-            ),
-          ],
-        ),
+        decoration: BoxDecoration(color: AppColors.navBackground),
         child: SafeArea(
           top: false,
           child: SizedBox(
@@ -758,12 +729,12 @@ class DashboardView extends GetView<DashboardController> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildNavItem(
-                  iconPath: 'assets/nav/home.svg',
+                  iconPath: 'assets/homeicon/home 232.svg',
                   index: 0,
                   isActive: controller.currentIndex.value == 0,
                 ),
                 _buildNavItem(
-                  iconPath: 'assets/nav/search.svg',
+                  iconPath: 'assets/homeicon/Community-feed 232.svg',
                   index: 1,
                   isActive: controller.currentIndex.value == 1,
                 ),
@@ -774,26 +745,29 @@ class DashboardView extends GetView<DashboardController> {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: AppColors.crimson,
+                      color: Colors.white,
                       shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.3),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
                     ),
-                    child: const Icon(Icons.add, size: 28, color: Colors.white),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        'assets/homeicon/add-post.svg',
+                        width: 48,
+                        height: 48,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.primary,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 _buildNavItem(
-                  iconPath: 'assets/profile/shop.svg', // Moved Shop to nav
+                  iconPath: 'assets/homeicon/search 232.svg',
                   index: 2,
                   isActive: controller.currentIndex.value == 2,
                 ),
                 _buildNavItem(
-                  iconPath: 'assets/nav/profile.svg',
+                  iconPath: 'assets/homeicon/profile 232.svg',
                   index: 3,
                   isActive: controller.currentIndex.value == 3,
                 ),
@@ -822,7 +796,7 @@ class DashboardView extends GetView<DashboardController> {
             width: 24,
             height: 24,
             colorFilter: ColorFilter.mode(
-              isActive ? const Color(0xFF1E63FF) : const Color(0xFF8F95A1),
+              isActive ? AppColors.primary : AppColors.navInactive,
               BlendMode.srcIn,
             ),
           ),

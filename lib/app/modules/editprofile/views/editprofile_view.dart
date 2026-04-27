@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/constants/url.dart';
 import '../controllers/editprofile_controller.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class EditprofileView extends GetView<EditprofileController> {
   const EditprofileView({super.key});
@@ -15,11 +16,14 @@ class EditprofileView extends GetView<EditprofileController> {
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
         title: Text(
-          'Edit Profile',
-          style: GoogleFonts.poppins(
+          'edit_profile_title'.tr,
+          style: AppTextStyles.headingSmall.copyWith(
             fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
+        backgroundColor: const Color(0xFF1E63FF),
+        iconTheme: const IconThemeData(color: Colors.white),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
@@ -102,10 +106,9 @@ class EditprofileView extends GetView<EditprofileController> {
               GestureDetector(
                 onTap: controller.pickImage,
                 child: Text(
-                  'Change Photo',
-                  style: GoogleFonts.poppins(
+                  'change_photo'.tr,
+                  style: AppTextStyles.bodyMedium.copyWith(
                     color: const Color(0xFF1E63FF),
-                    fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -113,25 +116,25 @@ class EditprofileView extends GetView<EditprofileController> {
               const SizedBox(height: 32),
 
               const SizedBox(height: 16),
-              _buildLabel('Full Name'),
+              _buildLabel('full_name'.tr),
               const SizedBox(height: 8),
               _buildTextField(
                 controller: controller.nameController,
-                hint: 'Enter your name',
+                hint: 'enter_your_name'.tr,
                 icon: Icons.person_outline,
               ),
 
               const SizedBox(height: 16),
-              _buildLabel('Bio'),
+              _buildLabel('bio'.tr),
               const SizedBox(height: 8),
               _buildTextField(
                 controller: controller.bioController,
-                hint: 'Tell us about yourself...',
+                hint: 'bio_hint'.tr,
                 maxLines: 3,
               ),
 
               const SizedBox(height: 16),
-              _buildLabel('Phone Number'),
+              _buildLabel('phone_number'.tr),
               const SizedBox(height: 8),
               _buildTextField(
                 controller: controller.phoneController,
@@ -146,7 +149,7 @@ class EditprofileView extends GetView<EditprofileController> {
                   Expanded(
                     child: Column(
                       children: [
-                        _buildLabel('Birth Date'),
+                        _buildLabel('birth_date'.tr),
                         const SizedBox(height: 8),
                         _buildTextField(
                           controller: controller.birthDateController,
@@ -162,11 +165,11 @@ class EditprofileView extends GetView<EditprofileController> {
                   Expanded(
                     child: Column(
                       children: [
-                        _buildLabel('Gender'),
+                        _buildLabel('gender'.tr),
                         const SizedBox(height: 8),
                         _buildDropdown(
                           value: controller.selectedGender,
-                          hint: 'Select Gender',
+                          hint: 'select_gender'.tr,
                           icon: Icons.people_outline,
                           items: ['Male', 'Female', 'Other'],
                         ),
@@ -182,11 +185,11 @@ class EditprofileView extends GetView<EditprofileController> {
                   Expanded(
                     child: Column(
                       children: [
-                        _buildLabel('Marital Status'),
+                        _buildLabel('marital_status'.tr),
                         const SizedBox(height: 8),
                         _buildDropdown(
                           value: controller.selectedMaritalStatus,
-                          hint: 'Select Status',
+                          hint: 'select_status'.tr,
                           items: ['Single', 'Married', 'Divorced', 'Widowed'],
                         ),
                       ],
@@ -196,11 +199,11 @@ class EditprofileView extends GetView<EditprofileController> {
                   Expanded(
                     child: Column(
                       children: [
-                        _buildLabel('Blood Group'),
+                        _buildLabel('blood_group'.tr),
                         const SizedBox(height: 8),
                         _buildDropdown(
                           value: controller.selectedBloodGroup,
-                          hint: 'Select Group',
+                          hint: 'select_group'.tr,
                           items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
                         ),
                       ],
@@ -210,7 +213,7 @@ class EditprofileView extends GetView<EditprofileController> {
               ),
 
               const SizedBox(height: 16),
-              _buildLabel('Job Title'),
+              _buildLabel('job_title'.tr),
               const SizedBox(height: 8),
               _buildTextField(
                 controller: controller.jobTitleController,
@@ -219,7 +222,7 @@ class EditprofileView extends GetView<EditprofileController> {
               ),
 
               const SizedBox(height: 16),
-              _buildLabel('Company Name'),
+              _buildLabel('company_name'.tr),
               const SizedBox(height: 8),
               _buildTextField(
                 controller: controller.companyNameController,
@@ -228,7 +231,7 @@ class EditprofileView extends GetView<EditprofileController> {
               ),
 
               const SizedBox(height: 16),
-              _buildLabel('Work Address'),
+              _buildLabel('work_address'.tr),
               const SizedBox(height: 8),
               _buildTextField(
                 controller: controller.workAddressController,
@@ -237,7 +240,7 @@ class EditprofileView extends GetView<EditprofileController> {
               ),
 
               const SizedBox(height: 16),
-              _buildLabel('Website Link'),
+              _buildLabel('website_link'.tr),
               const SizedBox(height: 8),
               _buildTextField(
                 controller: controller.websiteLinkController,
@@ -246,7 +249,7 @@ class EditprofileView extends GetView<EditprofileController> {
               ),
 
               const SizedBox(height: 16),
-              _buildLabel('Current Address'),
+              _buildLabel('current_address'.tr),
               const SizedBox(height: 8),
               _buildTextField(
                 controller: controller.currentAddressController,
@@ -255,7 +258,7 @@ class EditprofileView extends GetView<EditprofileController> {
               ),
 
               const SizedBox(height: 16),
-              _buildLabel('Country/Location'),
+              _buildLabel('country_location'.tr),
               const SizedBox(height: 8),
               _buildTextField(
                 controller: controller.locationController,
@@ -285,8 +288,8 @@ class EditprofileView extends GetView<EditprofileController> {
                           child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                         )
                       : Text(
-                          'Save Changes',
-                          style: GoogleFonts.poppins(
+                          'save_changes'.tr,
+                          style: AppTextStyles.button.copyWith(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
@@ -312,9 +315,8 @@ class EditprofileView extends GetView<EditprofileController> {
       ),
       child: Text(
         title.toUpperCase(),
-        style: GoogleFonts.poppins(
+        style: AppTextStyles.bodySmall.copyWith(
           color: const Color(0xFF1E63FF),
-          fontSize: 12,
           fontWeight: FontWeight.bold,
           letterSpacing: 1,
         ),
@@ -327,9 +329,8 @@ class EditprofileView extends GetView<EditprofileController> {
       alignment: Alignment.centerLeft,
       child: Text(
         text,
-        style: GoogleFonts.poppins(
+        style: AppTextStyles.bodyMedium.copyWith(
           color: const Color(0xFF495565),
-          fontSize: 14,
           fontWeight: FontWeight.w400,
         ),
       ),
@@ -352,7 +353,7 @@ class EditprofileView extends GetView<EditprofileController> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: items.contains(value.value) ? value.value : null,
-          hint: Text(hint, style: GoogleFonts.poppins(color: const Color(0xFF9CA3AF), fontSize: 16)),
+          hint: Text(hint, style: AppTextStyles.bodyMedium.copyWith(color: const Color(0xFF9CA3AF))),
           icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF9CA3AF)),
           isExpanded: true,
           items: items.map((String item) {
@@ -364,7 +365,7 @@ class EditprofileView extends GetView<EditprofileController> {
                     Icon(icon, color: const Color(0xFF9CA3AF), size: 22),
                     const SizedBox(width: 12),
                   ],
-                  Text(item, style: GoogleFonts.poppins(color: const Color(0xFF101727), fontSize: 16)),
+                  Text(item, style: AppTextStyles.bodyMedium.copyWith(color: const Color(0xFF101727))),
                 ],
               ),
             );
@@ -394,15 +395,13 @@ class EditprofileView extends GetView<EditprofileController> {
       keyboardType: keyboardType,
       readOnly: readOnly,
       onTap: onTap,
-      style: GoogleFonts.arimo(
+      style: AppTextStyles.bodyMedium.copyWith(
         color: const Color(0xFF101727),
-        fontSize: 16,
       ),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: GoogleFonts.arimo(
+        hintStyle: AppTextStyles.bodyMedium.copyWith(
           color: const Color(0xFF9CA3AF),
-          fontSize: 16,
         ),
         prefixIcon: icon != null ? Icon(icon, color: const Color(0xFF9CA3AF), size: 22) : null,
         filled: true,

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../controllers/mypost_controller.dart';
 import '../../communityFeed/widgets/community_post_card.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class MypostView extends GetView<MypostController> {
   const MypostView({super.key});
@@ -24,10 +25,9 @@ class MypostView extends GetView<MypostController> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'My Posts',
-          style: GoogleFonts.poppins(
+          'my_post'.tr,
+          style: AppTextStyles.headingSmall.copyWith(
             color: Colors.white,
-            fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -60,9 +60,8 @@ class MypostView extends GetView<MypostController> {
                     Icon(Icons.article_outlined, size: 64, color: Colors.grey[300]),
                     const SizedBox(height: 16),
                     Text(
-                      'You haven\'t posted anything yet',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
+                      'no_my_posts'.tr,
+                      style: AppTextStyles.bodyMedium.copyWith(
                         color: Colors.grey[400],
                         fontWeight: FontWeight.w500,
                       ),

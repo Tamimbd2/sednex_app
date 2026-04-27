@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../controllers/localtour_controller.dart';
 import 'toursdetails.dart';
 
@@ -15,16 +14,8 @@ class LocaltourView extends GetView<LocaltourController> {
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: Text(
-          'Sednex Travel',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ).copyWith(
-            fontFamilyFallback: [
-              GoogleFonts.hindSiliguri().fontFamily!,
-            ],
-          ),
+          'sednex_travel'.tr,
+          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -35,8 +26,8 @@ class LocaltourView extends GetView<LocaltourController> {
         if (controller.tours.isEmpty) {
           return Center(
             child: Text(
-              'No tours found',
-              style: GoogleFonts.poppins(color: Colors.grey),
+              'no_tours_found'.tr,
+              style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
             ),
           );
         }
@@ -140,14 +131,10 @@ class LocaltourView extends GetView<LocaltourController> {
                           // Title
                           Text(
                             tour.title,
-                            style: GoogleFonts.poppins(
+                            style: AppTextStyles.headingSmall.copyWith(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
                               color: Colors.black,
-                            ).copyWith(
-                              fontFamilyFallback: [
-                                GoogleFonts.hindSiliguri().fontFamily!,
-                              ],
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -164,14 +151,10 @@ class LocaltourView extends GetView<LocaltourController> {
                               Expanded(
                                 child: Text(
                                   '${tour.info.date} · ${tour.info.begins} - ${tour.info.returnTime}',
-                                  style: GoogleFonts.poppins(
+                                  style: AppTextStyles.bodyMedium.copyWith(
                                     fontSize: 14,
                                     color: Colors.grey[700],
                                     fontWeight: FontWeight.w500,
-                                  ).copyWith(
-                                    fontFamilyFallback: [
-                                      GoogleFonts.hindSiliguri().fontFamily!,
-                                    ],
                                   ),
                                 ),
                               ),
@@ -190,13 +173,9 @@ class LocaltourView extends GetView<LocaltourController> {
                               Expanded(
                                 child: Text(
                                   tour.locationDetails,
-                                  style: GoogleFonts.poppins(
+                                  style: AppTextStyles.bodyMedium.copyWith(
                                     fontSize: 14,
                                     color: Colors.grey[700],
-                                  ).copyWith(
-                                    fontFamilyFallback: [
-                                      GoogleFonts.hindSiliguri().fontFamily!,
-                                    ],
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -213,8 +192,8 @@ class LocaltourView extends GetView<LocaltourController> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                'See Details',
-                                style: GoogleFonts.poppins(
+                                'see_details'.tr,
+                                style: AppTextStyles.bodyMedium.copyWith(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   color: const Color(0xFF1E63FF),
@@ -250,17 +229,17 @@ class LocaltourView extends GetView<LocaltourController> {
       case 'running':
         bgColor = const Color(0xFFE8F5E9);
         textColor = const Color(0xFF2E7D32);
-        label = 'Running';
+        label = 'running'.tr;
         break;
       case 'upcoming':
         bgColor = const Color(0xFFE3F2FD);
         textColor = const Color(0xFF1565C0);
-        label = 'Upcoming';
+        label = 'upcoming'.tr;
         break;
       case 'completed':
         bgColor = const Color(0xFFFFEBEE);
         textColor = const Color(0xFFC62828);
-        label = 'Completed';
+        label = 'completed'.tr;
         break;
       default:
         bgColor = Colors.grey[200]!;
@@ -277,9 +256,9 @@ class LocaltourView extends GetView<LocaltourController> {
       ),
       child: Text(
         label,
-        style: GoogleFonts.poppins(
+        style: AppTextStyles.bodySmall.copyWith(
           color: textColor,
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: FontWeight.w600,
         ),
       ),

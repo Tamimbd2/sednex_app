@@ -1,7 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:sednexapp/app/core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
+import '../../../core/theme/app_colors.dart';
 import 'suradetails.dart';
 
 class QuranView extends StatefulWidget {
@@ -83,10 +83,9 @@ class _QuranViewState extends State<QuranView> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Al Quran',
-                        style: GoogleFonts.poppins(
+                        'al_quran'.tr,
+                        style: AppTextStyles.headingSmall.copyWith(
                           color: Colors.white,
-                          fontSize: 20,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -114,11 +113,10 @@ class _QuranViewState extends State<QuranView> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
                           child: Text(
-                            'Surah List',
-                            style: GoogleFonts.poppins(
+                            'surah_list'.tr,
+                            style: AppTextStyles.subHeadingLarge.copyWith(
                               color: const Color(0xFF8789A3),
                               fontWeight: FontWeight.w600,
-                              fontSize: 16,
                             ),
                           ),
                         ),
@@ -167,8 +165,7 @@ class _QuranViewState extends State<QuranView> {
                                           ),
                                           Text(
                                             '${surah['number']}',
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 14,
+                                            style: AppTextStyles.bodyMedium.copyWith(
                                               fontWeight: FontWeight.w600,
                                               color: const Color(0xFF101727),
                                             ),
@@ -182,8 +179,7 @@ class _QuranViewState extends State<QuranView> {
                                           children: [
                                             Text(
                                               surah['englishName'],
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 16,
+                                              style: AppTextStyles.bodyLarge.copyWith(
                                                 fontWeight: FontWeight.w600,
                                                 color: const Color(0xFF240F4F),
                                               ),
@@ -193,8 +189,7 @@ class _QuranViewState extends State<QuranView> {
                                               children: [
                                                 Text(
                                                   surah['revelationType'].toString().toUpperCase(), 
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 10,
+                                                  style: AppTextStyles.caption.copyWith(
                                                     fontWeight: FontWeight.w500,
                                                     color: const Color(0xFF8789A3),
                                                   ),
@@ -206,9 +201,8 @@ class _QuranViewState extends State<QuranView> {
                                                 ),
                                                  const SizedBox(width: 5),
                                                 Text(
-                                                  '${surah['numberOfAyahs']} VERSES',
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 10,
+                                                  '${surah['numberOfAyahs']} ${'verses'.tr}'.toUpperCase(),
+                                                  style: AppTextStyles.caption.copyWith(
                                                     fontWeight: FontWeight.w500,
                                                     color: const Color(0xFF8789A3),
                                                   ),
@@ -221,7 +215,7 @@ class _QuranViewState extends State<QuranView> {
                                       
                                       Text(
                                         surah['name'],
-                                        style: GoogleFonts.amiri(
+                                        style: AppTextStyles.arabic.copyWith(
                                           fontSize: 20,
                                           color: const Color(0xFF863ED5), // Purple accent
                                           fontWeight: FontWeight.bold,

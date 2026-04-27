@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../communityFeed/controllers/community_feed_controller.dart';
 import '../../../services/api_service.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class CreatepostController extends GetxController {
   final apiService = Get.find<ApiService>();
@@ -24,82 +24,90 @@ class CreatepostController extends GetxController {
       Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         backgroundColor: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Select Category',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'Please choose a category that best fits your post',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
-              ),
-              const SizedBox(height: 24),
-              Flexible(
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  itemCount: categories.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 2.2,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'select_category'.tr,
+                    style: AppTextStyles.headingSmall.copyWith(
+                      color: Colors.black,
+                    ),
                   ),
-                  itemBuilder: (context, index) {
-                    final category = categories[index];
-                    return Obx(() {
-                      final isSelected = selectedCategory.value == category;
-                      return GestureDetector(
-                        onTap: () {
-                          selectCategory(category);
-                          Get.back(); // Close dialog after selection
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? const Color(0xFF1E63FF)
-                                : const Color(0xFFF9FAFB),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: isSelected
-                                  ? const Color(0xFF1E63FF)
-                                  : Colors.grey.shade200,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              category.capitalizeFirst!,
-                              style: GoogleFonts.poppins(
-                                color: isSelected ? Colors.white : Colors.black87,
-                                fontSize: 14,
-                                fontWeight: isSelected
-                                    ? FontWeight.w600
-                                    : FontWeight.w500,
+                  const SizedBox(height: 12),
+                  Text(
+                    'category_description'.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Flexible(
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      itemCount: categories.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 2.2,
+                      ),
+                      itemBuilder: (context, index) {
+                        final category = categories[index];
+                        return Obx(() {
+                          final isSelected = selectedCategory.value == category;
+                          return GestureDetector(
+                            onTap: () {
+                              selectCategory(category);
+                              Get.back(); // Close dialog after selection
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? const Color(0xFF1E63FF)
+                                    : const Color(0xFFF9FAFB),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? const Color(0xFF1E63FF)
+                                      : Colors.grey.shade200,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  category.tr,
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    color: isSelected ? Colors.white : Colors.black87,
+                                    fontWeight: isSelected
+                                        ? FontWeight.w600
+                                        : FontWeight.w500,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      );
-                    });
-                  },
-                ),
+                          );
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            Positioned(
+              right: 8,
+              top: 8,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.grey),
+                onPressed: () => Get.back(),
+              ),
+            ),
+          ],
         ),
       ),
       barrierDismissible: false,
@@ -108,8 +116,8 @@ class CreatepostController extends GetxController {
 
   final categories = [
     'general',
-    'Jobs',
-    'buy & sell',
+    'jobs',
+    'buy_sell',
     'questions',
     'rental',
     'help',
@@ -249,22 +257,19 @@ class CreatepostController extends GetxController {
               ),
               const SizedBox(height: 24),
               Text(
-                'Post Create\nSuccessful',
+                'post_success_title'.tr,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
+                style: AppTextStyles.headingSmall.copyWith(
                   color: Colors.black,
                   height: 1.2,
                 ),
               ),
               const SizedBox(height: 12),
               Text(
-                'Your post has been successfully created and is now visible to the community.',
+                'post_success_desc'.tr,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: Color(0xFF4B5563),
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: const Color(0xFF4B5563),
                   height: 1.5,
                 ),
               ),
@@ -295,10 +300,8 @@ class CreatepostController extends GetxController {
                     elevation: 0,
                   ),
                   child: Text(
-                    'Done',
-                    style: GoogleFonts.inter(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                    'done'.tr,
+                    style: AppTextStyles.button.copyWith(
                       color: Colors.white,
                     ),
                   ),

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../controllers/saved_articles_controller.dart';
 import '../../articles/controllers/articles_controller.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class SavedArticlesView extends GetView<SavedArticlesController> {
   const SavedArticlesView({super.key});
@@ -14,10 +15,9 @@ class SavedArticlesView extends GetView<SavedArticlesController> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'Saved Articles',
-          style: GoogleFonts.poppins(
+          'saved_articles'.tr,
+          style: AppTextStyles.headingSmall.copyWith(
             fontWeight: FontWeight.w600,
-            fontSize: 18,
             color: Colors.white,
           ),
         ),
@@ -47,9 +47,8 @@ class SavedArticlesView extends GetView<SavedArticlesController> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'No saved articles found',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
+                  'no_saved_articles'.tr,
+                  style: AppTextStyles.bodyMedium.copyWith(
                     color: Colors.grey[400],
                     fontWeight: FontWeight.w500,
                   ),
@@ -138,7 +137,7 @@ class SavedArticlesView extends GetView<SavedArticlesController> {
                         ),
                         child: Text(
                           article.category,
-                          style: GoogleFonts.poppins(
+                          style: AppTextStyles.bodySmall.copyWith(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                             color: const Color(0xFF1E63FF),
@@ -159,8 +158,7 @@ class SavedArticlesView extends GetView<SavedArticlesController> {
                     article.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
+                    style: AppTextStyles.bodyLarge.copyWith(
                       fontWeight: FontWeight.w600,
                       color: const Color(0xFF101727),
                     ),
@@ -170,8 +168,7 @@ class SavedArticlesView extends GetView<SavedArticlesController> {
                     article.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
+                    style: AppTextStyles.bodyMedium.copyWith(
                       color: const Color(0xFF697282),
                       height: 1.5,
                     ),

@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sednexapp/app/core/constants/url.dart';
 import 'package:get_storage/get_storage.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../controllers/embassy_controller.dart';
 import '../../../core/theme/app_colors.dart';
 
@@ -18,18 +18,7 @@ TextStyle _getStyle({
   double? height,
   double? letterSpacing,
 }) {
-  final bool hasBangla =
-      text != null && RegExp(r'[\u0980-\u09FF]').hasMatch(text);
-  if (hasBangla) {
-    return GoogleFonts.hindSiliguri(
-      fontSize: fontSize,
-      fontWeight: fontWeight,
-      color: color,
-      height: height ?? 1.4,
-      letterSpacing: letterSpacing,
-    );
-  }
-  return GoogleFonts.poppins(
+  return AppTextStyles.bodyMedium.copyWith(
     fontSize: fontSize,
     fontWeight: fontWeight,
     color: color,
@@ -213,10 +202,10 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
     }
     try {
       if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-        Get.snackbar('Error', 'Could not open link');
+        Get.snackbar('error'.tr, 'could_not_open_link'.tr);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Action not supported');
+      Get.snackbar('error'.tr, 'action_not_supported'.tr);
     }
   }
 
@@ -238,7 +227,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
           ),
         ),
         title: Text(
-          _name.isEmpty ? 'Embassy Details' : _name,
+          _name.isEmpty ? 'embassy_details'.tr : _name,
           style: _getStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,
@@ -376,7 +365,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
               if (_category.isNotEmpty || _name.isNotEmpty) ...[
                 const SizedBox(height: 4),
                 Text(
-                  _category.isEmpty ? 'Embassy' : _category,
+                  _category.isEmpty ? 'embassy'.tr : _category,
                   style: _getStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -438,8 +427,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
             Expanded(
               child: Text(
                 _address,
-                style: GoogleFonts.inter(
-                  fontSize: 13,
+                style: AppTextStyles.bodyMedium.copyWith(
                   fontWeight: FontWeight.w500,
                   color: const Color(0xFF2C2C2C),
                   height: 1.4,
@@ -485,8 +473,8 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
             ),
             child: Row(
               children: [
-                _tabItem('About', 0),
-                _tabItem('Contact', 1),
+                _tabItem('about'.tr, 0),
+                _tabItem('contact'.tr, 1),
               ],
             ),
           ),
@@ -545,7 +533,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
         mainAxisSize: MainAxisSize.min,
         children: [
           if (_about.isNotEmpty) ...[
-            _label('About'),
+            _label('about'.tr),
             const SizedBox(height: 8),
             Text(
               _about,
@@ -561,7 +549,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
           ],
 
           if (_services.isNotEmpty) ...[
-            _label('Services'),
+            _label('services'.tr),
             const SizedBox(height: 10),
             ..._services.asMap().entries.map((e) {
               return TweenAnimationBuilder<double>(
@@ -616,7 +604,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
           ],
 
           if (_offDays.isNotEmpty) ...[
-            _label('Closed Days'),
+            _label('closed_days'.tr),
             const SizedBox(height: 10),
             Wrap(
               spacing: 8,
@@ -652,7 +640,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
           ],
 
           if (_direction.isNotEmpty) ...[
-            _label('Direction'),
+            _label('direction'.tr),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(12),
@@ -693,7 +681,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
     final allItems = [
       _ContactItem(
         icon: Icons.call_rounded,
-        label: 'Phone',
+        label: 'phone'.tr,
         value: _phone,
         color: AppColors.primary,
         onTap: () async {
@@ -704,7 +692,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
       ),
       _ContactItem(
         icon: Icons.alternate_email_rounded,
-        label: 'Email',
+        label: 'email'.tr,
         value: _email,
         color: AppColors.secondary,
         onTap: () async {
@@ -715,7 +703,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
       ),
       _ContactItem(
         icon: Icons.open_in_browser_rounded,
-        label: 'Website',
+        label: 'website'.tr,
         value: _website,
         color: const Color(0xFFB8860B),
         onTap: () async {
@@ -729,7 +717,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
       ),
       _ContactItem(
         icon: Icons.location_on_rounded,
-        label: 'Address',
+        label: 'address'.tr,
         value: _address,
         color: AppColors.blue3,
         onTap: () async {

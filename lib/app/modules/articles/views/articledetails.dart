@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:sednexapp/app/modules/articles/controllers/articles_controller.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class ArticleDetailsView extends StatelessWidget {
   const ArticleDetailsView({super.key});
@@ -39,10 +39,8 @@ class ArticleDetailsView extends StatelessWidget {
         ),
         title: Text(
           'Article Details',
-          style: GoogleFonts.poppins(
+          style: AppTextStyles.headingSmall.copyWith(
             color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
@@ -66,7 +64,7 @@ class ArticleDetailsView extends StatelessWidget {
                 ),
                 child: Text(
                   category,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.bodySmall.copyWith(
                     color: const Color(0xFF1E63FF),
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -109,7 +107,7 @@ class ArticleDetailsView extends StatelessWidget {
               const SizedBox(width: 6),
               Text(
                 formattedDate,
-                style: GoogleFonts.poppins(
+                style: AppTextStyles.caption.copyWith(
                   color: Colors.grey[500],
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
@@ -123,7 +121,7 @@ class ArticleDetailsView extends StatelessWidget {
           // Title
           Text(
             _parseHtml(title),
-            style: GoogleFonts.hindSiliguri(
+            style: AppTextStyles.headingLarge.copyWith(
               fontSize: 26,
               fontWeight: FontWeight.w700,
               color: Colors.black,
@@ -139,7 +137,7 @@ class ArticleDetailsView extends StatelessWidget {
           if (fullContent.isEmpty)
             Text(
               description,
-              style: GoogleFonts.hindSiliguri(
+              style: AppTextStyles.bodyMedium.copyWith(
                 fontSize: 16,
                 height: 1.8,
                 color: Colors.grey[800],
@@ -231,14 +229,14 @@ class ArticleDetailsView extends StatelessWidget {
           fontSize: FontSize(17),
           lineHeight: const LineHeight(1.8),
           color: Colors.black87,
-          fontFamily: GoogleFonts.hindSiliguri().fontFamily,
+          fontFamily: AppTextStyles.bodyMedium.fontFamily,
           margin: Margins.zero,
           padding: HtmlPaddings.zero,
         ),
         "h2,h3": Style(
           fontWeight: FontWeight.bold,
           margin: Margins.only(top: 20, bottom: 8),
-          fontFamily: GoogleFonts.hindSiliguri().fontFamily,
+          fontFamily: AppTextStyles.bodyMedium.fontFamily,
         ),
       },
     );

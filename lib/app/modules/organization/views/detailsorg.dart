@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sednexapp/app/core/constants/url.dart';
 import 'package:get_storage/get_storage.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 // ── Font Helper ──────────────────────────────────────────────────
 TextStyle _getStyle({
@@ -17,18 +17,7 @@ TextStyle _getStyle({
   double? height,
   double? letterSpacing,
 }) {
-  final bool hasBangla =
-      text != null && RegExp(r'[\u0980-\u09FF]').hasMatch(text);
-  if (hasBangla) {
-    return GoogleFonts.hindSiliguri(
-      fontSize: fontSize,
-      fontWeight: fontWeight,
-      color: color,
-      height: height ?? 1.4,
-      letterSpacing: letterSpacing,
-    );
-  }
-  return GoogleFonts.poppins(
+  return AppTextStyles.bodyMedium.copyWith(
     fontSize: fontSize,
     fontWeight: fontWeight,
     color: color,
@@ -244,7 +233,7 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
           ),
         ),
         title: Text(
-          _name.isEmpty ? 'Details' : _name,
+          _name.isEmpty ? 'details'.tr : _name,
           style: _getStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,
@@ -436,8 +425,8 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
             ),
             child: Row(
               children: [
-                _tabItem('About', 0),
-                _tabItem('Contact', 1),
+                _tabItem('about'.tr, 0),
+                _tabItem('contact'.tr, 1),
               ],
             ),
           ),
@@ -496,7 +485,7 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
         mainAxisSize: MainAxisSize.min,
         children: [
           if (_about.isNotEmpty) ...[
-            _label('About'),
+            _label('about'.tr),
             const SizedBox(height: 8),
             Text(
               _about,
@@ -512,7 +501,7 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
           ],
 
           if (_bio.isNotEmpty) ...[
-            _label('Information'),
+            _label('information'.tr),
             const SizedBox(height: 8),
             Text(
               _bio,
@@ -528,7 +517,7 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
           ],
 
           if (_officialName.isNotEmpty) ...[
-            _label('Top Official'),
+            _label('top_official'.tr),
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.all(12),
@@ -601,13 +590,13 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
           ],
 
           if (_services.isNotEmpty) ...[
-            _label('Services'),
+            _label('services'.tr),
             const SizedBox(height: 10),
             ..._services.map((s) => _buildServiceItem(s)),
             const SizedBox(height: 20),
           ],
           if (_offDays.isNotEmpty) ...[
-            _label('Closed Days'),
+            _label('closed_days'.tr),
             const SizedBox(height: 10),
             Wrap(
               spacing: 8,
@@ -617,7 +606,7 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
             const SizedBox(height: 20),
           ],
           if (_direction.isNotEmpty) ...[
-            _label('Direction'),
+            _label('direction'.tr),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(12),
@@ -710,28 +699,28 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
     final contacts = [
       _DetailRow(
         icon: Icons.call_rounded,
-        label: 'Phone',
+        label: 'phone'.tr,
         value: _phone,
         color: const Color(0xFF3D5AF1),
         onTap: () => _launch('tel:$_phone'),
       ),
       _DetailRow(
         icon: Icons.alternate_email_rounded,
-        label: 'Email',
+        label: 'email'.tr,
         value: _email,
         color: const Color(0xFF059669),
         onTap: () => _launch('mailto:$_email'),
       ),
       _DetailRow(
         icon: Icons.language_rounded,
-        label: 'Website',
+        label: 'website'.tr,
         value: _website,
         color: const Color(0xFFD97706),
         onTap: () => _launch(_website),
       ),
       _DetailRow(
         icon: Icons.location_on_rounded,
-        label: 'Address',
+        label: 'address'.tr,
         value: _address.isNotEmpty ? _address : _direction,
         color: const Color(0xFF7C3AED),
         onTap: () {
@@ -758,7 +747,7 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
           ],
           if (_facebook.isNotEmpty || _twitter.isNotEmpty || _linkedin.isNotEmpty || _instagram.isNotEmpty || _youtube.isNotEmpty) ...[
             const SizedBox(height: 24),
-            _label('Social Profiles'),
+            _label('social_profiles'.tr),
             const SizedBox(height: 12),
             _socialLinksRow(),
           ],

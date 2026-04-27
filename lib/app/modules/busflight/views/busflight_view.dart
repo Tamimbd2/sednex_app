@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../controllers/busflight_controller.dart';
@@ -21,12 +20,8 @@ class BusflightView extends GetView<BusflightController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Bus and Flight',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+          'bus_and_flight'.tr,
+          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -51,9 +46,8 @@ class BusflightView extends GetView<BusflightController> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Active Airlines',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
+                        'active_airlines'.tr,
+                        style: AppTextStyles.headingSmall.copyWith(
                           fontWeight: FontWeight.w700,
                           color: Colors.black,
                         ),
@@ -62,9 +56,8 @@ class BusflightView extends GetView<BusflightController> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'সুখ এবং নিরাপত্তার সাথে আপনার গন্তব্যে পৌঁছান',
-                    style: GoogleFonts.hindSiliguri(
-                      fontSize: 13,
+                    'airline_subtitle'.tr,
+                    style: AppTextStyles.bodySmall.copyWith(
                       color: Colors.grey[600],
                       height: 1.4,
                     ),
@@ -79,8 +72,8 @@ class BusflightView extends GetView<BusflightController> {
                     if (controller.activeAirlines.isEmpty) {
                       return Center(
                         child: Text(
-                          'No active airlines found',
-                          style: GoogleFonts.poppins(color: Colors.grey),
+                          'no_airlines_found'.tr,
+                          style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
                         ),
                       );
                     }
@@ -105,9 +98,8 @@ class BusflightView extends GetView<BusflightController> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                'Routes and Transit',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
+                'routes_and_transit'.tr,
+                style: AppTextStyles.headingSmall.copyWith(
                   fontWeight: FontWeight.w700,
                   color: Colors.black,
                 ),
@@ -123,8 +115,8 @@ class BusflightView extends GetView<BusflightController> {
               if (controller.routes.isEmpty) {
                 return Center(
                   child: Text(
-                    'No routes found',
-                    style: GoogleFonts.poppins(color: Colors.grey),
+                    'no_routes_found'.tr,
+                    style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
                   ),
                 );
               }
@@ -146,8 +138,7 @@ class BusflightView extends GetView<BusflightController> {
                       children: [
                         Text(
                           route.from,
-                          style: GoogleFonts.hindSiliguri(
-                            fontSize: 14,
+                          style: AppTextStyles.bodyMedium.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
                           ),
@@ -159,8 +150,7 @@ class BusflightView extends GetView<BusflightController> {
                           child: Text(
                             route.via.join(' - '),
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.hindSiliguri(
-                              fontSize: 14,
+                            style: AppTextStyles.bodyMedium.copyWith(
                               fontWeight: FontWeight.w600,
                               color: const Color(0xFF4169E1),
                             ),
@@ -171,8 +161,7 @@ class BusflightView extends GetView<BusflightController> {
                         const SizedBox(width: 8),
                         Text(
                           route.to,
-                          style: GoogleFonts.hindSiliguri(
-                            fontSize: 14,
+                          style: AppTextStyles.bodyMedium.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
                           ),
@@ -197,9 +186,8 @@ class BusflightView extends GetView<BusflightController> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Bus Service',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
+                    'bus_service'.tr,
+                    style: AppTextStyles.headingSmall.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Colors.black,
                     ),
@@ -218,7 +206,7 @@ class BusflightView extends GetView<BusflightController> {
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Text('No bus services found', style: GoogleFonts.poppins(color: Colors.grey)),
+                    child: Text('no_bus_services_found'.tr, style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
                   ),
                 );
               }
@@ -236,7 +224,7 @@ class BusflightView extends GetView<BusflightController> {
                           () => const BusDetailsView(),
                           arguments: {
                             'name': bus.busName,
-                            'seats': '${bus.busSitNo} Seats',
+                            'seats': '${bus.busSitNo} ${'seats'.tr}',
                             'image': bus.busImage,
                             'rentalDetails': bus.rentalDetails,
                             'note': bus.note,
@@ -312,14 +300,13 @@ class BusflightView extends GetView<BusflightController> {
                                     color: const Color(0xFF4169E1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  child: Text(
-                                    '${bus.busSitNo} Seats',
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
+                                    child: Text(
+                                      '${bus.busSitNo} ${'seats'.tr}',
+                                      style: AppTextStyles.bodySmall.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
-                                  ),
                                 ),
                               ),
                             ],
@@ -329,8 +316,7 @@ class BusflightView extends GetView<BusflightController> {
                             padding: const EdgeInsets.all(12),
                             child: Text(
                               bus.busName,
-                              style: GoogleFonts.hindSiliguri(
-                                fontSize: 14,
+                              style: AppTextStyles.bodyMedium.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black,
                               ),
@@ -356,18 +342,16 @@ class BusflightView extends GetView<BusflightController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'About Our Service',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
+                    'about_our_service'.tr,
+                    style: AppTextStyles.headingSmall.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Colors.black,
                     ),
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'আমরা নির্ভরযোগ্য ও সাশ্রয়ী বাস ও ফ্লাইট বুকিং সেবা প্রদান করি। আমাদের অভিজ্ঞ টিম আপনার নিরাপদ যাত্রা নিশ্চিত করতে সবসময় প্রস্তুত।',
-                    style: GoogleFonts.hindSiliguri(
-                      fontSize: 15,
+                    'about_service_desc'.tr,
+                    style: AppTextStyles.bodyMedium.copyWith(
                       color: Colors.grey[700],
                       height: 1.6,
                     ),
@@ -418,8 +402,7 @@ class BusflightView extends GetView<BusflightController> {
         const SizedBox(height: 6),
         Text(
           name,
-          style: GoogleFonts.poppins(
-            fontSize: 11,
+          style: AppTextStyles.bodySmall.copyWith(
             color: Colors.grey[600],
           ),
           textAlign: TextAlign.center,

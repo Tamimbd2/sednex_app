@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/change_password_controller.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class ChangePasswordView extends GetView<ChangePasswordController> {
   const ChangePasswordView({super.key});
@@ -13,11 +14,13 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
       backgroundColor: const Color(0xFFF9FAFB), // Very light grey bg
       appBar: AppBar(
         title: Text(
-          'Reset Password',
-          style: GoogleFonts.poppins(
+          'reset_password'.tr,
+          style: AppTextStyles.headingSmall.copyWith(
             fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
+        iconTheme: const IconThemeData(color: Colors.white),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
@@ -38,10 +41,9 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  'Your new password must be different from previously used passwords.',
-                  style: GoogleFonts.arimo(
+                  'password_info_msg'.tr,
+                  style: AppTextStyles.bodyMedium.copyWith(
                     color: const Color(0xFF1D4ED8), // Darker blue text
-                    fontSize: 14,
                     height: 1.5,
                   ),
                 ),
@@ -49,11 +51,11 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
               const SizedBox(height: 32),
 
               // Current Password
-              _buildLabel('Current Password'),
+              _buildLabel('current_password_label'.tr),
               const SizedBox(height: 8),
               Obx(() => _buildPasswordField(
                 controller: controller.currentPasswordController,
-                hintText: 'Enter current password',
+                hintText: 'enter_current_password'.tr,
                 isVisible: controller.isCurrentPasswordVisible.value,
                 onToggleVisibility: controller.toggleCurrentPasswordVisibility,
               )),
@@ -61,11 +63,11 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
               const SizedBox(height: 24),
 
               // New Password
-              _buildLabel('New Password'),
+              _buildLabel('new_password_label'.tr),
               const SizedBox(height: 8),
               Obx(() => _buildPasswordField(
                 controller: controller.newPasswordController,
-                hintText: 'Enter new password',
+                hintText: 'enter_new_password'.tr,
                 isVisible: controller.isNewPasswordVisible.value,
                 onToggleVisibility: controller.toggleNewPasswordVisibility,
               )),
@@ -73,11 +75,11 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
               const SizedBox(height: 24),
 
               // Confirm New Password
-              _buildLabel('Confirm New Password'),
+              _buildLabel('confirm_password_label'.tr),
               const SizedBox(height: 8),
               Obx(() => _buildPasswordField(
                 controller: controller.confirmNewPasswordController,
-                hintText: 'Re-enter new password',
+                hintText: 're_enter_new_password'.tr,
                 isVisible: controller.isConfirmNewPasswordVisible.value,
                 onToggleVisibility: controller.toggleConfirmNewPasswordVisibility,
               )),
@@ -108,33 +110,14 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
                           ),
                         )
                       : Text(
-                          'Update Password',
-                          style: GoogleFonts.arimo(
+                          'update_password'.tr,
+                          style: AppTextStyles.button.copyWith(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
                 )),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Forgot Password link
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    // Navigate to forgot password flow if needed
-                  },
-                  child: Text(
-                    'Forgot current password?',
-                    style: GoogleFonts.arimo(
-                      color: const Color(0xFF1E63FF), // Red
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
               ),
             ],
           ),
@@ -146,9 +129,8 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
   Widget _buildLabel(String text) {
     return Text(
       text,
-      style: GoogleFonts.arimo(
+      style: AppTextStyles.bodyMedium.copyWith(
         color: const Color(0xFF495565),
-        fontSize: 14,
         fontWeight: FontWeight.w500,
       ),
     );
@@ -163,13 +145,13 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
     return TextFormField(
       controller: controller,
       obscureText: !isVisible,
-      style: GoogleFonts.poppins(
+      style: AppTextStyles.bodyMedium.copyWith(
         color: const Color(0xFF101727),
         fontSize: 15,
       ),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: GoogleFonts.poppins(
+        hintStyle: AppTextStyles.bodyMedium.copyWith(
           color: const Color(0xFF9CA3AF),
           fontSize: 15,
         ),

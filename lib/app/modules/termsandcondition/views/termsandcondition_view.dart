@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/termsandcondition_controller.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class TermsandconditionView extends GetView<TermsandconditionController> {
   const TermsandconditionView({super.key});
@@ -25,8 +26,8 @@ class TermsandconditionView extends GetView<TermsandconditionController> {
           ),
         ),
         title: Text(
-          'Terms and Conditions',
-          style: GoogleFonts.poppins(
+          'terms_condition'.tr,
+          style: AppTextStyles.headingMedium.copyWith(
             fontWeight: FontWeight.w700,
             fontSize: 20,
             color: Colors.white,
@@ -50,8 +51,8 @@ class TermsandconditionView extends GetView<TermsandconditionController> {
           if (controller.terms.isEmpty) {
             return Center(
               child: Text(
-                'No terms and conditions found.',
-                style: GoogleFonts.arimo(color: const Color(0xFF697282)),
+                'no_terms_found'.tr,
+                style: AppTextStyles.bodyMedium.copyWith(color: const Color(0xFF697282)),
               ),
             );
           }
@@ -63,19 +64,17 @@ class TermsandconditionView extends GetView<TermsandconditionController> {
               children: [
                 if (controller.lastUpdated.value != null)
                   Text(
-                    'Last updated: ${controller.lastUpdated.value!.day} ${_getMonthName(controller.lastUpdated.value!.month)}, ${controller.lastUpdated.value!.year}',
-                    style: GoogleFonts.poppins(
+                    '${'last_updated_label'.tr}: ${controller.lastUpdated.value!.day} ${_getMonthName(controller.lastUpdated.value!.month)}, ${controller.lastUpdated.value!.year}',
+                    style: AppTextStyles.bodySmall.copyWith(
                       color: const Color(0xFF9CA3AF),
-                      fontSize: 14,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                 const SizedBox(height: 16),
                 Text(
-                  'Please read these terms and conditions carefully before using our mobile application.',
-                  style: GoogleFonts.poppins(
+                  'terms_intro'.tr,
+                  style: AppTextStyles.bodyMedium.copyWith(
                     color: const Color(0xFF495565),
-                    fontSize: 16,
                     height: 1.5,
                     fontWeight: FontWeight.w400,
                   ),
@@ -105,7 +104,7 @@ class TermsandconditionView extends GetView<TermsandconditionController> {
         children: [
           Text(
             title,
-            style: GoogleFonts.poppins(
+            style: AppTextStyles.bodyLarge.copyWith(
               color: const Color(0xFF101727),
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -114,9 +113,8 @@ class TermsandconditionView extends GetView<TermsandconditionController> {
           const SizedBox(height: 12),
           Text(
             content,
-            style: GoogleFonts.hindSiliguri(
+            style: AppTextStyles.bodyMedium.copyWith(
               color: const Color(0xFF495565),
-              fontSize: 14,
               height: 1.6,
               fontWeight: FontWeight.w400,
             ),

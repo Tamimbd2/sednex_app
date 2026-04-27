@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class SuraDetailsView extends StatefulWidget {
   final int number;
@@ -58,14 +58,14 @@ class _SuraDetailsViewState extends State<SuraDetailsView> {
           children: [
             Text(
               widget.englishName,
-              style: GoogleFonts.poppins(
+              style: AppTextStyles.headingSmall.copyWith(
                 fontWeight: FontWeight.w600,
-                fontSize: 18,
+                color: Colors.white,
               ),
             ),
             Text(
               widget.name,
-              style: GoogleFonts.amiri(
+              style: AppTextStyles.arabic.copyWith(
                 color: Colors.white.withValues(alpha: 0.9),
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
@@ -73,10 +73,12 @@ class _SuraDetailsViewState extends State<SuraDetailsView> {
             ),
           ],
         ),
+        backgroundColor: const Color(0xFF1E63FF),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
+        centerTitle: true,
       ),
       body: Obx(() {
         if (isLoading.value) {
@@ -108,9 +110,8 @@ class _SuraDetailsViewState extends State<SuraDetailsView> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            'Ayah $numberInSurah',
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
+                            '${'ayah'.tr} $numberInSurah',
+                            style: AppTextStyles.bodySmall.copyWith(
                               color: const Color(0xFF2E7D32),
                               fontWeight: FontWeight.w500,
                             ),
@@ -125,7 +126,7 @@ class _SuraDetailsViewState extends State<SuraDetailsView> {
                    Text(
                      text,
                      textAlign: TextAlign.right,
-                     style: GoogleFonts.amiri(
+                     style: AppTextStyles.arabic.copyWith(
                        fontSize: 26,
                        height: 2.2, // Good line height for Arabic
                        color: const Color(0xFF1F2937),

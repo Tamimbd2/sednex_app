@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:google_fonts/google_fonts.dart';
-
+import '../../../core/theme/app_text_styles.dart';
 
 import '../controllers/articles_controller.dart';
 import 'articledetails.dart';
@@ -22,12 +21,8 @@ class ArticlesView extends GetView<ArticlesController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Articles',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+          'articles'.tr,
+          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -49,11 +44,9 @@ class ArticlesView extends GetView<ArticlesController> {
                       child: TextField(
                         onChanged: (value) => controller.search(value),
                         decoration: InputDecoration(
-                          hintText: 'Search legal topics...',
-                          hintStyle: GoogleFonts.poppins(
+                          hintText: 'search_articles_placeholder'.tr,
+                          hintStyle: AppTextStyles.bodyMedium.copyWith(
                             color: Colors.grey[500],
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
                           ),
                           prefixIcon: Icon(
                             Icons.search_rounded,
@@ -82,9 +75,8 @@ class ArticlesView extends GetView<ArticlesController> {
                             ),
                           ),
                         ),
-                        style: GoogleFonts.poppins(
+                        style: AppTextStyles.bodyMedium.copyWith(
                           color: const Color(0xFF2C2C2C),
-                          fontSize: 15,
                           fontWeight: FontWeight.w500,
                         ),
                         cursorColor: const Color(0xFF1E63FF),
@@ -115,9 +107,8 @@ class ArticlesView extends GetView<ArticlesController> {
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      'Categories',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 14,
+                                      'categories'.tr,
+                                      style: AppTextStyles.bodyMedium.copyWith(
                                         fontWeight: FontWeight.w600,
                                         color: Colors.black,
                                       ),
@@ -179,12 +170,11 @@ class ArticlesView extends GetView<ArticlesController> {
                                       ),
                                       child: Center(
                                         child: Text(
-                                          category,
-                                          style: GoogleFonts.poppins(
+                                          category == 'All' ? 'view_all'.tr : category,
+                                          style: AppTextStyles.bodySmall.copyWith(
                                             color: isSelected
                                                 ? Colors.white
                                                 : Colors.black87,
-                                            fontSize: 13,
                                             fontWeight: isSelected
                                                 ? FontWeight.w600
                                                 : FontWeight.w500,
@@ -234,9 +224,8 @@ class ArticlesView extends GetView<ArticlesController> {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'No articles found',
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
+                            'no_articles_found'.tr,
+                            style: AppTextStyles.bodyMedium.copyWith(
                               color: Colors.grey[400],
                               fontWeight: FontWeight.w500,
                             ),
@@ -278,9 +267,8 @@ class ArticlesView extends GetView<ArticlesController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Filter Categories',
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
+                    'filter_categories'.tr,
+                    style: AppTextStyles.headingSmall.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -302,7 +290,7 @@ class ArticlesView extends GetView<ArticlesController> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Select All'),
+                    child: Text('select_all'.tr),
                   ),
                   const SizedBox(width: 8),
                   TextButton(
@@ -314,7 +302,7 @@ class ArticlesView extends GetView<ArticlesController> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Clear All'),
+                    child: Text('clear_all'.tr),
                   ),
                 ],
               ),
@@ -359,8 +347,7 @@ class ArticlesView extends GetView<ArticlesController> {
                                     const SizedBox(width: 12),
                                     Text(
                                       category,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 16,
+                                      style: AppTextStyles.bodyLarge.copyWith(
                                         color: Colors.black87,
                                       ),
                                     ),
@@ -380,8 +367,8 @@ class ArticlesView extends GetView<ArticlesController> {
                 children: [
                   Obx(
                     () => Text(
-                      '${controller.selectedFilterCategories.length} selected',
-                      style: GoogleFonts.poppins(color: Colors.grey),
+                      '${controller.selectedFilterCategories.length} ${'selected'.tr}',
+                      style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
                     ),
                   ),
                   ElevatedButton(
@@ -398,7 +385,7 @@ class ArticlesView extends GetView<ArticlesController> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Apply'),
+                    child: Text('apply'.tr),
                   ),
                 ],
               ),
@@ -493,7 +480,7 @@ class ArticlesView extends GetView<ArticlesController> {
                         ),
                         child: Text(
                           article.category,
-                          style: GoogleFonts.poppins(
+                          style: AppTextStyles.label.copyWith(
                             color: const Color(0xFF1E63FF),
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
@@ -505,8 +492,7 @@ class ArticlesView extends GetView<ArticlesController> {
                       const SizedBox(width: 8),
                       Text(
                         _smartDate(article.date),
-                        style: GoogleFonts.poppins(
-                          fontSize: 11,
+                        style: AppTextStyles.caption.copyWith(
                           color: Colors.grey[500],
                           fontWeight: FontWeight.w400,
                         ),
@@ -518,8 +504,7 @@ class ArticlesView extends GetView<ArticlesController> {
                   // Title
                   Text(
                     _parseHtml(article.title),
-                    style: GoogleFonts.hindSiliguri(
-                      fontSize: 18,
+                    style: AppTextStyles.headingSmall.copyWith(
                       fontWeight: FontWeight.w700,
                       color: const Color(0xFF1A1A1A),
                       height: 1.3,
@@ -532,8 +517,7 @@ class ArticlesView extends GetView<ArticlesController> {
                   // Description
                   Text(
                     _parseHtml(article.description),
-                    style: GoogleFonts.hindSiliguri(
-                      fontSize: 14,
+                    style: AppTextStyles.bodyMedium.copyWith(
                       color: Colors.grey[600],
                       height: 1.5,
                     ),
@@ -577,10 +561,9 @@ class ArticlesView extends GetView<ArticlesController> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Read More',
-                                style: GoogleFonts.poppins(
+                                'read_more'.tr,
+                                style: AppTextStyles.bodySmall.copyWith(
                                   color: const Color(0xFF1E63FF),
-                                  fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -639,8 +622,8 @@ class ArticlesView extends GetView<ArticlesController> {
     final articleDay = DateTime(date.year, date.month, date.day);
     final diff = today.difference(articleDay).inDays;
 
-    if (diff == 0) return 'Today';
-    if (diff == 1) return 'Yesterday';
+    if (diff == 0) return 'today'.tr;
+    if (diff == 1) return 'yesterday'.tr;
 
     const months = [
       'Jan',

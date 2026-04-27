@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 import '../controllers/aboutus_controller.dart';
 
@@ -27,8 +28,8 @@ class AboutusView extends GetView<AboutusController> {
           ),
         ),
         title: Text(
-          'About Us',
-          style: GoogleFonts.poppins(
+          'about_us'.tr,
+          style: AppTextStyles.headingMedium.copyWith(
             fontWeight: FontWeight.w700,
             fontSize: 20,
             color: Colors.white,
@@ -47,7 +48,7 @@ class AboutusView extends GetView<AboutusController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle('Our Team'),
+              _buildSectionTitle('our_team'.tr),
               const SizedBox(height: 16),
 
               Obx(() {
@@ -63,10 +64,13 @@ class AboutusView extends GetView<AboutusController> {
                 }
 
                 if (controller.teamMembers.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(32.0),
-                      child: Text('No team members found.'),
+                      padding: const EdgeInsets.all(32.0),
+                      child: Text(
+                        'no_team_found'.tr,
+                        style: AppTextStyles.bodyMedium,
+                      ),
                     ),
                   );
                 }
@@ -138,27 +142,24 @@ class AboutusView extends GetView<AboutusController> {
                                 children: [
                                   Text(
                                     member.name,
-                                    style: GoogleFonts.arimo(
+                                    style: AppTextStyles.bodyLarge.copyWith(
                                       color: const Color(0xFF101727),
-                                      fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     member.designation,
-                                    style: GoogleFonts.arimo(
+                                    style: AppTextStyles.bodyMedium.copyWith(
                                       color: const Color(0xFF495565),
-                                      fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     member.about,
-                                    style: GoogleFonts.arimo(
+                                    style: AppTextStyles.bodySmall.copyWith(
                                       color: const Color(0xFF9CA3AF),
-                                      fontSize: 12,
                                     ),
                                     maxLines: 4,
                                     overflow: TextOverflow.ellipsis,
@@ -182,7 +183,7 @@ class AboutusView extends GetView<AboutusController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 32),
-                    _buildSectionTitle('Contact Us'),
+                    _buildSectionTitle('contact_us'.tr),
                     const SizedBox(height: 16),
                     Container(
                       decoration: BoxDecoration(
@@ -234,9 +235,8 @@ class AboutusView extends GetView<AboutusController> {
               Center(
                 child: Text(
                   'Copyright © Sednex 2025',
-                  style: GoogleFonts.arimo(
+                  style: AppTextStyles.bodySmall.copyWith(
                     color: const Color(0xFF9CA3AF),
-                    fontSize: 14,
                   ),
                 ),
               ),
@@ -251,9 +251,8 @@ class AboutusView extends GetView<AboutusController> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: GoogleFonts.arimo(
+      style: AppTextStyles.bodyLarge.copyWith(
         color: const Color(0xFF495565),
-        fontSize: 16,
         fontWeight: FontWeight.w600,
       ),
     );
@@ -271,9 +270,8 @@ class AboutusView extends GetView<AboutusController> {
             children: [
               Text(
                 text,
-                style: GoogleFonts.arimo(
+                style: AppTextStyles.bodyMedium.copyWith(
                   color: const Color(0xFF101727),
-                  fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -281,9 +279,8 @@ class AboutusView extends GetView<AboutusController> {
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: GoogleFonts.arimo(
+                  style: AppTextStyles.bodySmall.copyWith(
                     color: const Color(0xFF9CA3AF),
-                    fontSize: 12,
                   ),
                 ),
               ],

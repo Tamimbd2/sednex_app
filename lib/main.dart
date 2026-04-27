@@ -8,6 +8,7 @@ import 'app/core/constants/app_constants.dart';
 import 'app/routes/app_pages.dart';
 import 'app/bindings/initial_binding.dart';
 import 'app/core/theme/app_theme.dart';
+import 'app/core/theme/app_text_styles.dart';
 import 'app/core/translations/app_translations.dart';
 
 void main() async {
@@ -42,10 +43,10 @@ void main() async {
       locale: initialLocale,
       fallbackLocale: const Locale('en', 'US'),
       theme: AppTheme.lightTheme.copyWith(
-        // Global font fallback: Poppins for Latin, Hind Siliguri for Bengali
+        // Global font fallback: Poppins for Latin, Noto Sans Bengali for Bengali
         textTheme: AppTheme.lightTheme.textTheme.apply(
           fontFamilyFallback: [
-            GoogleFonts.hindSiliguri().fontFamily ?? 'HindSiliguri',
+            AppTextStyles.bengaliFontFamily,
             'Roboto', // Fallback for Arabic if needed, or specify an Arabic font
           ],
         ),

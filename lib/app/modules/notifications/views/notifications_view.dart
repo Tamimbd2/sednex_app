@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sednexapp/app/core/theme/app_colors.dart';
+import 'package:sednexapp/app/core/theme/app_text_styles.dart';
 import '../controllers/notifications_controller.dart';
 
 class NotificationsView extends GetView<NotificationsController> {
@@ -14,7 +15,15 @@ class NotificationsView extends GetView<NotificationsController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: Text(
+          'notifications_title'.tr,
+          style: AppTextStyles.headingSmall.copyWith(
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color(0xFF1E63FF),
+        iconTheme: const IconThemeData(color: Colors.white),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, size: 18),
           onPressed: () => Get.back(),
@@ -25,9 +34,8 @@ class NotificationsView extends GetView<NotificationsController> {
               return TextButton(
                 onPressed: () => controller.markAllAsRead(),
                 child: Text(
-                  'Mark all read',
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
+                  'mark_all_read'.tr,
+                  style: AppTextStyles.bodySmall.copyWith(
                     fontWeight: FontWeight.w500,
                     color: AppColors.primary,
                   ),
@@ -46,7 +54,7 @@ class NotificationsView extends GetView<NotificationsController> {
         if (controller.error.value != null && controller.notifications.isEmpty) {
           return _buildMinimalState(
             icon: Icons.error_outline_rounded,
-            title: 'Connection Issue',
+            title: 'connection_issue'.tr,
             subtitle: controller.error.value!,
           );
         }
@@ -54,8 +62,8 @@ class NotificationsView extends GetView<NotificationsController> {
         if (controller.notifications.isEmpty) {
           return _buildMinimalState(
             icon: Icons.notifications_none_rounded,
-            title: 'All caught up!',
-            subtitle: 'No new notifications at the moment.',
+            title: 'all_caught_up'.tr,
+            subtitle: 'no_new_notifications'.tr,
           );
         }
 
@@ -100,8 +108,7 @@ class NotificationsView extends GetView<NotificationsController> {
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
       child: Text(
         _getFormattedDateHeader(date).toUpperCase(),
-        style: GoogleFonts.poppins(
-          fontSize: 11,
+        style: AppTextStyles.caption.copyWith(
           fontWeight: FontWeight.w700,
           color: AppColors.text.withValues(alpha: 0.4),
           letterSpacing: 1.2,
@@ -166,7 +173,7 @@ class NotificationsView extends GetView<NotificationsController> {
                       Expanded(
                         child: Text(
                           notification.title,
-                          style: (isBangla ? GoogleFonts.hindSiliguri : GoogleFonts.poppins)(
+                          style: AppTextStyles.bodyMedium.copyWith(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                             color: AppColors.mainText.withValues(alpha: 0.9),
@@ -178,8 +185,7 @@ class NotificationsView extends GetView<NotificationsController> {
                       const SizedBox(width: 8),
                       Text(
                         _getRelativeTime(notification.createdAt),
-                        style: GoogleFonts.poppins(
-                          fontSize: 11,
+                        style: AppTextStyles.caption.copyWith(
                           color: AppColors.text.withValues(alpha: 0.4),
                         ),
                       ),
@@ -188,7 +194,7 @@ class NotificationsView extends GetView<NotificationsController> {
                   const SizedBox(height: 6),
                   Text(
                     notification.message,
-                    style: (isBangla ? GoogleFonts.hindSiliguri : GoogleFonts.poppins)(
+                    style: AppTextStyles.bodySmall.copyWith(
                       fontSize: 13,
                       color: AppColors.text.withValues(alpha: 0.6),
                       height: 1.4,
@@ -268,12 +274,12 @@ class NotificationsView extends GetView<NotificationsController> {
             const SizedBox(height: 24),
             Text(
               title,
-              style: GoogleFonts.poppins(fontSize: 17, fontWeight: FontWeight.w600, color: AppColors.mainText),
+              style: AppTextStyles.headingSmall.copyWith(fontSize: 17, color: AppColors.mainText),
             ),
             const SizedBox(height: 10),
             Text(
               subtitle,
-              style: GoogleFonts.poppins(fontSize: 13, color: AppColors.text.withValues(alpha: 0.5)),
+              style: AppTextStyles.bodySmall.copyWith(fontSize: 13, color: AppColors.text.withValues(alpha: 0.5)),
               textAlign: TextAlign.center,
             ),
           ],
@@ -292,14 +298,14 @@ class NotificationsView extends GetView<NotificationsController> {
     final yesterday = today.subtract(const Duration(days: 1));
     final checkDate = DateTime(date.year, date.month, date.day);
 
-    if (checkDate == today) return 'Today';
-    if (checkDate == yesterday) return 'Yesterday';
+    if (checkDate == today) return 'today'.tr;
+    if (checkDate == yesterday) return 'yesterday'.tr;
     return DateFormat('MMMM dd, yyyy').format(date);
   }
 
   String _getRelativeTime(DateTime date) {
     final diff = DateTime.now().difference(date);
-    if (diff.inMinutes < 1) return 'Just now';
+    if (diff.inMinutes < 1) return 'just_now'.tr;
     if (diff.inMinutes < 60) return '${diff.inMinutes}m';
     if (diff.inHours < 24) return '${diff.inHours}h';
     return '${diff.inDays}d';

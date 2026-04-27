@@ -3,20 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NamajController extends GetxController with WidgetsBindingObserver {
-  //TODO: Implement NamajController
-
-  // Namaj Schedule Data
   // Namaj Schedule Data
   final schedule = {
     'day': '',
     'status': 'ওয়াক্ত',
     'lastUpdate': '',
     'prayers': [
-      {'name': 'ফজর', 'time': '৫:০৫'},
-      {'name': 'যোহর', 'time': '১২:১৫'},
-      {'name': 'আছর', 'time': '৪:৩৫'},
-      {'name': 'মাগরিব', 'time': '৫:৫৮'},
-      {'name': 'ঈশা', 'time': '৮:০০'},
+      {'name': 'fajar', 'time': '৫:০৫'},
+      {'name': 'zohar', 'time': '১২:১৫'},
+      {'name': 'asar', 'time': '৪:৩৫'},
+      {'name': 'magrib', 'time': '৫:৫৮'},
+      {'name': 'esha', 'time': '৮:০০'},
     ]
   }.obs;
 
@@ -75,11 +72,11 @@ class NamajController extends GetxController with WidgetsBindingObserver {
         final timings = data['timings'];
         
         final newPrayers = [
-          {'name': 'ফজর', 'time': _formatTime12H(timings['Fajr']), 'raw': timings['Fajr']},
-          {'name': 'যোহর', 'time': _formatTime12H(timings['Dhuhr']), 'raw': timings['Dhuhr']},
-          {'name': 'আছর', 'time': _formatTime12H(timings['Asr']), 'raw': timings['Asr']},
-          {'name': 'মাগরিব', 'time': _formatTime12H(timings['Maghrib']), 'raw': timings['Maghrib']},
-          {'name': 'ঈশা', 'time': _formatTime12H(timings['Isha']), 'raw': timings['Isha']},
+          {'name': 'fajar', 'time': _formatTime12H(timings['Fajr']), 'raw': timings['Fajr']},
+          {'name': 'zohar', 'time': _formatTime12H(timings['Dhuhr']), 'raw': timings['Dhuhr']},
+          {'name': 'asar', 'time': _formatTime12H(timings['Asr']), 'raw': timings['Asr']},
+          {'name': 'magrib', 'time': _formatTime12H(timings['Maghrib']), 'raw': timings['Maghrib']},
+          {'name': 'esha', 'time': _formatTime12H(timings['Isha']), 'raw': timings['Isha']},
         ];
         
         schedule['prayers'] = newPrayers;
@@ -182,7 +179,6 @@ class NamajController extends GetxController with WidgetsBindingObserver {
     return input;
   }
 
-
   String _getBengaliDay(int weekday) {
     switch (weekday) {
       case DateTime.saturday:
@@ -205,82 +201,81 @@ class NamajController extends GetxController with WidgetsBindingObserver {
   }
 
   // Prayer Learning Sections
-  // Prayer Learning Sections
   final prayerSections = [
     {
-      'title': 'ফজর',
-      'rakat': '২ রাকাত',
-      'icon': Icons.nights_stay_rounded, // Night Vibe
-      'color': 0xFFFFF8E1, // Light Yellow
+      'title': 'fajar',
+      'rakat': 'rakat_2',
+      'icon': Icons.nights_stay_rounded,
+      'color': 0xFFFFF8E1,
       'textColor': 0xFFF57F17,
     },
     {
-      'title': 'যোহর',
-      'rakat': '৪ রাকাত',
-      'icon': Icons.wb_sunny_rounded, // Day Vibe
-      'color': 0xFFFFF1F1, // Light Pink
+      'title': 'zohar',
+      'rakat': 'rakat_4',
+      'icon': Icons.wb_sunny_rounded,
+      'color': 0xFFFFF1F1,
       'textColor': 0xFFFFAB91,
     },
     {
-      'title': 'আছর',
-      'rakat': '৪ রাকাত',
-      'icon': Icons.wb_cloudy_rounded, // Day Vibe (Cloudy/Soft)
-      'color': 0xFFE3F2FD, // Light Blue
+      'title': 'asar',
+      'rakat': 'rakat_4',
+      'icon': Icons.wb_cloudy_rounded,
+      'color': 0xFFE3F2FD,
       'textColor': 0xFF64B5F6,
     },
     {
-      'title': 'মাগরিব',
-      'rakat': '৩ রাকাত',
-      'icon': Icons.wb_twilight_rounded, // Evening Vibe
-      'color': 0xFFFCE4EC, // Very Light Pink
+      'title': 'magrib',
+      'rakat': 'rakat_3',
+      'icon': Icons.wb_twilight_rounded,
+      'color': 0xFFFCE4EC,
       'textColor': 0xFFF06292,
     },
     {
-      'title': 'ঈশা',
-      'rakat': '৪ রাকাত',
-      'icon': Icons.bedtime_rounded, // Night Vibe
-      'color': 0xFFE8EAF6, // Indigo Light
+      'title': 'esha',
+      'rakat': 'rakat_4',
+      'icon': Icons.bedtime_rounded,
+      'color': 0xFFE8EAF6,
       'textColor': 0xFF7986CB,
     },
     {
-      'title': 'কুরআন',
-      'rakat': 'তিলাওয়াত',
+      'title': 'quran',
+      'rakat': 'quran_reading',
       'icon': Icons.menu_book_rounded,
-      'color': 0xFFE8F5E9, // Light Green
-      'textColor': 0xFF43A047, // Green
+      'color': 0xFFE8F5E9,
+      'textColor': 0xFF43A047,
     },
   ].obs;
 
   // Essential Duas
   final duas = [
     {
-      'title': 'নামাজ শুরু করার দোয়া',
+      'title': 'dua_start',
       'arabic': 'سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ وَتَبَارَكَ اسْمُكَ وَتَعَالَى جَدُّكَ وَلَا إِلَهَ غَيْرُكَ',
       'bangla': 'হে আল্লাহ! আমি তোমার প্রশংসা সহকারে তোমার পবিত্রতা বর্ণনা করছি। তোমার নাম বরকতময়, তোমার মর্যাদা অতি উচ্চ এবং তুমি ব্যতীত কোন ইলাহ নেই',
     },
     {
-      'title': 'রুকুর দোয়া',
+      'title': 'dua_ruku',
       'arabic': 'سُبْحَانَ رَبِّيَ الْعَظِيمِ',
       'bangla': 'আমার মহান প্রতিপালক পবিত্র, মহান',
     },
     {
-      'title': 'রুকু থেকে ওঠার দোয়া',
-      'arabic': 'سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ - رَبَّنَا لَكَ الْحَمْدُ',
+      'title': 'dua_ruku_rise',
+      'arabic': 'سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ - রَبَّنَا لَكَ الْحَمْدُ',
       'bangla': 'আল্লাহ তাঁর প্রশংসাকারীর প্রশংসা শোনেন। হে আমাদের প্রতিপালক! সকল প্রশংসা তোমারই',
     },
     {
-      'title': 'সিজদাহ্ দোয়া',
+      'title': 'dua_sujud',
       'arabic': 'سُبْحَانَ رَبِّيَ الْأَعْلَى',
       'bangla': 'আমার সর্বোচ্চ প্রতিপালক পবিত্র, মহান',
     },
     {
-      'title': 'দুই সিজদার মাঝে',
+      'title': 'dua_between_sujud',
       'arabic': 'رَبِّ اغْفِرْ لِي وَارْحَمْنِي',
       'bangla': 'হে আমার প্রতিপালক! আমাকে ক্ষমা কর এবং আমার প্রতি দয়া কর',
     },
     {
-      'title': 'তাশাহুদ',
-      'arabic': 'التَّحِيَّاتُ لِلَّهِ وَالصَّلَوَاتُ وَالطَّيِّبَاتُ، السَّلَامُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ',
+      'title': 'dua_tashahhud',
+      'arabic': 'التَّحِيَّاتُ لِلَّهِ وَالصَّلَاوَاتُ وَالطَّيِّبَاتُ، السَّلَامُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ',
       'bangla': 'সকল সম্মান, সকল নমন এবং সকল পবিত্রতা আল্লাহর জন্য। হে নবী! আপনার উপর শান্তি, আল্লাহর রহমত ও বরকত বর্ষিত হোক',
     },
   ].obs;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class FajarView extends StatelessWidget {
   const FajarView({super.key});
@@ -11,14 +12,15 @@ class FajarView extends StatelessWidget {
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
         title: Text(
-          'ফজরের নামাজ',
-          style: GoogleFonts.hindSiliguri(
+          'fajar_prayer'.tr,
+          style: AppTextStyles.headingSmall.copyWith(
             fontWeight: FontWeight.w600,
-            fontSize: 20,
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF1E63FF), // Deep Red matching screenshot
+        backgroundColor: const Color(
+          0xFF1E63FF,
+        ), // Deep Red matching screenshot
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
@@ -34,15 +36,24 @@ class FajarView extends StatelessWidget {
             // Section 1: At a Glance
             _buildSectionHeader(
               icon: Icons.info_outline_rounded,
-              title: 'এক নজরে ফজরের নামাজ',
+              title: 'at_a_glance'.tr,
             ),
             const SizedBox(height: 12),
             _buildInfoCard(
               items: [
-                _buildInfoRow('সময়:', 'সুবহে সাদিক হতে সূর্যোদয়ের ঠিক আগ পর্যন্ত।'),
-                _buildInfoRow('রাকাত:', 'সুন্নাত ২ রাকাত ও ফরজ ২ রাকাত। মোট ৪ রাকাত।'),
-                _buildInfoRow('নিয়ত:', 'আমি কেবলামুখী হয়ে ফজরের ২ রাকাত (সুন্নাত/ফরজ) নামাজ আদায় করছি।'),
-              ]
+                _buildInfoRow(
+                  'time_label'.tr,
+                  'সুবহে সাদিক হতে সূর্যোদয়ের ঠিক আগ পর্যন্ত।',
+                ),
+                _buildInfoRow(
+                  'rakat_label'.tr,
+                  'সুন্নাত ২ রাকাত ও ফরজ ২ রাকাত। মোট ৪ রাকাত।',
+                ),
+                _buildInfoRow(
+                  'niyat_label'.tr,
+                  'আমি কেবলামুখী হয়ে ফজরের ২ রাকাত (সুন্নাত/ফরজ) নামাজ আদায় করছি।',
+                ),
+              ],
             ),
 
             const SizedBox(height: 24),
@@ -50,7 +61,7 @@ class FajarView extends StatelessWidget {
             // Section 2: Time
             _buildSectionHeader(
               icon: Icons.access_time_filled_rounded,
-              title: 'ফজরের নামাজের সময়',
+              title: 'prayer_time_header'.tr,
             ),
             const SizedBox(height: 12),
             Container(
@@ -62,8 +73,7 @@ class FajarView extends StatelessWidget {
               ),
               child: Text(
                 'সুবহে সাদিক হতে শুরু হয়, এটি ভোরের প্রথম রশ্মি উঠার শুরু বলতে পারা যায়। সুবহে সাদিক।\n\nশেষ হওয়ার নামাজের সময় সূর্যোদয়ের সাথে শেষ হয়।',
-                style: GoogleFonts.hindSiliguri(
-                  fontSize: 14,
+                style: AppTextStyles.bodyMedium.copyWith(
                   color: Colors.black87,
                   height: 1.5,
                 ),
@@ -75,7 +85,7 @@ class FajarView extends StatelessWidget {
             // Section 3: Niyat (Arabic & Bangla)
             _buildSectionHeader(
               icon: Icons.menu_book_rounded, // Assuming icon for Niyat/Rules
-              title: 'ফজরের নামাজের নিয়ত',
+              title: 'prayer_niyat_header'.tr,
             ),
             const SizedBox(height: 8),
             Text(
@@ -88,8 +98,10 @@ class FajarView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             _buildArabicCard(
-              arabic: 'نَوَيْتُ اَنْ اُصَلِّىَ لِلّهِ تَعَالَى رَكْعَتَى صَلْوَةِ الْفَجْرِ سُنَّةُ رَسُوْلِ اللّهِ',
-              pronunciation: 'নাওয়াইতু আন উসাল্লিয়া লিল্লাহি তা‘আলা রাক‘আতাই সালাতিল ফাজরি, সুন্নাতু রাসুলিল্লাহি তা‘আলা, মুতাওয়াজ্জিহান ইলা জিহাতিল কা‘বাতিশ শারীফাতি - আল্লাহু আকবার',
+              arabic:
+                  'نَوَيْتُ اَنْ اُصَلِّىَ لِلّهِ تَعَالَى رَكْعَتَى صَلْوَةِ الْفَجْرِ سُنَّةُ رَسُوْلِ اللّهِ',
+              pronunciation:
+                  'নাওয়াইতু আন উসাল্লিয়া লিল্লাহি তা‘আলা রাক‘আতাই সালাতিল ফাজরি, সুন্নাতু রাসুলিল্লাহি তা‘আলা, মুতাওয়াজ্জিহান ইলা জিহাতিল কা‘বাতিশ শারীফাতি - আল্লাহু আকবার',
             ),
             const SizedBox(height: 20),
             Text(
@@ -102,8 +114,10 @@ class FajarView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             _buildArabicCard(
-              arabic: 'نَوَيْتُ اَنْ اُصَلِّىَ لِلّهِ تَعَالَى رَكْعَتَى صَلْوَةِ الْفَجْرِ فَرْضُ اللّهِ',
-              pronunciation: 'নাওয়াইতু আন উসাল্লিয়া লিল্লাহি তা‘আলা রাক‘আতাই সালাতিল ফাজরি ফারজুল্লাহি তা‘আলা, মুতাওয়াজ্জিহান ইলা জিহাতিল কা‘বাতিশ শারীফাতি - আল্লাহু আকবার',
+              arabic:
+                  'نَوَيْتُ اَنْ اُصَلِّىَ لِلّهِ تَعَالَى رَكْعَتَى صَلْوَةِ الْفَجْرِ فَرْضُ اللّهِ',
+              pronunciation:
+                  'নাওয়াইতু আন উসাল্লিয়া লিল্লাহি তা‘আলা রাক‘আতাই সালাতিল ফাজরি ফারজুল্লাহি তা‘আলা, মুতাওয়াজ্জিহান ইলা জিহাতিল কা‘বাতিশ শারীফাতি - আল্লাহু আকবার',
             ),
 
             const SizedBox(height: 24),
@@ -111,7 +125,7 @@ class FajarView extends StatelessWidget {
             // Section 4: Method of Prayer
             _buildSectionHeader(
               icon: Icons.menu_book_outlined,
-              title: 'ফজরের নামাজের নিয়ম',
+              title: 'prayer_method_header'.tr,
             ),
             const SizedBox(height: 12),
             Container(
@@ -123,16 +137,28 @@ class FajarView extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildStepItem(1, 'পবিত্রতা অর্জন করে নামাজের স্থানে দাঁড়ানো।'),
+                  _buildStepItem(
+                    1,
+                    'পবিত্রতা অর্জন করে নামাজের স্থানে দাঁড়ানো।',
+                  ),
                   _buildStepItem(2, 'হৃদয়ে সুন্নাত বা ফরজ নামাজের নিয়ত করা।'),
                   _buildStepItem(3, 'তাকবীরে তাহরীমা বলা ও হাত বাঁধা।'),
                   _buildStepItem(4, 'ছানা পড়া।'),
-                  _buildStepItem(5, 'আউযুবিল্লাহ, বিসমিল্লাহ পড়ে সূরা ফাতিহা এবং অন্য একটি সূরা তিলাওয়াত করা।'),
+                  _buildStepItem(
+                    5,
+                    'আউযুবিল্লাহ, বিসমিল্লাহ পড়ে সূরা ফাতিহা এবং অন্য একটি সূরা তিলাওয়াত করা।',
+                  ),
                   _buildStepItem(6, 'রুকু করা।'),
                   _buildStepItem(7, 'রুকু থেকে সোজা হয়ে দাঁড়ানো।'),
                   _buildStepItem(8, 'দুই সিজদা করা।'),
-                  _buildStepItem(9, 'দ্বিতীয় রাকাতে সূরা ফাতিহা এবং অন্য কোনো সূরা পড়ে রুকু করা।'),
-                  _buildStepItem(10, 'শয়তানের থেকে বাঁচতে দরূদ/দোয়ে মাসূরা পড়া।'), // Adjusted text slightly based on generic rule
+                  _buildStepItem(
+                    9,
+                    'দ্বিতীয় রাকাতে সূরা ফাতিহা এবং অন্য কোনো সূরা পড়ে রুকু করা।',
+                  ),
+                  _buildStepItem(
+                    10,
+                    'শয়তানের থেকে বাঁচতে দরূদ/দোয়ে মাসূরা পড়া।',
+                  ), // Adjusted text slightly based on generic rule
                   _buildStepItem(11, 'সালাম ফিরানো।'),
                 ],
               ),
@@ -143,7 +169,7 @@ class FajarView extends StatelessWidget {
             // Section 5: FAQ
             _buildSectionHeader(
               icon: Icons.help_outline_rounded,
-              title: 'সচরাচর জিজ্ঞাসা',
+              title: 'faq_header'.tr,
             ),
             const SizedBox(height: 12),
             _buildFAQItem(
@@ -179,8 +205,7 @@ class FajarView extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           title,
-          style: GoogleFonts.hindSiliguri(
-            fontSize: 18,
+          style: AppTextStyles.bodyLarge.copyWith(
             fontWeight: FontWeight.w700,
             color: const Color(0xFF1E63FF),
           ),
@@ -214,9 +239,8 @@ class FajarView extends StatelessWidget {
           width: 60,
           child: Text(
             label,
-            style: GoogleFonts.hindSiliguri(
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w700,
-              fontSize: 14,
               color: Colors.black87,
             ),
           ),
@@ -225,9 +249,8 @@ class FajarView extends StatelessWidget {
         Expanded(
           child: Text(
             value,
-            style: GoogleFonts.hindSiliguri(
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w500,
-              fontSize: 14,
               color: Colors.black87,
               height: 1.4,
             ),
@@ -237,7 +260,10 @@ class FajarView extends StatelessWidget {
     );
   }
 
-  Widget _buildArabicCard({required String arabic, required String pronunciation}) {
+  Widget _buildArabicCard({
+    required String arabic,
+    required String pronunciation,
+  }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -253,7 +279,7 @@ class FajarView extends StatelessWidget {
             child: Text(
               arabic,
               textAlign: TextAlign.right,
-              style: GoogleFonts.amiri(
+              style: AppTextStyles.arabic.copyWith(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 height: 1.6,
@@ -262,9 +288,8 @@ class FajarView extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'বাংলা উচ্চারণ:',
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 12,
+            'pronunciation_label'.tr,
+            style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
               color: Colors.grey.shade600,
             ),
@@ -272,8 +297,7 @@ class FajarView extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             pronunciation,
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 14,
+            style: AppTextStyles.bodyMedium.copyWith(
               color: Colors.black87,
               height: 1.5,
             ),
@@ -297,8 +321,7 @@ class FajarView extends StatelessWidget {
             ),
             child: Text(
               '$step',
-              style: GoogleFonts.poppins(
-                fontSize: 12,
+              style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -308,8 +331,7 @@ class FajarView extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 14,
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: Colors.black87,
                 height: 1.4,
               ),
@@ -334,8 +356,7 @@ class FajarView extends StatelessWidget {
         children: [
           Text(
             question,
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 15,
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w700,
               color: Colors.black87,
             ),
@@ -343,8 +364,7 @@ class FajarView extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             answer,
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 14,
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w400,
               color: Colors.black87,
               height: 1.5,
@@ -355,4 +375,3 @@ class FajarView extends StatelessWidget {
     );
   }
 }
-

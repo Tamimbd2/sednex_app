@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class MagribView extends StatelessWidget {
   const MagribView({super.key});
@@ -11,10 +11,9 @@ class MagribView extends StatelessWidget {
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
         title: Text(
-          'মাগরিবের নামাজ',
-          style: GoogleFonts.hindSiliguri(
+          'magrib_prayer'.tr,
+          style: AppTextStyles.headingSmall.copyWith(
             fontWeight: FontWeight.w600,
-            fontSize: 20,
             color: Colors.white,
           ),
         ),
@@ -34,14 +33,14 @@ class MagribView extends StatelessWidget {
             // Section 1: At a Glance
             _buildSectionHeader(
               icon: Icons.info_outline_rounded,
-              title: 'এক নজরে মাগরিবের নামাজ',
+              title: 'at_a_glance'.tr,
             ),
             const SizedBox(height: 12),
             _buildInfoCard(
               items: [
-                _buildInfoRow('সময়:', 'সূর্যাস্তের পর থেকে আকাশের লাল আভা মিলিয়ে যাওয়া পর্যন্ত।'),
-                _buildInfoRow('রাকাত:', '৩ রাকাত ফরজ ও ২ রাকাত সুন্নাত। মোট ৫ রাকাত।'),
-                _buildInfoRow('নিয়ত:', 'আমি কেবলামুখী হয়ে মাগরিবের (ফরজ/সুন্নাত) নামাজ আদায় করছি।'),
+                _buildInfoRow('time_label'.tr, 'সূর্যাস্তের পর থেকে আকাশের লাল আভা মিলিয়ে যাওয়া পর্যন্ত।'),
+                _buildInfoRow('rakat_label'.tr, '৩ রাকাত ফরজ ও ২ রাকাত সুন্নাত। মোট ৫ রাকাত।'),
+                _buildInfoRow('niyat_label'.tr, 'আমি কেবলামুখী হয়ে মাগরিবের (ফরজ/সুন্নাত) নামাজ আদায় করছি।'),
                 
               ],
             ),
@@ -51,7 +50,7 @@ class MagribView extends StatelessWidget {
             // Section 2: Time
             _buildSectionHeader(
               icon: Icons.access_time_filled_rounded,
-              title: 'মাগরিবের নামাজের সময়',
+              title: 'prayer_time_header'.tr,
             ),
             const SizedBox(height: 12),
             Container(
@@ -63,8 +62,7 @@ class MagribView extends StatelessWidget {
               ),
               child: Text(
                 'সূর্য সম্পূর্ণ অস্ত যাওয়ার সাথে সাথে মাগরিবের ওয়াক্ত শুরু হয় এবং পশ্চিম আকাশের লালিমা বা শفق থাকা পর্যন্ত এই ওয়াক্ত থাকে। সাধারণত সূর্য অস্ত যাওয়ার পর থেকে ১ ঘণ্টা পর্যন্ত সময় থাকে।',
-                style: GoogleFonts.hindSiliguri(
-                  fontSize: 14,
+                style: AppTextStyles.bodyMedium.copyWith(
                   color: Colors.black87,
                   height: 1.5,
                 ),
@@ -76,15 +74,14 @@ class MagribView extends StatelessWidget {
             // Section 3: Niyat (Arabic & Bangla)
             _buildSectionHeader(
               icon: Icons.menu_book_rounded,
-              title: 'মাগরিবের নামাজের নিয়ত',
+              title: 'prayer_niyat_header'.tr,
             ),
             
             // 3 Rakat Fard
             const SizedBox(height: 8),
             Text(
               'মাগরিবের ৩ রাকাত ফরজ নামাজের নিয়ত',
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 16,
+              style: AppTextStyles.subHeadingMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
@@ -99,8 +96,7 @@ class MagribView extends StatelessWidget {
             const SizedBox(height: 20),
             Text(
               'মাগরিবের ২ রাকাত সুন্নাত নামাজের নিয়ত',
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 16,
+              style: AppTextStyles.subHeadingMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
@@ -116,7 +112,7 @@ class MagribView extends StatelessWidget {
             // Section 4: Method of Prayer
             _buildSectionHeader(
               icon: Icons.menu_book_outlined,
-              title: 'মাগরিবের নামাজের নিয়ম',
+              title: 'prayer_method_header'.tr,
             ),
             const SizedBox(height: 12),
             Container(
@@ -146,7 +142,7 @@ class MagribView extends StatelessWidget {
             // Section 5: FAQ
             _buildSectionHeader(
               icon: Icons.help_outline_rounded,
-              title: 'সচরাচর জিজ্ঞাসা',
+              title: 'faq_header'.tr,
             ),
             const SizedBox(height: 12),
             _buildFAQItem(
@@ -177,8 +173,7 @@ class MagribView extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           title,
-          style: GoogleFonts.hindSiliguri(
-            fontSize: 18,
+          style: AppTextStyles.bodyLarge.copyWith(
             fontWeight: FontWeight.w700,
             color: const Color(0xFF1E63FF),
           ),
@@ -212,9 +207,8 @@ class MagribView extends StatelessWidget {
           width: 60,
           child: Text(
             label,
-            style: GoogleFonts.hindSiliguri(
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w700,
-              fontSize: 14,
               color: Colors.black87,
             ),
           ),
@@ -223,9 +217,8 @@ class MagribView extends StatelessWidget {
         Expanded(
           child: Text(
             value,
-            style: GoogleFonts.hindSiliguri(
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w500,
-              fontSize: 14,
               color: Colors.black87,
               height: 1.4,
             ),
@@ -251,7 +244,7 @@ class MagribView extends StatelessWidget {
             child: Text(
               arabic,
               textAlign: TextAlign.right,
-              style: GoogleFonts.amiri(
+              style: AppTextStyles.arabic.copyWith(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 height: 1.6,
@@ -260,9 +253,8 @@ class MagribView extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'বাংলা উচ্চারণ:',
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 12,
+            'pronunciation_label'.tr,
+            style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
               color: Colors.grey.shade600,
             ),
@@ -270,8 +262,7 @@ class MagribView extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             pronunciation,
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 14,
+            style: AppTextStyles.bodyMedium.copyWith(
               color: Colors.black87,
               height: 1.5,
             ),
@@ -295,8 +286,7 @@ class MagribView extends StatelessWidget {
             ),
             child: Text(
               '$step',
-              style: GoogleFonts.poppins(
-                fontSize: 12,
+              style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -306,8 +296,7 @@ class MagribView extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 14,
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: Colors.black87,
                 height: 1.4,
               ),
@@ -332,8 +321,7 @@ class MagribView extends StatelessWidget {
         children: [
           Text(
             question,
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 15,
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w700,
               color: Colors.black87,
             ),
@@ -341,8 +329,7 @@ class MagribView extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             answer,
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 14,
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w400,
               color: Colors.black87,
               height: 1.5,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:marquee/marquee.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,6 +12,7 @@ import '../../ramadancalander/controllers/ramadancalander_controller.dart';
 import '../../../routes/app_pages.dart';
 import '../../communityFeed/widgets/community_post_card.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class HomePageContent extends StatelessWidget {
   const HomePageContent({super.key});
@@ -46,16 +46,10 @@ class HomePageContent extends StatelessWidget {
 
               return Marquee(
                 text: text,
-                style:
-                    GoogleFonts.poppins(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ).copyWith(
-                      fontFamilyFallback: [
-                        GoogleFonts.hindSiliguri().fontFamily!,
-                      ],
-                    ),
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
                 scrollAxis: Axis.horizontal,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 blankSpace: 20.0,
@@ -191,9 +185,8 @@ class HomePageContent extends StatelessWidget {
               children: [
                 Text(
                   'information_services'.tr,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.headingMedium.copyWith(
                     fontSize: 20,
-                    fontWeight: FontWeight.w700,
                     color: const Color(0xFF2C2C2C),
                   ),
                 ),
@@ -391,9 +384,8 @@ class HomePageContent extends StatelessWidget {
               children: [
                 Text(
                   'essential_services'.tr,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.headingMedium.copyWith(
                     fontSize: 20,
-                    fontWeight: FontWeight.w700,
                     color: const Color(0xFF2C2C2C),
                   ),
                 ),
@@ -415,49 +407,49 @@ class HomePageContent extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 _buildEssentialServiceItem(
-                  'Informations',
+                  'information'.tr,
                   'assets/newessential/info.svg',
                   const Color(0xFFFF5722),
                   () => Get.toNamed('/informations'),
                 ),
                 _buildEssentialServiceItem(
-                  'Embassy',
+                  'embassies'.tr,
                   'assets/newessential/City-Hall--Streamline-Core-Gradient.svg',
                   const Color(0xFF9C27B0),
                   () => Get.toNamed('/embassy'),
                 ),
                 _buildEssentialServiceItem(
-                  'Article',
+                  'articles'.tr,
                   'assets/newessential/Multiple-File-2--Streamline-Core-Gradient.svg',
                   const Color(0xFF00BFA5),
                   () => Get.toNamed('/articles'),
                 ),
                 _buildEssentialServiceItem(
-                  'Basic Goods',
+                  'basic_goods'.tr,
                   'assets/newessential/Shopping-Basket-2--Streamline-Core-Gradient.svg',
                   const Color(0xFF448AFF),
                   () => Get.toNamed('/basicgoods'),
                 ),
                 _buildEssentialServiceItem(
-                  'Community',
+                  'community'.tr,
                   'assets/newessential/User-Multiple-Group--Streamline-Core-Gradient.svg',
                   const Color(0xFF4CAF50),
                   () => Get.toNamed('/community'),
                 ),
                 _buildEssentialServiceItem(
-                  'Tourist spot',
+                  'tourist_spots'.tr,
                   'assets/newessential/Beach--Streamline-Core-Gradient.svg',
                   const Color(0xFF00BCD4),
                   () => Get.toNamed('/tourist-spot'),
                 ),
                 _buildEssentialServiceItem(
-                  'Learn Arabic',
+                  'learn_arabic'.tr,
                   'assets/newessential/Dictionary-Language-Book--Streamline-Core-Gradient.svg',
                   const Color(0xFF795548),
                   () => Get.toNamed('/learnarabic'),
                 ),
                 _buildEssentialServiceItem(
-                  'Bus & Flight',
+                  'bus_flight_booking'.tr,
                   'assets/newessential/Bus--Streamline-Core-Gradient.svg',
                   const Color(0xFF2196F3),
                   () => Get.toNamed('/busflight'),
@@ -474,9 +466,8 @@ class HomePageContent extends StatelessWidget {
               children: [
                 Text(
                   'community_feed'.tr,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.headingMedium.copyWith(
                     fontSize: 20,
-                    fontWeight: FontWeight.w700,
                     color: const Color(0xFF2C2C2C),
                   ),
                 ),
@@ -484,8 +475,7 @@ class HomePageContent extends StatelessWidget {
                   onTap: () => Get.toNamed('/community-feed'),
                   child: Text(
                     'view_all'.tr,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
+                    style: AppTextStyles.bodyMedium.copyWith(
                       fontWeight: FontWeight.w500,
                       color: const Color(0xFF8F95A1),
                     ),
@@ -580,7 +570,7 @@ class HomePageContent extends StatelessWidget {
                         const SizedBox(width: 2),
                         Text(
                           data['date']!.split(' 2026')[0],
-                          style: GoogleFonts.poppins(
+                          style: AppTextStyles.bodySmall.copyWith(
                             fontSize: 7,
                             fontWeight: FontWeight.w500,
                           ),
@@ -615,8 +605,8 @@ class HomePageContent extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'Seheri',
-                            style: GoogleFonts.poppins(
+                            'seheri'.tr,
+                            style: AppTextStyles.bodySmall.copyWith(
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
                               color: Colors.black87,
@@ -627,7 +617,7 @@ class HomePageContent extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         data['seheri']!,
-                        style: GoogleFonts.poppins(
+                        style: AppTextStyles.subHeadingLarge.copyWith(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFF2E7D32),
@@ -662,8 +652,8 @@ class HomePageContent extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'Ifter',
-                            style: GoogleFonts.poppins(
+                            'iftar'.tr,
+                            style: AppTextStyles.bodySmall.copyWith(
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
                               color: Colors.black87,
@@ -674,7 +664,7 @@ class HomePageContent extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         data['iftar']!,
-                        style: GoogleFonts.poppins(
+                        style: AppTextStyles.subHeadingLarge.copyWith(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFF2E7D32),
@@ -747,14 +737,14 @@ class HomePageContent extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             label,
-            style:
-                GoogleFonts.poppins(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF2C2C2C),
-                ).copyWith(
-                  fontFamilyFallback: [GoogleFonts.hindSiliguri().fontFamily!],
-                ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.bodySmall.copyWith(
+              fontWeight: FontWeight.w500,
+              fontSize: 10,
+              color: const Color(0xFF2C2C2C),
+            ),
           ),
         ],
       ),
@@ -811,19 +801,24 @@ class HomePageContent extends StatelessWidget {
                 ),
               ),
             const SizedBox(height: 12),
-            Text(
-              title,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF2C2C2C),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: Text(
+                title.tr,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.bodySmall.copyWith(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 10,
+                  color: const Color(0xFF757575),
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: GoogleFonts.poppins(
+              style: AppTextStyles.headingSmall.copyWith(
                 fontSize: 16, // Slightly smaller to fit
                 fontWeight: FontWeight.w700,
                 color: subtitleColor,
@@ -843,16 +838,11 @@ class HomePageContent extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   footerText,
-                  style:
-                      GoogleFonts.poppins(
-                        fontSize: 12,
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w400,
-                      ).copyWith(
-                        fontFamilyFallback: [
-                          GoogleFonts.hindSiliguri().fontFamily!,
-                        ],
-                      ),
+                  style: AppTextStyles.caption.copyWith(
+                    fontSize: 12,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ],
             ),

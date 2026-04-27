@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
+
 class BusDetailsView extends StatelessWidget {
   const BusDetailsView({super.key});
 
@@ -18,7 +18,8 @@ class BusDetailsView extends StatelessWidget {
     final String image = Get.arguments['image'] ?? '';
     final List<String> rentalDetails = Get.arguments['rentalDetails'] ?? [];
     final String note = Get.arguments['note'] ?? '';
-    final String about = Get.arguments['about'] ?? 'No extra details available.';
+    final String about =
+        Get.arguments['about'] ?? 'No extra details available.';
     final String contact = Get.arguments['contact'] ?? '';
 
     return Scaffold(
@@ -32,10 +33,8 @@ class BusDetailsView extends StatelessWidget {
         ),
         title: Text(
           'Bus Service Details',
-          style: GoogleFonts.poppins(
+          style: AppTextStyles.headingSmall.copyWith(
             color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
@@ -70,7 +69,9 @@ class BusDetailsView extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFD700).withValues(alpha: 0.1),
+                            color: const Color(
+                              0xFFFFD700,
+                            ).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(
@@ -86,8 +87,7 @@ class BusDetailsView extends StatelessWidget {
                             children: [
                               Text(
                                 busName,
-                                style: GoogleFonts.hindSiliguri(
-                                  fontSize: 18,
+                                style: AppTextStyles.headingSmall.copyWith(
                                   fontWeight: FontWeight.w700,
                                   color: Colors.black,
                                 ),
@@ -95,7 +95,7 @@ class BusDetailsView extends StatelessWidget {
                               const SizedBox(height: 4),
                               Text(
                                 'ডিজাইনিং এবং বুক সার্ভিসিং',
-                                style: GoogleFonts.hindSiliguri(
+                                style: AppTextStyles.bodySmall.copyWith(
                                   fontSize: 13,
                                   color: Colors.grey[600],
                                 ),
@@ -118,19 +118,19 @@ class BusDetailsView extends StatelessWidget {
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
-                            width: double.infinity,
-                            height: 180,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Icon(
-                              Icons.directions_bus,
-                              size: 60,
-                              color: Colors.grey,
-                            ),
-                            );
-                          },
+                                  width: double.infinity,
+                                  height: 180,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: const Icon(
+                                    Icons.directions_bus,
+                                    size: 60,
+                                    color: Colors.grey,
+                                  ),
+                                );
+                              },
                             )
                           : Container(
                               width: double.infinity,
@@ -157,8 +157,7 @@ class BusDetailsView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'Rent Details',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
+                style: AppTextStyles.subHeadingLarge.copyWith(
                   fontWeight: FontWeight.w700,
                   color: Colors.black,
                 ),
@@ -168,14 +167,19 @@ class BusDetailsView extends StatelessWidget {
 
             // Rent Details Cards
             if (rentalDetails.isNotEmpty)
-              ...rentalDetails.map((detail) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                child: _buildRentDetailCard(
-                  Icons.check_circle_outline,
-                  detail,
-                  const Color(0xFF00C853),
+              ...rentalDetails.map(
+                (detail) => Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 6,
+                  ),
+                  child: _buildRentDetailCard(
+                    Icons.check_circle_outline,
+                    detail,
+                    const Color(0xFF00C853),
+                  ),
                 ),
-              )),
+              ),
             const SizedBox(height: 20),
 
             // Note Section
@@ -213,8 +217,7 @@ class BusDetailsView extends StatelessWidget {
                           children: [
                             Text(
                               'নোট:',
-                              style: GoogleFonts.hindSiliguri(
-                                fontSize: 14,
+                              style: AppTextStyles.subHeadingMedium.copyWith(
                                 fontWeight: FontWeight.w700,
                                 color: const Color(0xFFFFD700),
                               ),
@@ -222,7 +225,7 @@ class BusDetailsView extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               note,
-                              style: GoogleFonts.hindSiliguri(
+                              style: AppTextStyles.bodyMedium.copyWith(
                                 fontSize: 13,
                                 color: Colors.black87,
                                 height: 1.4,
@@ -251,8 +254,7 @@ class BusDetailsView extends StatelessWidget {
                   children: [
                     Text(
                       'About Bus Service',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
+                      style: AppTextStyles.subHeadingLarge.copyWith(
                         fontWeight: FontWeight.w700,
                         color: Colors.black,
                       ),
@@ -260,8 +262,7 @@ class BusDetailsView extends StatelessWidget {
                     const SizedBox(height: 12),
                     Text(
                       about,
-                      style: GoogleFonts.hindSiliguri(
-                        fontSize: 14,
+                      style: AppTextStyles.bodyMedium.copyWith(
                         color: Colors.grey[700],
                         height: 1.6,
                       ),
@@ -281,13 +282,22 @@ class BusDetailsView extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (contact.isNotEmpty) {
-                      final cleanPhone = contact.replaceAll(RegExp(r'[^\d+]'), '');
+                      final cleanPhone = contact.replaceAll(
+                        RegExp(r'[^\d+]'),
+                        '',
+                      );
                       final formattedPhone = cleanPhone.replaceAll('+', '');
-                      final message = "Hello, I am interested in booking this service:\n\n*Service Name:* $busName\n*Seat Capacity:* $seats\n*Details:* ${rentalDetails.join(', ')}\n\nPlease let me know the process.";
+                      final message =
+                          "Hello, I am interested in booking this service:\n\n*Service Name:* $busName\n*Seat Capacity:* $seats\n*Details:* ${rentalDetails.join(', ')}\n\nPlease let me know the process.";
                       final encodedMessage = Uri.encodeComponent(message);
-                      final uri = Uri.parse("https://wa.me/$formattedPhone?text=$encodedMessage");
+                      final uri = Uri.parse(
+                        "https://wa.me/$formattedPhone?text=$encodedMessage",
+                      );
                       try {
-                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        await launchUrl(
+                          uri,
+                          mode: LaunchMode.externalApplication,
+                        );
                       } catch (e) {
                         Get.snackbar(
                           'Error',
@@ -302,7 +312,9 @@ class BusDetailsView extends StatelessWidget {
                         'Booking',
                         'Bus booking feature coming soon.',
                         snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                        backgroundColor: AppColors.primary.withValues(
+                          alpha: 0.1,
+                        ),
                         colorText: AppColors.primary,
                       );
                     }
@@ -325,11 +337,7 @@ class BusDetailsView extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         contact.isNotEmpty ? contact : 'Book This Bus Now',
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+                        style: AppTextStyles.button,
                       ),
                     ],
                   ),
@@ -371,8 +379,7 @@ class BusDetailsView extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 14,
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: Colors.black87,
                 height: 1.4,
               ),
@@ -383,4 +390,3 @@ class BusDetailsView extends StatelessWidget {
     );
   }
 }
-

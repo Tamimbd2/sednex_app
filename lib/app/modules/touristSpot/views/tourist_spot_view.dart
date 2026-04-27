@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 import '../controllers/tourist_spot_controller.dart';
 import 'toursitspotdetails.dart';
@@ -20,12 +19,8 @@ class TouristSpotView extends GetView<TouristSpotController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Tourist Spots',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+          'tourist_spots'.tr,
+          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -37,9 +32,8 @@ class TouristSpotView extends GetView<TouristSpotController> {
         if (controller.touristSpots.isEmpty) {
           return Center(
             child: Text(
-              'No tourist spots found',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
+              'no_tourist_spots_found'.tr,
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: Colors.grey,
                 fontWeight: FontWeight.w500,
               ),
@@ -126,8 +120,7 @@ class TouristSpotView extends GetView<TouristSpotController> {
                           children: [
                             Text(
                               spot.title,
-                              style: GoogleFonts.hindSiliguri(
-                                fontSize: 18,
+                              style: AppTextStyles.headingSmall.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: const Color(0xFF2C2C2C),
                                 height: 1.3,
@@ -144,8 +137,7 @@ class TouristSpotView extends GetView<TouristSpotController> {
                                     .replaceAll('&amp;', '&')
                                     .replaceAll(RegExp(r'\s+'), ' ') // Collapse random spaces
                                     .trim(),
-                                style: GoogleFonts.hindSiliguri(
-                                  fontSize: 14,
+                                style: AppTextStyles.bodySmall.copyWith(
                                   color: Colors.grey[600],
                                   height: 1.4,
                                 ),

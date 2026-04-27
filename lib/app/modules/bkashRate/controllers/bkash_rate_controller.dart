@@ -66,7 +66,7 @@ class BkashRateController extends GetxController {
   void toggleCurrency(bool isTaka) {
     isTakaSelected.value = isTaka;
     inputController.clear();
-    displayResult.value = '৳0';
+    displayResult.value = '0';
   }
 
   // Set predefined amount
@@ -83,7 +83,7 @@ class BkashRateController extends GetxController {
   void _calculateResult() {
     String text = inputController.text;
     if (text.isEmpty) {
-      displayResult.value = '৳0';
+      displayResult.value = '0';
       return;
     }
 
@@ -98,6 +98,6 @@ class BkashRateController extends GetxController {
       result = inputAmount * exchangeRate.value;
     }
 
-    displayResult.value = '৳${result.toStringAsFixed(0)}';
+    displayResult.value = result.toStringAsFixed(0);
   }
 }

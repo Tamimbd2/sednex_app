@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
@@ -6,7 +7,13 @@ import '../controllers/community_feed_controller.dart';
 import '../widgets/community_post_card.dart';
 
 class CommunityFeedView extends GetView<CommunityFeedController> {
-  const CommunityFeedView({super.key});
+  final bool showAppBar;
+  final bool showFAB;
+  const CommunityFeedView({
+    super.key,
+    this.showAppBar = true,
+    this.showFAB = true,
+  });
 
   static final ScrollController _scrollController = ScrollController();
 
@@ -22,22 +29,34 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          'community_feed'.tr,
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Get.back(),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Get.toNamed('/createpost'),
-        backgroundColor: const Color(0xFF1E63FF),
-        elevation: 4,
-        child: const Icon(Icons.add, color: Colors.white, size: 28),
-      ),
+      appBar: showAppBar
+          ? AppBar(
+              title: Text(
+                'community_feed'.tr,
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+              ),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Get.back(),
+              ),
+            )
+          : null,
+      floatingActionButton: showFAB
+          ? FloatingActionButton(
+              onPressed: () => Get.toNamed('/createpost'),
+              backgroundColor: const Color(0xFF1E63FF),
+              elevation: 4,
+              child: SvgPicture.asset(
+                'assets/homeicon/add-post.svg',
+                width: 56, // Standard FAB size to fit the SVG circle
+                height: 56,
+                colorFilter: const ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
+                ),
+              ),
+            )
+          : null,
       body: SafeArea(
         child: RefreshIndicator(
           color: const Color(0xFF1E63FF),

@@ -7,6 +7,7 @@ import '../../../routes/app_pages.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../controllers/profile_controller.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -84,8 +85,8 @@ class ProfileView extends GetView<ProfileController> {
                               () => Text(
                                 controller.userName.value.isNotEmpty
                                     ? controller.userName.value
-                                    : 'User',
-                                style: GoogleFonts.poppins(
+                                    : 'profile'.tr,
+                                style: AppTextStyles.headingSmall.copyWith(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: const Color(0xFF111827),
@@ -97,7 +98,7 @@ class ProfileView extends GetView<ProfileController> {
                                 controller.userEmail.value.isNotEmpty
                                     ? controller.userEmail.value
                                     : '',
-                                style: GoogleFonts.poppins(
+                                style: AppTextStyles.bodySmall.copyWith(
                                   fontSize: 13,
                                   color: const Color(0xFF6B7280),
                                 ),
@@ -122,8 +123,8 @@ class ProfileView extends GetView<ProfileController> {
                                   ),
                                 ),
                                 child: Text(
-                                  'Edit Profile',
-                                  style: GoogleFonts.poppins(
+                                  'edit_profile'.tr,
+                                  style: AppTextStyles.button.copyWith(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -163,8 +164,7 @@ class ProfileView extends GetView<ProfileController> {
                       Expanded(
                         child: Text(
                           controller.userWarning.value,
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
+                          style: AppTextStyles.bodyMedium.copyWith(
                             color: const Color(0xFF9A3412),
                             fontWeight: FontWeight.w500,
                           ),
@@ -180,7 +180,7 @@ class ProfileView extends GetView<ProfileController> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   'other_settings'.tr,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.bodyMedium.copyWith(
                     fontSize: 14,
                     color: const Color(0xFF495565),
                   ),
@@ -191,13 +191,13 @@ class ProfileView extends GetView<ProfileController> {
               // Settings Group 1
               _buildSettingsGroup([
                 _buildSettingsItem(
-                  'My Post',
+                  'my_post'.tr,
                   'assets/profile/post.svg',
                   onTap: () => Get.toNamed('/mypost'),
                 ),
                 Obx(
                   () => _buildSettingsItem(
-                    'Cart',
+                    'my_cart'.tr,
                     'assets/profile/cart.svg',
                     badgeCount: dashboardController.lovedProducts.length,
                     onTap: () => Get.toNamed(Routes.FAVORITES),
@@ -221,9 +221,9 @@ class ProfileView extends GetView<ProfileController> {
                   onTap: () => Get.toNamed('/savepost'),
                 ),
                 _buildSettingsItem(
-                  'Saved Articles',
+                  'saved_articles'.tr,
                   '', // No SVG path
-                  icon: Icons.newspaper,
+                  icon: Icons.bookmark_border_rounded,
                   isLast: true,
                   onTap: () => Get.toNamed(Routes.SAVED_ARTICLES),
                 ),
@@ -339,7 +339,7 @@ class ProfileView extends GetView<ProfileController> {
           ),
           title: Text(
             title,
-            style: GoogleFonts.poppins(
+            style: AppTextStyles.bodyLarge.copyWith(
               fontSize: 16,
               fontWeight: FontWeight.w400,
               color: isDestructive
@@ -366,7 +366,7 @@ class ProfileView extends GetView<ProfileController> {
                     child: Center(
                       child: Text(
                         badgeCount.toString(),
-                        style: GoogleFonts.inter(
+                        style: AppTextStyles.caption.copyWith(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,

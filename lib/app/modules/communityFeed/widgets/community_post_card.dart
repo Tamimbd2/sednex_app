@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../community/views/communityprofiledetails.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class CommunityPostCard extends StatelessWidget {
   final Map<String, dynamic> post;
@@ -75,7 +75,7 @@ class CommunityPostCard extends StatelessWidget {
                           children: [
                             Text(
                               post['name'] ?? 'User',
-                              style: GoogleFonts.poppins(
+                              style: AppTextStyles.bodyMedium.copyWith(
                                 color: const Color(0xFF101727),
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -86,7 +86,7 @@ class CommunityPostCard extends StatelessWidget {
                               children: [
                                 Text(
                                   post['time'] ?? '',
-                                  style: GoogleFonts.poppins(
+                                  style: AppTextStyles.bodyMedium.copyWith(
                                     color: const Color(0xFF697282),
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
@@ -133,7 +133,7 @@ class CommunityPostCard extends StatelessWidget {
                             ? TextOverflow.ellipsis
                             : TextOverflow.visible)
                       : TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.bodyMedium.copyWith(
                     color: const Color(0xFF354152),
                     fontSize: 14,
                     height: 1.5,
@@ -145,7 +145,7 @@ class CommunityPostCard extends StatelessWidget {
                     builder: (context, constraints) {
                       final textSpan = TextSpan(
                         text: content,
-                        style: GoogleFonts.poppins(
+                        style: AppTextStyles.bodyMedium.copyWith(
                           fontSize: 14,
                           height: 1.5,
                           fontWeight: FontWeight.w400,
@@ -164,7 +164,7 @@ class CommunityPostCard extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 4),
                             child: Text(
                               isExpanded ? 'See less' : 'See more',
-                              style: GoogleFonts.poppins(
+                              style: AppTextStyles.bodyMedium.copyWith(
                                 color: const Color(0xFF697282),
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
@@ -213,7 +213,7 @@ class CommunityPostCard extends StatelessWidget {
                         const SizedBox(width: 6),
                         Text(
                           '${post['likes'] ?? 0}',
-                          style: GoogleFonts.poppins(
+                          style: AppTextStyles.bodyMedium.copyWith(
                             color: post['isLiked'] ?? false
                                 ? const Color(0xFF1E63FF)
                                 : Colors.grey[600],
@@ -250,7 +250,7 @@ class CommunityPostCard extends StatelessWidget {
                         const SizedBox(width: 6),
                         Text(
                           '${post['comments'] ?? 0}',
-                          style: GoogleFonts.poppins(
+                          style: AppTextStyles.bodyMedium.copyWith(
                             color: const Color(0xFF495565),
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
@@ -327,7 +327,7 @@ class CommunityPostCard extends StatelessWidget {
       ),
       child: Text(
         category,
-        style: GoogleFonts.poppins(
+        style: AppTextStyles.bodyMedium.copyWith(
           color: Colors.white,
           fontSize: 10,
           fontWeight: FontWeight.w500,
@@ -359,7 +359,7 @@ class CommunityPostCard extends StatelessWidget {
                   if (isOwnPost) ...[
                     _buildOptionItem(
                       icon: Icons.edit_outlined,
-                      label: 'Edit post',
+                      label: 'edit_post'.tr,
                       onTap: () {
                         Get.back();
                         _showEditPostDialog();
@@ -371,7 +371,7 @@ class CommunityPostCard extends StatelessWidget {
                           ? Icons.lock_open_outlined
                           : Icons.check_circle_outline,
                       label: (post['isCompleted'] ?? false)
-                          ? 'Open post'
+                          ? 'open_post'.tr
                           : _getCategoryActionLabel(),
                       color: const Color(0xFF00C853),
                       onTap: () {
@@ -382,7 +382,7 @@ class CommunityPostCard extends StatelessWidget {
                     const SizedBox(height: 24),
                     _buildOptionItem(
                       icon: Icons.delete_outline,
-                      label: 'Delete post',
+                      label: 'delete_post'.tr,
                       color: const Color(0xFFEF4444),
                       onTap: () {
                         Get.back();
@@ -393,9 +393,9 @@ class CommunityPostCard extends StatelessWidget {
                     _buildOptionItem(
                       label:
                           controller.runtimeType.toString() ==
-                              'SavepostController'
-                          ? 'Unsave post'
-                          : 'Save post',
+                                  'SavepostController'
+                              ? 'unsave_post'.tr
+                              : 'save_post'.tr,
                       iconSrc: 'assets/post/saves.svg',
                       onTap: () {
                         Get.back();
@@ -404,7 +404,7 @@ class CommunityPostCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     _buildOptionItem(
-                      label: 'Report',
+                      label: 'report'.tr,
                       iconSrc: 'assets/post/report.svg',
                       color: const Color(0xFFEF4444),
                       onTap: () {
@@ -444,13 +444,11 @@ class CommunityPostCard extends StatelessWidget {
             )
           else if (icon != null)
             Icon(icon, size: 24, color: color),
-
           const SizedBox(width: 16),
           Text(
             label,
-            style: GoogleFonts.poppins(
+            style: AppTextStyles.bodyLarge.copyWith(
               color: color,
-              fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -467,19 +465,27 @@ class CommunityPostCard extends StatelessWidget {
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
-          'Edit Post',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+          'edit_post'.tr,
+          style: AppTextStyles.headingSmall.copyWith(fontWeight: FontWeight.w600),
         ),
         content: TextField(
           controller: editController,
           maxLines: 5,
+          style: AppTextStyles.bodyMedium,
           decoration: InputDecoration(
-            hintText: 'Enter post content...',
+            hintText: 'add_comment'.tr,
+            hintStyle: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'cancel'.tr,
+              style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
+            ),
+          ),
           ElevatedButton(
             onPressed: () {
               if (editController.text.trim().isNotEmpty) {
@@ -487,7 +493,14 @@ class CommunityPostCard extends StatelessWidget {
                 controller.updatePost(index, editController.text.trim());
               }
             },
-            child: const Text('Save'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Text(
+              'save'.tr,
+              style: AppTextStyles.button.copyWith(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -497,16 +510,36 @@ class CommunityPostCard extends StatelessWidget {
   void _showDeleteConfirmation() {
     Get.dialog(
       AlertDialog(
-        title: const Text('Delete Post?'),
-        content: const Text('Are you sure?'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'delete_confirmation_title'.tr,
+          style: AppTextStyles.headingSmall.copyWith(fontWeight: FontWeight.w600),
+        ),
+        content: Text(
+          'delete_confirmation_msg'.tr,
+          style: AppTextStyles.bodyMedium,
+        ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'cancel'.tr,
+              style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
+            ),
+          ),
           ElevatedButton(
             onPressed: () {
               Get.back();
               controller.deletePost(index);
             },
-            child: const Text('Delete'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFEF4444),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Text(
+              'delete'.tr,
+              style: AppTextStyles.button.copyWith(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -547,7 +580,7 @@ class CommunityPostCard extends StatelessWidget {
               child: Obx(
                 () => Text(
                   'Comments (${controller.posts[index]["comments"]})',
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.bodyMedium.copyWith(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF101727),
@@ -575,7 +608,7 @@ class CommunityPostCard extends StatelessWidget {
                   return Center(
                     child: Text(
                       'No comments yet. Be the first!',
-                      style: GoogleFonts.poppins(color: Colors.grey),
+                      style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
                     ),
                   );
                 }
@@ -604,7 +637,7 @@ class CommunityPostCard extends StatelessWidget {
                                 children: [
                                   Text(
                                     comment['name'],
-                                    style: GoogleFonts.poppins(
+                                    style: AppTextStyles.bodyMedium.copyWith(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14,
                                     ),
@@ -612,7 +645,7 @@ class CommunityPostCard extends StatelessWidget {
                                   const SizedBox(width: 8),
                                   Text(
                                     comment['time'],
-                                    style: GoogleFonts.poppins(
+                                    style: AppTextStyles.bodyMedium.copyWith(
                                       color: Colors.grey,
                                       fontSize: 12,
                                     ),
@@ -622,7 +655,7 @@ class CommunityPostCard extends StatelessWidget {
                               const SizedBox(height: 4),
                               Text(
                                 comment['text'],
-                                style: GoogleFonts.poppins(
+                                style: AppTextStyles.bodyMedium.copyWith(
                                   color: const Color(0xFF354152),
                                   fontSize: 14,
                                 ),
@@ -639,7 +672,7 @@ class CommunityPostCard extends StatelessWidget {
                                     },
                                     child: Text(
                                       'Reply',
-                                      style: GoogleFonts.poppins(
+                                      style: AppTextStyles.bodyMedium.copyWith(
                                         color: const Color(0xFF101727),
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
@@ -657,7 +690,7 @@ class CommunityPostCard extends StatelessWidget {
                                         ),
                                         child: Text(
                                           'View Replies',
-                                          style: GoogleFonts.poppins(
+                                          style: AppTextStyles.bodyMedium.copyWith(
                                             color: const Color(0xFF697282),
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
@@ -698,7 +731,7 @@ class CommunityPostCard extends StatelessWidget {
                                             ),
                                             child: Text(
                                               'Show ${comment['replies'].length} replies',
-                                              style: GoogleFonts.poppins(
+                                              style: AppTextStyles.bodyMedium.copyWith(
                                                 color: AppColors.primary,
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w600,
@@ -741,7 +774,7 @@ class CommunityPostCard extends StatelessWidget {
                                                           Text(
                                                             reply['name'],
                                                             style:
-                                                                GoogleFonts.poppins(
+                                                                AppTextStyles.bodyMedium.copyWith(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w500,
@@ -754,7 +787,7 @@ class CommunityPostCard extends StatelessWidget {
                                                           Text(
                                                             reply['time'],
                                                             style:
-                                                                GoogleFonts.poppins(
+                                                                AppTextStyles.bodyMedium.copyWith(
                                                                   color: Colors
                                                                       .grey,
                                                                   fontSize: 11,
@@ -766,7 +799,7 @@ class CommunityPostCard extends StatelessWidget {
                                                       Text(
                                                         reply['text'],
                                                         style:
-                                                            GoogleFonts.poppins(
+                                                            AppTextStyles.bodyMedium.copyWith(
                                                               color:
                                                                   const Color(
                                                                     0xFF354152,
@@ -791,7 +824,7 @@ class CommunityPostCard extends StatelessWidget {
                                             ),
                                             child: Text(
                                               'Hide replies',
-                                              style: GoogleFonts.poppins(
+                                              style: AppTextStyles.bodyMedium.copyWith(
                                                 color: const Color(0xFF697282),
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w500,
@@ -831,7 +864,7 @@ class CommunityPostCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'Replying to ${controller.replyTargetName.value}',
-                        style: GoogleFonts.poppins(
+                        style: AppTextStyles.bodyMedium.copyWith(
                           fontSize: 12,
                           color: const Color(0xFF697282),
                           fontWeight: FontWeight.w500,
@@ -876,7 +909,7 @@ class CommunityPostCard extends StatelessWidget {
                                   controller.replyTargetCommentId.value != null
                                   ? 'Write a reply...'
                                   : 'Add a comment...',
-                              hintStyle: GoogleFonts.poppins(
+                              hintStyle: AppTextStyles.bodyMedium.copyWith(
                                 color: const Color(0xFF9CA3AF),
                                 fontSize: 14,
                               ),
@@ -991,7 +1024,7 @@ class CommunityPostCard extends StatelessWidget {
                                 alignment: Alignment.center,
                                 child: Text(
                                   "+${count - 4}",
-                                  style: GoogleFonts.poppins(
+                                  style: AppTextStyles.bodyMedium.copyWith(
                                     color: Colors.white,
                                     fontSize: 24,
                                     fontWeight: FontWeight.w600,
@@ -1045,44 +1078,46 @@ class CommunityPostCard extends StatelessWidget {
   }
 
   String _getCategoryStatusLabel() {
-    String category = post['category'] ?? 'General';
-    switch (category) {
-      case 'Jobs':
-        return 'Filled';
-      case 'Sell':
-      case 'Buy & sell':
-        return 'Sold';
-      case 'Question':
-      case 'Questions':
-        return 'Answered';
-      case 'Rental':
-      case 'Rentals':
-        return 'Rented';
-      case 'Help':
-        return 'Resolved';
+    String category = post['category'] ?? 'general';
+    switch (category.toLowerCase()) {
+      case 'jobs':
+        return 'filled'.tr;
+      case 'sell':
+      case 'buy & sell':
+      case 'buy_sell':
+        return 'sold'.tr;
+      case 'question':
+      case 'questions':
+        return 'answered'.tr;
+      case 'rental':
+      case 'rentals':
+        return 'rented'.tr;
+      case 'help':
+        return 'resolved'.tr;
       default:
-        return 'Closed';
+        return 'closed'.tr;
     }
   }
 
   String _getCategoryActionLabel() {
-    String category = post['category'] ?? 'General';
-    switch (category) {
-      case 'Jobs':
-        return 'Mark as Filled';
-      case 'Sell':
-      case 'Buy & sell':
-        return 'Mark as Sold';
-      case 'Question':
-      case 'Questions':
-        return 'Mark as Answered';
-      case 'Rental':
-      case 'Rentals':
-        return 'Mark as Rented';
-      case 'Help':
-        return 'Mark as Resolved';
+    String category = post['category'] ?? 'general';
+    switch (category.toLowerCase()) {
+      case 'jobs':
+        return 'mark_as_filled'.tr;
+      case 'sell':
+      case 'buy & sell':
+      case 'buy_sell':
+        return 'mark_as_sold'.tr;
+      case 'question':
+      case 'questions':
+        return 'mark_as_answered'.tr;
+      case 'rental':
+      case 'rentals':
+        return 'mark_as_rented'.tr;
+      case 'help':
+        return 'mark_as_resolved'.tr;
       default:
-        return 'Close post';
+        return 'close_post'.tr;
     }
   }
 
@@ -1101,7 +1136,7 @@ class CommunityPostCard extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             _getCategoryStatusLabel(),
-            style: GoogleFonts.poppins(
+            style: AppTextStyles.bodyMedium.copyWith(
               color: const Color(0xFF166534),
               fontSize: 10,
               fontWeight: FontWeight.w600,

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../controllers/embassy_controller.dart';
 import 'embassydetails.dart';
 
@@ -24,18 +22,14 @@ class EmbassyView extends GetView<EmbassyController> {
           ),
         ),
         title: Text(
-          'Embassy',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+          'embassies'.tr,
+          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
         ),
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(
-            color: const Color(0xFF3575FF), // Matches the AppBar since it doesn't need to stand out
+            color: const Color(0xFF3575FF),
             height: 1,
           ),
         ),
@@ -51,19 +45,17 @@ class EmbassyView extends GetView<EmbassyController> {
             child: TextField(
               onChanged: (val) => controller.searchQuery.value = val,
               decoration: InputDecoration(
-                hintText: 'Search embassy...',
-                hintStyle: GoogleFonts.inter(
+                hintText: 'search_embassy_hint'.tr,
+                hintStyle: AppTextStyles.bodyMedium.copyWith(
                   color: Colors.grey[500],
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
                 ),
                 prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
                 filled: true,
-                fillColor: Colors.grey[100], // Minimalist soft grey background
+                fillColor: Colors.grey[100],
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none, // No borders initially for a clean look
+                  borderSide: BorderSide.none,
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -71,13 +63,11 @@ class EmbassyView extends GetView<EmbassyController> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
+                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5),
                 ),
               ),
-              style: GoogleFonts.inter(
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: const Color(0xFF2C2C2C),
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
               ),
               cursorColor: const Color(0xFF1E63FF),
             ),
@@ -88,12 +78,8 @@ class EmbassyView extends GetView<EmbassyController> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              'All Embassy',
-              style: GoogleFonts.inter(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: Colors.black,
-              ),
+              'all_embassy'.tr,
+              style: AppTextStyles.headingMedium.copyWith(color: Colors.black),
             ),
           ),
           const SizedBox(height: 16),
@@ -114,11 +100,9 @@ class EmbassyView extends GetView<EmbassyController> {
                         Icon(Icons.search_off_rounded, size: 60, color: Colors.grey[300]),
                         const SizedBox(height: 16),
                         Text(
-                          'No embassies found',
-                          style: GoogleFonts.inter(
-                            fontSize: 15,
+                          'no_embassy_found'.tr,
+                          style: AppTextStyles.bodyMedium.copyWith(
                             color: Colors.grey[500],
-                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -194,8 +178,7 @@ class EmbassyView extends GetView<EmbassyController> {
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Text(
                 embassy.name,
-                style: GoogleFonts.inter(
-                  fontSize: 12,
+                style: AppTextStyles.bodySmall.copyWith(
                   fontWeight: FontWeight.w500,
                   color: Colors.black,
                 ),

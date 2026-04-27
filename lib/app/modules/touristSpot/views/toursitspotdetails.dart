@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_html/flutter_html.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class TouristSpotDetailsView extends StatelessWidget {
   const TouristSpotDetailsView({super.key});
@@ -9,8 +9,8 @@ class TouristSpotDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get the data passed from previous screen
-    final String title = Get.arguments['title'] ?? 'Tourist Spot';
-    final String description = Get.arguments['description'] ?? 'No description available.';
+    final String title = Get.arguments['title'] ?? 'tourist_spots'.tr;
+    final String description = Get.arguments['description'] ?? 'no_description_available'.tr;
     final String image = Get.arguments['image'] ?? '';
 
     return Scaffold(
@@ -23,11 +23,9 @@ class TouristSpotDetailsView extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Tourist Spots',
-          style: GoogleFonts.poppins(
+          'tourist_spots'.tr,
+          style: AppTextStyles.headingSmall.copyWith(
             color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
@@ -84,7 +82,7 @@ class TouristSpotDetailsView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 title,
-                style: GoogleFonts.hindSiliguri(
+                style: AppTextStyles.headingMedium.copyWith(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
                   color: Colors.black,
@@ -110,7 +108,7 @@ class TouristSpotDetailsView extends StatelessWidget {
                       data: description,
                       style: {
                         "body": Style(
-                          fontFamily: GoogleFonts.hindSiliguri().fontFamily,
+                          fontFamily: AppTextStyles.bodyMedium.fontFamily,
                           fontSize: FontSize(15.0),
                           color: Colors.grey[800],
                           lineHeight: LineHeight(1.5),

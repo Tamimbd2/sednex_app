@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
+import 'app_text_styles.dart';
 
 class AppTheme {
   AppTheme._();
@@ -34,80 +35,38 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle.light,
-        titleTextStyle:
-            GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.3,
-            ).copyWith(
-              fontFamilyFallback: [GoogleFonts.hindSiliguri().fontFamily!],
-            ),
+        titleTextStyle: AppTextStyles.headingSmall.copyWith(
+          color: Colors.white,
+          letterSpacing: -0.3,
+        ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
 
       // ── Text ──────────────────────────────────────────────────────
-      textTheme: GoogleFonts.poppinsTextTheme().copyWith(
-        displayLarge: GoogleFonts.poppins(
+      textTheme: TextTheme(
+        displayLarge: AppTextStyles.headingLarge.copyWith(
           fontSize: 32,
           fontWeight: FontWeight.w800,
-          color: AppColors.mainText,
           letterSpacing: -0.5,
         ),
-        displayMedium: GoogleFonts.poppins(
+        displayMedium: AppTextStyles.headingMedium.copyWith(
           fontSize: 28,
           fontWeight: FontWeight.w700,
-          color: AppColors.mainText,
           letterSpacing: -0.3,
         ),
-        headlineLarge: GoogleFonts.poppins(
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
-          color: AppColors.mainText,
-        ),
-        headlineMedium: GoogleFonts.poppins(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: AppColors.mainText,
-        ),
-        titleLarge: GoogleFonts.poppins(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: AppColors.mainText,
-        ),
-        titleMedium: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: AppColors.mainText,
-        ),
-        bodyLarge: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          color: AppColors.text,
-          height: 1.6,
-        ),
-        bodyMedium: GoogleFonts.poppins(
+        headlineLarge: AppTextStyles.headingLarge.copyWith(fontSize: 24),
+        headlineMedium: AppTextStyles.headingMedium.copyWith(fontSize: 20),
+        titleLarge: AppTextStyles.headingSmall.copyWith(fontSize: 18),
+        titleMedium: AppTextStyles.subHeadingMedium.copyWith(fontSize: 16),
+        bodyLarge: AppTextStyles.bodyLarge,
+        bodyMedium: AppTextStyles.bodyMedium,
+        bodySmall: AppTextStyles.bodySmall,
+        labelLarge: AppTextStyles.label.copyWith(
           fontSize: 14,
-          fontWeight: FontWeight.w400,
-          color: AppColors.text,
-          height: 1.5,
-        ),
-        bodySmall: GoogleFonts.poppins(
-          fontSize: 12,
-          fontWeight: FontWeight.w400,
-          color: AppColors.text,
-        ),
-        labelLarge: GoogleFonts.poppins(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
           color: AppColors.primary,
+          fontWeight: FontWeight.w600,
         ),
-        labelSmall: GoogleFonts.poppins(
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-          color: AppColors.hintText,
-          letterSpacing: 0.4,
-        ),
+        labelSmall: AppTextStyles.caption.copyWith(letterSpacing: 0.4),
       ),
 
       // ── Elevated Button ───────────────────────────────────────────
@@ -121,9 +80,8 @@ class AppTheme {
             borderRadius: BorderRadius.circular(14),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          textStyle: GoogleFonts.poppins(
+          textStyle: AppTextStyles.button.copyWith(
             fontSize: 15,
-            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -132,9 +90,8 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: AppColors.primary,
-          textStyle: GoogleFonts.poppins(
+          textStyle: AppTextStyles.button.copyWith(
             fontSize: 14,
-            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -148,9 +105,8 @@ class AppTheme {
             borderRadius: BorderRadius.circular(14),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          textStyle: GoogleFonts.poppins(
+          textStyle: AppTextStyles.button.copyWith(
             fontSize: 15,
-            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -179,8 +135,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: AppColors.error, width: 1),
         ),
-        hintStyle: GoogleFonts.poppins(fontSize: 14, color: AppColors.hintText),
-        labelStyle: GoogleFonts.poppins(fontSize: 14, color: AppColors.text),
+        hintStyle: AppTextStyles.hintText,
+        labelStyle: AppTextStyles.bodyMedium,
       ),
 
       // ── Card ──────────────────────────────────────────────────────
@@ -198,13 +154,11 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.backgroundAlt,
         selectedColor: AppColors.primary,
-        labelStyle: GoogleFonts.poppins(
-          fontSize: 13,
+        labelStyle: AppTextStyles.bodySmall.copyWith(
           fontWeight: FontWeight.w500,
           color: AppColors.mainText,
         ),
-        secondaryLabelStyle: GoogleFonts.poppins(
-          fontSize: 13,
+        secondaryLabelStyle: AppTextStyles.bodySmall.copyWith(
           fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
@@ -244,12 +198,10 @@ class AppTheme {
         indicatorColor: AppColors.primary,
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,
-        labelStyle: GoogleFonts.poppins(
-          fontSize: 14,
+        labelStyle: AppTextStyles.bodyMedium.copyWith(
           fontWeight: FontWeight.w700,
         ),
-        unselectedLabelStyle: GoogleFonts.poppins(
-          fontSize: 14,
+        unselectedLabelStyle: AppTextStyles.bodyMedium.copyWith(
           fontWeight: FontWeight.w500,
         ),
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class ZoharView extends StatelessWidget {
   const ZoharView({super.key});
@@ -11,10 +11,9 @@ class ZoharView extends StatelessWidget {
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
         title: Text(
-          'যোহরের নামাজ',
-          style: GoogleFonts.hindSiliguri(
+          'zohar_prayer'.tr,
+          style: AppTextStyles.headingSmall.copyWith(
             fontWeight: FontWeight.w600,
-            fontSize: 20,
             color: Colors.white,
           ),
         ),
@@ -34,14 +33,14 @@ class ZoharView extends StatelessWidget {
             // Section 1: At a Glance
             _buildSectionHeader(
               icon: Icons.info_outline_rounded,
-              title: 'এক নজরে যোহরের নামাজ',
+              title: 'at_a_glance'.tr,
             ),
             const SizedBox(height: 12),
             _buildInfoCard(
               items: [
-                _buildInfoRow('সময়:', 'সূর্য পশ্চিম আকাশে ঢলে পড়ার পর হতে আসরের ওয়াক্ত শুরু হওয়ার আগ পর্যন্ত।'),
-                _buildInfoRow('রাকাত:', '৪ রাকাত সুন্নাত, ৪ রাকাত ফরজ, ২ রাকাত সুন্নাত ও ২ রাকাত নফল। মোট ১২ রাকাত।'),
-                _buildInfoRow('নিয়ত:', 'আমি কেবলামুখী হয়ে যোহরের (সুন্নাত/ফরজ) নামাজ আদায় করছি।'),
+                _buildInfoRow('time_label'.tr, 'সূর্য পশ্চিম আকাশে ঢলে পড়ার পর হতে আসরের ওয়াক্ত শুরু হওয়ার আগ পর্যন্ত।'),
+                _buildInfoRow('rakat_label'.tr, '৪ রাকাত সুন্নাত, ৪ রাকাত ফরজ, ২ রাকাত সুন্নাত ও ২ রাকাত নফল। মোট ১২ রাকাত।'),
+                _buildInfoRow('niyat_label'.tr, 'আমি কেবলামুখী হয়ে যোহরের (সুন্নাত/ফরজ) নামাজ আদায় করছি।'),
             
               ],
             ),
@@ -51,7 +50,7 @@ class ZoharView extends StatelessWidget {
             // Section 2: Time
             _buildSectionHeader(
               icon: Icons.access_time_filled_rounded,
-              title: 'যোহরের নামাজের সময়',
+              title: 'prayer_time_header'.tr,
             ),
             const SizedBox(height: 12),
             Container(
@@ -63,8 +62,7 @@ class ZoharView extends StatelessWidget {
               ),
               child: Text(
                 'সূর্য ঠিক মধ্যাকাশ থেকে পশ্চিমে ঢলে পড়লেই যোহরের ওয়াক্ত শুরু হয় এবং কোনো বস্তুর ছায়া দ্বিগুণ হওয়া পর্যন্ত (ছায় আসলি বাদে) এই ওয়াক্ত থাকে।',
-                style: GoogleFonts.hindSiliguri(
-                  fontSize: 14,
+                style: AppTextStyles.bodyMedium.copyWith(
                   color: Colors.black87,
                   height: 1.5,
                 ),
@@ -76,15 +74,14 @@ class ZoharView extends StatelessWidget {
             // Section 3: Niyat (Arabic & Bangla)
             _buildSectionHeader(
               icon: Icons.menu_book_rounded, 
-              title: 'যোহরের নামাজের নিয়ত',
+              title: 'prayer_niyat_header'.tr,
             ),
             
             // 4 Rakat Sunnah
             const SizedBox(height: 8),
             Text(
               'যোহরের ৪ রাকাত সুন্নাত নামাজের নিয়ত',
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 16,
+              style: AppTextStyles.subHeadingMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
@@ -99,8 +96,7 @@ class ZoharView extends StatelessWidget {
             const SizedBox(height: 20),
             Text(
               'যোহরের ৪ রাকাত ফরজ নামাজের নিয়ত',
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 16,
+              style: AppTextStyles.subHeadingMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
@@ -115,8 +111,7 @@ class ZoharView extends StatelessWidget {
             const SizedBox(height: 20),
             Text(
               'যোহরের ২ রাকাত সুন্নাত নামাজের নিয়ত',
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 16,
+              style: AppTextStyles.subHeadingMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
@@ -132,7 +127,7 @@ class ZoharView extends StatelessWidget {
             // Section 4: Method of Prayer
             _buildSectionHeader(
               icon: Icons.menu_book_outlined,
-              title: 'যোহরের নামাজের নিয়ম',
+              title: 'prayer_method_header'.tr,
             ),
             const SizedBox(height: 12),
             Container(
@@ -163,7 +158,7 @@ class ZoharView extends StatelessWidget {
             // Section 5: FAQ
             _buildSectionHeader(
               icon: Icons.help_outline_rounded,
-              title: 'সচরাচর জিজ্ঞাসা',
+              title: 'faq_header'.tr,
             ),
             const SizedBox(height: 12),
             _buildFAQItem(
@@ -194,8 +189,7 @@ class ZoharView extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           title,
-          style: GoogleFonts.hindSiliguri(
-            fontSize: 18,
+          style: AppTextStyles.bodyLarge.copyWith(
             fontWeight: FontWeight.w700,
             color: const Color(0xFF1E63FF),
           ),
@@ -229,9 +223,8 @@ class ZoharView extends StatelessWidget {
           width: 60,
           child: Text(
             label,
-            style: GoogleFonts.hindSiliguri(
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w700,
-              fontSize: 14,
               color: Colors.black87,
             ),
           ),
@@ -240,9 +233,8 @@ class ZoharView extends StatelessWidget {
         Expanded(
           child: Text(
             value,
-            style: GoogleFonts.hindSiliguri(
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w500,
-              fontSize: 14,
               color: Colors.black87,
               height: 1.4,
             ),
@@ -268,7 +260,7 @@ class ZoharView extends StatelessWidget {
             child: Text(
               arabic,
               textAlign: TextAlign.right,
-              style: GoogleFonts.amiri(
+              style: AppTextStyles.arabic.copyWith(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 height: 1.6,
@@ -277,9 +269,8 @@ class ZoharView extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'বাংলা উচ্চারণ:',
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 12,
+            'pronunciation_label'.tr,
+            style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
               color: Colors.grey.shade600,
             ),
@@ -287,8 +278,7 @@ class ZoharView extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             pronunciation,
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 14,
+            style: AppTextStyles.bodyMedium.copyWith(
               color: Colors.black87,
               height: 1.5,
             ),
@@ -312,8 +302,7 @@ class ZoharView extends StatelessWidget {
             ),
             child: Text(
               '$step',
-              style: GoogleFonts.poppins(
-                fontSize: 12,
+              style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -323,8 +312,7 @@ class ZoharView extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.hindSiliguri(
-                fontSize: 14,
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: Colors.black87,
                 height: 1.4,
               ),
@@ -349,8 +337,7 @@ class ZoharView extends StatelessWidget {
         children: [
           Text(
             question,
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 15,
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w700,
               color: Colors.black87,
             ),
@@ -358,8 +345,7 @@ class ZoharView extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             answer,
-            style: GoogleFonts.hindSiliguri(
-              fontSize: 14,
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w400,
               color: Colors.black87,
               height: 1.5,

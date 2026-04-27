@@ -89,6 +89,7 @@ flutter:
     - assets/newessential/
     - assets/onboarding/
     - assets/appicon/
+    - assets/homeicon/
 
 flutter_launcher_icons:
   android: "launcher_icon"

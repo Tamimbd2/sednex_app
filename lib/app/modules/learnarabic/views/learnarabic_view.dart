@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../controllers/learnarabic_controller.dart';
@@ -20,12 +21,8 @@ class LearnarabicView extends GetView<LearnarabicController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Learn Arabic',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+          'learn_arabic'.tr,
+          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -39,8 +36,8 @@ class LearnarabicView extends GetView<LearnarabicController> {
         if (controller.categories.isEmpty) {
           return Center(
             child: Text(
-              'No categories found',
-              style: GoogleFonts.inter(color: Colors.grey),
+              'no_categories_found'.tr,
+              style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
             ),
           );
         }
@@ -54,11 +51,9 @@ class LearnarabicView extends GetView<LearnarabicController> {
               child: TextField(
                 onChanged: controller.onSearchChanged,
                 decoration: InputDecoration(
-                  hintText: 'Search word (Bangla / Arabic / English)',
-                  hintStyle: GoogleFonts.inter(
+                  hintText: 'search_arabic_placeholder'.tr,
+                  hintStyle: AppTextStyles.bodyMedium.copyWith(
                     color: Colors.grey[500],
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
                   ),
                   prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
                   filled: true,
@@ -77,9 +72,8 @@ class LearnarabicView extends GetView<LearnarabicController> {
                     borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
                   ),
                 ),
-                style: GoogleFonts.inter(
+                style: AppTextStyles.bodyMedium.copyWith(
                   color: const Color(0xFF2C2C2C),
-                  fontSize: 15,
                   fontWeight: FontWeight.w500,
                 ),
                 cursorColor: const Color(0xFF1E63FF),
@@ -97,7 +91,7 @@ class LearnarabicView extends GetView<LearnarabicController> {
                   if (index == 0) {
                     return Padding(
                       padding: const EdgeInsets.only(right: 8),
-                      child: _buildTab('All', -1),
+                      child: _buildTab('view_all'.tr, -1),
                     );
                   }
                   final category = controller.categories[index - 1];
@@ -114,8 +108,8 @@ class LearnarabicView extends GetView<LearnarabicController> {
               child: controller.currentWords.isEmpty
                   ? Center(
                       child: Text(
-                        'No words found',
-                        style: GoogleFonts.inter(color: Colors.grey),
+                        'no_words_found'.tr,
+                        style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
                       ),
                     )
                   : ListView.builder(
@@ -138,7 +132,8 @@ class LearnarabicView extends GetView<LearnarabicController> {
     return GestureDetector(
       onTap: () => controller.changeTab(index),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -149,10 +144,10 @@ class LearnarabicView extends GetView<LearnarabicController> {
         ),
         child: Text(
           label,
-          style: GoogleFonts.inter(
-            fontSize: 13,
+          style: AppTextStyles.bodySmall.copyWith(
             fontWeight: FontWeight.w500,
             color: isSelected ? Colors.white : Colors.black87,
+            height: 1.0,
           ),
         ),
       ),
@@ -187,8 +182,7 @@ class LearnarabicView extends GetView<LearnarabicController> {
               word.arabic,
               textAlign: TextAlign.center,
               style: isArabicTextBengali
-                  ? GoogleFonts.hindSiliguri(
-                      fontSize: 24,
+                  ? AppTextStyles.headingLarge.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppColors.primary,
                       height: 1.2,
@@ -218,8 +212,7 @@ class LearnarabicView extends GetView<LearnarabicController> {
                 child: Text(
                   word.pronunciation,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
+                  style: AppTextStyles.bodySmall.copyWith(
                     fontWeight: FontWeight.w500,
                     color: AppColors.primary,
                     letterSpacing: 0.5,
@@ -240,20 +233,16 @@ class LearnarabicView extends GetView<LearnarabicController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Meaning',
-                        style: GoogleFonts.inter(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
+                        'meaning'.tr,
+                        style: AppTextStyles.label.copyWith(
                           color: Colors.grey[400],
                           letterSpacing: 0.5,
-                          textBaseline: TextBaseline.alphabetic,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         word.example.isNotEmpty ? word.example : 'N/A',
-                        style: GoogleFonts.hindSiliguri(
-                          fontSize: 16,
+                        style: AppTextStyles.bodyLarge.copyWith(
                           fontWeight: FontWeight.w600,
                           color: Colors.black87,
                           height: 1.2,
@@ -270,20 +259,16 @@ class LearnarabicView extends GetView<LearnarabicController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'English',
-                        style: GoogleFonts.inter(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
+                        'english'.tr,
+                        style: AppTextStyles.label.copyWith(
                           color: Colors.grey[400],
                           letterSpacing: 0.5,
-                          textBaseline: TextBaseline.alphabetic,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         word.english,
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
+                        style: AppTextStyles.bodyMedium.copyWith(
                           fontWeight: FontWeight.w500,
                           color: Colors.grey[700],
                           height: 1.2,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../controllers/essential_service_controller.dart';
 
 class EssentialServiceView extends GetView<EssentialServiceController> {
@@ -19,12 +19,8 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Essential service',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+          'essential_services'.tr,
+          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -37,189 +33,189 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
           childAspectRatio: 0.75,
           children: [
             _buildServiceCard(
-              'Informations',
+              'information'.tr,
               'assets/newessential/info.svg',
               const Color(0xFFFF5722),
               () => Get.toNamed('/informations'),
             ),
             _buildServiceCard(
-              'Embassy',
+              'embassies'.tr,
               'assets/newessential/City-Hall--Streamline-Core-Gradient.svg',
               const Color(0xFF9C27B0),
               () => Get.toNamed('/embassy'),
             ),
             _buildServiceCard(
-              'Article',
+              'articles'.tr,
               'assets/newessential/Multiple-File-2--Streamline-Core-Gradient.svg',
               const Color(0xFF00BFA5),
               () => Get.toNamed('/articles'),
             ),
             _buildServiceCard(
-              'Basic Goods',
+              'basic_goods'.tr,
               'assets/newessential/Shopping-Basket-2--Streamline-Core-Gradient.svg',
               const Color(0xFF448AFF),
               () => Get.toNamed('/basicgoods'),
             ),
             _buildServiceCard(
-              'Community',
+              'community'.tr,
               'assets/newessential/User-Multiple-Group--Streamline-Core-Gradient.svg',
               const Color(0xFF4CAF50),
               () => Get.toNamed('/community'),
             ),
             _buildServiceCard(
-              'Grocery Store',
+              'grocery_store'.tr,
               'assets/newessential/Store-1--Streamline-Core-Gradient.svg',
               const Color(0xFFFF9800),
               () => Get.toNamed(
                 '/general-section',
-                arguments: {'slug': 'grocery-store', 'title': 'Grocery Store'},
+                arguments: {'slug': 'grocery-store', 'title': 'grocery_store'.tr},
               ),
             ),
             _buildServiceCard(
-              'Tourist spot',
+              'tourist_spots'.tr,
               'assets/newessential/Beach--Streamline-Core-Gradient.svg',
               const Color(0xFF00BCD4),
               () => Get.toNamed('/tourist-spot'),
             ),
             _buildServiceCard(
-              'Learn Arabic',
+              'learn_arabic'.tr,
               'assets/newessential/Dictionary-Language-Book--Streamline-Core-Gradient.svg',
               const Color(0xFF795548),
               () => Get.toNamed('/learnarabic'),
             ),
             _buildServiceCard(
-              'Restaurants',
+              'restaurants'.tr,
               'assets/newessential/Fork-Knife--Streamline-Core-Gradient.svg',
               const Color(0xFFE91E63),
               () => Get.toNamed('/restaurents'),
             ),
             _buildServiceCard(
-              'Hospitals',
+              'hospitals'.tr,
               'assets/newessential/Ambulance--Streamline-Core-Gradient.svg',
               const Color(0xFFF44336),
               () => Get.toNamed('/hospitals'),
             ),
             _buildServiceCard(
-              'Local Business',
+              'local_business'.tr,
               'assets/newessential/Briefcase-Dollar--Streamline-Core-Gradient.svg',
               const Color(0xFF607D8B),
               () => Get.toNamed(
                 '/general-section',
                 arguments: {
                   'slug': 'local-business',
-                  'title': 'Local Business',
+                  'title': 'local_business'.tr,
                 },
               ),
             ),
             _buildServiceCard(
-              'Jewellery shop',
+              'jewellery_shop'.tr,
               'assets/newessential/Gift-2--Streamline-Core-Gradient.svg',
               const Color(0xFFFFC107),
               () => Get.toNamed(
                 '/general-section',
                 arguments: {
                   'slug': 'jewellery-shop',
-                  'title': 'Jewellery shop',
+                  'title': 'jewellery_shop'.tr,
                 },
               ),
             ),
             _buildServiceCard(
-              'Clothing shop',
+              'clothing_shop'.tr,
               'assets/newessential/Shopping-Bag-Hand-Bag-2--Streamline-Core-Gradient.svg',
               const Color(0xFF9C27B0),
               () => Get.toNamed(
                 '/general-section',
-                arguments: {'slug': 'clothing-shop', 'title': 'Clothing shop'},
+                arguments: {'slug': 'clothing-shop', 'title': 'clothing_shop'.tr},
               ),
             ),
             _buildServiceCard(
-              'Organization',
+              'organizations'.tr,
               'assets/newessential/Business-Profession-Home-Office--Streamline-Core-Gradient.svg',
               const Color(0xFF3F51B5),
               () => Get.toNamed('/organization'),
             ),
             _buildServiceCard(
-              'Sports team',
+              'sports_team'.tr,
               'assets/newessential/Flash-3--Streamline-Core-Gradient.svg',
               const Color(0xFF8BC34A),
               () => Get.toNamed(
                 '/general-section',
-                arguments: {'slug': 'sports-team', 'title': 'Sports team'},
+                arguments: {'slug': 'sports-team', 'title': 'sports_team'.tr},
               ),
             ),
             _buildServiceCard(
-              'Drivers',
+              'drivers'.tr,
               'assets/newessential/Car-Taxi-1--Streamline-Core-Gradient.svg',
               const Color(0xFFFFEB3B),
               () => Get.toNamed(
                 '/general-section',
-                arguments: {'slug': 'texi-driver', 'title': 'Taxi Drivers'},
+                arguments: {'slug': 'texi-driver', 'title': 'drivers'.tr},
               ),
             ),
             _buildServiceCard(
-              'Businessman',
+              'businessman'.tr,
               'assets/newessential/Necktie--Streamline-Core-Gradient.svg',
               const Color(0xFF607D8B),
               () => Get.toNamed(
                 '/general-section',
-                arguments: {'slug': 'businessman', 'title': 'Businessman'},
+                arguments: {'slug': 'businessman', 'title': 'businessman'.tr},
               ),
             ),
             _buildServiceCard(
-              'Influencer',
+              'influencer'.tr,
               'assets/newessential/Megaphone-2--Streamline-Core-Gradient.svg',
               const Color(0xFFE91E63),
               () => Get.toNamed(
                 '/general-section',
-                arguments: {'slug': 'influencer', 'title': 'Influencer'},
+                arguments: {'slug': 'influencer', 'title': 'influencer'.tr},
               ),
             ),
             _buildServiceCard(
-              'Local Market',
+              'local_market'.tr,
               'assets/newessential/Shopping-Cart-1--Streamline-Core-Gradient.svg',
               const Color(0xFFFF5722),
               () => Get.toNamed(
                 '/general-section',
-                arguments: {'slug': 'local-market', 'title': 'Local Market'},
+                arguments: {'slug': 'local-market', 'title': 'local_market'.tr},
               ),
             ),
             _buildServiceCard(
-              'Pharmacy',
+              'pharmacy'.tr,
               'assets/newessential/Tablet-Capsule--Streamline-Core-Gradient.svg',
               const Color(0xFF009688),
               () => Get.toNamed(
                 '/general-section',
-                arguments: {'slug': 'pharmacy', 'title': 'Pharmacy'},
+                arguments: {'slug': 'pharmacy', 'title': 'pharmacy'.tr},
               ),
             ),
             _buildServiceCard(
-              'NGO',
+              'ngo'.tr,
               'assets/newessential/Decent-Work-And-Economic-Growth--Streamline-Core-Gradient.svg',
               const Color(0xFF4CAF50),
               () => Get.toNamed(
                 '/general-section',
-                arguments: {'slug': 'ngo', 'title': 'NGO'},
+                arguments: {'slug': 'ngo', 'title': 'ngo'.tr},
               ),
             ),
             _buildServiceCard(
-              'Bus & Flight Booking',
+              'bus_and_flight'.tr,
               'assets/newessential/Bus--Streamline-Core-Gradient.svg',
               const Color(0xFF2196F3),
               () => Get.toNamed('/busflight'),
             ),
             _buildServiceCard(
-              'Sednex Travel',
+              'local_tours'.tr,
               'assets/newessential/Location-Pin-3--Streamline-Core-Gradient.svg',
               const Color(0xFF00BCD4),
               () => Get.toNamed('/localtour'),
             ),
             _buildServiceCard(
-              'Maker',
+              'maker'.tr,
               'assets/newessential/Shield-.svg',
               const Color(0xFF1565C0),
               () => Get.toNamed(
                 '/general-section',
-                arguments: {'slug': 'maker', 'title': 'Maker'},
+                arguments: {'slug': 'maker', 'title': 'maker'.tr},
               ),
             ),
           ],
@@ -381,7 +377,7 @@ class _AdvancedServiceCardState extends State<_AdvancedServiceCard>
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.inter(
+                    style: AppTextStyles.caption.copyWith(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
                       color: const Color(0xFF2C2C2C),

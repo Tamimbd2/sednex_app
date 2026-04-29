@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/theme/app_text_styles.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../routes/app_pages.dart';
@@ -25,9 +25,9 @@ class SignupView extends GetView<SignupController> {
                 const SizedBox(height: 60),
                 // Title
                 Text(
-                  'Create Account',
+                  'create_account_title'.tr,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.headingLarge.copyWith(
                     color: const Color(0xFF1C1C1C),
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
@@ -37,24 +37,22 @@ class SignupView extends GetView<SignupController> {
                 const SizedBox(height: 8),
                 // Subtitle
                 Text(
-                  'Join the global community today',
+                  'create_account_subtitle'.tr,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.bodyMedium.copyWith(
                     color: const Color(0xFF6E6E6E),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
                     height: 1.50,
                   ),
                 ),
                 const SizedBox(height: 40),
                 // Full Name Field
                 _buildInputField(
-                  label: 'Full Name',
-                  hintText: 'Your name',
+                  label: 'full_name'.tr,
+                  hintText: 'your_name'.tr,
                   controller: controller.nameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your name';
+                      return 'error_name_empty'.tr;
                     }
                     return null;
                   },
@@ -62,17 +60,17 @@ class SignupView extends GetView<SignupController> {
                 const SizedBox(height: 16),
                 // Email Field
                 _buildInputField(
-                  label: 'Email',
-                  hintText: 'Enter your email',
+                  label: 'email'.tr,
+                  hintText: 'enter_your_email'.tr,
                   controller: controller.emailController,
                   keyboardType: TextInputType.emailAddress,
                   prefixIcon: const Icon(Icons.email_outlined, size: 20, color: Color(0xFF6E6E6E)),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
+                      return 'error_email_empty'.tr;
                     }
                     if (!GetUtils.isEmail(value)) {
-                      return 'Please enter a valid email';
+                      return 'error_email_invalid'.tr;
                     }
                     return null;
                   },
@@ -83,8 +81,8 @@ class SignupView extends GetView<SignupController> {
                 const SizedBox(height: 16),
                 // Password Field
                 Obx(() => _buildInputField(
-                  label: 'Password',
-                  hintText: 'Enter password',
+                  label: 'password'.tr,
+                  hintText: 'enter_password'.tr,
                   controller: controller.passwordController,
                   obscureText: !controller.isPasswordVisible.value,
                   suffixIcon: IconButton(
@@ -97,10 +95,10 @@ class SignupView extends GetView<SignupController> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a password';
+                      return 'error_password_empty_2'.tr;
                     }
                     if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
+                      return 'error_password_length'.tr;
                     }
                     return null;
                   },
@@ -108,7 +106,7 @@ class SignupView extends GetView<SignupController> {
                 const SizedBox(height: 40),
                 // Sign Up Button
                 PrimaryButton(
-                  title: 'Sign Up',
+                  title: 'signup_btn'.tr,
                   onTap: () => controller.signup(),
                   width: double.infinity,
                   height: 56,
@@ -116,12 +114,10 @@ class SignupView extends GetView<SignupController> {
                 const SizedBox(height: 25),
                 // Or sign up with
                 Text(
-                  '- Or sign up with -',
+                  'or_sign_up_with'.tr,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.arimo(
+                  style: AppTextStyles.bodyMedium.copyWith(
                     color: const Color(0xFF99A1AE),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
                     height: 1.43,
                   ),
                 ),
@@ -147,20 +143,17 @@ class SignupView extends GetView<SignupController> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Already have an account? ",
-                      style: GoogleFonts.poppins(
+                      'already_have_account'.tr,
+                      style: AppTextStyles.bodyMedium.copyWith(
                         color: const Color(0xFF6E6E6E),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     GestureDetector(
                       onTap: () => Get.offNamed(Routes.SIGNIN),
                       child: Text(
-                        'Login',
-                        style: GoogleFonts.poppins(
+                        'login'.tr,
+                        style: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.primary,
-                          fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -191,9 +184,8 @@ class SignupView extends GetView<SignupController> {
       children: [
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: AppTextStyles.bodyMedium.copyWith(
             color: const Color(0xFF1C1C1C),
-            fontSize: 14,
             fontWeight: FontWeight.w500,
             height: 1.50,
           ),
@@ -205,16 +197,13 @@ class SignupView extends GetView<SignupController> {
           keyboardType: keyboardType,
           validator: validator,
           cursorColor: Colors.grey,
-          style: GoogleFonts.poppins(
-            fontSize: 15,
+          style: AppTextStyles.bodyLarge.copyWith(
             color: const Color(0xFF1D2838),
           ),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: GoogleFonts.poppins(
+            hintStyle: AppTextStyles.bodyLarge.copyWith(
               color: AppColors.hintText,
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
             ),
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
@@ -252,10 +241,9 @@ class SignupView extends GetView<SignupController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Country',
-          style: GoogleFonts.poppins(
+          'country'.tr,
+          style: AppTextStyles.bodyMedium.copyWith(
             color: const Color(0xFF1C1C1C),
-            fontSize: 14,
             fontWeight: FontWeight.w500,
             height: 1.50,
           ),
@@ -285,10 +273,8 @@ class SignupView extends GetView<SignupController> {
               value: country,
               child: Text(
                 country,
-                style: GoogleFonts.poppins(
+                style: AppTextStyles.bodyLarge.copyWith(
                   color: const Color(0x7F0A0A0A),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
                 ),
               ),
             );

@@ -21,8 +21,8 @@ class SplashController extends GetxController {
       // User is already logged in, go to dashboard
       Get.offAllNamed(Routes.DASHBOARD);
     } else if (isFirstTime) {
-      // First time user, show onboarding
-      Get.offAllNamed(Routes.ONBOARD);
+      // First time user, show select language screen
+      Get.offAllNamed(Routes.SELECT_LANG);
     } else {
       // Not first time, go directly to sign in
       Get.offAllNamed(Routes.SIGNIN);

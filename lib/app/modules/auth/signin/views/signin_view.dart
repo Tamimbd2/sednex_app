@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../../../routes/app_pages.dart';
 import '../../../../widgets/primary_button.dart';
 import '../controllers/signin_controller.dart';
@@ -39,9 +39,9 @@ class SigninView extends GetView<SigninController> {
                 const SizedBox(height: 40),
                 // Title
                 Text(
-                  'Login to your Account',
+                  'login_title'.tr,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.headingLarge.copyWith(
                     color: const Color(0xFF1C1C1C),
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
@@ -51,17 +51,17 @@ class SigninView extends GetView<SigninController> {
                 const SizedBox(height: 45),
                 // Email Field
                 _buildInputField(
-                  label: 'Email',
-                  hintText: 'Enter email',
+                  label: 'email'.tr,
+                  hintText: 'enter_email'.tr,
                   controller: controller.emailController,
                   keyboardType: TextInputType.emailAddress,
                   prefixIcon: const Icon(Icons.email_outlined, size: 20, color: Color(0xFF6E6E6E)),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
+                      return 'error_email_empty'.tr;
                     }
                     if (!GetUtils.isEmail(value)) {
-                      return 'Please enter a valid email address';
+                      return 'error_email_invalid'.tr;
                     }
                     return null;
                   },
@@ -69,8 +69,8 @@ class SigninView extends GetView<SigninController> {
                 const SizedBox(height: 20),
                 // Password Field
                 Obx(() => _buildInputField(
-                  label: 'Password',
-                  hintText: 'Enter password',
+                  label: 'password'.tr,
+                  hintText: 'enter_password'.tr,
                   controller: controller.passwordController,
                   obscureText: controller.obscurePassword.value,
                   suffixIcon: IconButton(
@@ -85,10 +85,10 @@ class SigninView extends GetView<SigninController> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
+                      return 'error_password_empty'.tr;
                     }
                     if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
+                      return 'error_password_length'.tr;
                     }
                     return null;
                   },
@@ -98,10 +98,9 @@ class SigninView extends GetView<SigninController> {
                   child: TextButton(
                     onPressed: () => Get.toNamed(Routes.SENDOTP),
                     child: Text(
-                      'Forgot password?',
-                      style: GoogleFonts.poppins(
+                      'forgot_password'.tr,
+                      style: AppTextStyles.bodyMedium.copyWith(
                         color: AppColors.primary,
-                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -116,7 +115,7 @@ class SigninView extends GetView<SigninController> {
                         ),
                       )
                     : PrimaryButton(
-                        title: 'Login',
+                        title: 'login'.tr,
                         onTap: () => controller.login(),
                         width: double.infinity,
                         height: 56,
@@ -125,12 +124,10 @@ class SigninView extends GetView<SigninController> {
                 const SizedBox(height: 25),
                 // Or sign in with
                 Text(
-                  '- Or sign in with -',
+                  'or_sign_in_with'.tr,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.arimo(
+                  style: AppTextStyles.bodyMedium.copyWith(
                     color: const Color(0xFF99A1AE),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
                     height: 1.43,
                   ),
                 ),
@@ -156,20 +153,17 @@ class SigninView extends GetView<SigninController> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account? ",
-                      style: GoogleFonts.poppins(
+                      'dont_have_account'.tr,
+                      style: AppTextStyles.bodyMedium.copyWith(
                         color: const Color(0xFF6E6E6E),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     GestureDetector(
                       onTap: () => Get.offNamed(Routes.SIGNUP),
                       child: Text(
-                        'Sign up',
-                        style: GoogleFonts.poppins(
+                        'signup'.tr,
+                        style: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.primary,
-                          fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -200,9 +194,8 @@ class SigninView extends GetView<SigninController> {
       children: [
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: AppTextStyles.bodyMedium.copyWith(
             color: const Color(0xFF1C1C1C),
-            fontSize: 14,
             fontWeight: FontWeight.w500,
             height: 1.50,
           ),
@@ -214,16 +207,13 @@ class SigninView extends GetView<SigninController> {
           keyboardType: keyboardType,
           validator: validator,
           cursorColor: Colors.grey,
-          style: GoogleFonts.poppins(
-            fontSize: 15,
+          style: AppTextStyles.bodyLarge.copyWith(
             color: const Color(0xFF1D2838),
           ),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: GoogleFonts.poppins(
+            hintStyle: AppTextStyles.bodyLarge.copyWith(
               color: AppColors.hintText,
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
             ),
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,

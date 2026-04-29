@@ -81,36 +81,56 @@ class SendotpView extends GetView<SendotpController> {
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
-                        prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF6E6E6E), size: 20),
+                        prefixIcon: const Icon(
+                          Icons.email_outlined,
+                          color: Color(0xFF6E6E6E),
+                          size: 20,
+                        ),
                         filled: false,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 13,
+                          vertical: 15,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xFFCBD5E1), width: 1.15),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFCBD5E1),
+                            width: 1.15,
+                          ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xFFCBD5E1), width: 1.15),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFCBD5E1),
+                            width: 1.15,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.grey, width: 1.15),
+                          borderSide: const BorderSide(
+                            color: Colors.grey,
+                            width: 1.15,
+                          ),
                         ),
-                        errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
+                        errorStyle: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 50),
                 // Send Code Button
-                Obx(() => controller.isLoading.value
-                    ? const Center(child: CircularProgressIndicator())
-                    : PrimaryButton(
-                        title: 'Send Code',
-                        onTap: () => controller.sendCode(),
-                        width: double.infinity,
-                        height: 56,
-                      ),
+                Obx(
+                  () => controller.isLoading.value
+                      ? const Center(child: CircularProgressIndicator())
+                      : PrimaryButton(
+                          title: 'Send Code',
+                          onTap: () => controller.sendCode(),
+                          width: double.infinity,
+                          height: 56,
+                        ),
                 ),
                 const SizedBox(height: 40),
                 // Footer
@@ -146,4 +166,3 @@ class SendotpView extends GetView<SendotpController> {
     );
   }
 }
-

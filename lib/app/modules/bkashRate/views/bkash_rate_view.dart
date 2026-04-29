@@ -133,9 +133,11 @@ class BkashRateView extends GetView<BkashRateController> {
                               ),
                             ],
                           ),
-                          child: const Icon(
-                            Icons.currency_exchange,
-                            color: Color(0xFFD12053),
+                          child: Image.asset(
+                            'assets/logo/bkash.png',
+                            width: 24,
+                            height: 24,
+                            fit: BoxFit.contain,
                           ),
                         ),
                         const SizedBox(width: 14),
@@ -307,24 +309,6 @@ class BkashRateView extends GetView<BkashRateController> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 40,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          _buildModernChip('1k'.trNum),
-                          const SizedBox(width: 10),
-                          _buildModernChip('5k'.trNum),
-                          const SizedBox(width: 10),
-                          _buildModernChip('10k'.trNum),
-                          const SizedBox(width: 10),
-                          _buildModernChip('20k'.trNum),
-                          const SizedBox(width: 10),
-                          _buildModernChip('50k'.trNum),
-                        ],
-                      ),
-                    ),
                     const SizedBox(height: 24),
                     Stack(
                       alignment: Alignment.center,
@@ -356,12 +340,16 @@ class BkashRateView extends GetView<BkashRateController> {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    Text(
-                      'amount_to_send_total'.tr,
-                      style: _getStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xFF616161),
+                    Obx(
+                      () => Text(
+                        controller.isTakaSelected.value
+                            ? 'amount_to_pay'.tr
+                            : 'amount_to_receive'.tr,
+                        style: _getStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF616161),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),

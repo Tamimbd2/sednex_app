@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/theme/app_text_styles.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../routes/app_pages.dart';
@@ -23,9 +23,9 @@ class VerifyotpView extends GetView<VerifyotpController> {
               const SizedBox(height: 120),
               // Title
               Text(
-                'Verify OTP',
+                'verify_otp_title'.tr,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
+                style: AppTextStyles.headingLarge.copyWith(
                   color: const Color(0xFF1C1C1C),
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
@@ -37,12 +37,10 @@ class VerifyotpView extends GetView<VerifyotpController> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  'Enter the 6-digit code sent to your email',
+                  'verify_otp_subtitle'.tr,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.bodyMedium.copyWith(
                     color: const Color(0xFF6E6E6E),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
                     height: 1.50,
                   ),
                 ),
@@ -65,22 +63,19 @@ class VerifyotpView extends GetView<VerifyotpController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Didn't receive the code? ",
-                    style: GoogleFonts.poppins(
+                    'didnt_receive_code'.tr,
+                    style: AppTextStyles.bodySmall.copyWith(
                       color: const Color(0xFF6E6E6E),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
                     ),
                   ),
                   GestureDetector(
                     onTap: controller.canResend.value ? () => controller.resendCode() : null,
                     child: Text(
                       controller.canResend.value 
-                          ? 'Resend' 
-                          : 'Resend in ${controller.resendSeconds.value}s',
-                      style: GoogleFonts.poppins(
+                          ? 'resend'.tr 
+                          : '${'resend_in'.tr}${controller.resendSeconds.value}s',
+                      style: AppTextStyles.bodySmall.copyWith(
                         color: controller.canResend.value ? AppColors.primary : const Color(0xFF6E6E6E),
-                        fontSize: 13,
                         fontWeight: FontWeight.w500,
                         decoration: controller.canResend.value ? TextDecoration.underline : TextDecoration.none,
                       ),
@@ -93,7 +88,7 @@ class VerifyotpView extends GetView<VerifyotpController> {
               Obx(() => controller.isLoading.value 
                   ? const Center(child: CircularProgressIndicator())
                   : PrimaryButton(
-                      title: 'Verify Code',
+                      title: 'verify_code'.tr,
                       onTap: () => controller.verifyCode(),
                       width: double.infinity,
                       height: 56,
@@ -104,10 +99,9 @@ class VerifyotpView extends GetView<VerifyotpController> {
               GestureDetector(
                 onTap: () => Get.offAllNamed(Routes.SIGNIN),
                 child: Text(
-                  'Back to Login',
-                  style: GoogleFonts.poppins(
+                  'back_to_login'.tr,
+                  style: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.primary,
-                    fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -142,7 +136,7 @@ class VerifyotpView extends GetView<VerifyotpController> {
           keyboardType: TextInputType.number,
           textAlign: TextAlign.center,
           cursorColor: AppColors.primary,
-          style: GoogleFonts.poppins(
+          style: AppTextStyles.headingMedium.copyWith(
             fontSize: 20,
             fontWeight: FontWeight.w600,
             color: const Color(0xFF1C1C1C),

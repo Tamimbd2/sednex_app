@@ -80,6 +80,8 @@ import '../modules/savedArticles/bindings/saved_articles_binding.dart';
 import '../modules/savedArticles/views/saved_articles_view.dart';
 import '../modules/savepost/bindings/savepost_binding.dart';
 import '../modules/savepost/views/savepost_view.dart';
+import '../modules/selectLang/bindings/select_lang_binding.dart';
+import '../modules/selectLang/views/select_lang_view.dart';
 import '../modules/sendotp/bindings/sendotp_binding.dart';
 import '../modules/sendotp/views/sendotp_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
@@ -333,6 +335,11 @@ class AppPages {
       name: _Paths.PROFILEINFODETAILS,
       page: () => const ProfileinfodetailsView(),
       binding: ProfileinfodetailsBinding(),
+    ),
+    GetPage(
+      name: _Paths.SELECT_LANG,
+      page: () => const SelectLangView(),
+      binding: SelectLangBinding(),
     ),
   ];
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../../../widgets/primary_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../controllers/onboard_controller.dart';
@@ -13,24 +13,21 @@ class OnboardView extends GetView<OnboardController> {
     final List<Map<String, String>> onboardingData = [
       {
         'image': 'assets/onboarding/ONB-1-1.svg',
-        'title': 'Community & Support',
-        'subtitle': 'Stay connected and get help anytime',
-        'description':
-            'Learn languages, get help, find Bangladeshi shops, affordable hospitals, and NGO support around you.',
+        'title': 'onboard_title_1'.tr,
+        'subtitle': 'onboard_subtitle_1'.tr,
+        'description': 'onboard_desc_1'.tr,
       },
       {
         'image': 'assets/onboarding/ONB-1-2.svg',
-        'title': 'Jobs & Marketplace',
-        'subtitle': 'Opportunities and essentials in one place',
-        'description':
-            'Browse jobs, connect with employers, share posts, and buy & sell essential items within your community.',
+        'title': 'onboard_title_2'.tr,
+        'subtitle': 'onboard_subtitle_2'.tr,
+        'description': 'onboard_desc_2'.tr,
       },
       {
         'image': 'assets/onboarding/ONB-1-3.svg',
-        'title': 'Daily Updates & Info',
-        'subtitle': 'Everything important, updated daily',
-        'description':
-            'Get embassy news, travel info, gold prices, exchange rates, and other essential information in one place.',
+        'title': 'onboard_title_3'.tr,
+        'subtitle': 'onboard_subtitle_3'.tr,
+        'description': 'onboard_desc_3'.tr,
       },
     ];
 
@@ -65,7 +62,7 @@ class OnboardView extends GetView<OnboardController> {
                         // Text Content
                         Text(
                           onboardingData[index]['title']!,
-                          style: GoogleFonts.poppins(
+                          style: AppTextStyles.headingMedium.copyWith(
                             color: const Color(0xFF001A4F),
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
@@ -74,7 +71,7 @@ class OnboardView extends GetView<OnboardController> {
                         const SizedBox(height: 16),
                         Text(
                           onboardingData[index]['subtitle']!,
-                          style: GoogleFonts.poppins(
+                          style: AppTextStyles.subHeadingLarge.copyWith(
                             color: const Color(0xFF001A4F).withValues(alpha: 0.8),
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
@@ -83,7 +80,7 @@ class OnboardView extends GetView<OnboardController> {
                         const SizedBox(height: 16),
                         Text(
                           onboardingData[index]['description']!,
-                          style: GoogleFonts.poppins(
+                          style: AppTextStyles.bodyLarge.copyWith(
                             color: const Color(0xFF1E293B),
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
@@ -135,11 +132,11 @@ class OnboardView extends GetView<OnboardController> {
                           title:
                               controller.currentPage.value ==
                                   onboardingData.length - 1
-                              ? 'Get Started'
-                              : 'Next',
+                              ? 'get_started'.tr
+                              : 'next'.tr,
                           width: 160,
                           borderRadius: 15,
-                          textStyle: GoogleFonts.poppins(
+                          textStyle: AppTextStyles.button.copyWith(
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

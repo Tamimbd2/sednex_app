@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/theme/app_text_styles.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../routes/app_pages.dart';
@@ -24,9 +24,9 @@ class ResetpasswordView extends GetView<ResetpasswordController> {
                 const SizedBox(height: 120),
                 // Title
                 Text(
-                  'Reset Password',
+                  'reset_password_title'.tr,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.headingLarge.copyWith(
                     color: const Color(0xFF1C1C1C),
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
@@ -36,20 +36,18 @@ class ResetpasswordView extends GetView<ResetpasswordController> {
                 const SizedBox(height: 10),
                 // Subtitle
                 Text(
-                  'Create a new password for your account',
+                  'reset_password_subtitle'.tr,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
+                  style: AppTextStyles.bodyMedium.copyWith(
                     color: const Color(0xFF6E6E6E),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
                     height: 1.50,
                   ),
                 ),
                 const SizedBox(height: 50),
                 // New Password Field
                 Obx(() => _buildInputField(
-                  label: 'New Password',
-                  hintText: 'Enter password',
+                  label: 'new_password'.tr,
+                  hintText: 'enter_password'.tr,
                   controller: controller.passwordController,
                   obscureText: !controller.isPasswordVisible.value,
                   suffixIcon: IconButton(
@@ -62,10 +60,10 @@ class ResetpasswordView extends GetView<ResetpasswordController> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a new password';
+                      return 'error_new_password_empty'.tr;
                     }
                     if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
+                      return 'error_password_length'.tr;
                     }
                     return null;
                   },
@@ -73,8 +71,8 @@ class ResetpasswordView extends GetView<ResetpasswordController> {
                 const SizedBox(height: 20),
                 // Confirm Password Field
                 Obx(() => _buildInputField(
-                  label: 'Confirm Password',
-                  hintText: 'Enter password',
+                  label: 'confirm_password'.tr,
+                  hintText: 'enter_password'.tr,
                   controller: controller.confirmPasswordController,
                   obscureText: !controller.isConfirmPasswordVisible.value,
                   suffixIcon: IconButton(
@@ -87,10 +85,10 @@ class ResetpasswordView extends GetView<ResetpasswordController> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
+                      return 'error_confirm_password_empty'.tr;
                     }
                     if (value != controller.passwordController.text) {
-                      return 'Passwords do not match';
+                      return 'error_passwords_dont_match'.tr;
                     }
                     return null;
                   },
@@ -100,7 +98,7 @@ class ResetpasswordView extends GetView<ResetpasswordController> {
                 Obx(() => controller.isLoading.value 
                     ? const Center(child: CircularProgressIndicator())
                     : PrimaryButton(
-                        title: 'Reset Password',
+                        title: 'reset_password_title'.tr,
                         onTap: () => controller.resetPassword(),
                         width: double.infinity,
                         height: 56,
@@ -111,10 +109,9 @@ class ResetpasswordView extends GetView<ResetpasswordController> {
                 GestureDetector(
                   onTap: () => Get.offAllNamed(Routes.SIGNIN),
                   child: Text(
-                    'Back to Login',
-                    style: GoogleFonts.poppins(
+                    'back_to_login'.tr,
+                    style: AppTextStyles.bodyMedium.copyWith(
                       color: AppColors.primary,
-                      fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -140,9 +137,8 @@ class ResetpasswordView extends GetView<ResetpasswordController> {
       children: [
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: AppTextStyles.bodyMedium.copyWith(
             color: const Color(0xFF1C1C1C),
-            fontSize: 14,
             fontWeight: FontWeight.w500,
             height: 1.50,
           ),
@@ -153,16 +149,13 @@ class ResetpasswordView extends GetView<ResetpasswordController> {
           obscureText: obscureText,
           validator: validator,
           cursorColor: Colors.grey,
-          style: GoogleFonts.poppins(
-            fontSize: 15,
+          style: AppTextStyles.bodyLarge.copyWith(
             color: const Color(0xFF1D2838),
           ),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: GoogleFonts.poppins(
+            hintStyle: AppTextStyles.bodyLarge.copyWith(
               color: AppColors.hintText,
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
             ),
             suffixIcon: suffixIcon,
             filled: true,

@@ -72,25 +72,7 @@ class DashboardView extends GetView<DashboardController> {
                               color: Colors.white,
                             ),
                           ),
-                        if (controller.currentIndex.value != 1 &&
-                            controller.currentIndex.value != 2 &&
-                            controller.currentIndex.value != 3 &&
-                            (Get.locale?.languageCode != 'en' ||
-                                controller.currentIndex.value != 0)) ...[
-                          const SizedBox(width: 12),
-                          Container(
-                            width: 1,
-                            height: 20,
-                            color: Colors.white.withValues(alpha: 0.3),
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            _getAppBarTitle(controller.currentIndex.value),
-                            style: AppTextStyles.headingSmall.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+
                       ],
                     ),
                   ),
@@ -724,17 +706,19 @@ class DashboardView extends GetView<DashboardController> {
         child: SafeArea(
           top: false,
           child: SizedBox(
-            height: 70,
+            height: 75,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildNavItem(
                   iconPath: 'assets/homeicon/home 232.svg',
+                  label: 'home'.tr,
                   index: 0,
                   isActive: controller.currentIndex.value == 0,
                 ),
                 _buildNavItem(
                   iconPath: 'assets/homeicon/Community-feed 232.svg',
+                  label: 'posts'.tr,
                   index: 1,
                   isActive: controller.currentIndex.value == 1,
                 ),
@@ -763,11 +747,13 @@ class DashboardView extends GetView<DashboardController> {
                 ),
                 _buildNavItem(
                   iconPath: 'assets/homeicon/search 232.svg',
+                  label: 'search'.tr,
                   index: 2,
                   isActive: controller.currentIndex.value == 2,
                 ),
                 _buildNavItem(
                   iconPath: 'assets/homeicon/profile 232.svg',
+                  label: 'profile'.tr,
                   index: 3,
                   isActive: controller.currentIndex.value == 3,
                 ),
@@ -781,6 +767,7 @@ class DashboardView extends GetView<DashboardController> {
 
   Widget _buildNavItem({
     required String iconPath,
+    required String label,
     required int index,
     required bool isActive,
   }) {
@@ -788,18 +775,33 @@ class DashboardView extends GetView<DashboardController> {
       onTap: () => controller.changePage(index),
       behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          child: SvgPicture.asset(
-            iconPath,
-            width: 24,
-            height: 24,
-            colorFilter: ColorFilter.mode(
-              isActive ? AppColors.primary : AppColors.navInactive,
-              BlendMode.srcIn,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              child: SvgPicture.asset(
+                iconPath,
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(
+                  isActive ? AppColors.primary : AppColors.navInactive,
+                  BlendMode.srcIn,
+                ),
+              ),
             ),
-          ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: AppTextStyles.bodySmall.copyWith(
+                fontSize: 13,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                color: isActive ? AppColors.primary : AppColors.navInactive,
+              ),
+            ),
+          ],
         ),
       ),
     );

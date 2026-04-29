@@ -77,16 +77,7 @@ class DashboardController extends GetxController {
       }
     }, time: const Duration(milliseconds: 500));
 
-    // Seamless scroll for community feed
-    homeScrollController.addListener(() {
-      if (homeScrollController.offset >=
-          homeScrollController.position.maxScrollExtent) {
-        // Debounce or ensure we only navigate once
-        if (Get.currentRoute != '/community-feed') {
-          Get.toNamed('/community-feed', preventDuplicates: true);
-        }
-      }
-    });
+    // Auto-scroll navigation to community feed removed as per request
   }
 
   void startAutoScrolls() {

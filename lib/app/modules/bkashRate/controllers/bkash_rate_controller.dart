@@ -91,13 +91,13 @@ class BkashRateController extends GetxController {
     double result;
 
     if (isTakaSelected.value) {
-      // If BDT is selected, the input is already in BDT
-      result = inputAmount;
+      // If BDT is selected, the input is in BDT. Output in USD: input / rate = output
+      result = inputAmount / exchangeRate.value;
+      displayResult.value = result.toStringAsFixed(2);
     } else {
-      // If USD is selected, multiply by exchange rate to get BDT
+      // If USD is selected, the input is in USD. Output in BDT: input * rate = output
       result = inputAmount * exchangeRate.value;
+      displayResult.value = result.toStringAsFixed(0);
     }
-
-    displayResult.value = result.toStringAsFixed(0);
   }
 }

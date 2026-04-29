@@ -26,13 +26,15 @@ class MixedCard {
   final String id;
   final String name;
   final String image;
-  final String type; // 'embassy' | 'hospital' | 'restaurant' | 'organization'
+  final String type; // 'embassy' | 'hospital' | 'restaurant' | 'organization' | etc.
+  final Map<String, dynamic> rawItem;
 
   MixedCard({
     required this.id,
     required this.name,
     required this.image,
     required this.type,
+    required this.rawItem,
   });
 }
 
@@ -214,6 +216,18 @@ class InformationsController extends GetxController {
         _fetchItems('hospitals'),
         _fetchItems('restaurents'),
         _fetchItems('organization'),
+        _fetchItems('grocery-store'),
+        _fetchItems('local-business'),
+        _fetchItems('jewellery-shop'),
+        _fetchItems('clothing-shop'),
+        _fetchItems('sports-team'),
+        _fetchItems('texi-driver'),
+        _fetchItems('businessman'),
+        _fetchItems('influencer'),
+        _fetchItems('local-market'),
+        _fetchItems('pharmacy'),
+        _fetchItems('ngo'),
+        _fetchItems('maker'),
       ]);
 
       final all = <MixedCard>[];
@@ -246,8 +260,9 @@ class InformationsController extends GetxController {
       return data.map((item) => MixedCard(
         id: item['_id'] ?? '',
         name: item['name'] ?? '',
-        image: item['image'] ?? '',
+        image: item['image'] ?? item['icon'] ?? '',
         type: slug,
+        rawItem: item is Map<String, dynamic> ? item : {},
       )).toList();
     } catch (_) {
       return [];
@@ -269,9 +284,8 @@ class InformationsController extends GetxController {
         .toList();
   }
 
-  // Returns only first 6 for 2-row display (3 columns × 2 rows)
+  // Returns all items to display in multiple rows
   List<MixedCard> get previewCards {
-    final list = filteredMixedCards;
-    return list.length > 6 ? list.sublist(0, 6) : list;
+    return filteredMixedCards;
   }
 }

@@ -236,7 +236,7 @@ class HomePageContent extends StatelessWidget {
                           footerText: 'today'.tr,
                           imagePath: 'assets/logo/mosque.png',
                           bgColor: const Color(0xFFE0F2F1),
-                          iconSize: 60,
+                          iconSize: 50,
                           onTap: () => Get.toNamed('/namaj'),
                         );
                       }),
@@ -407,77 +407,77 @@ class HomePageContent extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 _buildEssentialServiceItem(
-                  'information'.tr,
-                  'assets/newessential/info.svg',
-                  const Color(0xFFFF5722),
-                  () => Get.toNamed('/informations'),
-                ),
-                _buildEssentialServiceItem(
-                  'embassies'.tr,
-                  'assets/newessential/City-Hall--Streamline-Core-Gradient.svg',
-                  const Color(0xFF9C27B0),
-                  () => Get.toNamed('/embassy'),
-                ),
-                _buildEssentialServiceItem(
                   'articles'.tr,
-                  'assets/newessential/Multiple-File-2--Streamline-Core-Gradient.svg',
+                  'assets/Service Icon svg/Articels.svg',
                   const Color(0xFF00BFA5),
                   () => Get.toNamed('/articles'),
                 ),
                 _buildEssentialServiceItem(
-                  'basic_goods'.tr,
-                  'assets/newessential/Shopping-Basket-2--Streamline-Core-Gradient.svg',
-                  const Color(0xFF448AFF),
-                  () => Get.toNamed('/basicgoods'),
+                  'shop'.tr,
+                  'assets/Service Icon svg/Shopping.svg',
+                  const Color(0xFF102A6B),
+                  () => Get.toNamed('/shop'),
                 ),
                 _buildEssentialServiceItem(
-                  'community'.tr,
-                  'assets/newessential/User-Multiple-Group--Streamline-Core-Gradient.svg',
-                  const Color(0xFF4CAF50),
-                  () => Get.toNamed('/community'),
+                  'bus_flight_booking'.tr,
+                  'assets/Service Icon svg/Flight Booking.svg',
+                  const Color(0xFF2196F3),
+                  () => Get.toNamed('/busflight'),
                 ),
                 _buildEssentialServiceItem(
                   'tourist_spots'.tr,
-                  'assets/newessential/Beach--Streamline-Core-Gradient.svg',
+                  'assets/Service Icon svg/Tourist spots.svg',
                   const Color(0xFF00BCD4),
                   () => Get.toNamed('/tourist-spot'),
                 ),
                 _buildEssentialServiceItem(
                   'learn_arabic'.tr,
-                  'assets/newessential/Dictionary-Language-Book--Streamline-Core-Gradient.svg',
+                  'assets/Service Icon svg/Learn Arobic.svg',
                   const Color(0xFF795548),
                   () => Get.toNamed('/learnarabic'),
                 ),
                 _buildEssentialServiceItem(
-                  'bus_flight_booking'.tr,
-                  'assets/newessential/Bus--Streamline-Core-Gradient.svg',
-                  const Color(0xFF2196F3),
-                  () => Get.toNamed('/busflight'),
+                  'local_tours'.tr,
+                  'assets/Service Icon svg/Join Tour.svg',
+                  const Color(0xFF00BCD4),
+                  () => Get.toNamed('/localtour'),
+                ),
+                _buildEssentialServiceItem(
+                  'basic_goods'.tr,
+                  'assets/Service Icon svg/Basic goods.svg',
+                  const Color(0xFF448AFF),
+                  () => Get.toNamed('/basicgoods'),
+                ),
+                _buildEssentialServiceItem(
+                  'users'.tr,
+                  'assets/Service Icon svg/Users.svg',
+                  const Color(0xFF4CAF50),
+                  () => Get.toNamed('/community'),
                 ),
               ],
             ),
           ),
 
-          // Community Feed Header
+          // Explore Informations Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'community_feed'.tr,
+                  'Explore Informations',
                   style: AppTextStyles.headingMedium.copyWith(
                     fontSize: 20,
                     color: const Color(0xFF2C2C2C),
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => Get.toNamed('/community-feed'),
+                  onTap: () => Get.toNamed('/informations'),
                   child: Text(
                     'view_all'.tr,
                     style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF8F95A1),
+                      fontWeight: FontWeight.w600, // Make it slightly bolder too
+                      color: const Color(0xFF1E63FF), // Vibrant blue
                     ),
                   ),
                 ),
@@ -487,35 +487,177 @@ class HomePageContent extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // Community Feeds List
-          Obx(() {
-            if (feedController.posts.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(child: Text('no_posts_available'.tr)),
-              );
-            }
-
-            // Show only first 3 posts
-            final displayPosts = feedController.posts.take(3).toList();
-
-            return ListView.separated(
+          // Explore Informations Grid
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: GridView.count(
+              crossAxisCount: 4,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 0.8,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: displayPosts.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
-              itemBuilder: (context, index) {
-                final post = displayPosts[index];
-                return CommunityPostCard(
-                  post: post,
-                  index: index,
-                  controller: feedController,
-                  isDashboard: true,
-                );
-              },
-            );
-          }),
+              children: [
+                _buildEssentialServiceItem(
+                  'embassies'.tr,
+                  'assets/newessential/City-Hall--Streamline-Core-Gradient.svg',
+                  const Color(0xFF9C27B0),
+                  () => Get.toNamed('/embassy'),
+                ),
+                _buildEssentialServiceItem(
+                  'drivers'.tr,
+                  'assets/newessential/Car-Taxi-1--Streamline-Core-Gradient.svg',
+                  const Color(0xFFFFEB3B),
+                  () => Get.toNamed(
+                    '/general-section',
+                    arguments: {'slug': 'texi-driver', 'title': 'drivers'.tr},
+                  ),
+                ),
+                _buildEssentialServiceItem(
+                  'sports_team'.tr,
+                  'assets/newessential/Flash-3--Streamline-Core-Gradient.svg',
+                  const Color(0xFF8BC34A),
+                  () => Get.toNamed(
+                    '/general-section',
+                    arguments: {
+                      'slug': 'sports-team',
+                      'title': 'sports_team'.tr,
+                    },
+                  ),
+                ),
+                _buildEssentialServiceItem(
+                  'hospitals'.tr,
+                  'assets/newessential/Ambulance--Streamline-Core-Gradient.svg',
+                  const Color(0xFFF44336),
+                  () => Get.toNamed('/hospitals'),
+                ),
+
+                _buildEssentialServiceItem(
+                  'pharmacy'.tr,
+                  'assets/newessential/Tablet-Capsule--Streamline-Core-Gradient.svg',
+                  const Color(0xFF009688),
+                  () => Get.toNamed(
+                    '/general-section',
+                    arguments: {'slug': 'pharmacy', 'title': 'pharmacy'.tr},
+                  ),
+                ),
+                _buildEssentialServiceItem(
+                  'grocery_store'.tr,
+                  'assets/newessential/Store-1--Streamline-Core-Gradient.svg',
+                  const Color(0xFFFF9800),
+                  () => Get.toNamed(
+                    '/general-section',
+                    arguments: {
+                      'slug': 'grocery-store',
+                      'title': 'grocery_store'.tr,
+                    },
+                  ),
+                ),
+                _buildEssentialServiceItem(
+                  'jewellery_shop'.tr,
+                  'assets/newessential/Gift-2--Streamline-Core-Gradient.svg',
+                  const Color(0xFFFFC107),
+                  () => Get.toNamed(
+                    '/general-section',
+                    arguments: {
+                      'slug': 'jewellery-shop',
+                      'title': 'jewellery_shop'.tr,
+                    },
+                  ),
+                ),
+                _buildEssentialServiceItem(
+                  'influencer'.tr,
+                  'assets/newessential/Megaphone-2--Streamline-Core-Gradient.svg',
+                  const Color(0xFFE91E63),
+                  () => Get.toNamed(
+                    '/general-section',
+                    arguments: {'slug': 'influencer', 'title': 'influencer'.tr},
+                  ),
+                ),
+
+                _buildEssentialServiceItem(
+                  'organizations'.tr,
+                  'assets/newessential/Business-Profession-Home-Office--Streamline-Core-Gradient.svg',
+                  const Color(0xFF3F51B5),
+                  () => Get.toNamed('/organization'),
+                ),
+                _buildEssentialServiceItem(
+                  'clothing_shop'.tr,
+                  'assets/newessential/Shopping-Bag-Hand-Bag-2--Streamline-Core-Gradient.svg',
+                  const Color(0xFF9C27B0),
+                  () => Get.toNamed(
+                    '/general-section',
+                    arguments: {
+                      'slug': 'clothing-shop',
+                      'title': 'clothing_shop'.tr,
+                    },
+                  ),
+                ),
+                _buildEssentialServiceItem(
+                  'maker'.tr,
+                  'assets/newessential/Shield-.svg',
+                  const Color(0xFF1565C0),
+                  () => Get.toNamed(
+                    '/general-section',
+                    arguments: {'slug': 'maker', 'title': 'maker'.tr},
+                  ),
+                ),
+                _buildEssentialServiceItem(
+                  'local_market'.tr,
+                  'assets/newessential/Shopping-Cart-1--Streamline-Core-Gradient.svg',
+                  const Color(0xFFFF5722),
+                  () => Get.toNamed(
+                    '/general-section',
+                    arguments: {
+                      'slug': 'local-market',
+                      'title': 'local_market'.tr,
+                    },
+                  ),
+                ),
+
+
+                _buildEssentialServiceItem(
+                  'restaurants'.tr,
+                  'assets/newessential/Fork-Knife--Streamline-Core-Gradient.svg',
+                  const Color(0xFFE91E63),
+                  () => Get.toNamed('/restaurents'),
+                ),
+                _buildEssentialServiceItem(
+                  'local_business'.tr,
+                  'assets/newessential/Briefcase-Dollar--Streamline-Core-Gradient.svg',
+                  const Color(0xFF607D8B),
+                  () => Get.toNamed(
+                    '/general-section',
+                    arguments: {
+                      'slug': 'local-business',
+                      'title': 'local_business'.tr,
+                    },
+                  ),
+                ),
+                _buildEssentialServiceItem(
+                  'businessman'.tr,
+                  'assets/newessential/Necktie--Streamline-Core-Gradient.svg',
+                  const Color(0xFF607D8B),
+                  () => Get.toNamed(
+                    '/general-section',
+                    arguments: {
+                      'slug': 'businessman',
+                      'title': 'businessman'.tr,
+                    },
+                  ),
+                ),
+                _buildEssentialServiceItem(
+                  'ngo'.tr,
+                  'assets/newessential/Decent-Work-And-Economic-Growth--Streamline-Core-Gradient.svg',
+                  const Color(0xFF4CAF50),
+                  () => Get.toNamed(
+                    '/general-section',
+                    arguments: {'slug': 'ngo', 'title': 'ngo'.tr},
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -742,7 +884,7 @@ class HomePageContent extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: AppTextStyles.bodySmall.copyWith(
               fontWeight: FontWeight.w500,
-              fontSize: 10,
+              fontSize: 12,
               color: const Color(0xFF2C2C2C),
             ),
           ),
@@ -809,9 +951,9 @@ class HomePageContent extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.bodySmall.copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 10,
-                  color: const Color(0xFF757575),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                  color: const Color(0xFF424242),
                 ),
               ),
             ),

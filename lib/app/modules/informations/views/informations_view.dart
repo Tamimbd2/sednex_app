@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../core/theme/app_text_styles.dart';
 import '../controllers/informations_controller.dart';
@@ -8,6 +9,8 @@ import '../../embassy/views/embassydetails.dart';
 import '../../hospitals/views/hospitaldetails.dart';
 import '../../restaurents/views/restaurantdetails.dart';
 import '../../organization/views/detailsorg.dart';
+import '../../generalsection/controllers/generalsection_controller.dart';
+import '../../generalsection/views/generalsection_details.dart';
 
 class InformationsView extends GetView<InformationsController> {
   const InformationsView({super.key});
@@ -26,7 +29,7 @@ class InformationsView extends GetView<InformationsController> {
           ),
         ),
         title: Text(
-          'information'.tr,
+          'explore_information'.tr,
           style: AppTextStyles.headingMedium.copyWith(
             color: Colors.white,
           ),
@@ -67,61 +70,60 @@ class InformationsView extends GetView<InformationsController> {
               ),
               const SizedBox(height: 12),
 
-              // Section Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'information_services'.tr,
-                    style: AppTextStyles.headingSmall,
-                  ),
-                ],
-              ),
               const SizedBox(height: 8),
-
-              // Service Cards Grid (Dynamic based on search)
-              Obx(() => GridView.builder(
-                padding: EdgeInsets.zero,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 0.75,
-                ),
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: controller.filteredServices.length,
-                itemBuilder: (context, index) {
-                  final service = controller.filteredServices[index];
-                  return _buildServiceCard(
-                    service.label.tr,
-                    service.imagePath,
-                    service.backgroundColor,
-                    () {
-                      if (service.route != null) {
-                        Get.toNamed(service.route!, arguments: service.arguments);
-                      } else {
-                        _showComingSoonDialog(context, service.label.tr);
-                      }
-                    },
-                  );
-                },
-              )),
-              
-              const SizedBox(height: 20),
 
               // Mixed Live Cards Grid (3 columns × max 2 rows)
               Obx(() {
                 if (controller.isLoadingMixed.value &&
                     controller.mixedCards.isEmpty) {
-                  return const SizedBox(
-                    height: 160,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Color(0xFF1E63FF),
-                        strokeWidth: 2,
-                      ),
+                  return GridView.builder(
+                    padding: EdgeInsets.zero,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 14,
+                      crossAxisSpacing: 14,
+                      childAspectRatio: 0.82,
                     ),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 15,
+                    itemBuilder: (context, index) {
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 52,
+                                height: 52,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                width: 60,
+                                height: 10,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(height: 4),
+                              Container(
+                                width: 40,
+                                height: 10,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   );
                 }
                 if (controller.mixedCards.isEmpty) {
@@ -294,7 +296,7 @@ class InformationsView extends GetView<InformationsController> {
                 child: Text(
                   card.name,
                   style: AppTextStyles.label.copyWith(
-                    fontSize: 11,
+                    fontSize: 12,
                     height: 1.3,
                   ),
                   textAlign: TextAlign.center,
@@ -328,6 +330,16 @@ class InformationsView extends GetView<InformationsController> {
         break;
       case 'organization':
         Get.to(() => const OrganizationDetailsView(), arguments: args);
+        break;
+      default:
+        final sectionItem = SectionItem.fromJson(card.rawItem);
+        Get.to(
+          () => const GeneralSectionDetailsView(),
+          arguments: {
+            'item': sectionItem,
+            'title': card.type.tr,
+          },
+        );
         break;
     }
   }

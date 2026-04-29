@@ -6,7 +6,7 @@ class NamajController extends GetxController with WidgetsBindingObserver {
   // Namaj Schedule Data
   final schedule = {
     'day': '',
-    'status': 'ওয়াক্ত',
+    'status': 'waqt',
     'lastUpdate': '',
     'prayers': [
       {'name': 'fajar', 'time': '৫:০৫'},
@@ -53,8 +53,8 @@ class NamajController extends GetxController with WidgetsBindingObserver {
 
   void _updateScheduleDate() {
     final now = DateTime.now();
-    schedule['day'] = _getBengaliDay(now.weekday);
-    schedule['lastUpdate'] = 'আজ';
+    schedule['day'] = _getDayKey(now.weekday);
+    schedule['lastUpdate'] = 'today';
   }
 
   void fetchPrayerTimes() async {
@@ -163,9 +163,15 @@ class NamajController extends GetxController with WidgetsBindingObserver {
       
       // Formatting to En 12h first: "5:05"
       final timeEn = '$hour:${minute.toString().padLeft(2, '0')}';
-      return _toBengaliNumber(timeEn);
+      if (Get.locale?.languageCode == 'bn') {
+        return _toBengaliNumber(timeEn);
+      }
+      return timeEn;
     } catch (e) {
-      return _toBengaliNumber(time24);
+      if (Get.locale?.languageCode == 'bn') {
+        return _toBengaliNumber(time24);
+      }
+      return time24;
     }
   }
 
@@ -179,24 +185,24 @@ class NamajController extends GetxController with WidgetsBindingObserver {
     return input;
   }
 
-  String _getBengaliDay(int weekday) {
+  String _getDayKey(int weekday) {
     switch (weekday) {
       case DateTime.saturday:
-        return 'শনিবার';
+        return 'saturday';
       case DateTime.sunday:
-        return 'রবিবার';
+        return 'sunday';
       case DateTime.monday:
-        return 'সোমবার';
+        return 'monday';
       case DateTime.tuesday:
-        return 'মঙ্গলবার';
+        return 'tuesday';
       case DateTime.wednesday:
-        return 'বুধবার';
+        return 'wednesday';
       case DateTime.thursday:
-        return 'বৃহস্পতিবার';
+        return 'thursday';
       case DateTime.friday:
-        return 'শুক্রবার';
+        return 'friday';
       default:
-        return 'শনিবার';
+        return 'saturday';
     }
   }
 

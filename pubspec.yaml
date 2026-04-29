@@ -90,6 +90,7 @@ flutter:
     - assets/onboarding/
     - assets/appicon/
     - assets/homeicon/
+    - "assets/Service Icon svg/"
 
 flutter_launcher_icons:
   android: "launcher_icon"

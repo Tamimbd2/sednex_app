@@ -172,7 +172,21 @@ class BkashRateView extends GetView<BkashRateController> {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  'bkash_rate_instruction'.tr,
+                  style: _getStyle(
+                    fontSize: 13,
+                    color: const Color(0xFF616161),
+                    fontWeight: FontWeight.w500,
+                    height: 1.4,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
@@ -378,7 +392,7 @@ class BkashRateView extends GetView<BkashRateController> {
                         children: [
                           Obx(
                             () => Text(
-                              '৳' + controller.displayResult.value.trNum,
+                              (controller.isTakaSelected.value ? '\$' : '৳') + controller.displayResult.value.trNum,
                               style: _getStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.w700,

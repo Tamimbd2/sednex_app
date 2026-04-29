@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:sednexapp/app/services/api_service.dart';
 
 class SectionContact {
   final String phone;
@@ -63,8 +62,7 @@ class SectionItem {
 }
 
 class GeneralSectionController extends GetxController {
-  final _connect = GetConnect();
-  final _box = GetStorage();
+  late final ApiService _apiService;
   final isLoading = false.obs;
   final RxList<SectionItem> items = <SectionItem>[].obs;
   final RxString searchQuery = ''.obs;
@@ -84,6 +82,7 @@ class GeneralSectionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _apiService = Get.find<ApiService>();
     slug = Get.arguments['slug'] ?? 'embassy';
     title = Get.arguments['title'] ?? 'Section';
     fetchItems();
@@ -92,16 +91,8 @@ class GeneralSectionController extends GetxController {
   Future<void> fetchItems() async {
     try {
       isLoading.value = true;
-      final token = _box.read('token');
-
-      // Default fallback token as seen in other controllers
-      final authToken = token ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE2NDc4NGFiMjQ3YTI0NTc2MGIxOGIiLCJlbWFpbCI6IlNha2liQHNlZG5leC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ4NzkwNzUsImV4cCI6MTc3NTQ4Mzg3NX0.SYIpSj3uqab2J8EciPMW0nmb77xe-ld0NHruVyU1Ojs";
-
-      final response = await _connect.get(
-        '${AppUrl.baseUrl}api/sections/$slug/items',
-        headers: {
-          'Authorization': 'Bearer $authToken',
-        },
+      final response = await _apiService.getData(
+        'api/sections/$slug/items',
       );
 
       if (response.status.hasError) {

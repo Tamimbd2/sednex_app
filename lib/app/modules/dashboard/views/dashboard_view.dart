@@ -8,9 +8,10 @@ import '../../../core/theme/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/constants/url.dart';
 
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../profile/views/profile_view.dart';
-import '../../Shop/views/shop_view.dart';
+
+
 import '../../notifications/controllers/notifications_controller.dart';
 import 'home_page_content.dart';
 import '../../communityFeed/views/community_feed_view.dart';
@@ -190,20 +191,7 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
-  String _getAppBarTitle(int index) {
-    switch (index) {
-      case 0:
-        return 'home'.tr;
-      case 1:
-        return 'community_feed'.tr;
-      case 2:
-        return 'search'.tr;
-      case 3:
-        return 'profile'.tr;
-      default:
-        return 'home'.tr;
-    }
-  }
+
 
   Widget _getPage(int index) {
     switch (index) {
@@ -691,9 +679,7 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
-  Widget _buildShopPage() {
-    return const ShopContent();
-  }
+
 
   Widget _buildProfilePage() {
     return ProfileView();

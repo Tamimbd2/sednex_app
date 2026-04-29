@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import '../../../core/constants/url.dart';
+import '../../../services/api_service.dart';
 
 class ProfileController extends GetxController {
   final _box = GetStorage();
@@ -49,13 +49,10 @@ class ProfileController extends GetxController {
     if (token == null) return;
 
     isLoading.value = true;
-    final connect = GetConnect();
+    final apiService = Get.find<ApiService>();
     
     try {
-      final response = await connect.get(
-        '${AppUrl.baseUrl}api/users/me',
-        headers: {'Authorization': 'Bearer $token'},
-      );
+      final response = await apiService.getData('api/users/me');
 
       if (response.statusCode == 200 && response.body['success'] == true) {
         final user = response.body['user'];
@@ -136,11 +133,10 @@ class ProfileController extends GetxController {
       final userId = user['_id'];
 
       if (userId != null) {
-        final connect = GetConnect();
+        final apiService = Get.find<ApiService>();
         try {
-          final response = await connect.get(
-            '${AppUrl.baseUrl}api/users/$userId/warnings',
-            headers: {'Authorization': 'Bearer $token'},
+          final response = await apiService.getData(
+            'api/users/$userId/warnings',
           );
 
           if (response.statusCode == 200 && response.body['success'] == true) {

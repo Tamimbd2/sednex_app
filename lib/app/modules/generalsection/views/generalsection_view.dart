@@ -11,8 +11,7 @@ class GeneralSectionView extends GetView<GeneralSectionController> {
 
   @override
   Widget build(BuildContext context) {
-    // Get arguments again to ensure title is present before it might be assigned in onInit
-    final String title = Get.arguments['title'] ?? 'Section';
+
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),

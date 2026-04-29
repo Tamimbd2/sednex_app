@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:sednexapp/app/services/api_service.dart';
 
 class Hospital {
   final String id;
@@ -25,8 +24,7 @@ class Hospital {
 }
 
 class HospitalsController extends GetxController {
-  final _connect = GetConnect();
-  final _box = GetStorage();
+  late final ApiService _apiService;
   final isLoading = false.obs;
   final RxList<Hospital> hospitals = <Hospital>[].obs;
   final RxString searchQuery = ''.obs;
@@ -43,20 +41,15 @@ class HospitalsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _apiService = Get.find<ApiService>();
     fetchHospitals();
   }
 
   Future<void> fetchHospitals() async {
     try {
       isLoading.value = true;
-      final token = _box.read('token');
-
-      final response = await _connect.get(
-        '${AppUrl.baseUrl}api/sections/hospitals/items',
-        headers: {
-          'Authorization':
-              'Bearer ${token ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE2NDc4NGFiMjQ3YTI0NTc2MGIxOGIiLCJlbWFpbCI6IlNha2liQHNlZG5leC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ4NzkwNzUsImV4cCI6MTc3NTQ4Mzg3NX0.SYIpSj3uqab2J8EciPMW0nmb77xe-ld0NHruVyU1Ojs"}',
-        },
+      final response = await _apiService.getData(
+        'api/sections/hospitals/items',
       );
 
       if (response.status.hasError) {

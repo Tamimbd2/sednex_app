@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../controllers/mypost_controller.dart';
 import '../../communityFeed/widgets/community_post_card.dart';
 import '../../../core/theme/app_colors.dart';

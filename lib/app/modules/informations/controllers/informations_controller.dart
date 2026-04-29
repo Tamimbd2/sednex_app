@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:sednexapp/app/services/api_service.dart';
 
 class ServiceItem {
   final String label;
@@ -39,15 +38,10 @@ class MixedCard {
 }
 
 class InformationsController extends GetxController {
-  final _connect = GetConnect();
-  final _box = GetStorage();
+  late final ApiService _apiService;
   final searchQuery = ''.obs;
   final isLoadingMixed = false.obs;
   final RxList<MixedCard> mixedCards = <MixedCard>[].obs;
-
-  String get _token =>
-      _box.read('token') ??
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE2NDc4NGFiMjQ3YTI0NTc2MGIxOGIiLCJlbWFpbCI6IlNha2liQHNlZG5leC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ4NzkwNzUsImV4cCI6MTc3NTQ4Mzg3NX0.SYIpSj3uqab2J8EciPMW0nmb77xe-ld0NHruVyU1Ojs';
 
   final List<ServiceItem> services = [
     ServiceItem(
@@ -205,6 +199,7 @@ class InformationsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _apiService = Get.find<ApiService>();
     _fetchAllMixed();
   }
 
@@ -247,9 +242,8 @@ class InformationsController extends GetxController {
 
   Future<List<MixedCard>> _fetchItems(String slug) async {
     try {
-      final response = await _connect.get(
-        '${AppUrl.baseUrl}api/sections/$slug/items',
-        headers: {'Authorization': 'Bearer $_token'},
+      final response = await _apiService.getData(
+        'api/sections/$slug/items',
       );
       if (response.status.hasError) return [];
       var body = response.body;

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:sednexapp/app/services/api_service.dart';
 
 class TermItem {
   final String id;
@@ -32,7 +32,7 @@ class TermItem {
 }
 
 class TermsandconditionController extends GetxController {
-  final _connect = GetConnect();
+  late final ApiService _apiService;
 
   final isLoading = false.obs;
   final terms = <TermItem>[].obs;
@@ -41,13 +41,14 @@ class TermsandconditionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _apiService = Get.find<ApiService>();
     fetchTerms();
   }
 
   Future<void> fetchTerms() async {
     try {
       isLoading.value = true;
-      final response = await _connect.get('${AppUrl.baseUrl}api/about/terms');
+      final response = await _apiService.getData('api/about/terms');
 
       if (response.status.hasError) {
         debugPrint('Error fetching terms: ${response.statusText}');

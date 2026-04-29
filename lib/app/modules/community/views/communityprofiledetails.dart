@@ -1,13 +1,13 @@
-import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:get_storage/get_storage.dart';
+
 import 'package:intl/intl.dart';
-import '../../../core/constants/url.dart';
+
 import '../../../services/api_service.dart';
 
 // ── Font Helper ──────────────────────────────────────────────────
@@ -176,15 +176,7 @@ class _CommunityProfileDetailsViewState
     }
   }
 
-  String _formatDate(String dateStr) {
-    if (dateStr.isEmpty) return '';
-    try {
-      final date = DateTime.parse(dateStr);
-      return DateFormat('dd MMMM, yyyy').format(date);
-    } catch (e) {
-      return dateStr;
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {

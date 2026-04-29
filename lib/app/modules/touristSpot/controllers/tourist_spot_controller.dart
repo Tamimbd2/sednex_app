@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:sednexapp/app/services/api_service.dart';
 
 class TouristSpot {
   final String id;
@@ -27,20 +27,21 @@ class TouristSpot {
 }
 
 class TouristSpotController extends GetxController {
-  final _connect = GetConnect();
+  late final ApiService _apiService;
   final RxList<TouristSpot> touristSpots = <TouristSpot>[].obs;
   final isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
+    _apiService = Get.find<ApiService>();
     fetchTouristSpots();
   }
 
   Future<void> fetchTouristSpots() async {
     try {
       isLoading.value = true;
-      final response = await _connect.get('${AppUrl.baseUrl}api/tourist/');
+      final response = await _apiService.getData('api/tourist/');
 
       if (response.status.hasError) {
         debugPrint('API Error: ${response.statusText}');

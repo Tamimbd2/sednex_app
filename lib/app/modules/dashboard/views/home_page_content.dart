@@ -10,7 +10,7 @@ import '../../namaj/controllers/namaj_controller.dart';
 import '../../ramadancalander/controllers/ramadancalander_controller.dart';
 
 import '../../../routes/app_pages.dart';
-import '../../communityFeed/widgets/community_post_card.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
@@ -20,9 +20,7 @@ class HomePageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Ensure controller is available
-    final CommunityFeedController feedController = Get.put(
-      CommunityFeedController(),
-    );
+    Get.put(CommunityFeedController());
 
     final dashboardController = Get.find<DashboardController>();
 

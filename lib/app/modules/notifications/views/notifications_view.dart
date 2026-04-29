@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:shimmer/shimmer.dart';
 import 'package:sednexapp/app/core/theme/app_colors.dart';
 import 'package:sednexapp/app/core/theme/app_text_styles.dart';
@@ -118,7 +118,7 @@ class NotificationsView extends GetView<NotificationsController> {
   }
 
   Widget _buildSmoothNotificationCard(NotificationModel notification, int index) {
-    final bool isBangla = _containsBangla(notification.title) || _containsBangla(notification.message);
+
     
     return InkWell(
       onTap: () {
@@ -329,5 +329,4 @@ class NotificationsView extends GetView<NotificationsController> {
     }
   }
 
-  bool _containsBangla(String text) => RegExp(r'[\u0980-\u09FF]').hasMatch(text);
 }

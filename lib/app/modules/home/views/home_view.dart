@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '../controllers/home_controller.dart';
 
-/// The /home route is superseded by /signin.
-/// This view immediately redirects to /signin to avoid confusion.
+/// The /home route is a legacy entry point.
+/// Redirects to /dashboard if the user is logged in, or /signin otherwise.
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Redirect using post-frame callback so the navigator is ready
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Get.offAllNamed('/signin');
+      final box = GetStorage();
+      final isLoggedIn = box.read('isLoggedIn') == true;
+      if (isLoggedIn) {
+        Get.offAllNamed('/dashboard');
+      } else {
+        Get.offAllNamed('/signin');
+      }
     });
     return const Scaffold(
       body: Center(child: CircularProgressIndicator()),

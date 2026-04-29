@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:sednexapp/app/services/api_service.dart';
 
 class FlightRoute {
   final String from;
@@ -75,7 +75,7 @@ class BusService {
 }
 
 class BusflightController extends GetxController {
-  final _connect = GetConnect();
+  late final ApiService _apiService;
 
   final RxList<FlightRoute> routes = <FlightRoute>[].obs;
   final RxList<BusFlight> activeAirlines = <BusFlight>[].obs;
@@ -89,6 +89,7 @@ class BusflightController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _apiService = Get.find<ApiService>();
     fetchActiveAirlines();
     fetchRoutes();
     fetchBusServices();
@@ -97,7 +98,7 @@ class BusflightController extends GetxController {
   Future<void> fetchBusServices() async {
     try {
       isLoadingBus.value = true;
-      final response = await _connect.get('${AppUrl.baseUrl}api/bus-services/');
+      final response = await _apiService.getData('api/bus-services/');
 
       if (response.status.hasError) return;
 
@@ -118,7 +119,7 @@ class BusflightController extends GetxController {
   Future<void> fetchActiveAirlines() async {
     try {
       isLoadingFlights.value = true;
-      final response = await _connect.get('${AppUrl.baseUrl}api/bus-flights/');
+      final response = await _apiService.getData('api/bus-flights/');
 
       if (response.status.hasError) return;
 
@@ -139,8 +140,8 @@ class BusflightController extends GetxController {
   Future<void> fetchRoutes() async {
     try {
       isLoadingRoutes.value = true;
-      final response = await _connect.get(
-        '${AppUrl.baseUrl}api/flight-routes/',
+      final response = await _apiService.getData(
+        'api/flight-routes/',
       );
 
       if (response.status.hasError) return;

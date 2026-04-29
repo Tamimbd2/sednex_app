@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:sednexapp/app/services/api_service.dart';
 
 class LocalTourInfo {
   final String date;
@@ -68,20 +68,21 @@ class LocalTour {
 }
 
 class LocaltourController extends GetxController {
-  final _connect = GetConnect();
+  late final ApiService _apiService;
   final RxList<LocalTour> tours = <LocalTour>[].obs;
   final isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
+    _apiService = Get.find<ApiService>();
     fetchTours();
   }
 
   Future<void> fetchTours() async {
     try {
       isLoading.value = true;
-      final response = await _connect.get('${AppUrl.baseUrl}api/local-tour/');
+      final response = await _apiService.getData('api/local-tour/');
       if (response.status.hasError) return;
 
       var body = response.body;

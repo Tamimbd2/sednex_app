@@ -88,8 +88,7 @@ import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/termsandcondition/bindings/termsandcondition_binding.dart';
 import '../modules/termsandcondition/views/termsandcondition_view.dart';
-import '../modules/termsandconditions/bindings/termsandconditions_binding.dart';
-import '../modules/termsandconditions/views/termsandconditions_view.dart';
+
 import '../modules/touristSpot/bindings/tourist_spot_binding.dart';
 import '../modules/touristSpot/views/tourist_spot_view.dart';
 
@@ -232,9 +231,10 @@ class AppPages {
       binding: ChangePasswordBinding(),
     ),
     GetPage(
+      // Redirect legacy /termsandconditions path to the real T&C module
       name: _Paths.TERMSANDCONDITIONS,
-      page: () => const TermsandconditionsView(),
-      binding: TermsandconditionsBinding(),
+      page: () => const TermsandconditionView(),
+      binding: TermsandconditionBinding(),
     ),
     GetPage(
       name: _Paths.HELP,

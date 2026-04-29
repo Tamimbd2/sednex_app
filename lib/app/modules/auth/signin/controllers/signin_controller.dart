@@ -5,7 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:sednexapp/app/services/api_service.dart';
 
 class SigninController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -24,8 +24,8 @@ class SigninController extends GetxController {
     isLoading.value = true;
 
     try {
-      final connect = GetConnect();
-      final response = await connect.post('${AppUrl.baseUrl}api/auth/login', {
+      final apiService = Get.find<ApiService>();
+      final response = await apiService.postData('api/auth/login', {
         'email': emailController.text.trim(),
         'password': passwordController.text,
       });
@@ -133,12 +133,9 @@ class SigninController extends GetxController {
         throw Exception("Failed to retrieve Firebase ID token.");
       }
 
-      final connect = GetConnect();
-      // Increasing timeout to 30s as the backend might be on a cold start
-      connect.timeout = const Duration(seconds: 30);
-      
-      final response = await connect.post(
-        '${AppUrl.baseUrl}api/auth/google-login',
+      final apiService = Get.find<ApiService>();
+      final response = await apiService.postData(
+        'api/auth/google-login',
         {
           'token': firebaseToken,
           'email': userCredential.user?.email,
@@ -237,11 +234,9 @@ class SigninController extends GetxController {
         throw Exception("Failed to retrieve Firebase ID token.");
       }
 
-      final connect = GetConnect();
-      connect.timeout = const Duration(seconds: 30);
-
-      final response = await connect.post(
-        '${AppUrl.baseUrl}api/auth/facebook-login',
+      final apiService = Get.find<ApiService>();
+      final response = await apiService.postData(
+        'api/auth/facebook-login',
         {
           'token': firebaseToken,
           'email': userCredential.user?.email,

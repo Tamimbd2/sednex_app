@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:sednexapp/app/services/api_service.dart';
 
 class Contact {
   final String phone;
@@ -63,8 +62,7 @@ class Embassy {
 }
 
 class EmbassyController extends GetxController {
-  final _connect = GetConnect();
-  final _box = GetStorage();
+  late final ApiService _apiService;
   final isLoading = false.obs;
   final RxList<Embassy> embassies = <Embassy>[].obs;
   final RxString searchQuery = ''.obs;
@@ -81,20 +79,15 @@ class EmbassyController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _apiService = Get.find<ApiService>();
     fetchEmbassies();
   }
 
   Future<void> fetchEmbassies() async {
     try {
       isLoading.value = true;
-      final token = _box.read('token');
-
-      final response = await _connect.get(
-        '${AppUrl.baseUrl}api/sections/embassy/items',
-        headers: {
-          'Authorization':
-              'Bearer ${token ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTk5MzhmYjViNWJjMmM1YjEyMzYyY2QiLCJlbWFpbCI6ImFmc2FyQHNlZG5leC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc3Mjg2MTYzMiwiZXhwIjoxNzczNDY2NDMyfQ.PuRUjybyM9EzP2ICL0X_SXoSx8PwDOlJh0XrSi5fiwU"}',
-        },
+      final response = await _apiService.getData(
+        'api/sections/embassy/items',
       );
 
       if (response.status.hasError) {

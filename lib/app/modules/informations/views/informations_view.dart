@@ -160,88 +160,8 @@ class InformationsView extends GetView<InformationsController> {
   }
 
 
-  Widget _buildServiceCard(
-    String label,
-    String imagePath,
-    Color backgroundColor,
-    VoidCallback onTap,
-  ) {
-    return _AdvancedServiceCard(
-      label: label,
-      imagePath: imagePath,
-      color: backgroundColor,
-      onTap: onTap,
-    );
-  }
-
-  void _showComingSoonDialog(BuildContext context, String serviceName) {
-    Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TweenAnimationBuilder<double>(
-                tween: Tween<double>(begin: 0.0, end: 1.0),
-                duration: const Duration(milliseconds: 800),
-                curve: Curves.elasticOut,
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: value,
-                    child: child,
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E63FF).withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.rocket_launch,
-                    size: 50,
-                    color: Color(0xFF1E63FF),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'coming_soon'.tr,
-                style: AppTextStyles.headingSmall,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                '$serviceName ' + 'feature_under_development'.tr,
-                textAlign: TextAlign.center,
-                style: AppTextStyles.bodyMedium,
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Get.back(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1E63FF),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    'got_it'.tr,
-                    style: AppTextStyles.button,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
   Widget _buildLiveCard(MixedCard card, int index) {
+
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
       duration: Duration(milliseconds: 250 + index * 60),

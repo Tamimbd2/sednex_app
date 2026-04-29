@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import '../controllers/saved_articles_controller.dart';
 import '../../articles/controllers/articles_controller.dart';

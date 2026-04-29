@@ -192,22 +192,8 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
     }
   }
 
-  Future<void> _launchUrl(String url) async {
-    if (url.isEmpty) return;
-    final Uri uri;
-    if (url.startsWith('http') || url.startsWith('mailto:')) {
-      uri = Uri.parse(url);
-    } else {
-      uri = Uri.parse('https://$url');
-    }
-    try {
-      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-        Get.snackbar('error'.tr, 'could_not_open_link'.tr);
-      }
-    } catch (e) {
-      Get.snackbar('error'.tr, 'action_not_supported'.tr);
-    }
-  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -387,63 +373,7 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
     color: Color(0xFF94A3B8),
   );
 
-  // ── Location Row ───────────────────────────────────────────────────
-  Widget _locationRow() {
-    final hasMap = _mapUrl.isNotEmpty;
-    return GestureDetector(
-      onTap: () => _launchUrl(
-        hasMap ? _mapUrl : 'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}',
-      ),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(
-                Icons.location_on_rounded,
-                color: AppColors.primary,
-                size: 18,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                _address,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF2C2C2C),
-                  height: 1.4,
-                ),
-              ),
-            ),
-            const Icon(
-              Icons.chevron_right_rounded,
-              color: Color(0xFFD1D5DB),
-              size: 20,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 
   // ── Tab Card ──────────────────────────────────────────────────────
   Widget _tabCard() {

@@ -333,7 +333,7 @@ class ArticlesView extends GetView<ArticlesController> {
                                         color: isSelected
                                             ? const Color(0xFF1E63FF)
                                             : const Color(0xFF1E63FF)
-                                                .withOpacity(0.1),
+                                                .withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: isSelected

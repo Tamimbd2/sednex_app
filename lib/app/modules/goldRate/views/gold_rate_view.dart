@@ -98,7 +98,7 @@ class GoldRateView extends GetView<GoldRateController> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              'gold_last_update'.tr + controller.lastUpdate.value.trNum,
+                              '${"gold_last_update".tr}${controller.lastUpdate.value.trNum}',
                               style: _getStyle(
                                 fontSize: 13,
                                 color: const Color(0xFF616161),
@@ -191,7 +191,7 @@ class GoldRateView extends GetView<GoldRateController> {
                               return Column(
                                 children: [
                                   _buildPremiumRateRow(
-                                    '1'.trNum + ' ${controller.selectedTabName.value.tr} $caratLabel',
+                                    '${'1'.trNum} ${controller.selectedTabName.value.tr} $caratLabel',
                                     rate['price'].toString().trNum,
                                     isHighlight: idx == 0,
                                   ),
@@ -296,21 +296,21 @@ class GoldRateView extends GetView<GoldRateController> {
                         if (controller.selectedTabIndex.value == 0) {
                           return Column(
                             children: [
-                              _buildModernConversionItem('1'.trNum + ' ${'vhori'.tr}', '16'.trNum + ' ${'ana'.tr}'),
-                              _buildModernConversionItem('1'.trNum + ' ${'vhori'.tr}', '96'.trNum + ' ${'roti'.tr}'),
+                              _buildModernConversionItem('${'1'.trNum} ${'vhori'.tr}', '${'16'.trNum} ${'ana'.tr}'),
+                              _buildModernConversionItem('${'1'.trNum} ${'vhori'.tr}', '${'96'.trNum} ${'roti'.tr}'),
                               _buildModernConversionItem(
-                                '1'.trNum + ' ${'vhori'.tr}',
-                                '11.664'.trNum + ' ${'gram'.tr}',
+                                '${'1'.trNum} ${'vhori'.tr}',
+                                '${'11.664'.trNum} ${'gram'.tr}',
                               ),
                             ],
                           );
                         } else if (controller.selectedTabIndex.value == 1) {
                           return Column(
                             children: [
-                              _buildModernConversionItem('1'.trNum + ' ${'ana'.tr}', '6'.trNum + ' ${'roti'.tr}'),
+                              _buildModernConversionItem('${'1'.trNum} ${'ana'.tr}', '${'6'.trNum} ${'roti'.tr}'),
                               _buildModernConversionItem(
-                                '1'.trNum + ' ${'ana'.tr}',
-                                '0.729'.trNum + ' ${'gram'.tr}',
+                                '${'1'.trNum} ${'ana'.tr}',
+                                '${'0.729'.trNum} ${'gram'.tr}',
                               ),
                             ],
                           );
@@ -318,8 +318,8 @@ class GoldRateView extends GetView<GoldRateController> {
                           return Column(
                             children: [
                               _buildModernConversionItem(
-                                '1'.trNum + ' ${'roti'.tr}',
-                                '0.1215'.trNum + ' ${'gram'.tr}',
+                                '${'1'.trNum} ${'roti'.tr}',
+                                '${'0.1215'.trNum} ${'gram'.tr}',
                               ),
                             ],
                           );
@@ -327,8 +327,8 @@ class GoldRateView extends GetView<GoldRateController> {
                           return Column(
                             children: [
                               _buildModernConversionItem(
-                                '1'.trNum + ' ${'gram'.tr}',
-                                '0.0857'.trNum + ' ${'vhori'.tr}',
+                                '${'1'.trNum} ${'gram'.tr}',
+                                '${'0.0857'.trNum} ${'vhori'.tr}',
                               ),
                             ],
                           );

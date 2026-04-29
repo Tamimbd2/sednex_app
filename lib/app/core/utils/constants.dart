@@ -1,8 +1,16 @@
-﻿import 'package:flutter/material.dart';
+// DEPRECATED: This file is a misnamed legacy duplicate.
+// The canonical theme definition lives in: lib/app/core/theme/app_theme.dart
+// This file's class also duplicates AppTheme — do NOT import this file in new code.
+// TODO: Remove this file entirely once all callers have been audited.
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 
+// ignore_for_file: unused_import
+// Keeping the class name identical to app_theme.dart intentionally
+// to avoid breaking any stale imports.
+// ignore: duplicate_ignore
 class AppTheme {
   AppTheme._();
 

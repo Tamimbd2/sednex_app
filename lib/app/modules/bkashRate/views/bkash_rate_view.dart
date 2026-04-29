@@ -85,7 +85,7 @@ class BkashRateView extends GetView<BkashRateController> {
                           }
                         }
                         return Text(
-                          'last_update'.tr + ': $dateStr',
+                          '${'last_update'.tr}: $dateStr',
                           style: _getStyle(
                             fontSize: 13,
                             color: const Color(0xFF1E63FF),
@@ -429,7 +429,7 @@ class BkashRateView extends GetView<BkashRateController> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: 'note'.tr + ': ',
+                              text: '${'note'.tr}: ',
                               style: _getStyle(
                                 fontWeight: FontWeight.w700,
                                 color: const Color(0xFFD48806),
@@ -489,35 +489,7 @@ class BkashRateView extends GetView<BkashRateController> {
     );
   }
 
-  Widget _buildModernChip(String label) {
-    return GestureDetector(
-      onTap: () => controller.setAmount(label),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey.shade200),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.05),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: _getStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF616161),
-          ),
-        ),
-      ),
-    );
-  }
+
 
   TextStyle _getStyle({
     double? fontSize,

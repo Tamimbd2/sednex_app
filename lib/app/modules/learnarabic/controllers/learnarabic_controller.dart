@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:sednexapp/app/services/api_service.dart';
 
 class LearnArabicCategory {
   final String id;
@@ -44,7 +44,7 @@ class LearnArabicWord {
 }
 
 class LearnarabicController extends GetxController {
-  final _connect = GetConnect();
+  late final ApiService _apiService;
 
   final selectedTab = (-1).obs;
   final isLoading = false.obs;
@@ -57,6 +57,7 @@ class LearnarabicController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _apiService = Get.find<ApiService>();
     fetchData();
   }
 
@@ -74,8 +75,8 @@ class LearnarabicController extends GetxController {
 
   Future<void> fetchCategories() async {
     try {
-      final response = await _connect.get(
-        '${AppUrl.baseUrl}api/learn-arabic/categories',
+      final response = await _apiService.getData(
+        'api/learn-arabic/categories',
       );
       if (response.status.hasError) return;
 
@@ -95,8 +96,8 @@ class LearnarabicController extends GetxController {
 
   Future<void> fetchWords() async {
     try {
-      final response = await _connect.get(
-        '${AppUrl.baseUrl}api/learn-arabic/words',
+      final response = await _apiService.getData(
+        'api/learn-arabic/words',
       );
       if (response.status.hasError) return;
 

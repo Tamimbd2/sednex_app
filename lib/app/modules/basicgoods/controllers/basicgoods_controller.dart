@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:sednexapp/app/core/constants/url.dart';
+import 'package:sednexapp/app/services/api_service.dart';
 
 class BasicGood {
   final String id;
@@ -36,7 +36,7 @@ class BasicGood {
 }
 
 class BasicgoodsController extends GetxController {
-  final _connect = GetConnect();
+  late final ApiService _apiService;
   final isLoading = false.obs;
   final selectedCategory = 'All'.obs;
 
@@ -59,7 +59,7 @@ class BasicgoodsController extends GetxController {
   Future<void> fetchGoods() async {
     try {
       isLoading.value = true;
-      final response = await _connect.get('${AppUrl.baseUrl}api/goods/');
+      final response = await _apiService.getData('api/goods/');
 
       if (response.status.hasError) {
         Get.snackbar('Error', 'Failed to fetch goods: ${response.statusText}');
@@ -127,6 +127,7 @@ class BasicgoodsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _apiService = Get.find<ApiService>();
     fetchGoods();
   }
 }

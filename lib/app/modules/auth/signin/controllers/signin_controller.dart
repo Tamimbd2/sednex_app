@@ -116,11 +116,6 @@ class SigninController extends GetxController {
       // 1. Opens the native Google login popup on the phone
       final GoogleSignInAccount googleUser = await GoogleSignIn.instance.authenticate();
 
-      if (googleUser == null) {
-        isLoading.value = false;
-        return; // User cancelled
-      }
-
       // 2. Grabs the secure authentication tokens
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 

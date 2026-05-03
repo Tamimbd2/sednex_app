@@ -97,11 +97,6 @@ class SignupController extends GetxController {
 
       final GoogleSignInAccount googleUser = await GoogleSignIn.instance.authenticate();
 
-      if (googleUser == null) {
-        isLoading.value = false;
-        return; // User cancelled
-      }
-
       // 2. Grabs the secure authentication tokens
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 

@@ -95,17 +95,25 @@ class SignupController extends GetxController {
     try {
       isLoading.value = true;
 
-      final GoogleSignInAccount googleUser = await GoogleSignIn.instance
-          .authenticate();
+      final GoogleSignInAccount googleUser = await GoogleSignIn.instance.authenticate();
+
+      if (googleUser == null) {
+        isLoading.value = false;
+        return; // User cancelled
+      }
 
       // 2. Grabs the secure authentication tokens
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
- 
+
+      if (googleAuth.idToken == null) {
+        throw Exception("Google ID Token is null. Check your Firebase/Google Console configuration and Server Client ID.");
+      }
+
       // 3. Authenticate with Firebase
       final AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
       );
- 
+
       final UserCredential userCredential = await FirebaseAuth.instance
           .signInWithCredential(credential);
       final String? firebaseToken = await userCredential.user?.getIdToken(true);
@@ -178,9 +186,17 @@ class SignupController extends GetxController {
     } catch (e) {
       debugPrint('Google Sign-In Error: $e');
       debugPrint("------------ GOOGLE SIGN-IN FAILED ------------");
+      
+      String errorMessage = 'Google sign-in failed. Please try again.';
+      if (e.toString().contains('network_error')) {
+        errorMessage = 'Network error. Please check your internet connection.';
+      } else if (e.toString().contains('idToken is null')) {
+        errorMessage = 'Configuration error: ID Token is missing.';
+      }
+
       Get.snackbar(
         'Error',
-        'Google sign-in failed. Please try again.',
+        errorMessage,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: const Color(0xFF1E63FF),
         colorText: Colors.white,

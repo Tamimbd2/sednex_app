@@ -47,14 +47,14 @@ flutter {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.14.0")
-    implementation("androidx.appcompat:appcompat:1.8.0")
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
-    implementation("com.google.firebase:firebase-core:22.0.0")
+    implementation("com.google.firebase:firebase-analytics:21.5.1")
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("com.google.android.gms:play-services-maps:18.0.2")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
-    implementation("androidx.work:work-runtime-ktx:2.10.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
 }

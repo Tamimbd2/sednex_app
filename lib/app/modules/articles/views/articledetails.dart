@@ -129,9 +129,9 @@ class ArticleDetailsView extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           const Divider(height: 1, thickness: 1.2, color: Color(0xFFF1F1F1)),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
 
           // Content Rendering
           if (fullContent.isEmpty)
@@ -139,7 +139,7 @@ class ArticleDetailsView extends StatelessWidget {
               description,
               style: AppTextStyles.bodyMedium.copyWith(
                 fontSize: 16,
-                height: 1.8,
+                height: 1.5,
                 color: Colors.grey[800],
               ),
             )
@@ -147,8 +147,6 @@ class ArticleDetailsView extends StatelessWidget {
             ..._groupContent(fullContent),
 
           const SizedBox(height: 40),
-
-          const SizedBox(height: 50),
         ],
       ),
     ),
@@ -165,7 +163,10 @@ class ArticleDetailsView extends StatelessWidget {
       if (item is! Map) continue;
 
       if (item['type'] == 'paragraph') {
-        currentParagraphs += (item['data'] ?? "") + "<br/><br/>";
+        currentParagraphs +=
+            "<p style='margin-bottom: 10px; line-height: 1.4;'>" +
+            (item['data'] ?? "") +
+            "</p>";
       } else {
         // If we hit an image, flush current paragraphs first
         if (currentParagraphs.isNotEmpty) {
@@ -227,9 +228,13 @@ class ArticleDetailsView extends StatelessWidget {
       style: {
         "body": Style(
           fontSize: FontSize(17),
-          lineHeight: const LineHeight(1.8),
+          lineHeight: const LineHeight(1.4),
           color: Colors.black87,
           fontFamily: AppTextStyles.bodyMedium.fontFamily,
+          margin: Margins.zero,
+          padding: HtmlPaddings.zero,
+        ),
+        "p": Style(
           margin: Margins.zero,
           padding: HtmlPaddings.zero,
         ),

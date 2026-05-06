@@ -79,15 +79,72 @@ class CreatepostView extends GetView<CreatepostController> {
                     controller: controller.textController,
                     onChanged: (value) => controller.postText.value = value,
                     maxLines: null,
+                    minLines: 5,
                     decoration: InputDecoration(
                       hintText: "whats_on_your_mind".tr,
-                      hintStyle: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
-                      border: InputBorder.none,
+                      hintStyle:
+                          AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: AppColors.primary),
+                      ),
+                      contentPadding: const EdgeInsets.all(16),
                     ),
                     style: AppTextStyles.bodyLarge,
-                    contentInsertionConfiguration: ContentInsertionConfiguration(
-                      onContentInserted: (content) => controller.handleKeyboardContent(content),
-                      allowedMimeTypes: const ['image/gif', 'image/png', 'image/jpeg'],
+                    contentInsertionConfiguration:
+                        ContentInsertionConfiguration(
+                      onContentInserted: (content) =>
+                          controller.handleKeyboardContent(content),
+                      allowedMimeTypes: const [
+                        'image/gif',
+                        'image/png',
+                        'image/jpeg',
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Quick Templates
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: controller.quickTemplates.map((template) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: ActionChip(
+                              label: Text(
+                                template['title']!.tr,
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              onPressed: () => controller.applyTemplate(
+                                template['textKey']!,
+                                template['category']!,
+                              ),
+                              backgroundColor: const Color(0xFFF3F4F6),
+                              side: BorderSide.none,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                                vertical: 0,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
 

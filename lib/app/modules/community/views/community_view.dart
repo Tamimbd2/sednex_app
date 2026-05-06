@@ -132,6 +132,7 @@ class CommunityView extends GetView<CommunityController> {
     final name = (member['name'] ?? 'unknown'.tr).toString();
     final location = (member['country'] ?? 'unknown'.tr).toString();
     final image = (member['profileImage'] ?? '').toString();
+    final isVerified = member['isVerified'] == true || member['verified'] == true;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -165,12 +166,23 @@ class CommunityView extends GetView<CommunityController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      name,
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
-                      ),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            name,
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if (isVerified) ...[
+                          const SizedBox(width: 4),
+                          const Icon(Icons.verified, color: Color(0xFF1E63FF), size: 16),
+                        ],
+                      ],
                     ),
                     const SizedBox(height: 2),
                     Text(

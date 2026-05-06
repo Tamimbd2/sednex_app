@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:get/get.dart';
@@ -8,9 +9,7 @@ import '../../../core/theme/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/constants/url.dart';
 
-
 import '../../profile/views/profile_view.dart';
-
 
 import '../../notifications/controllers/notifications_controller.dart';
 import 'home_page_content.dart';
@@ -31,167 +30,178 @@ class DashboardView extends GetView<DashboardController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 60),
-        child: Obx(() {
-          // Show header consistently across all tabs
-          final statusBarHeight = MediaQuery.of(context).padding.top;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldExit = await _showExitDialog(context);
+        if (shouldExit) {
+          // Close the app
+          SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(
+            MediaQuery.of(context).padding.top + 60,
+          ),
+          child: Obx(() {
+            // Show header consistently across all tabs
+            final statusBarHeight = MediaQuery.of(context).padding.top;
 
-          return Container(
-            height: statusBarHeight + 60,
-            padding: EdgeInsets.only(top: statusBarHeight),
-            decoration: BoxDecoration(color: const Color(0xFF1E63FF)),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  // Logo & Dynamic Title
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment:
-                          (controller.currentIndex.value == 1 ||
-                              controller.currentIndex.value == 2)
-                          ? MainAxisAlignment.center
-                          : MainAxisAlignment.start,
-                      children: [
-                        if (controller.currentIndex.value != 1 &&
-                            controller.currentIndex.value != 2)
-                          Image.asset(
-                            'assets/logo/Sednex Website Logo Eng@3x.png',
-                            height: 30,
-                            fit: BoxFit.contain,
-                          ),
-                        if (controller.currentIndex.value == 1 ||
-                            controller.currentIndex.value == 2)
-                          Text(
-                            controller.currentIndex.value == 1
-                                ? 'community_feed'.tr
-                                : 'search'.tr,
-                            style: AppTextStyles.headingMedium.copyWith(
-                              color: Colors.white,
+            return Container(
+              height: statusBarHeight + 60,
+              padding: EdgeInsets.only(top: statusBarHeight),
+              decoration: BoxDecoration(color: const Color(0xFF1E63FF)),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    // Logo & Dynamic Title
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment:
+                            (controller.currentIndex.value == 1 ||
+                                controller.currentIndex.value == 2)
+                            ? MainAxisAlignment.center
+                            : MainAxisAlignment.start,
+                        children: [
+                          if (controller.currentIndex.value != 1 &&
+                              controller.currentIndex.value != 2)
+                            Image.asset(
+                              'assets/logo/Sednex Website Logo Eng@3x.png',
+                              height: 30,
+                              fit: BoxFit.contain,
                             ),
-                          ),
-
-                      ],
-                    ),
-                  ),
-                  if (controller.currentIndex.value != 1 &&
-                      controller.currentIndex.value != 2) ...[
-                    // Notification Icon with Badge
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.0),
-                            shape: BoxShape.circle,
-                          ),
-                          child: IconButton(
-                            onPressed: () {
-                              Get.find<NotificationsController>()
-                                  .markAllAsRead();
-                              Get.toNamed(Routes.NOTIFICATIONS);
-                            },
-                            icon: SvgPicture.asset(
-                              'assets/homeicon/notification.svg',
-                              width: 26,
-                              height: 28,
-                              colorFilter: const ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
+                          if (controller.currentIndex.value == 1 ||
+                              controller.currentIndex.value == 2)
+                            Text(
+                              controller.currentIndex.value == 1
+                                  ? 'community_feed'.tr
+                                  : 'search'.tr,
+                              style: AppTextStyles.headingMedium.copyWith(
+                                color: Colors.white,
                               ),
                             ),
-                          ),
-                        ),
-                        Obx(() {
-                          final nController =
-                              Get.find<NotificationsController>();
-                          final unreadCount = nController.unreadCount;
-                          if (unreadCount == 0) return const SizedBox.shrink();
-
-                          return Positioned(
-                            right: 5,
-                            top: 5,
-                            child: Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                color: AppColors.crimson,
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 1.5,
+                        ],
+                      ),
+                    ),
+                    if (controller.currentIndex.value != 1 &&
+                        controller.currentIndex.value != 2) ...[
+                      // Notification Icon with Badge
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.0),
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                Get.find<NotificationsController>()
+                                    .markAllAsRead();
+                                Get.toNamed(Routes.NOTIFICATIONS);
+                              },
+                              icon: SvgPicture.asset(
+                                'assets/homeicon/notification.svg',
+                                width: 26,
+                                height: 26,
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.white,
+                                  BlendMode.srcIn,
                                 ),
                               ),
-                              constraints: const BoxConstraints(
-                                minWidth: 16,
-                                minHeight: 16,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  unreadCount > 9
-                                      ? '9+'
-                                      : unreadCount.toString(),
-                                  style: AppTextStyles.caption.copyWith(
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Obx(() {
+                            final nController =
+                                Get.find<NotificationsController>();
+                            final unreadCount = nController.unreadCount;
+                            if (unreadCount == 0)
+                              return const SizedBox.shrink();
+
+                            return Positioned(
+                              right: 5,
+                              top: 5,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: AppColors.crimson,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
                                     color: Colors.white,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 16,
+                                  minHeight: 16,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    unreadCount > 9
+                                        ? '9+'
+                                        : unreadCount.toString(),
+                                    style: AppTextStyles.caption.copyWith(
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
-                    const SizedBox(width: 8),
-                    // Profile Picture
-                    GestureDetector(
-                      onTap: () => controller.changePage(3),
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: controller.currentIndex.value == 3
-                                ? AppColors.crimson
-                                : Colors.transparent,
-                            width: 2,
-                          ),
-                        ),
-                        child: Obx(() {
-                          final imgUrl = controller.userProfileImage.value;
-                          return CircleAvatar(
-                            radius: 18,
-                            backgroundColor: Colors.grey[100],
-                            backgroundImage: imgUrl != null
-                                ? CachedNetworkImageProvider(imgUrl)
-                                : null,
-                            child: imgUrl == null
-                                ? const Icon(
-                                    Icons.person,
-                                    size: 20,
-                                    color: Color(0xFF9CA3AF),
-                                  )
-                                : null,
-                          );
-                        }),
+                            );
+                          }),
+                        ],
                       ),
-                    ),
+                      const SizedBox(width: 8),
+                      // Profile Picture
+                      GestureDetector(
+                        onTap: () => controller.changePage(3),
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: controller.currentIndex.value == 3
+                                  ? AppColors.crimson
+                                  : Colors.transparent,
+                              width: 2,
+                            ),
+                          ),
+                          child: Obx(() {
+                            final imgUrl = controller.userProfileImage.value;
+                            return CircleAvatar(
+                              radius: 18,
+                              backgroundColor: Colors.grey[100],
+                              backgroundImage: imgUrl != null
+                                  ? CachedNetworkImageProvider(imgUrl)
+                                  : null,
+                              child: imgUrl == null
+                                  ? const Icon(
+                                      Icons.person,
+                                      size: 20,
+                                      color: Color(0xFF9CA3AF),
+                                    )
+                                  : null,
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
+        body: Obx(() => _getPage(controller.currentIndex.value)),
+        bottomNavigationBar: _buildBottomNavigationBar(),
       ),
-      body: Obx(() => _getPage(controller.currentIndex.value)),
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
-
-
 
   Widget _getPage(int index) {
     switch (index) {
@@ -448,7 +458,9 @@ class DashboardView extends GetView<DashboardController> {
                     '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.bodySmall.copyWith(color: Colors.grey[500]),
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: Colors.grey[500],
+                ),
               ),
               trailing: const Icon(
                 Icons.arrow_forward_ios_rounded,
@@ -679,8 +691,6 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
-
-
   Widget _buildProfilePage() {
     return ProfileView();
   }
@@ -694,54 +704,65 @@ class DashboardView extends GetView<DashboardController> {
           child: SizedBox(
             height: 75,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(
-                  iconPath: 'assets/homeicon/home 232.svg',
-                  label: 'home'.tr,
-                  index: 0,
-                  isActive: controller.currentIndex.value == 0,
+                // Left group
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildNavItem(
+                        iconPath: 'assets/homeicon/home 232.svg',
+                        label: 'home'.tr,
+                        index: 0,
+                        isActive: controller.currentIndex.value == 0,
+                      ),
+                      _buildNavItem(
+                        iconPath: 'assets/homeicon/Community-feed 232.svg',
+                        label: 'posts'.tr,
+                        index: 1,
+                        isActive: controller.currentIndex.value == 1,
+                      ),
+                    ],
+                  ),
                 ),
-                _buildNavItem(
-                  iconPath: 'assets/homeicon/Community-feed 232.svg',
-                  label: 'posts'.tr,
-                  index: 1,
-                  isActive: controller.currentIndex.value == 1,
-                ),
-                // Center + button
+                // Center + button (always middle)
                 GestureDetector(
                   onTap: () => Get.toNamed(Routes.CREATEPOST),
                   child: Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
+                    width: 52,
+                    height: 52,
+                    decoration: const BoxDecoration(
+                      color: Colors.transparent,
                       shape: BoxShape.circle,
                     ),
                     child: Center(
                       child: SvgPicture.asset(
                         'assets/homeicon/add-post.svg',
-                        width: 48,
-                        height: 48,
-                        colorFilter: const ColorFilter.mode(
-                          AppColors.primary,
-                          BlendMode.srcIn,
-                        ),
+                        width: 52,
+                        height: 52,
                       ),
                     ),
                   ),
                 ),
-                _buildNavItem(
-                  iconPath: 'assets/homeicon/search 232.svg',
-                  label: 'search'.tr,
-                  index: 2,
-                  isActive: controller.currentIndex.value == 2,
-                ),
-                _buildNavItem(
-                  iconPath: 'assets/homeicon/profile 232.svg',
-                  label: 'profile'.tr,
-                  index: 3,
-                  isActive: controller.currentIndex.value == 3,
+                // Right group
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildNavItem(
+                        iconPath: 'assets/homeicon/search 232.svg',
+                        label: 'search'.tr,
+                        index: 2,
+                        isActive: controller.currentIndex.value == 2,
+                      ),
+                      _buildNavItem(
+                        iconPath: 'assets/homeicon/profile 232.svg',
+                        label: 'profile'.tr,
+                        index: 3,
+                        isActive: controller.currentIndex.value == 3,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -761,7 +782,7 @@ class DashboardView extends GetView<DashboardController> {
       onTap: () => controller.changePage(index),
       behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -778,7 +799,7 @@ class DashboardView extends GetView<DashboardController> {
                 ),
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Text(
               label,
               style: AppTextStyles.bodySmall.copyWith(
@@ -834,5 +855,43 @@ class DashboardView extends GetView<DashboardController> {
         );
       },
     );
+  }
+
+  Future<bool> _showExitDialog(BuildContext context) async {
+    return await Get.dialog<bool>(
+          AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Text('exit_app'.tr, style: AppTextStyles.headingSmall),
+            content: Text(
+              'exit_confirmation'.tr,
+              style: AppTextStyles.bodyMedium,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Get.back(result: false),
+                child: Text(
+                  'no'.tr,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1E63FF),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: () => Get.back(result: true),
+                child: Text(
+                  'yes'.tr,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 }

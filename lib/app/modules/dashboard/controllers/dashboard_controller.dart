@@ -108,6 +108,7 @@ class DashboardController extends GetxController {
   }
 
   void fetchServices() async {
+    debugPrint('fetchServices started');
     try {
       final response = await apiService.getData('api/homepage/services');
 
@@ -141,10 +142,13 @@ class DashboardController extends GetxController {
       }
     } catch (e) {
       debugPrint('Error fetching services: $e');
+    } finally {
+      debugPrint('fetchServices completed');
     }
   }
 
   void fetchBanner() async {
+    debugPrint('fetchBanner started');
     try {
       final response = await apiService.getData('api/homepage/sliders');
 
@@ -179,6 +183,8 @@ class DashboardController extends GetxController {
       }
     } catch (e) {
       debugPrint('Error fetching banners: $e');
+    } finally {
+      debugPrint('fetchBanner completed');
     }
   }
 
@@ -197,6 +203,7 @@ class DashboardController extends GetxController {
   }
 
   void fetchMarqueeText() async {
+    debugPrint('fetchMarqueeText started');
     try {
       final response = await apiService.getData('api/homepage/marquees');
 
@@ -235,6 +242,8 @@ class DashboardController extends GetxController {
       }
     } catch (e) {
       debugPrint('Error fetching marquee: $e');
+    } finally {
+      debugPrint('fetchMarqueeText completed');
     }
   }
 
@@ -440,20 +449,28 @@ class DashboardController extends GetxController {
 
   Future<void> speakPost(int index, String text) async {
     try {
+      if (text.trim().isEmpty) return;
+
       if (currentlySpeakingIndex.value == index) {
-        await flutterTts.stop();
         currentlySpeakingIndex.value = -1;
+        await flutterTts.stop();
         return;
       }
 
       await flutterTts.stop();
-      // Use the logic from CommunityFeedController or define locally
-      await flutterTts.speak(text);
       currentlySpeakingIndex.value = index;
+
+      await flutterTts.speak(text);
+      
       flutterTts.setCompletionHandler(() {
         currentlySpeakingIndex.value = -1;
       });
+
+      flutterTts.setErrorHandler((msg) {
+        currentlySpeakingIndex.value = -1;
+      });
     } catch (e) {
+      currentlySpeakingIndex.value = -1;
       debugPrint("TTS Search Error: $e");
     }
   }

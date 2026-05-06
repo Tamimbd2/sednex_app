@@ -123,10 +123,50 @@ class CreatepostController extends GetxController {
     'help',
   ];
 
+  final quickTemplates = [
+    {
+      'title': 'tpl_need_worker_title',
+      'category': 'jobs',
+      'textKey': 'tpl_need_worker_body'
+    },
+    {
+      'title': 'tpl_job_search_title',
+      'category': 'jobs',
+      'textKey': 'tpl_job_search_body'
+    },
+    {
+      'title': 'tpl_rent_out_title',
+      'category': 'rental',
+      'textKey': 'tpl_rent_out_body'
+    },
+    {
+      'title': 'tpl_rent_need_title',
+      'category': 'rental',
+      'textKey': 'tpl_rent_need_body'
+    },
+    {
+      'title': 'tpl_sell_title',
+      'category': 'buy_sell',
+      'textKey': 'tpl_sell_body'
+    },
+    {
+      'title': 'tpl_buy_title',
+      'category': 'buy_sell',
+      'textKey': 'tpl_buy_body'
+    },
+  ];
+
   final RxList<XFile> selectedImages = <XFile>[].obs;
   final RxString postText = ''.obs;
 
   void selectCategory(String category) {
+    selectedCategory.value = category;
+  }
+
+  void applyTemplate(String templateTextKey, String category) {
+    final translatedText = templateTextKey.tr;
+    textController.text = translatedText;
+    postText.value = translatedText;
     selectedCategory.value = category;
   }
 

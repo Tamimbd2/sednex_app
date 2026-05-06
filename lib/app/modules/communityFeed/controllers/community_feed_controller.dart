@@ -12,14 +12,14 @@ class CommunityFeedController extends GetxController {
   final count = 0.obs;
 
   final List<String> filters = [
-    "General",
-    "Jobs",
-    "Buy & Sell",
+    "All Post",
+    "Job Posts",
+    "Buy & Sells",
     "Questions",
-    "Rentals",
-    "Help",
+    "Home Rents",
+    "Help Request",
   ];
-  final selectedFilter = "General".obs;
+  final selectedFilter = "All Post".obs;
 
   final posts = <Map<String, dynamic>>[].obs;
   final isLoading = true.obs;
@@ -97,15 +97,16 @@ class CommunityFeedController extends GetxController {
     try {
       // Build base URL
       String url;
-      if (selectedFilter.value == "General") {
+      if (selectedFilter.value == "All Post") {
         url = 'api/post/';
       } else {
         // Map UI filter to API category
         String category = selectedFilter.value.toLowerCase();
-        if (category == "buy & sell") category = "sell";
-        if (category == "rental") category = "rentals";
-        if (category == "jobs") category = "job";
+        if (category == "buy & sells") category = "sell";
+        if (category == "home rents") category = "rentals";
+        if (category == "job posts") category = "job";
         if (category == "questions") category = "question";
+        if (category == "help request") category = "help";
 
         url = 'api/post/category/$category';
       }
@@ -331,13 +332,14 @@ class CommunityFeedController extends GetxController {
   }
 
   String _mapCategory(String apiCategory) {
-    if (apiCategory.isEmpty) return 'General';
+    if (apiCategory.isEmpty) return 'All Post';
     String category = apiCategory.toLowerCase();
-    if (category == 'rental' || category == 'rentals') return 'Rentals';
-    if (category == 'job' || category == 'jobs') return 'Jobs';
+    if (category == 'rental' || category == 'rentals') return 'Home Rents';
+    if (category == 'job' || category == 'jobs') return 'Job Posts';
     if (category == 'question' || category == 'questions') return 'Questions';
-    if (category == 'sell') return 'Buy & Sell';
-    return category.capitalizeFirst ?? 'General';
+    if (category == 'sell') return 'Buy & Sells';
+    if (category == 'help') return 'Help Request';
+    return category.capitalizeFirst ?? 'All Post';
   }
 
   String _timeAgo(String dateString) {
@@ -561,34 +563,42 @@ class CommunityFeedController extends GetxController {
   // Text-to-Speech Implementation
   Future<void> speakPost(int index, String text) async {
     try {
+      if (text.trim().isEmpty) return;
+
+      // Immediate UI Feedback: If we're already speaking this post, stop it
       if (currentlySpeakingIndex.value == index) {
-        await flutterTts.stop();
         currentlySpeakingIndex.value = -1;
+        await flutterTts.stop();
         return;
       }
 
-      // Stop any current speech
+      // Stop any other active speech and update index
       await flutterTts.stop();
+      currentlySpeakingIndex.value = index;
 
-      // Universal Auto-detect language using Unicode script ranges
+      // Configure and Speak
       String lang = _detectLanguage(text);
-
       await flutterTts.setLanguage(lang);
-
-      // Configure TTS
       await flutterTts.setPitch(1.0);
       await flutterTts.setSpeechRate(0.5);
 
-      // Start speaking
-      await flutterTts.speak(text);
-      currentlySpeakingIndex.value = index;
+      int result = await flutterTts.speak(text);
+      if (result != 1) {
+        // If speaking failed, reset the index
+        currentlySpeakingIndex.value = -1;
+      }
 
-      // Handle completion
       flutterTts.setCompletionHandler(() {
         currentlySpeakingIndex.value = -1;
       });
+      
+      flutterTts.setErrorHandler((msg) {
+        currentlySpeakingIndex.value = -1;
+        debugPrint("TTS Error: $msg");
+      });
     } catch (e) {
-      debugPrint("TTS Error: $e");
+      currentlySpeakingIndex.value = -1;
+      debugPrint("TTS Exception: $e");
     }
   }
 

@@ -28,7 +28,7 @@ class AppColors {
   static const Color background  = Color(0xFFF5F5F5); // Main Background
   static const Color backgroundAlt = Color(0xFFE3EEFF); // BG 1
   static const Color surface    = Color(0xFFFFFFFF);
-  static const Color navInactive = Color(0xFF243F61);
+  static const Color navInactive = Color(0xFF8E9AAF);
   static const Color navBackground = Color(0xFFF5FAFF);
 
   // ── Text ────────────────────────────────────────────────────────────

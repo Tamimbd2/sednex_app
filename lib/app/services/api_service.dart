@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sednexapp/app/core/constants/url.dart';
@@ -17,11 +18,13 @@ class ApiService extends GetConnect {
       if (token.toString().isNotEmpty) {
         request.headers['Authorization'] = 'Bearer $token';
       }
+      debugPrint('API Request: ${request.method} ${request.url}');
       return request;
     });
 
     // Handle global responses (like 401 Unauthorized)
     httpClient.addResponseModifier((request, response) {
+      debugPrint('API Response: ${response.statusCode} ${request.url}');
       if (response.statusCode == 401 && !_isRedirecting) {
         _isRedirecting = true;
 

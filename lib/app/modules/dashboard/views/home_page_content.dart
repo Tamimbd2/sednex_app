@@ -27,6 +27,7 @@ class HomePageContent extends StatelessWidget {
     return SingleChildScrollView(
       controller: dashboardController.homeScrollController,
       physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.only(bottom: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -374,7 +375,7 @@ class HomePageContent extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           // Essential Services Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -391,16 +392,16 @@ class HomePageContent extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
           // Essential Services Grid (2 rows x 4 columns)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: GridView.count(
               crossAxisCount: 4,
-              mainAxisSpacing: 12,
+              mainAxisSpacing: 0,
               crossAxisSpacing: 12,
-              childAspectRatio: 0.8,
+              childAspectRatio: 0.68,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               children: [
@@ -409,53 +410,77 @@ class HomePageContent extends StatelessWidget {
                   'assets/Service Icon svg/Articels.svg',
                   const Color(0xFF00BFA5),
                   () => Get.toNamed('/articles'),
+                  useColorFilter: true,
+                  iconSize: 32,
+                  useLightBlueBg: true,
                 ),
                 _buildEssentialServiceItem(
                   'shop'.tr,
                   'assets/Service Icon svg/Shopping.svg',
                   const Color(0xFF102A6B),
                   () => Get.toNamed('/shop'),
+                  useColorFilter: true,
+                  iconSize: 32,
+                  useLightBlueBg: true,
                 ),
                 _buildEssentialServiceItem(
                   'bus_flight_booking'.tr,
                   'assets/Service Icon svg/Flight Booking.svg',
                   const Color(0xFF2196F3),
                   () => Get.toNamed('/busflight'),
+                  useColorFilter: true,
+                  iconSize: 32,
+                  useLightBlueBg: true,
                 ),
                 _buildEssentialServiceItem(
                   'tourist_spots'.tr,
                   'assets/Service Icon svg/Tourist spots.svg',
                   const Color(0xFF00BCD4),
                   () => Get.toNamed('/tourist-spot'),
+                  useColorFilter: true,
+                  iconSize: 32,
+                  useLightBlueBg: true,
                 ),
                 _buildEssentialServiceItem(
                   'learn_arabic'.tr,
                   'assets/Service Icon svg/Learn Arobic.svg',
                   const Color(0xFF795548),
                   () => Get.toNamed('/learnarabic'),
+                  useColorFilter: true,
+                  iconSize: 32,
+                  useLightBlueBg: true,
                 ),
                 _buildEssentialServiceItem(
                   'local_tours'.tr,
                   'assets/Service Icon svg/Join Tour.svg',
                   const Color(0xFF00BCD4),
                   () => Get.toNamed('/localtour'),
+                  useColorFilter: false,
+                  iconSize: 32,
+                  useLightBlueBg: true,
                 ),
                 _buildEssentialServiceItem(
                   'basic_goods'.tr,
-                  'assets/Service Icon svg/Basic goods.svg',
+                  'assets/Service Icon svg/Basic Goods.svg',
                   const Color(0xFF448AFF),
                   () => Get.toNamed('/basicgoods'),
+                  useColorFilter: false,
+                  iconSize: 32,
+                  useLightBlueBg: true,
                 ),
                 _buildEssentialServiceItem(
                   'users'.tr,
                   'assets/Service Icon svg/Users.svg',
                   const Color(0xFF4CAF50),
                   () => Get.toNamed('/community'),
+                  useColorFilter: true,
+                  iconSize: 32,
+                  useLightBlueBg: true,
                 ),
               ],
             ),
           ),
-
+          const SizedBox(height: 4),
           // Explore Informations Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -463,7 +488,7 @@ class HomePageContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Explore Informations',
+                  'explore_information'.tr,
                   style: AppTextStyles.headingMedium.copyWith(
                     fontSize: 20,
                     color: const Color(0xFF2C2C2C),
@@ -474,7 +499,8 @@ class HomePageContent extends StatelessWidget {
                   child: Text(
                     'view_all'.tr,
                     style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: FontWeight.w600, // Make it slightly bolder too
+                      fontWeight:
+                          FontWeight.w600, // Make it slightly bolder too
                       color: const Color(0xFF1E63FF), // Vibrant blue
                     ),
                   ),
@@ -483,16 +509,16 @@ class HomePageContent extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
           // Explore Informations Grid
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: GridView.count(
               crossAxisCount: 4,
-              mainAxisSpacing: 12,
+              mainAxisSpacing: 0,
               crossAxisSpacing: 12,
-              childAspectRatio: 0.8,
+              childAspectRatio: 0.68,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               children: [
@@ -574,7 +600,7 @@ class HomePageContent extends StatelessWidget {
                 ),
 
                 _buildEssentialServiceItem(
-                  'organizations'.tr,
+                  'organization'.tr,
                   'assets/newessential/Business-Profession-Home-Office--Streamline-Core-Gradient.svg',
                   const Color(0xFF3F51B5),
                   () => Get.toNamed('/organization'),
@@ -613,7 +639,6 @@ class HomePageContent extends StatelessWidget {
                   ),
                 ),
 
-
                 _buildEssentialServiceItem(
                   'restaurants'.tr,
                   'assets/newessential/Fork-Knife--Streamline-Core-Gradient.svg',
@@ -623,7 +648,7 @@ class HomePageContent extends StatelessWidget {
                 _buildEssentialServiceItem(
                   'local_business'.tr,
                   'assets/newessential/Briefcase-Dollar--Streamline-Core-Gradient.svg',
-                  const Color(0xFF607D8B),
+                  const Color.fromARGB(255, 3, 171, 255),
                   () => Get.toNamed(
                     '/general-section',
                     arguments: {
@@ -825,8 +850,11 @@ class HomePageContent extends StatelessWidget {
     String label,
     String imagePath,
     Color backgroundColor,
-    VoidCallback onTap,
-  ) {
+    VoidCallback onTap, {
+    bool useColorFilter = false,
+    double iconSize = 38,
+    bool useLightBlueBg = false,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -835,7 +863,7 @@ class HomePageContent extends StatelessWidget {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: useLightBlueBg ? const Color(0xFFF5F9FF) : Colors.white,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
@@ -851,9 +879,15 @@ class HomePageContent extends StatelessWidget {
                   if (imagePath.endsWith('.svg')) {
                     return SvgPicture.asset(
                       imagePath,
-                      width: 38,
-                      height: 38,
+                      width: iconSize,
+                      height: iconSize,
                       fit: BoxFit.contain,
+                      colorFilter: useColorFilter
+                          ? const ColorFilter.mode(
+                              Color(0xFF5E90FF),
+                              BlendMode.srcIn,
+                            )
+                          : null,
                       placeholderBuilder: (BuildContext context) => const Icon(
                         Icons.grid_view_rounded,
                         color: Colors.grey,
@@ -863,8 +897,8 @@ class HomePageContent extends StatelessWidget {
                   } else {
                     return Image.asset(
                       imagePath,
-                      width: 38,
-                      height: 38,
+                      width: iconSize,
+                      height: iconSize,
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) =>
                           const Icon(Icons.image, color: Colors.grey, size: 28),
@@ -878,12 +912,13 @@ class HomePageContent extends StatelessWidget {
           Text(
             label,
             textAlign: TextAlign.center,
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: AppTextStyles.bodySmall.copyWith(
               fontWeight: FontWeight.w500,
               fontSize: 12,
               color: const Color(0xFF2C2C2C),
+              height: 1.2,
             ),
           ),
         ],

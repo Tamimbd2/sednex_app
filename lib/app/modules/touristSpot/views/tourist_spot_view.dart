@@ -1,9 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/theme/app_text_styles.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import '../controllers/tourist_spot_controller.dart';
 import 'toursitspotdetails.dart';
+
+// ── Font Helper ──────────────────────────────────────────────────
+TextStyle _getStyle({
+  required double fontSize,
+  required FontWeight fontWeight,
+  required Color color,
+  double? letterSpacing,
+  String? text,
+}) {
+  bool isBangla = false;
+  if (text != null) {
+    isBangla = RegExp(r'[\u0980-\u09FF]').hasMatch(text);
+  }
+  return isBangla
+      ? GoogleFonts.hindSiliguri(
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+          color: color,
+          letterSpacing: letterSpacing,
+        )
+      : GoogleFonts.poppins(
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+          color: color,
+          letterSpacing: letterSpacing,
+        );
+}
 
 class TouristSpotView extends GetView<TouristSpotController> {
   const TouristSpotView({super.key});
@@ -111,42 +138,61 @@ class TouristSpotView extends GetView<TouristSpotController> {
                             ),
                     ),
                     // Content
-                    SizedBox(
-                      height: 125, // Forces identical lower-half card size
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              spot.title,
-                              style: AppTextStyles.headingSmall.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: const Color(0xFF2C2C2C),
-                                height: 1.3,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                    // Content
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            spot.title,
+                            style: AppTextStyles.headingSmall.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF2C2C2C),
+                              height: 1.3,
                             ),
-                            const SizedBox(height: 6),
-                            Expanded(
-                              child: Text(
-                                spot.description
-                                    .replaceAll(RegExp(r'<[^>]*>'), ' ') // Strip HTML tags
-                                    .replaceAll('&nbsp;', ' ')
-                                    .replaceAll('&amp;', '&')
-                                    .replaceAll(RegExp(r'\s+'), ' ') // Collapse random spaces
-                                    .trim(),
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: Colors.grey[600],
-                                  height: 1.4,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            spot.description
+                                .replaceAll(RegExp(r'<[^>]*>'), ' ')
+                                .replaceAll('&nbsp;', ' ')
+                                .replaceAll('&amp;', '&')
+                                .replaceAll(RegExp(r'\s+'), ' ')
+                                .trim(),
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: Colors.grey[600],
+                              height: 1.4,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 12), // Small consistent gap
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'see_more'.tr,
+                                  style: _getStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(0xFF1E63FF),
+                                  ),
                                 ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                                const SizedBox(width: 4),
+                                const Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 12,
+                                  color: Color(0xFF1E63FF),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

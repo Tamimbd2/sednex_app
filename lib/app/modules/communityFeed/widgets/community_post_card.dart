@@ -267,22 +267,20 @@ class CommunityPostCard extends StatelessWidget {
                 Obx(() {
                   final isSpeaking =
                       controller.currentlySpeakingIndex.value == index;
-                  return GestureDetector(
-                    onTap: () =>
+                  return IconButton(
+                    onPressed: () =>
                         controller.speakPost(index, post['content'] ?? ''),
-                    behavior: HitTestBehavior.opaque,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        isSpeaking
-                            ? Icons.stop_circle_rounded
-                            : Icons.volume_up_outlined,
-                        size: 24,
-                        color: isSpeaking
-                            ? const Color(0xFF1E63FF)
-                            : const Color(0xFF495565),
-                      ),
+                    icon: Icon(
+                      isSpeaking
+                          ? Icons.stop_circle_rounded
+                          : Icons.volume_up_outlined,
+                      size: 24,
+                      color: isSpeaking
+                          ? const Color(0xFF1E63FF)
+                          : const Color(0xFF495565),
                     ),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
                   );
                 }),
               ],
@@ -296,23 +294,22 @@ class CommunityPostCard extends StatelessWidget {
   Widget _buildCategoryTag(String category) {
     Color bgColor;
     switch (category) {
-      case 'Question':
+      case 'Questions':
         bgColor = const Color(0xFFFF7F00);
         break;
-      case 'Sell':
+      case 'Buy & Sells':
         bgColor = const Color(0xFF22C55E);
         break;
       case 'Info':
         bgColor = const Color(0xFFA855F7);
         break;
-      case 'Jobs':
+      case 'Job Posts':
         bgColor = Colors.blue;
         break;
-      case 'Rental':
-      case 'Rentals':
+      case 'Home Rents':
         bgColor = Colors.teal;
         break;
-      case 'Help':
+      case 'Help Request':
         bgColor = const Color(0xFFF43F5E);
         break;
       default:

@@ -145,7 +145,7 @@ class AppTranslations extends Translations {
       'all__restaurants': 'All Restaurants',
       'search_restaurants': 'Search restaurants...',
       'no_restaurants_found': 'No restaurants found',
-      'organizations': 'Organizations',
+      'organization': 'Organization',
       'all_organizations': 'All Organizations',
       'all__organizations': 'All Organizations',
       'search_organizations': 'Search organizations...',
@@ -160,6 +160,7 @@ class AppTranslations extends Translations {
       'articles': 'Articles',
       'sednex_travel': 'Sednex Travel',
       'see_details': 'See Details',
+      'see_more': 'See More',
       'running': 'Running',
       'upcoming': 'Upcoming',
       'completed': 'Completed',
@@ -184,12 +185,12 @@ class AppTranslations extends Translations {
           'Please choose a category that best fits your post',
       'whats_on_your_mind': "What's on your mind?",
       'post': 'Post',
-      'general': 'General',
-      'jobs': 'Jobs',
-      'buy_sell': 'Buy & Sell',
+      'general': 'All Post',
+      'jobs': 'Job Posts',
+      'buy_sell': 'Buy & Sells',
       'questions': 'Questions',
-      'rental': 'Rental',
-      'help': 'Help',
+      'rental': 'Home Rents',
+      'help': 'Help Request',
       'post_success_title': 'Post Create Successful',
       'post_success_desc':
           'Your post has been successfully created and is now visible to the community.',
@@ -214,6 +215,8 @@ class AppTranslations extends Translations {
       'cancel': 'Cancel',
       'save': 'Save',
       'delete': 'Delete',
+      'exit_app': 'Exit App',
+      'exit_confirmation': 'Are you sure you want to exit the app?',
       'delete_confirmation_title': 'Delete Post?',
       'delete_confirmation_msg': 'Are you sure you want to delete this post?',
       'comments_label': 'Comments',
@@ -372,6 +375,24 @@ class AppTranslations extends Translations {
       'feature_under_development':
           'feature is currently under development and will be available shortly.',
       'search_info_placeholder': 'Search embassy, restaurant, phar...',
+      'tpl_need_worker_title': 'Need Worker',
+      'tpl_need_worker_body':
+          'Need a worker?\nJob Name : \nExperience : \nAddress : \nSalary : \nTime : \nAccommodation : \nWeekly Holiday : \nContact : ',
+      'tpl_job_search_title': 'Searching Job',
+      'tpl_job_search_body':
+          'Need a job?\nJob Type : \nExperience : \nArea : \nTime : \nAccommodation : \nContact : ',
+      'tpl_rent_out_title': 'Rent Out',
+      'tpl_rent_out_body':
+          'Have a room to rent?\nType : \nOccupancy : \nRent : \nLocation : \nFacilities : \nExtra Cost : \nContact : ',
+      'tpl_rent_need_title': 'Rent Needed',
+      'tpl_rent_need_body':
+          'Need a room?\nType : \nPerson count : \nArea : \nBudget : \nContact : ',
+      'tpl_sell_title': 'Want to Sell',
+      'tpl_sell_body':
+          'Want to sell something?\nProduct Name : \nCondition : \nLocation : \nPrice : \nContact : ',
+      'tpl_buy_title': 'Want to Buy',
+      'tpl_buy_body':
+          'Want to buy something?\nProduct Name : \nBudget : \nCondition : \nArea : \nContact : ',
     },
     'en': {
       'amount_to_pay': 'Amount to pay',
@@ -530,6 +551,7 @@ class AppTranslations extends Translations {
       'articles': 'Articles',
       'sednex_travel': 'Sednex Travel',
       'see_details': 'See Details',
+      'see_more': 'See More',
       'running': 'Running',
       'upcoming': 'Upcoming',
       'completed': 'Completed',
@@ -725,6 +747,8 @@ class AppTranslations extends Translations {
       'clear_all': 'Clear All',
       'selected': 'selected',
       'apply': 'Apply',
+      'exit_app': 'Exit App',
+      'exit_confirmation': 'Are you sure you want to exit the app?',
       'read_more': 'Read More',
       'price_disclaimer': 'Prices may vary by location',
       'updated': 'Updated',
@@ -750,8 +774,30 @@ class AppTranslations extends Translations {
       'about_our_service': 'About Our Service',
       'about_service_desc':
           'We provide reliable and affordable bus and flight booking services. Our experienced team is always ready to ensure your safe journey.',
+      'tpl_need_worker_title': 'Need Worker',
+      'tpl_need_worker_body':
+          'Need a worker?\nJob Name : \nExperience : \nAddress : \nSalary : \nTime : \nAccommodation : \nWeekly Holiday : \nContact : ',
+      'tpl_job_search_title': 'Searching Job',
+      'tpl_job_search_body':
+          'Need a job?\nJob Type : \nExperience : \nArea : \nTime : \nAccommodation : \nContact : ',
+      'tpl_rent_out_title': 'Rent Out',
+      'tpl_rent_out_body':
+          'Have a room to rent?\nType : \nOccupancy : \nRent : \nLocation : \nFacilities : \nExtra Cost : \nContact : ',
+      'tpl_rent_need_title': 'Rent Needed',
+      'tpl_rent_need_body':
+          'Need a room?\nType : \nPerson count : \nArea : \nBudget : \nContact : ',
+      'tpl_sell_title': 'Want to Sell',
+      'tpl_sell_body':
+          'Want to sell something?\nProduct Name : \nCondition : \nLocation : \nPrice : \nContact : ',
+      'tpl_buy_title': 'Want to Buy',
+      'tpl_buy_body':
+          'Want to buy something?\nProduct Name : \nBudget : \nCondition : \nArea : \nContact : ',
     },
     'bn_BD': {
+      'exit_app': 'অ্যাপ বন্ধ করুন',
+      'exit_confirmation': 'আপনি কি নিশ্চিত যে আপনি অ্যাপটি বন্ধ করতে চান?',
+      'yes': 'হ্যাঁ',
+      'no': 'না',
       'amount_to_pay': 'পরিশোধের পরিমাণ',
       'amount_to_receive': 'গ্রহণের পরিমাণ',
       'login_title': 'আপনার অ্যাকাউন্টে লগইন করুন',
@@ -896,7 +942,7 @@ class AppTranslations extends Translations {
       'all__restaurants': 'সব রেস্টুরেন্ট',
       'search_restaurants': 'রেস্টুরেন্ট খুঁজুন...',
       'no_restaurants_found': 'কোনো রেস্টুরেন্ট পাওয়া যায়নি',
-      'organizations': 'প্রতিষ্ঠান',
+      'organization': 'প্রতিষ্ঠান',
       'all_organizations': 'সব প্রতিষ্ঠান',
       'all__organizations': 'সব প্রতিষ্ঠান',
       'search_organizations': 'প্রতিষ্ঠান খুঁজুন...',
@@ -910,6 +956,7 @@ class AppTranslations extends Translations {
       'articles': 'নিবন্ধ',
       'sednex_travel': 'সেডনেক্স ট্রাভেল',
       'see_details': 'বিস্তারিত দেখুন',
+      'see_more': 'আরও দেখুন',
       'running': 'চলমান',
       'upcoming': 'আসন্ন',
       'completed': 'সম্পন্ন',
@@ -934,12 +981,12 @@ class AppTranslations extends Translations {
           'অনুগ্রহ করে আপনার পোস্টের জন্য সবচেয়ে উপযুক্ত ক্যাটাগরি বেছে নিন',
       'whats_on_your_mind': 'আপনার মনে কী আছে?',
       'post': 'পোস্ট করুন',
-      'general': 'সাধারণ',
-      'jobs': 'চাকরি',
+      'general': 'সব পোস্ট',
+      'jobs': 'চাকরির পোস্ট',
       'buy_sell': 'কেনা-বেচা',
       'questions': 'প্রশ্ন',
-      'rental': 'ভাড়া',
-      'help': 'সাহায্য',
+      'rental': 'বাসা ভাড়া',
+      'help': 'সাহায্যের অনুরোধ',
       'post_success_title': 'পোস্ট তৈরি সফল হয়েছে',
       'post_success_desc':
           'আপনার পোস্টটি সফলভাবে তৈরি করা হয়েছে এবং এখন কমিউনিটির সবার কাছে দৃশ্যমান।',
@@ -998,6 +1045,24 @@ class AppTranslations extends Translations {
       'enter_amount': 'পরিমাণ লিখুন...',
       'amount_to_send_total': 'সর্বমোট পাঠানোর পরিমাণ',
       'estimated_amount': 'আনুমানিক পরিমাণ',
+      'tpl_need_worker_title': 'কর্মী প্রয়োজন',
+      'tpl_need_worker_body':
+          'কাজ আছে কর্মি লাগবে?\nকাজের নাম : \nঅভিজ্ঞতা : \nঠিকানা : \nবেতন : \nসময় : \nথাকার জায়গা : \nসাপ্তাহিক ছুটি : \nযোগাযোগ : ',
+      'tpl_job_search_title': 'চাকরি খুঁজছি',
+      'tpl_job_search_body':
+          'একটা কাজ লাগবে?\nকাজের ধরন : \nঅভিজ্ঞতা : \nএলাকা : \nসময় : \nথাকার জায়গা : \nযোগাযোগ : ',
+      'tpl_rent_out_title': 'বাসা ভাড়া দিবো',
+      'tpl_rent_out_body':
+          'রুম আছে ভাড়া দিব?\nটাইপ : \nথাকা যাবে : \nভাড়া : \nলোকেশন : \nসুবিধা : \nঅতিরিক্ত খরচ : \nযোগাযোগ : ',
+      'tpl_rent_need_title': 'বাসা ভাড়া প্রয়োজন',
+      'tpl_rent_need_body':
+          'আমার থাকার জন্য রুম লাগবে?\nটাইপ : \nকতজন : \nএলাকা : \nবাজেট : \nযোগাযোগ : ',
+      'tpl_sell_title': 'বিক্রি করতে চাই',
+      'tpl_sell_body':
+          'আমি বিক্রি করতে চাই?\nপণ্যের নাম : \nঅবস্থা : \nলোকেশন : \nদাম : \nযোগাযোগ : ',
+      'tpl_buy_title': 'কিনতে চাই',
+      'tpl_buy_body':
+          'আমি কিনতে চাই?\nপণ্যের নাম : \nবাজেট : \nঅবস্থা : \nএলাকা : \nযোগাযোগ : ',
       'bkash_commission_note':
           'স্থান ভেদে কমিশনের হার পরিবর্তিত হতে পারে। প্রতি হাজারে স্ট্যান্ডার্ড কমিশন ২০ টাকা।',
       'note': 'নোট',

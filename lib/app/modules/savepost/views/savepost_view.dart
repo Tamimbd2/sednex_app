@@ -15,10 +15,7 @@ class SavepostView extends GetView<SavepostController> {
       appBar: AppBar(
         title: Text(
           'saved_posts'.tr,
-          style: AppTextStyles.headingSmall.copyWith(
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         backgroundColor: const Color(0xFF1E63FF),
         iconTheme: const IconThemeData(color: Colors.white),

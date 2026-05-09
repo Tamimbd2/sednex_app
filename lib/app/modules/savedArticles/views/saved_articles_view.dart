@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
+
 import '../controllers/saved_articles_controller.dart';
 import '../../articles/controllers/articles_controller.dart';
+import '../../articles/views/articledetails.dart';
 import '../../../core/theme/app_text_styles.dart';
 
 class SavedArticlesView extends GetView<SavedArticlesController> {
@@ -16,10 +17,7 @@ class SavedArticlesView extends GetView<SavedArticlesController> {
       appBar: AppBar(
         title: Text(
           'saved_articles'.tr,
-          style: AppTextStyles.headingSmall.copyWith(
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         elevation: 0,
         backgroundColor: const Color(0xFF1E63FF),
@@ -41,9 +39,9 @@ class SavedArticlesView extends GetView<SavedArticlesController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.newspaper,
+                  Icons.bookmark_outline,
                   size: 64,
-                  color: Colors.grey[300],
+                  color: Colors.grey[200],
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -64,7 +62,7 @@ class SavedArticlesView extends GetView<SavedArticlesController> {
           child: ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: controller.articles.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 16),
+            separatorBuilder: (context, index) => const SizedBox(height: 0), // ArticlesView uses margin in card
             itemBuilder: (context, index) {
               final article = controller.articles[index];
               return _buildArticleCard(context, article);
@@ -76,55 +74,75 @@ class SavedArticlesView extends GetView<SavedArticlesController> {
   }
 
   Widget _buildArticleCard(BuildContext context, Article article) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: InkWell(
-        onTap: () {
-          // Navigate to details if needed
-          // Get.toNamed(Routes.ARTICLE_DETAILS, arguments: article);
-        },
-        borderRadius: BorderRadius.circular(16),
+    bool isNetworkImage = article.imageUrl.startsWith('http');
+
+    return GestureDetector(
+      onTap: () {
+        Get.to(
+          () => const ArticleDetailsView(),
+          arguments: {
+            'id': article.id,
+            'title': article.title,
+            'description': article.description,
+            'imageUrl': article.imageUrl,
+            'date': article.date,
+            'fullContent': article.fullContent,
+            'category': article.category,
+            'authorName': article.authorName,
+          },
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 15,
+              spreadRadius: 0,
+              offset: const Offset(0, 8),
+            ),
+          ],
+          border: Border.all(color: Colors.grey[100]!),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image
-            ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              ),
-              child: CachedNetworkImage(
-                imageUrl: article.imageUrl,
-                height: 180,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: Colors.grey[100],
-                  child: const Center(child: CircularProgressIndicator()),
+            // Article Image - Only show if not empty
+            if (article.imageUrl.isNotEmpty)
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(20),
                 ),
-                errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[100],
-                  child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                child: SizedBox(
+                  height: 180,
+                  width: double.infinity,
+                  child: isNetworkImage
+                      ? CachedNetworkImage(
+                          imageUrl: article.imageUrl,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) => Container(
+                            color: Colors.grey[50],
+                            child: Icon(
+                              Icons.image_not_supported_outlined,
+                              color: Colors.grey[300],
+                              size: 40,
+                            ),
+                          ),
+                        )
+                      : Image.asset(article.imageUrl, fit: BoxFit.cover),
                 ),
               ),
-            ),
+
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Metadata Row: Category & Time
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -132,46 +150,131 @@ class SavedArticlesView extends GetView<SavedArticlesController> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1E63FF).withValues(alpha: 0.1),
+                          color: const Color(0xFF1E63FF).withValues(alpha: 0.06),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           article.category,
-                          style: AppTextStyles.bodySmall.copyWith(
+                          style: AppTextStyles.label.copyWith(
+                            color: const Color(0xFF1E63FF),
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF1E63FF),
                           ),
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.bookmark,
-                          color: Color(0xFF1E63FF),
+                      const SizedBox(width: 8),
+                      Icon(Icons.circle, size: 4, color: Colors.grey[300]),
+                      const SizedBox(width: 8),
+                      Text(
+                        _smartDate(article.date),
+                        style: AppTextStyles.caption.copyWith(
+                          color: Colors.grey[500],
+                          fontWeight: FontWeight.w400,
                         ),
-                        onPressed: () => controller.toggleSaved(article),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
+
+                  // Title
                   Text(
-                    article.title,
+                    _parseHtml(article.title),
+                    style: AppTextStyles.headingSmall.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF1A1A1A),
+                      height: 1.3,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.bodyLarge.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF101727),
-                    ),
                   ),
                   const SizedBox(height: 8),
+
+                  // Description
                   Text(
-                    article.description,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                    _parseHtml(article.description),
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: const Color(0xFF697282),
+                      color: Colors.grey[600],
                       height: 1.5,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Actions Row: Read More and Save
+                  Row(
+                    children: [
+                      // Read More Button
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(
+                            () => const ArticleDetailsView(),
+                            arguments: {
+                              'id': article.id,
+                              'title': article.title,
+                              'description': article.description,
+                              'imageUrl': article.imageUrl,
+                              'date': article.date,
+                              'fullContent': article.fullContent,
+                              'category': article.category,
+                              'authorName': article.authorName,
+                            },
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1E63FF).withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'read_more'.tr,
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: const Color(0xFF1E63FF),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Icon(
+                                Icons.arrow_forward_rounded,
+                                size: 14,
+                                color: Color(0xFF1E63FF),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      // Save Button (Toggle)
+                      Obx(() {
+                        final isSaved = article.isSaved.value;
+                        return GestureDetector(
+                          onTap: () => controller.toggleSaved(article),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: isSaved ? const Color(0xFF1E63FF) : Colors.grey[50],
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: isSaved ? Colors.transparent : Colors.grey[200]!,
+                              ),
+                            ),
+                            child: Icon(
+                              isSaved ? Icons.bookmark : Icons.bookmark_border,
+                              size: 18,
+                              color: isSaved ? Colors.white : Colors.grey[700],
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
                   ),
                 ],
               ),
@@ -180,5 +283,29 @@ class SavedArticlesView extends GetView<SavedArticlesController> {
         ),
       ),
     );
+  }
+
+  String _smartDate(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final articleDay = DateTime(date.year, date.month, date.day);
+    final diff = today.difference(articleDay).inDays;
+
+    if (diff == 0) return 'today'.tr;
+    if (diff == 1) return 'yesterday'.tr;
+
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+    return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]} ${date.year}';
+  }
+
+  String _parseHtml(String htmlString) {
+    if (htmlString.isEmpty) return "";
+    return htmlString
+        .replaceAll('&nbsp;', ' ')
+        .replaceAll(RegExp(r'<[^>]*>'), '')
+        .trim();
   }
 }

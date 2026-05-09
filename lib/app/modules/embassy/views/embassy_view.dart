@@ -23,7 +23,7 @@ class EmbassyView extends GetView<EmbassyController> {
         ),
         title: Text(
           'embassies'.tr,
-          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
         bottom: PreferredSize(

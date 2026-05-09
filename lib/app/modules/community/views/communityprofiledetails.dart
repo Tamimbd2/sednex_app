@@ -108,7 +108,7 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
           onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back, color: Colors.white),
         ),
-        title: Text('Profile Details', style: AppTextStyles.headingMedium.copyWith(color: Colors.white)),
+        title: Text('Profile Details', style: AppTextStyles.appBarTitle),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF)))

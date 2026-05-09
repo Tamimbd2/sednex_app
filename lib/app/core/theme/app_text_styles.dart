@@ -11,6 +11,12 @@ class AppTextStyles {
       GoogleFonts.notoSansBengali().fontFamily!;
 
   static List<String> get fontFallbacks => [bengaliFontFamily];
+  
+  static TextStyle get appBarTitle => GoogleFonts.poppins(
+    fontSize: 22,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+  ).copyWith(fontFamilyFallback: fontFallbacks);
 
   /// Headings
   static TextStyle get headingLarge => GoogleFonts.poppins(

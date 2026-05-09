@@ -263,82 +263,114 @@ class DashboardController extends GetxController {
     final results = <String, List<dynamic>>{};
 
     try {
-      // Parallel fetching for better performance
-      await Future.wait([
-        _searchSection(
-          'Articles',
-          'api/article/',
-          query,
-          (data) => data['articles'] ?? data['data'] ?? [],
-        ),
-        _searchSection(
-          'Products',
-          'api/products/',
-          query,
-          (data) => data['products'] ?? (data is List ? data : []),
-        ),
-        _searchSection(
-          'Community Posts',
-          'api/post/',
-          query,
-          (data) => data['posts'] ?? [],
-        ),
-        _searchSection(
-          'Hospitals',
-          'api/sections/hospitals/items',
-          query,
-          (data) => data['items'] ?? [],
-        ),
-        _searchSection(
-          'Restaurants',
-          'api/sections/restaurents/items',
-          query,
-          (data) => data['items'] ?? [],
-        ),
-        _searchSection(
-          'Organizations',
-          'api/sections/organization/items',
-          query,
-          (data) => data['items'] ?? [],
-        ),
-        _searchSection(
-          'Embassies',
-          'api/sections/embassy/items',
-          query,
-          (data) => data['items'] ?? [],
-        ),
-        _searchSection(
-          'Sednex Travel',
-          'api/local-tour/',
-          query,
-          (data) => data['tours'] ?? [],
-        ),
-      ]).then((lists) {
-        final sections = [
-          'Articles',
-          'Products',
-          'Community Posts',
-          'Hospitals',
-          'Restaurants',
-          'Organizations',
-          'Embassies',
-          'Sednex Travel',
-        ];
-        for (int i = 0; i < lists.length; i++) {
-          if (lists[i].isNotEmpty) {
-            results[sections[i]] = lists[i];
-          }
-        }
-      });
+      // Use the unified search API provided
+      final response = await apiService.getData('api/search', query: {'q': query});
+      
+      if (response.statusCode == 200) {
+        final body = response.body;
+        
+        // Map the response keys to display titles as used in the View
+        final sectionMap = {
+          'articles': 'Articles',
+          'products': 'Products',
+          'posts': 'Community Posts',
+          'hospitals': 'Hospitals',
+          'restaurents': 'Restaurants',
+          'organization': 'Organizations',
+          'embassy': 'Embassies',
+          'tours': 'Sednex Travel',
+        };
 
-      // Search in Services (locally available)
+        if (body is Map) {
+          // 1. Identify the list of items from various possible structures
+          dynamic itemsList;
+          if (body['items'] is List) {
+            itemsList = body['items'];
+          } else if (body['data'] is List) {
+            itemsList = body['data'];
+          } else if (body['data'] is Map && body['data']['items'] is List) {
+            itemsList = body['data']['items'];
+          }
+
+          // 2. Process the flat list if found (New Unified API)
+          if (itemsList is List) {
+            for (var item in itemsList) {
+              if (item is Map) {
+                final model = item['model']?.toString().toLowerCase() ?? '';
+                
+                // Use mapping for known models to match existing UI titles
+                final sectionMapping = {
+                  'article': 'Articles',
+                  'product': 'Products',
+                  'auctionitem': 'Products',
+                  'item': 'Products',
+                  'post': 'Community Posts',
+                  'hospital': 'Hospitals',
+                  'restaurent': 'Restaurants',
+                  'organization': 'Organizations',
+                  'embassy': 'Embassies',
+                  'tour': 'Sednex Travel',
+                  'localtour': 'Sednex Travel',
+                  'touristspot': 'Tourist Spots',
+                  'spot': 'Tourist Spots',
+                  'user': 'Users',
+                };
+
+                String section = sectionMapping[model] ?? 
+                                (model.isNotEmpty ? model.capitalizeFirst! : 'Search Results');
+                
+                // Special check for users if model is missing but role exists
+                if ((model.isEmpty || section == 'Search Results') && item.containsKey('role')) {
+                  section = 'Users';
+                }
+
+                results.putIfAbsent(section, () => []).add({
+                  ...Map<String, dynamic>.from(item),
+                  '_search_section': section,
+                });
+              }
+            }
+          }
+
+          // Fallback: Check for grouped keys if 'items' is empty or not present
+          sectionMap.forEach((apiKey, displayTitle) {
+            var items = body[apiKey];
+            
+            // Handle nested data structure if present
+            if (items is Map && items['items'] is List) {
+              items = items['items'];
+            } else if (items is Map && items['data'] is List) {
+              items = items['data'];
+            }
+
+            if (items is List && items.isNotEmpty) {
+              // Only add if not already present from the 'items' loop to avoid duplicates
+              final existing = results[displayTitle] ?? [];
+              for (var item in items) {
+                results.putIfAbsent(displayTitle, () => []).add({
+                  ...Map<String, dynamic>.from(item),
+                  '_search_section': displayTitle,
+                });
+              }
+            }
+          });
+        }
+      }
+      
+      // Search in Services (locally available as they are fetched on init)
       final services = servicesList.where((s) {
         final name = (s['title'] ?? s['name'] ?? s['label'] ?? '')
             .toString()
             .toLowerCase();
         return name.contains(query.toLowerCase());
       }).toList();
-      if (services.isNotEmpty) results['Services'] = services;
+      
+      if (services.isNotEmpty) {
+        results['Services'] = services.map((s) => {
+          ...Map<String, dynamic>.from(s),
+          '_search_section': 'Services',
+        }).toList();
+      }
 
       searchResults.assignAll(results);
     } catch (e) {
@@ -346,53 +378,6 @@ class DashboardController extends GetxController {
     } finally {
       isSearchLoading.value = false;
     }
-  }
-
-  Future<List<dynamic>> _searchSection(
-    String section,
-    String url,
-    String query,
-    List<dynamic> Function(dynamic) extractor,
-  ) async {
-    try {
-      final response = await apiService.getData(url);
-      if (response.statusCode == 200) {
-        var body = response.body;
-        if (body is String) body = jsonDecode(body);
-
-        final List raw = extractor(body);
-        final filtered = raw.where((item) {
-          final mainText =
-              (item['title'] ??
-                      item['name'] ??
-                      item['description'] ??
-                      item['content'] ??
-                      '')
-                  .toString()
-                  .toLowerCase();
-          final authorName =
-              (item['author'] is Map ? (item['author']['name'] ?? '') : '')
-                  .toString()
-                  .toLowerCase();
-          final queryLower = query.toLowerCase();
-          return mainText.contains(queryLower) ||
-              authorName.contains(queryLower);
-        }).toList();
-
-        // Match the model expected by the UI for consistent display
-        return filtered
-            .map(
-              (item) => {
-                ...item,
-                '_search_section': section, // Metadata for navigation if needed
-              },
-            )
-            .toList();
-      }
-    } catch (e) {
-      debugPrint("Error searching section $section: $e");
-    }
-    return [];
   }
 
   // --- Post Interaction Proxies for Search Results ---

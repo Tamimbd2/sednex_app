@@ -26,10 +26,7 @@ class MypostView extends GetView<MypostController> {
       appBar: AppBar(
         title: Text(
           'my_post'.tr,
-          style: AppTextStyles.headingSmall.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
         backgroundColor: AppColors.primary,

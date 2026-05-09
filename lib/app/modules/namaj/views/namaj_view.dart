@@ -34,10 +34,7 @@ class NamajView extends GetView<NamajController> {
         ),
         title: Text(
           'prayer_schedule'.tr,
-          style: AppTextStyles.headingSmall.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
       ),

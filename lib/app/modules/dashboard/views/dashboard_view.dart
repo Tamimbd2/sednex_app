@@ -24,6 +24,8 @@ import '../../restaurents/views/restaurantdetails.dart';
 import '../../organization/views/detailsorg.dart';
 import '../../embassy/views/embassydetails.dart';
 import '../../localtour/views/toursdetails.dart';
+import '../../community/views/communityprofiledetails.dart';
+import '../../touristSpot/views/toursitspotdetails.dart';
 
 class DashboardView extends GetView<DashboardController> {
   const DashboardView({super.key});
@@ -410,7 +412,7 @@ class DashboardView extends GetView<DashboardController> {
                 'time': item['createdAt'] != null
                     ? _timeAgo(item['createdAt'])
                     : '',
-                'content': item['description'] ?? item['content'] ?? '',
+                'content': _stripHtml(item['description'] ?? item['content'] ?? ''),
                 'likes': item['loveCount'] ?? 0,
                 'comments': item['commentsCount'] ?? 0,
                 'isLiked': item['isLiked'] ?? false,
@@ -452,10 +454,12 @@ class DashboardView extends GetView<DashboardController> {
                 ),
               ),
               subtitle: Text(
-                item['description'] ??
-                    item['content'] ??
-                    item['category'] ??
-                    '',
+                _stripHtml(
+                  item['description'] ??
+                      item['content'] ??
+                      item['category'] ??
+                      '',
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.bodySmall.copyWith(
@@ -590,6 +594,43 @@ class DashboardView extends GetView<DashboardController> {
         // Navigate to full view for specific service
         Get.toNamed(Routes.ESSENTIAL_SERVICE);
         break;
+      case 'Users':
+        Get.to(() => CommunityProfileDetailsView(member: item));
+        break;
+      case 'Tourist Spots':
+        Get.to(
+          () => const TouristSpotDetailsView(),
+          arguments: {
+            'title': item['name'] ?? item['title'],
+            'description': item['description'] ?? item['content'] ?? '',
+            'image': item['image'] ?? item['imageUrl'] ?? '',
+          },
+        );
+        break;
+      default:
+        // Generic fallback for any other sections that might map to existing views
+        if (section.toLowerCase().contains('product') || 
+            section.toLowerCase().contains('item')) {
+          Get.toNamed(Routes.PRODUCT_DETAILS, arguments: item);
+        } else if (section.toLowerCase().contains('article')) {
+          Get.to(
+            () => const ArticleDetailsView(),
+            arguments: {
+              'title': item['title'],
+              'description': item['description'],
+              'imageUrl': item['image'] ?? item['imageUrl'],
+              'date': item['createdAt'] != null
+                  ? DateTime.parse(item['createdAt'])
+                  : DateTime.now(),
+              'fullContent': item['fullContent'] ?? [],
+              'category': item['category'] ?? 'General',
+              'authorName': item['author'] is Map
+                  ? item['author']['name']
+                  : 'Admin',
+            },
+          );
+        }
+        break;
     }
   }
 
@@ -658,6 +699,9 @@ class DashboardView extends GetView<DashboardController> {
     } else if (item['logoPath'] != null &&
         item['logoPath'].toString().isNotEmpty) {
       imageUrl = item['logoPath'].toString();
+    } else if (item['profileImage'] != null &&
+        item['profileImage'].toString().isNotEmpty) {
+      imageUrl = item['profileImage'].toString();
     }
 
     if (imageUrl == null || imageUrl.isEmpty) {
@@ -893,5 +937,14 @@ class DashboardView extends GetView<DashboardController> {
           ),
         ) ??
         false;
+  }
+
+  String _stripHtml(String htmlString) {
+    if (htmlString.isEmpty) return '';
+    // Removes HTML tags and replaces common entities
+    return htmlString
+        .replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), ' ')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
   }
 }

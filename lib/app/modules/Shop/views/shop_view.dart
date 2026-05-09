@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../core/theme/app_text_styles.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../../../routes/app_pages.dart';
@@ -28,12 +29,7 @@ class ShopView extends GetView<ShopController> {
         ),
         title: Text(
           'premium_shop'.tr,
-          style: GoogleFonts.outfit( // Using Outfit for a more modern, premium feel
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            color: Colors.white,
-            letterSpacing: 0.5,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),

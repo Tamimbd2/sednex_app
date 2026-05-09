@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../core/theme/app_text_styles.dart';
+
 import '../../../routes/app_pages.dart';
 import '../controllers/shop_controller.dart';
 
@@ -35,11 +37,7 @@ class AllProductsView extends GetView<ShopController> {
         ),
         title: Text(
           category ?? 'all_products'.tr,
-          style: GoogleFonts.outfit(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
         elevation: 0,

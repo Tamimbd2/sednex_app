@@ -24,7 +24,7 @@ class OrganizationView extends GetView<OrganizationController> {
         ),
         title: Text(
           'organizations'.tr,
-          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
         bottom: PreferredSize(

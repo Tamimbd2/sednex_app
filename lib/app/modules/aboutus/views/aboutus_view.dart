@@ -29,11 +29,7 @@ class AboutusView extends GetView<AboutusController> {
         ),
         title: Text(
           'about_us'.tr,
-          style: AppTextStyles.headingMedium.copyWith(
-            fontWeight: FontWeight.w700,
-            fontSize: 20,
-            color: Colors.white,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),

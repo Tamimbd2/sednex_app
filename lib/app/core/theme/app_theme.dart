@@ -34,10 +34,7 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle.light,
-        titleTextStyle: AppTextStyles.headingSmall.copyWith(
-          color: Colors.white,
-          letterSpacing: -0.3,
-        ),
+        titleTextStyle: AppTextStyles.appBarTitle,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
 

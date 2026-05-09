@@ -24,7 +24,7 @@ class RestaurentsView extends GetView<RestaurentsController> {
         ),
         title: Text(
           'restaurants'.tr,
-          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
         bottom: PreferredSize(

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:sednexapp/app/core/theme/app_text_styles.dart';
 import '../controllers/community_feed_controller.dart';
 import '../widgets/community_post_card.dart';
 
@@ -33,7 +34,7 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
           ? AppBar(
               title: Text(
                 'community_feed'.tr,
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                style: AppTextStyles.appBarTitle,
               ),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),

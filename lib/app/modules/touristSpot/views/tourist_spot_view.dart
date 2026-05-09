@@ -47,7 +47,7 @@ class TouristSpotView extends GetView<TouristSpotController> {
         ),
         title: Text(
           'tourist_spots'.tr,
-          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
       ),

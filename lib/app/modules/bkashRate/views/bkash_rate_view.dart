@@ -24,11 +24,7 @@ class BkashRateView extends GetView<BkashRateController> {
         ),
         title: Text(
           'rate_calculator'.tr,
-          style: _getStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            color: Colors.white,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         leading: IconButton(
           icon: const Icon(

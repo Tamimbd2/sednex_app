@@ -27,11 +27,7 @@ class HelpView extends GetView<HelpController> {
         ),
         title: Text(
           'faq_help_title'.tr,
-          style: AppTextStyles.headingMedium.copyWith(
-            fontWeight: FontWeight.w700,
-            fontSize: 20,
-            color: Colors.white,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),

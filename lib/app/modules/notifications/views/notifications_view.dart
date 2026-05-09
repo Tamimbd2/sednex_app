@@ -17,10 +17,7 @@ class NotificationsView extends GetView<NotificationsController> {
       appBar: AppBar(
         title: Text(
           'notifications_title'.tr,
-          style: AppTextStyles.headingSmall.copyWith(
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         backgroundColor: const Color(0xFF1E63FF),
         iconTheme: const IconThemeData(color: Colors.white),

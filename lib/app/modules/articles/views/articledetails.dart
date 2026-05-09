@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:sednexapp/app/modules/articles/controllers/articles_controller.dart';
+import 'package:sednexapp/app/modules/savedArticles/controllers/saved_articles_controller.dart';
 import '../../../core/theme/app_text_styles.dart';
 
 class ArticleDetailsView extends StatelessWidget {
@@ -20,10 +21,34 @@ class ArticleDetailsView extends StatelessWidget {
     final DateTime date = args['date'] ?? DateTime.now();
     final List<dynamic> fullContent = args['fullContent'] ?? [];
     
-    // Find articles controller to handle saving
-    final controller = Get.find<ArticlesController>();
+    // Find available controller to handle saving (either ArticlesController or SavedArticlesController)
+    dynamic controller;
+    if (Get.isRegistered<ArticlesController>()) {
+      controller = Get.find<ArticlesController>();
+    } else if (Get.isRegistered<SavedArticlesController>()) {
+      controller = Get.find<SavedArticlesController>();
+    }
+
     final articleId = args['id'] ?? '';
-    final article = controller.articles.firstWhereOrNull((a) => a.id == articleId);
+    
+    // Find the article in whichever controller we have
+    Article? article;
+    if (controller != null) {
+      final List<Article> articleList = controller.articles;
+      article = articleList.firstWhereOrNull((a) => a.id == articleId);
+    }
+    
+    // If not found in controller, create a temporary one from args for viewing
+    article ??= Article(
+      id: articleId,
+      title: title,
+      description: description,
+      imageUrl: args['imageUrl'] ?? '',
+      date: date,
+      fullContent: fullContent,
+      category: category,
+      isSaved: true, // If we came from SavedArticlesView, it's likely saved
+    );
 
     final String formattedDate = _formatDate(date);
 
@@ -39,9 +64,7 @@ class ArticleDetailsView extends StatelessWidget {
         ),
         title: Text(
           'Article Details',
-          style: AppTextStyles.headingSmall.copyWith(
-            color: Colors.white,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
       ),
@@ -76,9 +99,9 @@ class ArticleDetailsView extends StatelessWidget {
               if (article != null) ...[
                 const SizedBox(width: 8),
                 Obx(() {
-                  final isSaved = article.isSaved.value;
+                  final isSaved = article!.isSaved.value;
                   return GestureDetector(
-                    onTap: () => controller.toggleSaved(article),
+                    onTap: () => controller.toggleSaved(article!),
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(

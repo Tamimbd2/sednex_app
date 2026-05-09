@@ -22,7 +22,7 @@ class LearnarabicView extends GetView<LearnarabicController> {
         ),
         title: Text(
           'learn_arabic'.tr,
-          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
       ),

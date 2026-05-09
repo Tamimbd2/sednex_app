@@ -22,7 +22,7 @@ class ArticlesView extends GetView<ArticlesController> {
         ),
         title: Text(
           'articles'.tr,
-          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
       ),

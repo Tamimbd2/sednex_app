@@ -112,40 +112,44 @@ class CreatepostView extends GetView<CreatepostController> {
                   const SizedBox(height: 12),
 
                   // Quick Templates
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: controller.quickTemplates.map((template) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: ActionChip(
-                              label: Text(
-                                template['title']!.tr,
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              onPressed: () => controller.applyTemplate(
-                                template['textKey']!,
-                                template['category']!,
-                              ),
-                              backgroundColor: const Color(0xFFF3F4F6),
-                              side: BorderSide.none,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                                vertical: 0,
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: controller.quickTemplates.map((template) {
+                      return ActionChip(
+                        label: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              template['title']!.tr,
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                            const SizedBox(width: 6),
+                            const Icon(
+                              Icons.add_circle_rounded,
+                              size: 16,
+                              color: Color(0xFF697282),
+                            ),
+                          ],
+                        ),
+                        onPressed: () => controller.applyTemplate(
+                          template['textKey']!,
+                          template['category']!,
+                        ),
+                        backgroundColor: const Color(0xFFF3F4F6),
+                        side: BorderSide.none,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 0,
+                        ),
+                      );
+                    }).toList(),
                   ),
 
                   const SizedBox(height: 16),

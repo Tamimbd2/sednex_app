@@ -142,13 +142,22 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
         final social = detail['socialLinks'] ?? {};
         final List offSchedules = detail['offDaySchedules'] ?? [];
 
-        // Find coverPhoto from any detail entry
-        String coverPhoto = '';
-        for (final d in detailsList) {
-          if (d['coverPhoto'] != null && d['coverPhoto'].toString().isNotEmpty) {
-            coverPhoto = d['coverPhoto'].toString();
-            break;
+        // Find coverPhoto: check root, then item, then details list
+        String coverPhoto = body['coverPhoto']?.toString() ?? 
+                           itemData['coverPhoto']?.toString() ?? '';
+        
+        if (coverPhoto.isEmpty) {
+          for (final d in detailsList) {
+            if (d['coverPhoto'] != null && d['coverPhoto'].toString().isNotEmpty) {
+              coverPhoto = d['coverPhoto'].toString();
+              break;
+            }
           }
+        }
+
+        // Final fallback: use item image if cover is still empty
+        if (coverPhoto.isEmpty) {
+          coverPhoto = itemData['image'] ?? itemData['icon'] ?? '';
         }
 
         setState(() {
@@ -274,70 +283,48 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
   // ── Premium Header ──────────────────────────────────────────────
   Widget _premiumHeader() {
     final hasCover = _coverPhoto.isNotEmpty;
-    final hasAvatar = _imageUrl.isNotEmpty;
-
-    if (!hasCover && !hasAvatar && _name.isEmpty) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (hasCover || hasAvatar)
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              // Cover Photo
-              if (hasCover)
-                Container(
-                  height: 180,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF1F5F9),
-                  ),
-                  child: Image.network(
-                    _coverPhoto,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-                  ),
-                )
-              else if (hasAvatar)
-                const SizedBox(height: 100),
-
-              // Profile Avatar
-              if (hasAvatar)
-                Positioned(
-                  bottom: hasCover ? -40 : 0,
-                  left: 20,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.08),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: ClipOval(
-                      child: Container(
-                        width: 80,
-                        height: 80,
-                        color: const Color(0xFFF8FAFC),
-                        child: Image.network(
-                          _imageUrl,
-                          fit: BoxFit.contain,
-                          errorBuilder: (_, __, ___) => const Icon(Icons.business_rounded, size: 40, color: Color(0xFF94A3B8)),
-                        ),
-                      ),
-                    ),
+        // Cover Photo / Top Hero Section
+        Stack(
+          children: [
+            Container(
+              height: 240,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Color(0xFFE2E8F0),
+              ),
+              child: hasCover
+                  ? Image.network(
+                      _coverPhoto,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => _coverFallback(),
+                    )
+                  : _coverFallback(),
+            ),
+            // Gradient Overlay
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.1),
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.4),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
                   ),
                 ),
-            ],
-          ),
+              ),
+            ),
+          ],
+        ),
         
-        SizedBox(height: (hasCover && hasAvatar) ? 50 : (hasAvatar ? 10 : 20)),
+        const SizedBox(height: 24),
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -345,31 +332,22 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (_name.isNotEmpty)
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        _name,
-                        style: _getStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF0F172A),
-                          letterSpacing: -0.5,
-                          text: _name,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    const Icon(Icons.verified_rounded, color: AppColors.accent, size: 20),
-                  ],
+                Text(
+                  _name,
+                  style: _getStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF0F172A),
+                    letterSpacing: -0.5,
+                    text: _name,
+                  ),
                 ),
               if (_tagline.isNotEmpty) ...[
-                const SizedBox(height: 2),
+                const SizedBox(height: 4),
                 Text(
                   _tagline,
                   style: _getStyle(
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: FontWeight.w400,
                     color: const Color(0xFF64748B),
                     text: _tagline,
@@ -378,15 +356,23 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
-              if (_category.isNotEmpty) ...[
-                const SizedBox(height: 6),
-                Text(
-                  _category,
-                  style: _getStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.primary,
-                    text: _category,
+              if (_category.isNotEmpty || _name.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    _category.isEmpty ? 'organization'.tr : _category.toUpperCase(),
+                    style: _getStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primary,
+                      letterSpacing: 1.0,
+                      text: _category,
+                    ),
                   ),
                 ),
               ],
@@ -860,6 +846,28 @@ class _OrganizationDetailsViewState extends State<OrganizationDetailsView>
       ),
     );
   }
+
+  Widget _coverFallback() => Container(
+    color: const Color(0xFFF1F5F9),
+    child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.business_rounded, size: 60, color: Colors.grey[300]),
+          const SizedBox(height: 12),
+          Text(
+            'SEDNEX ORGANIZATION',
+            style: AppTextStyles.bodyMedium.copyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: Colors.grey[400],
+              letterSpacing: 2,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 // ── Data Classes ──────────────────────────────────────────────────────

@@ -23,11 +23,7 @@ class GoldRateView extends GetView<GoldRateController> {
         ),
         title: Text(
           'gold_rate'.tr,
-          style: _getStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            color: Colors.white,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         leading: IconButton(
           icon: const Icon(

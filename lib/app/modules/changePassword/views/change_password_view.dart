@@ -15,10 +15,7 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
       appBar: AppBar(
         title: Text(
           'reset_password'.tr,
-          style: AppTextStyles.headingSmall.copyWith(
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         iconTheme: const IconThemeData(color: Colors.white),
         leading: IconButton(

@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sednexapp/app/core/constants/url.dart';
-import 'package:sednexapp/app/core/theme/app_colors.dart';
 import 'package:get_storage/get_storage.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
 class RestaurantDetailsView extends StatefulWidget {
@@ -17,14 +17,17 @@ class RestaurantDetailsView extends StatefulWidget {
 
 class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
     with TickerProviderStateMixin {
-  late TabController _tabController;
   late AnimationController _animCtrl;
   late Animation<double> _fadeAnim;
   late Animation<Offset> _slideAnim;
 
+  int _selectedTabIndex = 0;
   bool _isLoading = true;
   String _name = '';
+  String _tagline = '';
   String _imageUrl = '';
+  String _coverPhoto = '';
+  String _category = '';
   String _phone = '';
   String _email = '';
   String _website = '';
@@ -36,7 +39,6 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
     _animCtrl = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
@@ -51,7 +53,6 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
 
   @override
   void dispose() {
-    _tabController.dispose();
     _animCtrl.dispose();
     super.dispose();
   }
@@ -60,7 +61,6 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
     final args = Get.arguments is Map ? Map<String, dynamic>.from(Get.arguments as Map) : <String, dynamic>{};
     final String id = args['id'] ?? '';
 
-    // Set basic info immediately from list args
     setState(() {
       _name = args['name'] ?? '';
       _imageUrl = args['logoPath'] ?? '';
@@ -88,9 +88,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
       if (!response.status.hasError) {
         var body = response.body;
         if (body is String) {
-          try {
-            body = jsonDecode(body);
-          } catch (_) {}
+          try { body = jsonDecode(body); } catch (_) {}
         }
 
         final itemData = body['item'] ?? {};
@@ -101,25 +99,41 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
         final about = detail['about'] ?? {};
         final List offSchedules = detail['offDaySchedules'] ?? [];
 
+        // Find coverPhoto: check root, then item, then details list
+        String coverPhoto = body['coverPhoto']?.toString() ?? 
+                           itemData['coverPhoto']?.toString() ?? '';
+        
+        if (coverPhoto.isEmpty) {
+          for (final d in detailsList) {
+            if (d['coverPhoto'] != null && d['coverPhoto'].toString().isNotEmpty) {
+              coverPhoto = d['coverPhoto'].toString();
+              break;
+            }
+          }
+        }
+
+        // Final fallback: use item image if cover is still empty
+        if (coverPhoto.isEmpty) {
+          coverPhoto = itemData['image'] ?? itemData['icon'] ?? '';
+        }
+
         setState(() {
           _name = itemData['name'] ?? _name;
           _imageUrl = itemData['image'] ?? itemData['icon'] ?? _imageUrl;
+          _coverPhoto = coverPhoto;
+          _category = itemData['category'] ?? 'Restaurant';
+          _tagline = detail['tagline'] ?? detail['note'] ?? '';
           _about = about['description'] ?? '';
           _phone = contact['mobile'] ?? contact['phone'] ?? '';
           _email = contact['email'] ?? '';
           _website = contact['website'] ?? '';
           _address = location['address'] ?? contact['direction'] ?? '';
           _services = List<String>.from(about['services'] ?? []);
-          final days = offSchedules
+          _offDays = offSchedules
               .map<String>((e) => e['day']?.toString() ?? '')
               .where((d) => d.isNotEmpty)
               .toList();
-          _offDays = days;
         });
-
-        debugPrint('Restaurant details loaded: $_name');
-      } else {
-        debugPrint('Restaurant details API error: ${response.statusText}');
       }
     } catch (e) {
       debugPrint('Restaurant detail error: $e');
@@ -131,27 +145,15 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
 
   Future<void> _launchUrl(String url) async {
     if (url.isEmpty) return;
-    final Uri uri;
-    if (url.startsWith('http') ||
-        url.startsWith('mailto:') ||
-        url.startsWith('tel:')) {
-      uri = Uri.parse(url);
-    } else {
-      uri = Uri.parse('https://$url');
-    }
-    try {
-      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-        Get.snackbar('Error', 'Could not open link');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Action not supported');
-    }
+    final uri = url.startsWith('http') || url.startsWith('mailto:') || url.startsWith('tel:')
+        ? Uri.parse(url) : Uri.parse('https://$url');
+    try { await launchUrl(uri, mode: LaunchMode.externalApplication); } catch (_) {}
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1E63FF),
         elevation: 0,
@@ -169,13 +171,14 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
           _name.isEmpty ? 'restaurants'.tr : _name,
           style: AppTextStyles.headingSmall.copyWith(
             color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      body: SafeArea(
-        child: _isLoading
+      body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(
                 color: AppColors.primary,
@@ -190,12 +193,8 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
                   physics: const BouncingScrollPhysics(),
                   child: Column(
                     children: [
-                      _profileCard(),
-                      if (_address.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        _locationRow(),
-                      ],
-                      const SizedBox(height: 16),
+                      _premiumHeader(),
+                      const SizedBox(height: 20),
                       _tabCard(),
                       const SizedBox(height: 40),
                     ],
@@ -203,256 +202,216 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
                 ),
               ),
             ),
-      ),
     );
   }
 
-  // ── Profile Card ─────────────────────────────────────────────────
-  Widget _profileCard() {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Logo
-          SizedBox(
-            width: 60,
-            height: 60,
-            child: _imageUrl.isNotEmpty
-                ? Image.network(
-                    _imageUrl,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) =>
-                        _avatarFallback(),
-                  )
-                : _avatarFallback(),
-          ),
-          const SizedBox(width: 14),
-          // Info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _name,
-                  style: AppTextStyles.headingSmall.copyWith(
-                    color: const Color(0xFF2C2C2C),
-                    height: 1.2,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        'restaurants'.tr,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.accent.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(
-                          color: AppColors.accent.withValues(alpha: 0.35),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.verified_rounded,
-                            color: AppColors.accent,
-                            size: 10,
-                          ),
-                          const SizedBox(width: 3),
-                          Text(
-                            'verified'.tr,
-                            style: AppTextStyles.bodySmall.copyWith(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFFB8860B),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // ── Premium Header ──────────────────────────────────────────────
+  Widget _premiumHeader() {
+    final hasCover = _coverPhoto.isNotEmpty;
 
-  Widget _avatarFallback() => const Icon(
-        Icons.restaurant_rounded,
-        size: 40,
-        color: Colors.grey,
-      );
-
-  // ── Location Row ─────────────────────────────────────────────────
-  Widget _locationRow() {
-    return GestureDetector(
-      onTap: () => _launchUrl(
-        'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}',
-      ),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Cover Photo / Top Hero Section
+        Stack(
           children: [
             Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(10),
+              height: 240,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Color(0xFFE2E8F0),
               ),
-              child: const Icon(
-                Icons.location_on_rounded,
-                color: AppColors.primary,
-                size: 18,
-              ),
+              child: hasCover
+                  ? Image.network(
+                      _coverPhoto,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => _coverFallback(),
+                    )
+                  : _coverFallback(),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                _address,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF2C2C2C),
-                  height: 1.4,
+            // Gradient Overlay
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.1),
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.4),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
                 ),
               ),
             ),
-            const Icon(
-              Icons.chevron_right_rounded,
-              color: Color(0xFFD1D5DB),
-              size: 20,
-            ),
           ],
         ),
-      ),
+        
+        const SizedBox(height: 24),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (_name.isNotEmpty)
+                Text(
+                  _name,
+                  style: AppTextStyles.headingMedium.copyWith(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF0F172A),
+                    letterSpacing: -0.5,
+                  ),
+                ),
+              if (_tagline.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Text(
+                  _tagline,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF64748B),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+              if (_category.isNotEmpty || _name.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    _category.toUpperCase(),
+                    style: AppTextStyles.label.copyWith(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primary,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-  // ── Tab Card ─────────────────────────────────────────────────────
+  Widget _coverFallback() => Container(
+    color: const Color(0xFFF1F5F9),
+    child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.restaurant_rounded, size: 60, color: Colors.grey[300]),
+          const SizedBox(height: 12),
+          Text(
+            'SEDNEX CUISINE',
+            style: AppTextStyles.bodyMedium.copyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: Colors.grey[400],
+              letterSpacing: 2,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  // ── Tab Card ──────────────────────────────────────────────────────
   Widget _tabCard() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: const Color(0xFFFFFFFF),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // Pill Tab Bar
+          // Custom Tab bar
           Container(
-            margin: const EdgeInsets.all(10),
-            padding: const EdgeInsets.all(3),
+            margin: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               color: const Color(0xFFF1F5F9),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(14),
             ),
-            child: TabBar(
-              controller: _tabController,
-              indicator: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(9),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.12),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              dividerColor: Colors.transparent,
-              labelColor: AppColors.primary,
-              unselectedLabelColor: const Color(0xFF9CA3AF),
-              labelStyle: AppTextStyles.bodyMedium.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-              unselectedLabelStyle: AppTextStyles.bodyMedium.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
-              tabs: [
-                Tab(text: 'about'.tr),
-                Tab(text: 'contact'.tr),
+            child: Row(
+              children: [
+                _tabItem('about'.tr, 0),
+                _tabItem('contact'.tr, 1),
               ],
             ),
           ),
-          SizedBox(
-            height: 460,
-            child: TabBarView(
-              controller: _tabController,
-              children: [_aboutTab(), _contactTab()],
-            ),
+          // Dynamic content area
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: _selectedTabIndex == 0 ? _aboutTab() : _contactTab(),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _tabItem(String title, int index) {
+    bool isSelected = _selectedTabIndex == index;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedTabIndex = index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    )
+                  ]
+                : [],
+          ),
+          child: Center(
+            child: Text(
+              title,
+              style: AppTextStyles.bodyMedium.copyWith(
+                fontSize: 14,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                color: isSelected ? AppColors.primary : const Color(0xFF64748B),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 
   // ── About Tab ────────────────────────────────────────────────────
   Widget _aboutTab() {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+    return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (_about.isNotEmpty) ...[
             _label('about'.tr),
@@ -460,64 +419,19 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
             Text(
               _about,
               style: AppTextStyles.bodyMedium.copyWith(
+                fontSize: 14,
                 color: const Color(0xFF4B5563),
                 height: 1.75,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
           ],
 
           if (_services.isNotEmpty) ...[
-            _label('services'.tr),
-            const SizedBox(height: 10),
-            ..._services.asMap().entries.map((e) {
-              return TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0, end: 1),
-                duration: Duration(milliseconds: 200 + e.key * 60),
-                builder: (_, v, child) => Opacity(
-                  opacity: v,
-                  child: Transform.translate(
-                    offset: Offset(16 * (1 - v), 0),
-                    child: child,
-                  ),
-                ),
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8FAFF),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFE5EAF5)),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 6,
-                        height: 6,
-                        decoration: const BoxDecoration(
-                          color: AppColors.accent,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          e.value,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF1F2937),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-            const SizedBox(height: 20),
+            _label('menu_highlights'.tr),
+            const SizedBox(height: 12),
+            ..._services.map((s) => _buildServiceItem(s)),
+            const SizedBox(height: 24),
           ],
 
           if (_offDays.isNotEmpty) ...[
@@ -526,36 +440,66 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: _offDays
-                  .map(
-                    (d) => Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 7,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.06),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: AppColors.primary.withValues(alpha: 0.15),
-                        ),
-                      ),
-                      child: Text(
-                        d,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
+              children: _offDays.map((d) => _dayChip(d)).toList(),
             ),
           ],
 
           if (_about.isEmpty && _services.isEmpty && _offDays.isEmpty)
-            const _EmptyState(),
+            _emptyState(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildServiceItem(String text) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFF),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE5EAF5)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: const BoxDecoration(
+              color: AppColors.accent,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: AppTextStyles.bodyMedium.copyWith(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF1F2937),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dayChip(String day) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.15)),
+      ),
+      child: Text(
+        day,
+        style: AppTextStyles.bodySmall.copyWith(
+          fontWeight: FontWeight.w600,
+          color: AppColors.primary,
+        ),
       ),
     );
   }
@@ -563,154 +507,147 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView>
   // ── Contact Tab ──────────────────────────────────────────────────
   Widget _contactTab() {
     final items = [
-      _ContactItem(
-        icon: Icons.call_rounded,
-        label: 'phone'.tr,
-        value: _phone,
-        color: AppColors.primary,
-        onTap: () async {
-          try {
-            await launchUrl(Uri(scheme: 'tel', path: _phone));
-          } catch (_) {}
-        },
-      ),
-      _ContactItem(
-        icon: Icons.alternate_email_rounded,
-        label: 'email'.tr,
-        value: _email,
-        color: AppColors.secondary,
-        onTap: () async {
-          try {
-            await launchUrl(Uri(scheme: 'mailto', path: _email));
-          } catch (_) {}
-        },
-      ),
-      _ContactItem(
-        icon: Icons.open_in_browser_rounded,
-        label: 'website'.tr,
-        value: _website,
-        color: const Color(0xFFB8860B),
-        onTap: () async {
-          final uri = Uri.parse(
-            _website.startsWith('http') ? _website : 'https://$_website',
-          );
-          try {
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
-          } catch (_) {}
-        },
-      ),
-      _ContactItem(
-        icon: Icons.location_on_rounded,
-        label: 'address'.tr,
-        value: _address,
-        color: AppColors.primary,
-        onTap: () async {
-          final uri = Uri.parse(
+      if (_phone.isNotEmpty)
+        _ContactItem(
+          icon: Icons.call_rounded,
+          label: 'phone'.tr,
+          value: _phone,
+          color: const Color(0xFF3D5AF1),
+          onTap: () => _launchUrl('tel:$_phone'),
+        ),
+      if (_email.isNotEmpty)
+        _ContactItem(
+          icon: Icons.alternate_email_rounded,
+          label: 'email'.tr,
+          value: _email,
+          color: const Color(0xFF059669),
+          onTap: () => _launchUrl('mailto:$_email'),
+        ),
+      if (_website.isNotEmpty)
+        _ContactItem(
+          icon: Icons.language_rounded,
+          label: 'website'.tr,
+          value: _website,
+          color: const Color(0xFFD97706),
+          onTap: () => _launchUrl(_website),
+        ),
+      if (_address.isNotEmpty)
+        _ContactItem(
+          icon: Icons.location_on_rounded,
+          label: 'address'.tr,
+          value: _address,
+          color: const Color(0xFF7C3AED),
+          onTap: () => _launchUrl(
             'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}',
-          );
-          try {
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
-          } catch (_) {}
-        },
-      ),
+          ),
+        ),
     ];
 
-    return ListView.separated(
-      physics: const BouncingScrollPhysics(),
+    if (items.isEmpty) return _emptyState();
+
+    return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-      itemCount: items.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 10),
-      itemBuilder: (_, i) {
-        final item = items[i];
-        final hasValue = item.value.isNotEmpty;
-        return TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0, end: 1),
-          duration: Duration(milliseconds: 200 + i * 70),
-          builder: (_, v, child) => Opacity(
-            opacity: v,
-            child: Transform.translate(
-              offset: Offset(0, 12 * (1 - v)),
-              child: child,
-            ),
-          ),
-          child: GestureDetector(
-            onTap: hasValue ? item.onTap : null,
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-              padding: const EdgeInsets.all(14),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: items.map((item) => Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: _contactCard(item),
+        )).toList(),
+      ),
+    );
+  }
+
+  Widget _contactCard(_ContactItem item) {
+    return GestureDetector(
+      onTap: item.onTap,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FAFF),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: item.color.withValues(alpha: 0.1)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
               decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFF),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: hasValue
-                      ? item.color.withValues(alpha: 0.15)
-                      : const Color(0xFFE5EAF5),
-                ),
+                color: item.color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Row(
+              child: Icon(item.icon, color: item.color, size: 20),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 42,
-                    height: 42,
-                    decoration: BoxDecoration(
-                      color: item.color.withValues(alpha: 0.10),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(item.icon, color: item.color, size: 20),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.label,
-                          style: AppTextStyles.caption.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: item.color,
-                            letterSpacing: 0.6,
-                          ),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          hasValue ? item.value : '—',
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: hasValue
-                                ? const Color(0xFF111827)
-                                : const Color(0xFFD1D5DB),
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                  Text(
+                    item.label.toUpperCase(),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: item.color,
+                      letterSpacing: 0.5,
                     ),
                   ),
-                  if (hasValue)
-                    const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 12,
-                      color: Color(0xFFD1D5DB),
+                  const SizedBox(height: 2),
+                  Text(
+                    item.value,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF1F2937),
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
             ),
-          ),
-        );
-      },
+            const Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 12,
+              color: Color(0xFFD1D5DB),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _label(String text) => Text(
         text,
-        style: AppTextStyles.label.copyWith(
-          color: const Color(0xFF9CA3AF),
-          letterSpacing: 0.8,
+        style: AppTextStyles.bodyMedium.copyWith(
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+          color: const Color(0xFF6B7280),
+          letterSpacing: 0.5,
         ),
       );
+
+  Widget _emptyState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 40),
+        child: Column(
+          children: [
+            Icon(Icons.info_outline_rounded, size: 48, color: Colors.grey[300]),
+            const SizedBox(height: 12),
+            Text(
+              'No information available',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: Colors.grey[400],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-// ── Helper Classes ───────────────────────────────────────────────────
 class _ContactItem {
   final IconData icon;
   final String label;
@@ -724,41 +661,4 @@ class _ContactItem {
     required this.color,
     required this.onTap,
   });
-}
-
-class _EmptyState extends StatelessWidget {
-  const _EmptyState();
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 40),
-        child: Column(
-          children: [
-            Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF1F5F9),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Icon(
-                Icons.inbox_rounded,
-                size: 28,
-                color: Color(0xFFD1D5DB),
-              ),
-            ),
-            const SizedBox(height: 14),
-            Text(
-              'no_info_available'.tr,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: const Color(0xFF9CA3AF),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

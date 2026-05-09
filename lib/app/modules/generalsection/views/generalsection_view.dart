@@ -27,7 +27,7 @@ class GeneralSectionView extends GetView<GeneralSectionController> {
         ),
         title: Text(
           controller.slug.tr,
-          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
         bottom: PreferredSize(
@@ -85,7 +85,7 @@ class GeneralSectionView extends GetView<GeneralSectionController> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              '${'all'.tr} ${controller.slug.tr}',
+              '${'all'.tr.capitalizeFirst} ${controller.slug.tr}',
               style: AppTextStyles.headingSmall.copyWith(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,

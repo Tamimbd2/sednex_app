@@ -21,7 +21,7 @@ class CommunityView extends GetView<CommunityController> {
         ),
         title: Text(
           'community'.tr,
-          style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
       ),

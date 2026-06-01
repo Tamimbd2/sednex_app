@@ -102,7 +102,7 @@ class CommunityFeedController extends GetxController {
       } else {
         // Map UI filter to API category
         String category = selectedFilter.value.toLowerCase();
-        if (category == "buy & sells") category = "sell";
+        if (category == "buy & sells") category = "buy_sell";
         if (category == "home rents") category = "rentals";
         if (category == "job posts") category = "job";
         if (category == "questions") category = "question";
@@ -338,7 +338,7 @@ class CommunityFeedController extends GetxController {
     if (category == 'rental' || category == 'rentals') return 'Home Rents';
     if (category == 'job' || category == 'jobs') return 'Job Posts';
     if (category == 'question' || category == 'questions') return 'Questions';
-    if (category == 'sell') return 'Buy & Sells';
+    if (category == 'sell' || category == 'buy_sell') return 'Buy & Sells';
     if (category == 'help') return 'Help Request';
     return category.capitalizeFirst ?? 'All Post';
   }

@@ -102,8 +102,15 @@ class MypostController extends GetxController {
               'comments': post['commentsCount'] ?? 0,
               'isLiked':
                   currentUserId != null && lovedBy.contains(currentUserId),
-              'category':
-                  (post['category']?.toString() ?? 'General').capitalizeFirst,
+              'category': (() {
+                final cat = (post['category']?.toString() ?? 'general').toLowerCase();
+                if (cat == 'rental' || cat == 'rentals') return 'Home Rents';
+                if (cat == 'job' || cat == 'jobs') return 'Job Posts';
+                if (cat == 'question' || cat == 'questions') return 'Questions';
+                if (cat == 'sell' || cat == 'buy_sell') return 'Buy & Sells';
+                if (cat == 'help') return 'Help Request';
+                return cat.capitalizeFirst ?? 'All Post';
+              })(),
               'images': images,
               'lovedBy': lovedBy,
               'isCompleted': post['isCompleted'] ?? false,

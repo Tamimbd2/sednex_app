@@ -158,14 +158,7 @@ class ArticleDetailsView extends StatelessWidget {
 
           // Content Rendering
           if (fullContent.isEmpty)
-            Text(
-              description,
-              style: AppTextStyles.bodyMedium.copyWith(
-                fontSize: 16,
-                height: 1.5,
-                color: Colors.grey[800],
-              ),
-            )
+            _buildHtmlWidget(description)
           else
             ..._groupContent(fullContent),
 
@@ -186,8 +179,14 @@ class ArticleDetailsView extends StatelessWidget {
       if (item is! Map) continue;
 
       if (item['type'] == 'paragraph') {
-        currentParagraphs +=
-            "<p style='margin-bottom: 10px; line-height: 1.4;'>${item['data'] ?? ''}</p>";
+        // Strip out carriage returns and trailing/leading blank lines that cause gaps
+        String data = (item['data'] ?? '').toString()
+            .replaceAll('\r', '')
+            .replaceAll(RegExp(r'\n{2,}'), '\n') // Remove double vertical spaces
+            .trim();
+        if (data.isNotEmpty) {
+          currentParagraphs += "<p>$data</p>";
+        }
       } else {
         // If we hit an image, flush current paragraphs first
         if (currentParagraphs.isNotEmpty) {
@@ -200,7 +199,7 @@ class ArticleDetailsView extends StatelessWidget {
           if (imageUrl.isNotEmpty) {
             widgets.add(
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: CachedNetworkImage(
@@ -248,22 +247,36 @@ class ArticleDetailsView extends StatelessWidget {
       data: sanitizedData,
       style: {
         "body": Style(
-          fontSize: FontSize(17),
-          lineHeight: const LineHeight(1.4),
-          color: Colors.black87,
-          fontFamily: AppTextStyles.bodyMedium.fontFamily,
+          fontSize: FontSize(15),
+          lineHeight: const LineHeight(1.5),
+          color: const Color(0xFF2C2C2C),
+          fontFamily: AppTextStyles.bengaliFontFamily, // Render using Noto Sans Bengali
           margin: Margins.zero,
           padding: HtmlPaddings.zero,
         ),
         "p": Style(
-          margin: Margins.zero,
+          margin: Margins.only(bottom: 8), // Standard space between paragraphs
           padding: HtmlPaddings.zero,
+          fontSize: FontSize(15),
+          lineHeight: const LineHeight(1.5),
         ),
-        "h2,h3": Style(
+        "h1,h2,h3": Style(
+          fontSize: FontSize(16),
           fontWeight: FontWeight.bold,
-          margin: Margins.only(top: 20, bottom: 8),
-          fontFamily: AppTextStyles.bodyMedium.fontFamily,
+          color: const Color(0xFF111111),
+          margin: Margins.only(top: 16, bottom: 6),
+          padding: HtmlPaddings.zero,
+          fontFamily: AppTextStyles.bengaliFontFamily,
         ),
+        "ul,ol": Style(
+          margin: Margins.only(top: 4, bottom: 8),
+          padding: HtmlPaddings.only(left: 14), // Proper bullet indent
+        ),
+        "li": Style(
+          margin: Margins.only(bottom: 6), // Clean spacing between list elements
+          lineHeight: const LineHeight(1.45),
+          fontSize: FontSize(15),
+        )
       },
     );
   }

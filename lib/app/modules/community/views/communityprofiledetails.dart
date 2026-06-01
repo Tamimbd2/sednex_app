@@ -165,14 +165,38 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
                             const SizedBox(height: 10),
                           ],
   
+                          // Account Information Header
+                          if (_val('birthAddress').isNotEmpty ||
+                              _val('currentAddress').isNotEmpty ||
+                              _val('birthDate').isNotEmpty ||
+                              _val('gender').isNotEmpty ||
+                              _val('maritalStatus').isNotEmpty ||
+                              _val('nationality').isNotEmpty ||
+                              _val('bloodGroup').isNotEmpty) ...[
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 12, top: 16, left: 5),
+                                child: Text(
+                                  'Account Information',
+                                  style: _getStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(0xFF1E293B),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+
                           // Personal Info Section
-                          _buildModernRow(Icons.location_on_outlined, 'Birth Address', _val('birthAddress').isEmpty ? 'N/A' : _val('birthAddress')),
-                          _buildModernRow(Icons.home_outlined, 'Current Address', _val('currentAddress').isEmpty ? 'N/A' : _val('currentAddress')),
-                          _buildModernRow(Icons.calendar_today_outlined, 'Birth Date', _val('birthDate').isEmpty ? 'N/A' : _formatDateShort(_val('birthDate'))),
-                          _buildModernRow(Icons.person_outline_rounded, 'Gender', _val('gender').isEmpty ? 'N/A' : _val('gender')),
-                          _buildModernRow(Icons.favorite_border_rounded, 'Marital Status', _val('maritalStatus').isEmpty ? 'N/A' : _val('maritalStatus')),
-                          _buildModernRow(Icons.flag_outlined, 'Nationality', _val('nationality').isEmpty ? 'N/A' : _val('nationality')),
-                          _buildModernRow(Icons.bloodtype_outlined, 'Blood Group', _val('bloodGroup').isEmpty ? 'N/A' : _val('bloodGroup')),
+                          _buildModernRow(Icons.location_on_outlined, 'Birth Address', _val('birthAddress')),
+                          _buildModernRow(Icons.home_outlined, 'Current Address', _val('currentAddress')),
+                          _buildModernRow(Icons.calendar_today_outlined, 'Birth Date', _formatDateShort(_val('birthDate'))),
+                          _buildModernRow(Icons.person_outline_rounded, 'Gender', _val('gender')),
+                          _buildModernRow(Icons.favorite_border_rounded, 'Marital Status', _val('maritalStatus')),
+                          _buildModernRow(Icons.flag_outlined, 'Nationality', _val('nationality')),
+                          _buildModernRow(Icons.bloodtype_outlined, 'Blood Group', _val('bloodGroup')),
                           
                           // Website
                           if (_val('websiteLink').isNotEmpty)

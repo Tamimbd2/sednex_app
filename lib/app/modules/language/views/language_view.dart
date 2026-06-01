@@ -63,58 +63,63 @@ class LanguageView extends GetView<LanguageController> {
                           ),
                         ],
                       ),
-                      child: Column(
-                        children: List.generate(controller.languages.length, (index) {
-                          final language = controller.languages[index];
-                          final isLast = index == controller.languages.length - 1;
-                          
-                          return Column(
-                            children: [
-                              Obx(() {
-                                final isSelected = controller.selectedLanguage.value == language['name'];
-                                return ListTile(
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                                  title: Text(
-                                    language['name']!,
-                                    style: GoogleFonts.arimo(
-                                      color: const Color(0xFF101727),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
+                      child: Material(
+                        color: Colors.transparent,
+                        clipBehavior: Clip.antiAlias,
+                        borderRadius: BorderRadius.circular(16),
+                        child: Column(
+                          children: List.generate(controller.languages.length, (index) {
+                            final language = controller.languages[index];
+                            final isLast = index == controller.languages.length - 1;
+                            
+                            return Column(
+                              children: [
+                                Obx(() {
+                                  final isSelected = controller.selectedLanguage.value == language['name'];
+                                  return ListTile(
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                    title: Text(
+                                      language['name']!,
+                                      style: GoogleFonts.arimo(
+                                        color: const Color(0xFF101727),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                  ),
-                                  subtitle: Text(
-                                    language['native']!,
-                                    style: GoogleFonts.arimo(
-                                      color: const Color(0xFF697282), // Grey
-                                      fontSize: 14,
+                                    subtitle: Text(
+                                      language['native']!,
+                                      style: GoogleFonts.arimo(
+                                        color: const Color(0xFF697282), // Grey
+                                        fontSize: 14,
+                                      ),
                                     ),
-                                  ),
-                                  trailing: isSelected
-                                      ? Container(
-                                          width: 24,
-                                          height: 24,
-                                          decoration: const BoxDecoration(
-                                            color: Color(0xFF1E63FF), // Red check
-                                            shape: BoxShape.circle,
+                                    trailing: isSelected
+                                        ? Container(
+                                            width: 24,
+                                            height: 24,
+                                            decoration: const BoxDecoration(
+                                              color: Color(0xFF1E63FF), // Red check
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: const Icon(Icons.check, color: Colors.white, size: 16),
+                                          )
+                                        : Container(
+                                            width: 24,
+                                            height: 24,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(color: const Color(0xFFE5E7EB), width: 1.5),
+                                            ),
                                           ),
-                                          child: const Icon(Icons.check, color: Colors.white, size: 16),
-                                        )
-                                      : Container(
-                                          width: 24,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(color: const Color(0xFFE5E7EB), width: 1.5),
-                                          ),
-                                        ),
-                                  onTap: () => controller.selectLanguage(language['name']!),
-                                );
-                              }),
-                              if (!isLast)
-                                const Divider(height: 1, color: Color(0xFFF2F4F6), indent: 20, endIndent: 20),
-                            ],
-                          );
-                        }),
+                                    onTap: () => controller.selectLanguage(language['name']!),
+                                  );
+                                }),
+                                if (!isLast)
+                                  const Divider(height: 1, color: Color(0xFFF2F4F6), indent: 20, endIndent: 20),
+                              ],
+                            );
+                          }),
+                        ),
                       ),
                     ),
                   ],

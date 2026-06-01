@@ -299,7 +299,12 @@ class ProfileView extends GetView<ProfileController> {
           ),
         ],
       ),
-      child: Column(children: children),
+      child: Material(
+        color: Colors.transparent,
+        clipBehavior: Clip.antiAlias,
+        borderRadius: BorderRadius.circular(16),
+        child: Column(children: children),
+      ),
     );
   }
 

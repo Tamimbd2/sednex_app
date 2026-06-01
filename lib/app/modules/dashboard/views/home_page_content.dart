@@ -4,10 +4,12 @@ import 'package:marquee/marquee.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 import '../../communityFeed/controllers/community_feed_controller.dart';
 import '../controllers/dashboard_controller.dart';
 import '../../namaj/controllers/namaj_controller.dart';
 import '../../ramadancalander/controllers/ramadancalander_controller.dart';
+import '../../goldRate/controllers/gold_rate_controller.dart';
 
 import '../../../routes/app_pages.dart';
 
@@ -292,7 +294,22 @@ class HomePageContent extends StatelessWidget {
                           if (isBkash) {
                             subtitle += '৳';
                           } else if (isGold) {
-                            subtitle += '£';
+                            // Dynamically convert USD spot rate to BDT Vhori rate using current exchange rate
+                            try {
+                              final double usdPrice = double.tryParse(subtitle.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
+                              // Retrieve the current rate from the controller if registered
+                              double exchangeRate = 120.0;
+                              try {
+                                if (Get.isRegistered<GoldRateController>()) {
+                                  exchangeRate = Get.find<GoldRateController>().usdToBdtRate.value;
+                                }
+                              } catch (_) {}
+                              final double convertedVhoriRate = usdPrice * exchangeRate * 11.664;
+                              final formatter = NumberFormat('#,##,###');
+                              subtitle = '${formatter.format(convertedVhoriRate.round())}৳';
+                            } catch (_) {
+                              subtitle += '৳';
+                            }
                           }
                           Color bgColor = isBkash
                               ? const Color(0xFFFCE4EC)
@@ -302,7 +319,7 @@ class HomePageContent extends StatelessWidget {
                           Color subColor = isBkash
                               ? const Color(0xFFC2185B)
                               : (isGold
-                                    ? const Color(0xFF101727)
+                                    ? const Color(0xFF1E63FF)
                                     : const Color(0xFF1565C0));
                           String displayName =
                               isBkash && name.toLowerCase().contains('gold')
@@ -461,7 +478,7 @@ class HomePageContent extends StatelessWidget {
                 ),
                 _buildEssentialServiceItem(
                   'basic_goods'.tr,
-                  'assets/Service Icon svg/Basic Goods.svg',
+                  'assets/Service Icon svg/Basic goods.svg',
                   const Color(0xFF448AFF),
                   () => Get.toNamed('/basicgoods'),
                   useColorFilter: false,

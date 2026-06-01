@@ -82,8 +82,10 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
     final SectionItem? item = args['item'];
     _sectionTitle = args['title'] ?? 'Details';
     
-    final controller = Get.find<GeneralSectionController>();
-    _slug = controller.slug;
+    final controller = Get.isRegistered<GeneralSectionController>()
+        ? Get.find<GeneralSectionController>()
+        : null;
+    _slug = controller?.slug ?? args['slug'] ?? '';
 
     final String id = item?.id ?? args['id'] ?? '';
     final String fallbackName = item?.name ?? args['name'] ?? '';

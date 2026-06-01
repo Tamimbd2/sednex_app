@@ -320,6 +320,33 @@ class DashboardController extends GetxController {
                   'touristspot': 'Tourist Spots',
                   'spot': 'Tourist Spots',
                   'user': 'Users',
+                  'texi-driver': 'Drivers',
+                  'texi_driver': 'Drivers',
+                  'taxi-driver': 'Drivers',
+                  'taxidriver': 'Drivers',
+                  'sports-team': 'Sports Team',
+                  'sports_team': 'Sports Team',
+                  'sportsteam': 'Sports Team',
+                  'pharmacy': 'Pharmacy',
+                  'grocery-store': 'Grocery Store',
+                  'grocery_store': 'Grocery Store',
+                  'grocerystore': 'Grocery Store',
+                  'jewellery-shop': 'Jewellery Shop',
+                  'jewellery_shop': 'Jewellery Shop',
+                  'jewelleryshop': 'Jewellery Shop',
+                  'influencer': 'Influencer',
+                  'clothing-shop': 'Clothing Shop',
+                  'clothing_shop': 'Clothing Shop',
+                  'clothingshop': 'Clothing Shop',
+                  'maker': 'Maker',
+                  'local-market': 'Local Market',
+                  'local_market': 'Local Market',
+                  'localmarket': 'Local Market',
+                  'local-business': 'Local Business',
+                  'local_business': 'Local Business',
+                  'localbusiness': 'Local Business',
+                  'businessman': 'Businessman',
+                  'ngo': 'NGO',
                 };
 
                 String section = sectionMapping[model] ?? 
@@ -333,6 +360,7 @@ class DashboardController extends GetxController {
                 results.putIfAbsent(section, () => []).add({
                   ...Map<String, dynamic>.from(item),
                   '_search_section': section,
+                  'commentsList': <Map<String, dynamic>>[].obs,
                 });
               }
             }
@@ -355,6 +383,7 @@ class DashboardController extends GetxController {
                 results.putIfAbsent(displayTitle, () => []).add({
                   ...Map<String, dynamic>.from(item),
                   '_search_section': displayTitle,
+                  'commentsList': <Map<String, dynamic>>[].obs,
                 });
               }
             }
@@ -465,30 +494,279 @@ class DashboardController extends GetxController {
     }
   }
 
-  // Placeholder methods for card buttons (can be fully implemented if needed)
-  void fetchComments(int index) =>
-      Get.find<CommunityFeedController>().fetchComments(index);
-  dynamic get isLoadingComments =>
-      Get.find<CommunityFeedController>().isLoadingComments;
-  dynamic get replyTargetCommentId =>
-      Get.find<CommunityFeedController>().replyTargetCommentId;
-  dynamic get replyTargetName =>
-      Get.find<CommunityFeedController>().replyTargetName;
-  void addComment(int index, String text) =>
-      Get.find<CommunityFeedController>().addComment(index, text);
-  void setReplyTarget(String id, String name) =>
-      Get.find<CommunityFeedController>().setReplyTarget(id, name);
-  void clearReplyTarget() =>
-      Get.find<CommunityFeedController>().clearReplyTarget();
-  void savePost(int index) =>
-      Get.find<CommunityFeedController>().savePost(index);
-  void updatePost(int index, String text) =>
-      Get.find<CommunityFeedController>().updatePost(index, text);
-  void deletePost(int index) =>
-      Get.find<CommunityFeedController>().deletePost(index);
+  final replyTargetCommentId = RxnString();
+  final replyTargetName = RxnString();
+  final isLoadingComments = false.obs;
 
-  void markAsCompleted(int index) =>
-      Get.find<CommunityFeedController>().markAsCompleted(index);
+  void setReplyTarget(String id, String name) {
+    replyTargetCommentId.value = id;
+    replyTargetName.value = name;
+  }
+
+  void clearReplyTarget() {
+    replyTargetCommentId.value = null;
+    replyTargetName.value = null;
+  }
+
+  Future<void> fetchComments(int index) async {
+    final posts = searchResults['Community Posts'];
+    if (posts == null || index >= posts.length) return;
+    final post = posts[index];
+    final postId = post['_id'];
+
+    try {
+      isLoadingComments.value = true;
+      final response = await apiService.getData('api/post/comment/$postId');
+
+      if (response.statusCode == 200) {
+        final body = response.body;
+        final List rawComments = body['comments'] ?? [];
+
+        final List<Map<String, dynamic>> mappedComments = rawComments.map<Map<String, dynamic>>((c) {
+          final author = c['author'] ?? {};
+          return {
+            '_id': c['_id'] ?? '',
+            'name': author['name'] ?? 'Unknown',
+            'text': c['content'] ?? '',
+            'avatar': author['profileImage'] ??
+                'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=60',
+            'time': _timeAgo(c['createdAt'] ?? ''),
+            'replies': <Map<String, dynamic>>[].obs,
+            'isRepliesLoading': false.obs,
+            'showReplies': false.obs,
+          };
+        }).toList();
+
+        if (post['commentsList'] is RxList) {
+          (post['commentsList'] as RxList).assignAll(mappedComments);
+        } else {
+          post['commentsList'] = RxList<Map<String, dynamic>>(mappedComments);
+        }
+        post['comments'] = mappedComments.length;
+        searchResults.refresh();
+      }
+    } catch (e) {
+      debugPrint('Error fetching comments in search: $e');
+    } finally {
+      isLoadingComments.value = false;
+    }
+  }
+
+  Future<void> fetchReplies(int postIndex, int commentIndex) async {
+    final posts = searchResults['Community Posts'];
+    if (posts == null || postIndex >= posts.length) return;
+    final post = posts[postIndex];
+    final commentsList = post['commentsList'] as RxList?;
+    if (commentsList == null || commentIndex >= commentsList.length) return;
+    final comment = commentsList[commentIndex];
+    final commentId = comment['_id'];
+
+    try {
+      comment['isRepliesLoading'].value = true;
+      final response = await apiService.getData('api/post/comment/replies/$commentId');
+
+      if (response.statusCode == 200) {
+        final body = response.body;
+        final List rawReplies = body['replies'] ?? [];
+
+        final List<Map<String, dynamic>> mappedReplies = rawReplies.map<Map<String, dynamic>>((r) {
+          final author = r['author'] ?? {};
+          return {
+            '_id': r['_id'] ?? '',
+            'name': author['name'] ?? 'Unknown',
+            'text': r['content'] ?? '',
+            'avatar': author['profileImage'] ??
+                'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=50',
+            'time': _timeAgo(r['createdAt'] ?? ''),
+          };
+        }).toList();
+
+        if (comment['replies'] is RxList) {
+          (comment['replies'] as RxList<Map<String, dynamic>>).assignAll(mappedReplies);
+        } else {
+          comment['replies'] = RxList<Map<String, dynamic>>(mappedReplies);
+        }
+        comment['showReplies'].value = true;
+        searchResults.refresh();
+      }
+    } catch (e) {
+      debugPrint('Error fetching replies in search: $e');
+    } finally {
+      comment['isRepliesLoading'].value = false;
+    }
+  }
+
+  Future<void> addComment(int index, String text) async {
+    if (text.trim().isEmpty) return;
+
+    final posts = searchResults['Community Posts'];
+    if (posts == null || index >= posts.length) return;
+    final post = posts[index];
+    final postId = post['_id'];
+
+    if (userId == null) {
+      Get.snackbar('Login Required', 'Please login to comment');
+      return;
+    }
+
+    try {
+      final isReply = replyTargetCommentId.value != null;
+      final url = 'api/post/comment/$postId';
+      final Map<String, dynamic> body = {'content': text.trim()};
+
+      if (isReply) {
+        body['parentCommentId'] = replyTargetCommentId.value;
+      }
+
+      final response = await apiService.postData(url, body);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        clearReplyTarget();
+        fetchComments(index); // Refresh comments list
+      } else {
+        Get.snackbar('Error', 'Failed to post ${isReply ? 'reply' : 'comment'}');
+      }
+    } catch (e) {
+      debugPrint('Error posting comment in search: $e');
+    }
+  }
+
+  Future<void> savePost(int index) async {
+    final posts = searchResults['Community Posts'];
+    if (posts == null || index >= posts.length) return;
+    final post = posts[index];
+    final postId = post['_id'];
+
+    try {
+      Get.dialog(
+        const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF))),
+        barrierDismissible: false,
+      );
+      final response = await apiService.postData('api/post/save/$postId', {});
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Get.snackbar('Success', 'Post saved successfully');
+      } else {
+        var body = response.body;
+        String message = body is Map ? (body['message'] ?? 'Failed to save post') : 'Failed to save post';
+        Get.snackbar('Info', message);
+      }
+    } catch (e) {
+      if (Get.isDialogOpen ?? false) Get.back();
+      debugPrint('Save error: $e');
+      Get.snackbar('Error', 'An unexpected error occurred');
+    }
+  }
+
+  Future<void> updatePost(int index, String newDescription) async {
+    final posts = searchResults['Community Posts'];
+    if (posts == null || index >= posts.length) return;
+    final post = posts[index];
+    final postId = post['_id'];
+
+    try {
+      Get.dialog(
+        const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF))),
+        barrierDismissible: false,
+      );
+      final response = await apiService.patchData('api/post/$postId', {
+        'description': newDescription.trim(),
+      });
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      if (response.statusCode == 200) {
+        post['content'] = newDescription.trim();
+        posts[index] = Map<String, dynamic>.from(post);
+        searchResults.refresh();
+        Get.snackbar('Success', 'Post updated successfully');
+      } else {
+        Get.snackbar('Error', 'Failed to update post: ${response.statusText}');
+      }
+    } catch (e) {
+      if (Get.isDialogOpen ?? false) Get.back();
+      debugPrint('Update error: $e');
+      Get.snackbar('Error', 'An unexpected error occurred');
+    }
+  }
+
+  Future<void> deletePost(int index) async {
+    final posts = searchResults['Community Posts'];
+    if (posts == null || index >= posts.length) return;
+    final post = posts[index];
+    final postId = post['_id'];
+
+    try {
+      Get.dialog(
+        const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF))),
+        barrierDismissible: false,
+      );
+      final response = await apiService.deleteData('api/post/$postId');
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        posts.removeAt(index);
+        searchResults.refresh();
+        Get.snackbar('Success', 'Post deleted successfully');
+      } else {
+        Get.snackbar('Error', 'Failed to delete post: ${response.statusText}');
+      }
+    } catch (e) {
+      if (Get.isDialogOpen ?? false) Get.back();
+      debugPrint('Delete error: $e');
+      Get.snackbar('Error', 'An unexpected error occurred');
+    }
+  }
+
+  Future<void> markAsCompleted(int index) async {
+    final posts = searchResults['Community Posts'];
+    if (posts == null || index >= posts.length) return;
+    final post = posts[index];
+    final postId = post['_id'];
+    final bool currentStatus = post['isCompleted'] ?? false;
+    final bool newStatus = !currentStatus;
+
+    try {
+      Get.dialog(
+        const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF))),
+        barrierDismissible: false,
+      );
+      final response = await apiService.patchData(
+        'api/post/$postId/completion',
+        {'isCompleted': newStatus},
+      );
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      if (response.statusCode == 200) {
+        post['isCompleted'] = newStatus;
+        posts[index] = Map<String, dynamic>.from(post);
+        searchResults.refresh();
+        Get.snackbar('Success', newStatus ? 'Post marked as completed' : 'Post reopened');
+      } else {
+        Get.snackbar('Error', 'Failed to update status');
+      }
+    } catch (e) {
+      if (Get.isDialogOpen ?? false) Get.back();
+      debugPrint('Mark completed error: $e');
+    }
+  }
+
+  String _timeAgo(String dateString) {
+    if (dateString.isEmpty) return '';
+    try {
+      final date = DateTime.parse(dateString).toLocal();
+      final now = DateTime.now();
+      final difference = now.difference(date);
+
+      if (difference.inSeconds < 60) return 'Just now';
+      if (difference.inMinutes < 60) return '${difference.inMinutes}m ago';
+      if (difference.inHours < 24) return '${difference.inHours}h ago';
+      if (difference.inDays < 7) return '${difference.inDays}d ago';
+      return '${(difference.inDays / 7).floor()}w ago';
+    } catch (e) {
+      return '';
+    }
+  }
 
   void fetchLovedProducts() async {
     try {

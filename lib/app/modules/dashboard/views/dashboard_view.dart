@@ -26,6 +26,7 @@ import '../../embassy/views/embassydetails.dart';
 import '../../localtour/views/toursdetails.dart';
 import '../../community/views/communityprofiledetails.dart';
 import '../../touristSpot/views/toursitspotdetails.dart';
+import '../../generalsection/views/generalsection_details.dart';
 
 class DashboardView extends GetView<DashboardController> {
   const DashboardView({super.key});
@@ -419,17 +420,21 @@ class DashboardView extends GetView<DashboardController> {
                 'isLiked': item['isLiked'] ?? false,
               };
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: CommunityPostCard(
-                  post: mappedPost,
-                  index: index,
-                  controller: controller,
-                  isDashboard: true,
-                  showFooter: false,
+              final postCard = CommunityPostCard(
+                post: mappedPost,
+                index: index,
+                controller: controller,
+                isDashboard: true,
+                showFooter: false,
+              );
+              return GestureDetector(
+                onTap: () => postCard.showCommentsBottomSheet(context),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: postCard,
                 ),
               );
             }
@@ -611,9 +616,70 @@ class DashboardView extends GetView<DashboardController> {
           },
         );
         break;
+      case 'Drivers':
+      case 'Sports Team':
+      case 'Pharmacy':
+      case 'Grocery Store':
+      case 'Jewellery Shop':
+      case 'Influencer':
+      case 'Clothing Shop':
+      case 'Maker':
+      case 'Local Market':
+      case 'Local Business':
+      case 'Businessman':
+      case 'NGO':
+        final slugMapping = {
+          'Drivers': 'texi-driver',
+          'Sports Team': 'sports-team',
+          'Pharmacy': 'pharmacy',
+          'Grocery Store': 'grocery-store',
+          'Jewellery Shop': 'jewellery-shop',
+          'Influencer': 'influencer',
+          'Clothing Shop': 'clothing-shop',
+          'Maker': 'maker',
+          'Local Market': 'local-market',
+          'Local Business': 'local-business',
+          'Businessman': 'businessman',
+          'NGO': 'ngo',
+        };
+        Get.to(
+          () => const GeneralSectionDetailsView(),
+          arguments: {
+            'id': item['_id'] ?? item['id'],
+            'name': item['name'] ?? item['title'],
+            'logoPath': item['image'] ?? item['imageUrl'] ?? item['icon'],
+            'slug': slugMapping[section] ?? section.toLowerCase().replaceAll(' ', '-'),
+            'title': section,
+          },
+        );
+        break;
       default:
         // Generic fallback for any other sections that might map to existing views
-        if (section.toLowerCase().contains('product') || 
+        final model = item['model']?.toString().toLowerCase() ?? '';
+        final isGeneralSection = [
+          'texi-driver', 'texi_driver', 'taxi-driver', 'taxidriver',
+          'sports-team', 'sports_team', 'sportsteam', 'pharmacy',
+          'grocery-store', 'grocery_store', 'grocerystore',
+          'jewellery-shop', 'jewellery_shop', 'jewelleryshop',
+          'influencer', 'clothing-shop', 'clothing_shop', 'clothingshop',
+          'maker', 'local-market', 'local_market', 'localmarket',
+          'local-business', 'local_business', 'localbusiness',
+          'businessman', 'ngo'
+        ].contains(model) || item.containsKey('contact');
+
+        if (isGeneralSection) {
+          final slug = model.isNotEmpty ? model.replaceAll('_', '-') : section.toLowerCase().replaceAll(' ', '-');
+          Get.to(
+            () => const GeneralSectionDetailsView(),
+            arguments: {
+              'id': item['_id'] ?? item['id'],
+              'name': item['name'] ?? item['title'],
+              'logoPath': item['image'] ?? item['imageUrl'] ?? item['icon'],
+              'slug': slug,
+              'title': section,
+            },
+          );
+        } else if (section.toLowerCase().contains('product') || 
             section.toLowerCase().contains('item')) {
           Get.toNamed(Routes.PRODUCT_DETAILS, arguments: item);
         } else if (section.toLowerCase().contains('article')) {

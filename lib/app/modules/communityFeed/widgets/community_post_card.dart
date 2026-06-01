@@ -257,7 +257,7 @@ class CommunityPostCard extends StatelessWidget {
 
                 // Comment
                 GestureDetector(
-                  onTap: () => _showCommentsBottomSheet(context),
+                  onTap: () => showCommentsBottomSheet(context),
                   child: Container(
                     color: Colors.transparent,
                     padding: const EdgeInsets.symmetric(
@@ -574,7 +574,7 @@ class CommunityPostCard extends StatelessWidget {
     );
   }
 
-  void _showCommentsBottomSheet(BuildContext context) {
+  void showCommentsBottomSheet(BuildContext context) {
     TextEditingController commentController = TextEditingController();
     controller.fetchComments(index); // Trigger fetch when opened
 
@@ -606,14 +606,20 @@ class CommunityPostCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Obx(
-                () => Text(
-                  'Comments (${controller.posts[index]["comments"]})',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF101727),
-                  ),
-                ),
+                () {
+                  final isDashboard = controller.runtimeType.toString() == 'DashboardController';
+                  final postData = isDashboard
+                      ? (controller.searchResults['Community Posts']?[index] as Map<String, dynamic>?)
+                      : (controller.posts[index] as Map<String, dynamic>?);
+                  return Text(
+                    'Comments (${postData?["comments"] ?? postData?["commentsCount"] ?? 0})',
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF101727),
+                    ),
+                  );
+                },
               ),
             ),
 
@@ -628,8 +634,13 @@ class CommunityPostCard extends StatelessWidget {
                   );
                 }
 
+                final isDashboard = controller.runtimeType.toString() == 'DashboardController';
+                final postData = isDashboard
+                    ? (controller.searchResults['Community Posts']?[index] as Map<String, dynamic>?)
+                    : (controller.posts[index] as Map<String, dynamic>?);
+
                 final comments =
-                    controller.posts[index]["commentsList"] as List<dynamic>? ??
+                    postData?["commentsList"] as List<dynamic>? ??
                     [];
 
                 if (comments.isEmpty) {

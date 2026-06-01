@@ -69,111 +69,134 @@ class HomePageContent extends StatelessWidget {
           Obx(() {
             final controller = Get.find<DashboardController>();
             final banners = controller.bannerList;
-
+ 
             if (banners.isEmpty) return const SizedBox.shrink();
-
+ 
             return Padding(
               padding: const EdgeInsets.all(12.0),
               child: SizedBox(
                 height: 150,
-                child: Stack(
-                  children: [
-                    PageView.builder(
-                      controller: controller.bannerPageController,
-                      onPageChanged: (index) =>
-                          controller.currentBannerIndex.value = index,
-                      itemCount: 10000,
-                      itemBuilder: (context, index) {
-                        final actualIndex = index % banners.length;
-                        final banner = banners[actualIndex];
-                        return GestureDetector(
-                          onTap: () async {
-                            String urlStr = banner['url']?.toString() ?? '';
-                            debugPrint('Hero Banner: Tapped! URL: "$urlStr"');
-
-                            if (urlStr.isNotEmpty) {
-                              // Standardize URL schema if missing
-                              if (!urlStr.startsWith('http')) {
-                                urlStr = 'https://$urlStr';
-                              }
-
-                              final Uri uri = Uri.parse(urlStr);
-                              if (await canLaunchUrl(uri)) {
-                                debugPrint('Hero Banner: Launching $urlStr');
-                                await launchUrl(
-                                  uri,
-                                  mode: LaunchMode.externalApplication,
-                                );
-                              } else {
-                                debugPrint(
-                                  'Hero Banner: Could not launch $urlStr',
-                                );
-                                // Try launching even if canLaunchUrl fails (can happen)
-                                try {
-                                  await launchUrl(
-                                    uri,
-                                    mode: LaunchMode.externalApplication,
-                                  );
-                                } catch (e) {
-                                  debugPrint(
-                                    'Hero Banner: Final error launching $urlStr: $e',
-                                  );
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final width = constraints.maxWidth;
+                    return Stack(
+                      children: [
+                        PageView.builder(
+                          controller: controller.bannerPageController,
+                          onPageChanged: (index) =>
+                              controller.currentBannerIndex.value = index,
+                          itemCount: 10000,
+                          itemBuilder: (context, index) {
+                            final actualIndex = index % banners.length;
+                            final banner = banners[actualIndex];
+                            return AnimatedBuilder(
+                              animation: controller.bannerPageController,
+                              builder: (context, child) {
+                                double page = 5000.0;
+                                if (controller.bannerPageController.position.haveDimensions) {
+                                  page = controller.bannerPageController.page ?? 5000.0;
                                 }
-                              }
-                            } else {
-                              debugPrint(
-                                'Hero Banner: URL is empty, nothing to redirect.',
-                              );
-                            }
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              image: DecorationImage(
-                                image: CachedNetworkImageProvider(
-                                  banner['image'] ?? '',
+                                final double delta = page - index;
+                                final double opacity = (1.0 - delta.abs()).clamp(0.0, 1.0);
+                                return Transform.translate(
+                                  offset: Offset(delta * width, 0),
+                                  child: Opacity(
+                                    opacity: opacity,
+                                    child: child,
+                                  ),
+                                );
+                              },
+                              child: GestureDetector(
+                                onTap: () async {
+                                  String urlStr = banner['url']?.toString() ?? '';
+                                  debugPrint('Hero Banner: Tapped! URL: "$urlStr"');
+ 
+                                  if (urlStr.isNotEmpty) {
+                                    // Standardize URL schema if missing
+                                    if (!urlStr.startsWith('http')) {
+                                      urlStr = 'https://$urlStr';
+                                    }
+ 
+                                    final Uri uri = Uri.parse(urlStr);
+                                    if (await canLaunchUrl(uri)) {
+                                      debugPrint('Hero Banner: Launching $urlStr');
+                                      await launchUrl(
+                                        uri,
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    } else {
+                                      debugPrint(
+                                        'Hero Banner: Could not launch $urlStr',
+                                      );
+                                      // Try launching even if canLaunchUrl fails (can happen)
+                                      try {
+                                        await launchUrl(
+                                          uri,
+                                          mode: LaunchMode.externalApplication,
+                                        );
+                                      } catch (e) {
+                                        debugPrint(
+                                          'Hero Banner: Final error launching $urlStr: $e',
+                                        );
+                                      }
+                                    }
+                                  } else {
+                                    debugPrint(
+                                      'Hero Banner: URL is empty, nothing to redirect.',
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                        banner['image'] ?? '',
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
-                                fit: BoxFit.cover,
+                              ),
+                            );
+                          },
+                        ),
+                        // Indicators
+                        if (banners.length > 1)
+                          Positioned(
+                            bottom: 10,
+                            left: 0,
+                            right: 0,
+                            child: Obx(
+                              () => Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(banners.length, (index) {
+                                  final isActive =
+                                      (controller.currentBannerIndex.value %
+                                          banners.length) ==
+                                      index;
+                                  return AnimatedContainer(
+                                    duration: const Duration(milliseconds: 300),
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 4,
+                                    ),
+                                    width: isActive ? 20 : 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      color: isActive
+                                          ? Colors.white
+                                          : Colors.white.withValues(alpha: 0.5),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  );
+                                }),
                               ),
                             ),
                           ),
-                        );
-                      },
-                    ),
-                    // Indicators
-                    if (banners.length > 1)
-                      Positioned(
-                        bottom: 10,
-                        left: 0,
-                        right: 0,
-                        child: Obx(
-                          () => Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(banners.length, (index) {
-                              final isActive =
-                                  (controller.currentBannerIndex.value %
-                                      banners.length) ==
-                                  index;
-                              return AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                ),
-                                width: isActive ? 20 : 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: isActive
-                                      ? Colors.white
-                                      : Colors.white.withValues(alpha: 0.5),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                      ),
-                  ],
+                      ],
+                    );
+                  },
                 ),
               ),
             );

@@ -121,6 +121,7 @@ class CreatepostController extends GetxController {
     'questions',
     'rental',
     'help',
+    'update',
   ];
 
   final quickTemplates = [

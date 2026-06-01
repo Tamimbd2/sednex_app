@@ -194,6 +194,7 @@ class AppTranslations extends Translations {
       'questions': 'Questions',
       'rental': 'Home Rents',
       'help': 'Help Request',
+      'update': 'Updates',
       'post_success_title': 'Post Create Successful',
       'post_success_desc':
           'Your post has been successfully created and is now visible to the community.',
@@ -991,6 +992,7 @@ class AppTranslations extends Translations {
       'questions': 'প্রশ্ন',
       'rental': 'বাসা ভাড়া',
       'help': 'সাহায্যের অনুরোধ',
+      'update': 'আপডেট',
       'post_success_title': 'পোস্ট তৈরি সফল হয়েছে',
       'post_success_desc':
           'আপনার পোস্টটি সফলভাবে তৈরি করা হয়েছে এবং এখন কমিউনিটির সবার কাছে দৃশ্যমান।',
@@ -1430,6 +1432,7 @@ class AppTranslations extends Translations {
       'questions': 'প্রশ্ন',
       'rental': 'ভাড়া',
       'help': 'সাহায্য',
+      'update': 'আপডেট',
       'post_success_title': 'পোস্ট তৈরি সফল হয়েছে',
       'post_success_desc':
           'আপনার পোস্টটি সফলভাবে তৈরি করা হয়েছে এবং এখন কমিউনিটির সবার কাছে দৃশ্যমান।',

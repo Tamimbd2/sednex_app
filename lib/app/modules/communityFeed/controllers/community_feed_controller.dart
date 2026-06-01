@@ -18,6 +18,7 @@ class CommunityFeedController extends GetxController {
     "Questions",
     "Home Rents",
     "Help Request",
+    "Updates",
   ];
   final selectedFilter = "All Post".obs;
 
@@ -107,6 +108,7 @@ class CommunityFeedController extends GetxController {
         if (category == "job posts") category = "job";
         if (category == "questions") category = "question";
         if (category == "help request") category = "help";
+        if (category == "updates") category = "update";
 
         url = 'api/post/category/$category';
       }
@@ -340,6 +342,7 @@ class CommunityFeedController extends GetxController {
     if (category == 'question' || category == 'questions') return 'Questions';
     if (category == 'sell' || category == 'buy_sell') return 'Buy & Sells';
     if (category == 'help') return 'Help Request';
+    if (category == 'update') return 'Updates';
     return category.capitalizeFirst ?? 'All Post';
   }
 

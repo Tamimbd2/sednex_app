@@ -338,7 +338,10 @@ class CommunityPostCard extends StatelessWidget {
         bgColor = Colors.teal;
         break;
       case 'Help Request':
-        bgColor = const Color(0xFFF43F5E);
+        bgColor = const Color(0xFF3F51B5); // Indigo
+        break;
+      case 'Updates':
+        bgColor = const Color(0xFFE91E63); // Pink
         break;
       default:
         bgColor = Colors.grey;
@@ -398,7 +401,7 @@ class CommunityPostCard extends StatelessWidget {
                       label: (post['isCompleted'] ?? false)
                           ? 'open_post'.tr
                           : _getCategoryActionLabel(),
-                      color: const Color(0xFF00C853),
+                      color: const Color(0xFFEF4444),
                       onTap: () {
                         Get.back();
                         controller.markAsCompleted(index);
@@ -1150,19 +1153,19 @@ class CommunityPostCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: const Color(0xFFDCFCE7),
+        color: const Color(0xFFFFEBEE), // light red
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF22C55E), width: 0.5),
+        border: Border.all(color: const Color(0xFFEF4444), width: 0.5),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.check_circle, size: 10, color: Color(0xFF166534)),
+          const Icon(Icons.check_circle, size: 10, color: Color(0xFFC62828)),
           const SizedBox(width: 4),
           Text(
             _getCategoryStatusLabel(),
             style: AppTextStyles.bodyMedium.copyWith(
-              color: const Color(0xFF166534),
+              color: const Color(0xFFC62828),
               fontSize: 10,
               fontWeight: FontWeight.w600,
             ),

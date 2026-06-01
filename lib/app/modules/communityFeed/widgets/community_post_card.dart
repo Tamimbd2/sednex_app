@@ -46,34 +46,48 @@ class CommunityPostCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    final authorData =
-                        post['author'] ??
-                        {
-                          '_id': post['authorId'],
-                          'name': post['name'],
-                          'profileImage': post['avatar'],
-                        };
-                    Get.to(
-                      () => CommunityProfileDetailsView(member: authorData),
-                    );
-                  },
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CircleAvatar(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        final authorData =
+                            post['author'] ??
+                            {
+                              '_id': post['authorId'],
+                              'name': post['name'],
+                              'profileImage': post['avatar'],
+                            };
+                        Get.to(
+                          () => CommunityProfileDetailsView(member: authorData),
+                        );
+                      },
+                      child: CircleAvatar(
                         radius: 20,
                         backgroundImage: CachedNetworkImageProvider(
                           post['avatar'] ?? '',
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              final authorData =
+                                  post['author'] ??
+                                  {
+                                    '_id': post['authorId'],
+                                    'name': post['name'],
+                                    'profileImage': post['avatar'],
+                                  };
+                              Get.to(
+                                () => CommunityProfileDetailsView(member: authorData),
+                              );
+                            },
+                            child: Text(
                               post['name'] ?? 'User',
                               style: AppTextStyles.bodyMedium.copyWith(
                                 color: const Color(0xFF101727),
@@ -81,32 +95,32 @@ class CommunityPostCard extends StatelessWidget {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            const SizedBox(height: 2),
-                            Row(
-                              children: [
-                                Text(
-                                  post['time'] ?? '',
-                                  style: AppTextStyles.bodyMedium.copyWith(
-                                    color: const Color(0xFF697282),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                          ),
+                          const SizedBox(height: 2),
+                          Row(
+                            children: [
+                              Text(
+                                post['time'] ?? '',
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: const Color(0xFF697282),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
                                 ),
-                                if (post['category'] != null) ...[
-                                  const SizedBox(width: 8),
-                                  _buildCategoryTag(post['category']),
-                                ],
-                                if (post['isCompleted'] == true) ...[
-                                  const SizedBox(width: 8),
-                                  _buildCompletedBadge(),
-                                ],
+                              ),
+                              if (post['category'] != null) ...[
+                                const SizedBox(width: 8),
+                                _buildCategoryTag(post['category']),
                               ],
-                            ),
-                          ],
-                        ),
+                              if (post['isCompleted'] == true) ...[
+                                const SizedBox(width: 8),
+                                _buildCompletedBadge(),
+                              ],
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               _buildMoreOptionsButton(context),

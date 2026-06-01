@@ -107,6 +107,7 @@ class MypostController extends GetxController {
               'images': images,
               'lovedBy': lovedBy,
               'isCompleted': post['isCompleted'] ?? false,
+              'isVerified': author['isVerified'] == true || author['verified'] == true,
               'commentsList': <Map<String, dynamic>>[].obs,
             };
           }).toList();

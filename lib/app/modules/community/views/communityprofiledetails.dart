@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 
 import '../../../services/api_service.dart';
 import '../../../core/theme/app_text_styles.dart';
+import 'package:lottie/lottie.dart';
 
 // ── Font Helper ──────────────────────────────────────────────────
 TextStyle _getStyle({
@@ -156,53 +157,95 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
                     // Details Section (Profession, Personal, etc.)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        children: [
-                          // Profession Section
-                          if (_val('companyName').isNotEmpty || _val('workAddress').isNotEmpty) ...[
-                            _buildModernRow(Icons.business_rounded, 'Company', _val('companyName')),
-                            _buildModernRow(Icons.work_outline_rounded, 'Work Address', _val('workAddress')),
-                            const SizedBox(height: 10),
-                          ],
-  
-                          // Account Information Header
-                          if (_val('birthAddress').isNotEmpty ||
-                              _val('currentAddress').isNotEmpty ||
-                              _val('birthDate').isNotEmpty ||
-                              _val('gender').isNotEmpty ||
-                              _val('maritalStatus').isNotEmpty ||
-                              _val('nationality').isNotEmpty ||
-                              _val('bloodGroup').isNotEmpty) ...[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 12, top: 16, left: 5),
-                                child: Text(
-                                  'Account Information',
-                                  style: _getStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF1E293B),
+                      child: () {
+                        final hasDetails = _val('companyName').isNotEmpty ||
+                            _val('workAddress').isNotEmpty ||
+                            _val('birthAddress').isNotEmpty ||
+                            _val('currentAddress').isNotEmpty ||
+                            _val('birthDate').isNotEmpty ||
+                            _val('gender').isNotEmpty ||
+                            _val('maritalStatus').isNotEmpty ||
+                            _val('nationality').isNotEmpty ||
+                            _val('bloodGroup').isNotEmpty ||
+                            _val('websiteLink').isNotEmpty;
+
+                        if (!hasDetails) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 40, bottom: 20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Lottie.asset(
+                                  'assets/images/empty_profile.json',
+                                  height: 180,
+                                  fit: BoxFit.contain,
+                                ),
+                                const SizedBox(height: 16),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  child: Text(
+                                    'This member hasn\'t filled out their public profile details yet.',
+                                    textAlign: TextAlign.center,
+                                    style: _getStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      color: const Color(0xFF64748B),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+
+                        return Column(
+                          children: [
+                            // Profession Section
+                            if (_val('companyName').isNotEmpty || _val('workAddress').isNotEmpty) ...[
+                              _buildModernRow(Icons.business_rounded, 'Company', _val('companyName')),
+                              _buildModernRow(Icons.work_outline_rounded, 'Work Address', _val('workAddress')),
+                              const SizedBox(height: 10),
+                            ],
+    
+                            // Account Information Header
+                            if (_val('birthAddress').isNotEmpty ||
+                                _val('currentAddress').isNotEmpty ||
+                                _val('birthDate').isNotEmpty ||
+                                _val('gender').isNotEmpty ||
+                                _val('maritalStatus').isNotEmpty ||
+                                _val('nationality').isNotEmpty ||
+                                _val('bloodGroup').isNotEmpty) ...[
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 12, top: 16, left: 5),
+                                  child: Text(
+                                    'Account Information',
+                                    style: _getStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: const Color(0xFF1E293B),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
 
-                          // Personal Info Section
-                          _buildModernRow(Icons.location_on_outlined, 'Birth Address', _val('birthAddress')),
-                          _buildModernRow(Icons.home_outlined, 'Current Address', _val('currentAddress')),
-                          _buildModernRow(Icons.calendar_today_outlined, 'Birth Date', _formatDateShort(_val('birthDate'))),
-                          _buildModernRow(Icons.person_outline_rounded, 'Gender', _val('gender')),
-                          _buildModernRow(Icons.favorite_border_rounded, 'Marital Status', _val('maritalStatus')),
-                          _buildModernRow(Icons.flag_outlined, 'Nationality', _val('nationality')),
-                          _buildModernRow(Icons.bloodtype_outlined, 'Blood Group', _val('bloodGroup')),
-                          
-                          // Website
-                          if (_val('websiteLink').isNotEmpty)
-                            _buildModernRow(Icons.language_rounded, 'Website', _val('websiteLink'), isLast: true, onTap: () => _launch(_val('websiteLink'))),
-                        ],
-                      ),
+                            // Personal Info Section
+                            _buildModernRow(Icons.location_on_outlined, 'Birth Address', _val('birthAddress')),
+                            _buildModernRow(Icons.home_outlined, 'Current Address', _val('currentAddress')),
+                            _buildModernRow(Icons.calendar_today_outlined, 'Birth Date', _formatDateShort(_val('birthDate'))),
+                            _buildModernRow(Icons.person_outline_rounded, 'Gender', _val('gender')),
+                            _buildModernRow(Icons.favorite_border_rounded, 'Marital Status', _val('maritalStatus')),
+                            _buildModernRow(Icons.flag_outlined, 'Nationality', _val('nationality')),
+                            _buildModernRow(Icons.bloodtype_outlined, 'Blood Group', _val('bloodGroup')),
+                            
+                            // Website
+                            if (_val('websiteLink').isNotEmpty)
+                              _buildModernRow(Icons.language_rounded, 'Website', _val('websiteLink'), isLast: true, onTap: () => _launch(_val('websiteLink'))),
+                          ],
+                        );
+                      }(),
                     ),
                     const SizedBox(height: 50),
                   ],

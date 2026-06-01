@@ -87,13 +87,27 @@ class CommunityPostCard extends StatelessWidget {
                                 () => CommunityProfileDetailsView(member: authorData),
                               );
                             },
-                            child: Text(
-                              post['name'] ?? 'User',
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                color: const Color(0xFF101727),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  post['name'] ?? 'User',
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    color: const Color(0xFF101727),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                if (post['isVerified'] == true ||
+                                    post['author']?['isVerified'] == true ||
+                                    post['author']?['verified'] == true) ...[
+                                  const SizedBox(width: 4),
+                                  const Icon(
+                                    Icons.verified,
+                                    color: Color(0xFF1E63FF),
+                                    size: 16,
+                                  ),
+                                ],
+                              ],
                             ),
                           ),
                           const SizedBox(height: 2),

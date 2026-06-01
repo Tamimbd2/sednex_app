@@ -284,7 +284,7 @@ class CreatepostController extends GetxController {
                 width: 80,
                 height: 80,
                 decoration: const BoxDecoration(
-                  color: Color(0xFFFEECEF),
+                  color: Color(0xFFE5EDFF),
                   shape: BoxShape.circle,
                 ),
                 child: const Center(

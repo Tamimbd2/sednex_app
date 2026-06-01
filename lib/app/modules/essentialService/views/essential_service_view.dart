@@ -48,7 +48,13 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
               'bus_flight_booking'.tr,
               'assets/Service Icon svg/Flight Booking.svg',
               const Color(0xFF2196F3),
-              () => Get.toNamed('/busflight'),
+              () => Get.toNamed('/busflight', arguments: {'type': 'flight'}),
+            ),
+            _buildServiceCard(
+              'bus_service'.tr,
+              'assets/newessential/Bus--Streamline-Core-Gradient.svg',
+              const Color(0xFFFFD700),
+              () => Get.toNamed('/busflight', arguments: {'type': 'bus'}),
             ),
             _buildServiceCard(
               'tourist_spots'.tr,
@@ -194,12 +200,7 @@ class EssentialServiceView extends GetView<EssentialServiceController> {
                 arguments: {'slug': 'ngo', 'title': 'ngo'.tr},
               ),
             ),
-            _buildServiceCard(
-              'bus_and_flight'.tr,
-              'assets/newessential/Bus--Streamline-Core-Gradient.svg',
-              const Color(0xFF2196F3),
-              () => Get.toNamed('/busflight'),
-            ),
+
             _buildServiceCard(
               'local_tours'.tr,
               'assets/newessential/Location-Pin-3--Streamline-Core-Gradient.svg',

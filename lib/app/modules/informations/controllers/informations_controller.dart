@@ -177,9 +177,17 @@ class InformationsController extends GetxController {
     ),
     ServiceItem(
       label: 'bus_flight_booking',
-      imagePath: 'assets/newessential/Bus--Streamline-Core-Gradient.svg',
+      imagePath: 'assets/Service Icon svg/Flight Booking.svg',
       backgroundColor: const Color(0xFF2196F3),
       route: '/busflight',
+      arguments: {'type': 'flight'},
+    ),
+    ServiceItem(
+      label: 'bus_service',
+      imagePath: 'assets/newessential/Bus--Streamline-Core-Gradient.svg',
+      backgroundColor: const Color(0xFFFFD700),
+      route: '/busflight',
+      arguments: {'type': 'bus'},
     ),
     ServiceItem(
       label: 'local_tours',

@@ -162,7 +162,7 @@ class DashboardView extends GetView<DashboardController> {
                       const SizedBox(width: 8),
                       // Profile Picture
                       GestureDetector(
-                        onTap: () => controller.changePage(3),
+                        onTap: () => Get.toNamed(Routes.PROFILEINFODETAILS),
                         child: Container(
                           padding: const EdgeInsets.all(2),
                           decoration: BoxDecoration(
@@ -804,8 +804,8 @@ class DashboardView extends GetView<DashboardController> {
                         isActive: controller.currentIndex.value == 2,
                       ),
                       _buildNavItem(
-                        iconPath: 'assets/homeicon/profile 232.svg',
-                        label: 'profile'.tr,
+                        iconPath: 'assets/homeicon/settings 232.svg',
+                        label: 'settings'.tr,
                         index: 3,
                         isActive: controller.currentIndex.value == 3,
                       ),

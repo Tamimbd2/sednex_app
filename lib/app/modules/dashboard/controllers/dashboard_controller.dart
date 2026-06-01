@@ -55,6 +55,12 @@ class DashboardController extends GetxController {
     super.onInit();
     // Fetch initial data
     fetchUserProfile();
+    
+    // Listen for storage changes on the 'user' key to update the profile picture instantly
+    _box.listenKey('user', (value) {
+      fetchUserProfile();
+    });
+
     fetchMarqueeText();
     fetchBanner();
     fetchServices();

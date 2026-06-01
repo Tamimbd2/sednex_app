@@ -96,7 +96,7 @@ class ArticleDetailsView extends StatelessWidget {
               ),
               const Spacer(),
 
-              if (article != null) ...[
+              if (controller != null) ...[
                 const SizedBox(width: 8),
                 Obx(() {
                   final isSaved = article!.isSaved.value;
@@ -187,9 +187,7 @@ class ArticleDetailsView extends StatelessWidget {
 
       if (item['type'] == 'paragraph') {
         currentParagraphs +=
-            "<p style='margin-bottom: 10px; line-height: 1.4;'>" +
-            (item['data'] ?? "") +
-            "</p>";
+            "<p style='margin-bottom: 10px; line-height: 1.4;'>${item['data'] ?? ''}</p>";
       } else {
         // If we hit an image, flush current paragraphs first
         if (currentParagraphs.isNotEmpty) {

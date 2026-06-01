@@ -121,8 +121,9 @@ class DashboardView extends GetView<DashboardController> {
                             final nController =
                                 Get.find<NotificationsController>();
                             final unreadCount = nController.unreadCount;
-                            if (unreadCount == 0)
+                            if (unreadCount == 0) {
                               return const SizedBox.shrink();
+                            }
 
                             return Positioned(
                               right: 5,

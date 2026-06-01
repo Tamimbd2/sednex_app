@@ -345,7 +345,6 @@ class DashboardController extends GetxController {
 
             if (items is List && items.isNotEmpty) {
               // Only add if not already present from the 'items' loop to avoid duplicates
-              final existing = results[displayTitle] ?? [];
               for (var item in items) {
                 results.putIfAbsent(displayTitle, () => []).add({
                   ...Map<String, dynamic>.from(item),

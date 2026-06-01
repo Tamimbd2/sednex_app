@@ -44,7 +44,6 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
   int _selectedTabIndex = 0;
   bool _isLoading = true;
   String _name = '';
-  String _imageUrl = '';
   String _coverPhoto = '';
   String _category = '';
   String _about = '';
@@ -91,7 +90,6 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
     // Set whatever we already have immediately
     setState(() {
       _name = fallbackName;
-      _imageUrl = fallbackImage;
       _category = fallbackCategory;
       if (embassy != null) {
         _about = embassy.about;
@@ -157,12 +155,11 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
 
         // Final fallback: use item image if cover is still empty
         if (coverPhoto.isEmpty) {
-          coverPhoto = itemData['image'] ?? itemData['icon'] ?? '';
+          coverPhoto = itemData['image'] ?? itemData['icon'] ?? fallbackImage;
         }
 
         setState(() {
           _name = itemData['name'] ?? fallbackName;
-          _imageUrl = itemData['image'] ?? itemData['icon'] ?? fallbackImage;
           _coverPhoto = coverPhoto;
           _category = itemData['category'] ?? fallbackCategory;
           _about = about['description'] ?? _about;
@@ -372,11 +369,6 @@ class _EmbassyDetailsViewState extends State<EmbassyDetailsView>
     ),
   );
 
-  Widget _avatarFallback() => const Icon(
-    Icons.flag_rounded,
-    size: 40,
-    color: Color(0xFF94A3B8),
-  );
 
 
 

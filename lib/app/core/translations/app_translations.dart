@@ -909,8 +909,6 @@ class AppTranslations extends Translations {
       'please_login_to_react': 'পোস্টে প্রতিক্রিয়া জানাতে দয়া করে লগইন করুন',
       'logout_confirm_title': 'লগআউট',
       'logout_confirm_desc': 'আপনি কি নিশ্চিত যে আপনি লগ আউট করতে চান?',
-      'yes': 'হ্যাঁ',
-      'no': 'না',
       'edit_profile': 'প্রোফাইল পরিবর্তন',
       'saved_post': 'সংরক্ষিত পোস্ট',
       'help_faq': 'হেল্প/এফএকিউ',

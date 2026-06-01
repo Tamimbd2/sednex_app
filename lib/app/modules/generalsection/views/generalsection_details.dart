@@ -26,7 +26,6 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
   bool _isLoading = true;
   String _name = '';
   String _tagline = '';
-  String _imageUrl = '';
   String _coverPhoto = '';
   String _category = '';
   String _about = '';
@@ -93,7 +92,6 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
 
     setState(() {
       _name = fallbackName;
-      _imageUrl = fallbackImage;
       _category = fallbackCategory;
       if (item != null) {
         _about = item.about;
@@ -169,7 +167,6 @@ class _GeneralSectionDetailsViewState extends State<GeneralSectionDetailsView>
 
         setState(() {
           _name = itemData['name'] ?? fallbackName;
-          _imageUrl = itemData['image'] ?? itemData['icon'] ?? fallbackImage;
           _coverPhoto = coverPhoto;
           
           // Essential Tagline

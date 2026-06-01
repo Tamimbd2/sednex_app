@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -187,14 +186,6 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
     );
   }
 
-  Widget _sectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15, top: 10),
-      child: Center(
-        child: Text(title, style: _getStyle(fontSize: 16, fontWeight: FontWeight.w700, color: const Color(0xFF1E63FF))),
-      ),
-    );
-  }
 
   Widget _buildModernRow(IconData icon, String label, String value, {bool isLast = false, VoidCallback? onTap}) {
     if (value.isEmpty) return const SizedBox.shrink();

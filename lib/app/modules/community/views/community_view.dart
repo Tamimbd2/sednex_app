@@ -25,105 +25,107 @@ class CommunityView extends GetView<CommunityController> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 16),
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              onChanged: (val) => controller.searchMembers(val),
-              decoration: InputDecoration(
-                hintText: 'search_members_hint'.tr,
-                hintStyle: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.grey[500],
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            // Search Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                onChanged: (val) => controller.searchMembers(val),
+                decoration: InputDecoration(
+                  hintText: 'search_members_hint'.tr,
+                  hintStyle: AppTextStyles.bodyMedium.copyWith(
+                    color: Colors.grey[500],
+                  ),
+                  prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
+                  filled: true,
+                  fillColor: Colors.grey[100], // Minimalist soft grey background
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none, // No borders initially for a clean look
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
+                  ),
                 ),
-                prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
-                filled: true,
-                fillColor: Colors.grey[100], // Minimalist soft grey background
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none, // No borders initially for a clean look
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: const Color(0xFF2C2C2C),
+                  fontWeight: FontWeight.w500,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
-                ),
+                cursorColor: const Color(0xFF1E63FF),
               ),
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: const Color(0xFF2C2C2C),
-                fontWeight: FontWeight.w500,
-              ),
-              cursorColor: const Color(0xFF1E63FF),
             ),
-          ),
-          const SizedBox(height: 8),
-          // Members Count
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Icon(Icons.people_outline, size: 18, color: Colors.grey[600]),
-                const SizedBox(width: 8),
-                Obx(
-                  () => Text(
-                    '${controller.filteredMembers.length} ${'members_found'.tr}',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: Colors.grey[600],
+            const SizedBox(height: 8),
+            // Members Count
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Icon(Icons.people_outline, size: 18, color: Colors.grey[600]),
+                  const SizedBox(width: 8),
+                  Obx(
+                    () => Text(
+                      '${controller.filteredMembers.length} ${'members_found'.tr}',
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: Colors.grey[600],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          // Members List
-          Expanded(
-            child: Obx(() {
-              if (controller.isLoading.value) {
-                return const Center(
-                  child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
-                );
-              }
-
-              if (controller.filteredMembers.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.people_outline,
-                        size: 64,
-                        color: Colors.grey[300],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'no_members_found'.tr,
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: Colors.grey[500],
-                          fontWeight: FontWeight.w500,
+            // Members List
+            Expanded(
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
+                  );
+                }
+  
+                if (controller.filteredMembers.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.people_outline,
+                          size: 64,
+                          color: Colors.grey[300],
                         ),
-                      ),
-                    ],
-                  ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'no_members_found'.tr,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: Colors.grey[500],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+  
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: controller.filteredMembers.length,
+                  itemBuilder: (context, index) {
+                    final member = controller.filteredMembers[index];
+                    return _buildMemberCard(member);
+                  },
                 );
-              }
-
-              return ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: controller.filteredMembers.length,
-                itemBuilder: (context, index) {
-                  final member = controller.filteredMembers[index];
-                  return _buildMemberCard(member);
-                },
-              );
-            }),
-          ),
-        ],
+              }),
+            ),
+          ],
+        ),
       ),
     );
   }

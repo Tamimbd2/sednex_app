@@ -36,305 +36,307 @@ class GoldRateView extends GetView<GoldRateController> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: Obx(() {
-        if (controller.isLoading.value && controller.rawRates.isEmpty) {
-          return const Center(
-            child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
-          );
-        }
+      body: SafeArea(
+        child: Obx(() {
+          if (controller.isLoading.value && controller.rawRates.isEmpty) {
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xFF1E63FF)),
+            );
+          }
 
-        return RefreshIndicator(
-          onRefresh: controller.refreshGoldRates,
-          color: const Color(0xFF1E63FF),
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            child: Column(
-              children: [
-                 Center(
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 16),
-                      // Modern soft card for update information
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.04),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                          border: Border.all(color: const Color(0xFFF1F1F1)),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFFFB300).withValues(alpha: 0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.access_time_filled_rounded,
-                                color: Color(0xFFFFB300),
-                                size: 14,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              '${"gold_last_update".tr}${controller.lastUpdate.value.trNum}',
-                              style: _getStyle(
-                                fontSize: 13,
-                                color: const Color(0xFF455A64),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF1E63FF).withValues(alpha: 0.08),
-                        blurRadius: 24,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 16,
-                        ),
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0xFFFFF3E0), Color(0xFFFFE0B2)],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
+          return RefreshIndicator(
+            onRefresh: controller.refreshGoldRates,
+            color: const Color(0xFF1E63FF),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Column(
+                children: [
+                   Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 16),
+                        // Modern soft card for update information
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
                           ),
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.04),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                            border: Border.all(color: const Color(0xFFF1F1F1)),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.location_on,
-                                color: Color(0xFF1E63FF),
-                                size: 16,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              'current_market_rate'.tr,
-                              style: _getStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF5D4037),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Column(
-                          children: [
-                            if (controller.calculatedRates.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Text(
-                                  'no_data_found'.tr,
-                                  style: _getStyle(color: Colors.grey),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFFB300).withValues(alpha: 0.1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.access_time_filled_rounded,
+                                  color: Color(0xFFFFB300),
+                                  size: 14,
                                 ),
                               ),
-                            ...controller.calculatedRates.asMap().entries.map((
-                              entry,
-                            ) {
-                              final int idx = entry.key;
-                              final Map<String, dynamic> rate = entry.value;
-                              final String caratLabel = rate['carat'] == '1'
-                                  ? 'sanatan'.tr
-                                  : '${rate['carat'].toString().trNum} ${'carat'.tr}';
-
-                              return Column(
-                                children: [
-                                  _buildPremiumRateRow(
-                                    '${'1'.trNum} ${controller.selectedTabName.value.tr} $caratLabel',
-                                    rate['price'].toString().trNum,
-                                    isHighlight: idx == 0,
-                                  ),
-                                  if (idx <
-                                      controller.calculatedRates.length - 1)
-                                    _buildDivider(),
-                                ],
-                              );
-                            }),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'weight_conversion_calculation'.tr,
-                    style: _getStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF263238),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      _buildModernTab('vhori'.tr, 0, 'vhori'),
-                      _buildModernTab('ana'.tr, 1, 'ana'),
-                      _buildModernTab('roti'.tr, 2, 'roti'),
-                      _buildModernTab('gram'.tr, 3, 'gram'),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blueGrey.withValues(alpha: 0.06),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                    border: Border.all(
-                      color: Colors.grey.withValues(alpha: 0.05),
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Obx(
-                            () => Text(
-                              '${controller.selectedTabName.value.tr} ${'conversion_chart'.tr}',
-                              style: _getStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF37474F),
+                              const SizedBox(width: 8),
+                              Text(
+                                '${"gold_last_update".tr}${controller.lastUpdate.value.trNum}',
+                                style: _getStyle(
+                                  fontSize: 13,
+                                  color: const Color(0xFF455A64),
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF1E63FF).withValues(alpha: 0.08),
+                          blurRadius: 24,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
+                          ),
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFFFFF3E0), Color(0xFFFFE0B2)],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(24),
                             ),
                           ),
-                          const Icon(
-                            Icons.calculate_outlined,
-                            color: Color(0xFF1E63FF),
-                            size: 24,
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.location_on,
+                                  color: Color(0xFF1E63FF),
+                                  size: 16,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                'current_market_rate'.tr,
+                                style: _getStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xFF5D4037),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'measurement_unit_below'.tr,
-                        style: _getStyle(
-                          fontSize: 12,
-                          color: const Color(0xFF90A4AE),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      Obx(() {
-                        if (controller.selectedTabIndex.value == 0) {
-                          return Column(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Column(
                             children: [
-                              _buildModernConversionItem('${'1'.trNum} ${'vhori'.tr}', '${'16'.trNum} ${'ana'.tr}'),
-                              _buildModernConversionItem('${'1'.trNum} ${'vhori'.tr}', '${'96'.trNum} ${'roti'.tr}'),
-                              _buildModernConversionItem(
-                                '${'1'.trNum} ${'vhori'.tr}',
-                                '${'11.664'.trNum} ${'gram'.tr}',
-                              ),
+                              if (controller.calculatedRates.isEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Text(
+                                    'no_data_found'.tr,
+                                    style: _getStyle(color: Colors.grey),
+                                  ),
+                                ),
+                              ...controller.calculatedRates.asMap().entries.map((
+                                entry,
+                              ) {
+                                final int idx = entry.key;
+                                final Map<String, dynamic> rate = entry.value;
+                                final String caratLabel = rate['carat'] == '1'
+                                    ? 'sanatan'.tr
+                                    : '${rate['carat'].toString().trNum} ${'carat'.tr}';
+
+                                return Column(
+                                  children: [
+                                    _buildPremiumRateRow(
+                                      '${'1'.trNum} ${controller.selectedTabName.value.tr} $caratLabel',
+                                      rate['price'].toString().trNum,
+                                      isHighlight: idx == 0,
+                                    ),
+                                    if (idx <
+                                        controller.calculatedRates.length - 1)
+                                      _buildDivider(),
+                                  ],
+                                );
+                              }),
                             ],
-                          );
-                        } else if (controller.selectedTabIndex.value == 1) {
-                          return Column(
-                            children: [
-                              _buildModernConversionItem('${'1'.trNum} ${'ana'.tr}', '${'6'.trNum} ${'roti'.tr}'),
-                              _buildModernConversionItem(
-                                '${'1'.trNum} ${'ana'.tr}',
-                                '${'0.729'.trNum} ${'gram'.tr}',
-                              ),
-                            ],
-                          );
-                        } else if (controller.selectedTabIndex.value == 2) {
-                          return Column(
-                            children: [
-                              _buildModernConversionItem(
-                                '${'1'.trNum} ${'roti'.tr}',
-                                '${'0.1215'.trNum} ${'gram'.tr}',
-                              ),
-                            ],
-                          );
-                        } else {
-                          return Column(
-                            children: [
-                              _buildModernConversionItem(
-                                '${'1'.trNum} ${'gram'.tr}',
-                                '${'0.0857'.trNum} ${'vhori'.tr}',
-                              ),
-                            ],
-                          );
-                        }
-                      }),
-                    ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 40),
-              ],
+                  const SizedBox(height: 32),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'weight_conversion_calculation'.tr,
+                      style: _getStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF263238),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withValues(alpha: 0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        _buildModernTab('vhori'.tr, 0, 'vhori'),
+                        _buildModernTab('ana'.tr, 1, 'ana'),
+                        _buildModernTab('roti'.tr, 2, 'roti'),
+                        _buildModernTab('gram'.tr, 3, 'gram'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blueGrey.withValues(alpha: 0.06),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                      border: Border.all(
+                        color: Colors.grey.withValues(alpha: 0.05),
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Obx(
+                              () => Text(
+                                '${controller.selectedTabName.value.tr} ${'conversion_chart'.tr}',
+                                style: _getStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xFF37474F),
+                                ),
+                              ),
+                            ),
+                            const Icon(
+                              Icons.calculate_outlined,
+                              color: Color(0xFF1E63FF),
+                              size: 24,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'measurement_unit_below'.tr,
+                          style: _getStyle(
+                            fontSize: 12,
+                            color: const Color(0xFF90A4AE),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Obx(() {
+                          if (controller.selectedTabIndex.value == 0) {
+                            return Column(
+                              children: [
+                                _buildModernConversionItem('${'1'.trNum} ${'vhori'.tr}', '${'16'.trNum} ${'ana'.tr}'),
+                                _buildModernConversionItem('${'1'.trNum} ${'vhori'.tr}', '${'96'.trNum} ${'roti'.tr}'),
+                                _buildModernConversionItem(
+                                  '${'1'.trNum} ${'vhori'.tr}',
+                                  '${'11.664'.trNum} ${'gram'.tr}',
+                                ),
+                              ],
+                            );
+                          } else if (controller.selectedTabIndex.value == 1) {
+                            return Column(
+                              children: [
+                                _buildModernConversionItem('${'1'.trNum} ${'ana'.tr}', '${'6'.trNum} ${'roti'.tr}'),
+                                _buildModernConversionItem(
+                                  '${'1'.trNum} ${'ana'.tr}',
+                                  '${'0.729'.trNum} ${'gram'.tr}',
+                                ),
+                              ],
+                            );
+                          } else if (controller.selectedTabIndex.value == 2) {
+                            return Column(
+                              children: [
+                                _buildModernConversionItem(
+                                  '${'1'.trNum} ${'roti'.tr}',
+                                  '${'0.1215'.trNum} ${'gram'.tr}',
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Column(
+                              children: [
+                                _buildModernConversionItem(
+                                  '${'1'.trNum} ${'gram'.tr}',
+                                  '${'0.0857'.trNum} ${'vhori'.tr}',
+                                ),
+                              ],
+                            );
+                          }
+                        }),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 

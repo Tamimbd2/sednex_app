@@ -109,80 +109,82 @@ class _CommunityProfileDetailsViewState extends State<CommunityProfileDetailsVie
         ),
         title: Text('Profile Details', style: AppTextStyles.appBarTitle),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF)))
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(height: 30),
-                  // Header Section
-                  Center(
-                    child: Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 55,
-                          backgroundColor: const Color(0xFFF1F5F9),
-                          backgroundImage: avatar.isNotEmpty ? CachedNetworkImageProvider(avatar) : null,
-                          child: avatar.isEmpty ? const Icon(Icons.person, size: 45, color: Colors.grey) : null,
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(name, style: _getStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Colors.black)),
-                            if (isVerified) ...[
-                              const SizedBox(width: 4),
-                              const Icon(Icons.verified, color: Color(0xFF1E63FF), size: 20),
-                            ],
-                          ],
-                        ),
-                        if (job.isNotEmpty)
-                          Text(job.toUpperCase(), style: _getStyle(fontSize: 14, fontWeight: FontWeight.w600, color: const Color(0xFF1E63FF))),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Bio Section
-                  if (_val('bio').isNotEmpty) ...[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Text(_val('bio'), textAlign: TextAlign.center, style: _getStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.grey[600] ?? Colors.grey)),
-                    ),
+      body: SafeArea(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator(color: Color(0xFF1E63FF)))
+            : SingleChildScrollView(
+                child: Column(
+                  children: [
                     const SizedBox(height: 30),
-                  ],
-
-                  // Details Section (Profession, Personal, etc.)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        // Profession Section
-                        if (_val('companyName').isNotEmpty || _val('workAddress').isNotEmpty) ...[
-                          _buildModernRow(Icons.business_rounded, 'Company', _val('companyName')),
-                          _buildModernRow(Icons.work_outline_rounded, 'Work Address', _val('workAddress')),
-                          const SizedBox(height: 10),
+                    // Header Section
+                    Center(
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 55,
+                            backgroundColor: const Color(0xFFF1F5F9),
+                            backgroundImage: avatar.isNotEmpty ? CachedNetworkImageProvider(avatar) : null,
+                            child: avatar.isEmpty ? const Icon(Icons.person, size: 45, color: Colors.grey) : null,
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(name, style: _getStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Colors.black)),
+                              if (isVerified) ...[
+                                const SizedBox(width: 4),
+                                const Icon(Icons.verified, color: Color(0xFF1E63FF), size: 20),
+                              ],
+                            ],
+                          ),
+                          if (job.isNotEmpty)
+                            Text(job.toUpperCase(), style: _getStyle(fontSize: 14, fontWeight: FontWeight.w600, color: const Color(0xFF1E63FF))),
                         ],
-
-                        // Personal Info Section
-                        _buildModernRow(Icons.location_on_outlined, 'Birth Address', _val('birthAddress').isEmpty ? 'N/A' : _val('birthAddress')),
-                        _buildModernRow(Icons.home_outlined, 'Current Address', _val('currentAddress').isEmpty ? 'N/A' : _val('currentAddress')),
-                        _buildModernRow(Icons.calendar_today_outlined, 'Birth Date', _val('birthDate').isEmpty ? 'N/A' : _formatDateShort(_val('birthDate'))),
-                        _buildModernRow(Icons.person_outline_rounded, 'Gender', _val('gender').isEmpty ? 'N/A' : _val('gender')),
-                        _buildModernRow(Icons.favorite_border_rounded, 'Marital Status', _val('maritalStatus').isEmpty ? 'N/A' : _val('maritalStatus')),
-                        _buildModernRow(Icons.flag_outlined, 'Nationality', _val('nationality').isEmpty ? 'N/A' : _val('nationality')),
-                        _buildModernRow(Icons.bloodtype_outlined, 'Blood Group', _val('bloodGroup').isEmpty ? 'N/A' : _val('bloodGroup')),
-                        
-                        // Website
-                        if (_val('websiteLink').isNotEmpty)
-                          _buildModernRow(Icons.language_rounded, 'Website', _val('websiteLink'), isLast: true, onTap: () => _launch(_val('websiteLink'))),
-                      ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 50),
-                ],
+                    const SizedBox(height: 20),
+  
+                    // Bio Section
+                    if (_val('bio').isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Text(_val('bio'), textAlign: TextAlign.center, style: _getStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.grey[600] ?? Colors.grey)),
+                      ),
+                      const SizedBox(height: 30),
+                    ],
+  
+                    // Details Section (Profession, Personal, etc.)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          // Profession Section
+                          if (_val('companyName').isNotEmpty || _val('workAddress').isNotEmpty) ...[
+                            _buildModernRow(Icons.business_rounded, 'Company', _val('companyName')),
+                            _buildModernRow(Icons.work_outline_rounded, 'Work Address', _val('workAddress')),
+                            const SizedBox(height: 10),
+                          ],
+  
+                          // Personal Info Section
+                          _buildModernRow(Icons.location_on_outlined, 'Birth Address', _val('birthAddress').isEmpty ? 'N/A' : _val('birthAddress')),
+                          _buildModernRow(Icons.home_outlined, 'Current Address', _val('currentAddress').isEmpty ? 'N/A' : _val('currentAddress')),
+                          _buildModernRow(Icons.calendar_today_outlined, 'Birth Date', _val('birthDate').isEmpty ? 'N/A' : _formatDateShort(_val('birthDate'))),
+                          _buildModernRow(Icons.person_outline_rounded, 'Gender', _val('gender').isEmpty ? 'N/A' : _val('gender')),
+                          _buildModernRow(Icons.favorite_border_rounded, 'Marital Status', _val('maritalStatus').isEmpty ? 'N/A' : _val('maritalStatus')),
+                          _buildModernRow(Icons.flag_outlined, 'Nationality', _val('nationality').isEmpty ? 'N/A' : _val('nationality')),
+                          _buildModernRow(Icons.bloodtype_outlined, 'Blood Group', _val('bloodGroup').isEmpty ? 'N/A' : _val('bloodGroup')),
+                          
+                          // Website
+                          if (_val('websiteLink').isNotEmpty)
+                            _buildModernRow(Icons.language_rounded, 'Website', _val('websiteLink'), isLast: true, onTap: () => _launch(_val('websiteLink'))),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 50),
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
 

@@ -25,342 +25,344 @@ class BusflightView extends GetView<BusflightController> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-
-            // Biman Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.flight,
-                        color: Color(0xFF4169E1),
-                        size: 24,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'active_airlines'.tr,
-                        style: AppTextStyles.headingSmall.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'airline_subtitle'.tr,
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: Colors.grey[600],
-                      height: 1.4,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Airline Logos
-                  Obx(() {
-                    if (controller.isLoadingFlights.value) {
-                      return const Center(child: CircularProgressIndicator(color: Color(0xFF4169E1)));
-                    }
-                    if (controller.activeAirlines.isEmpty) {
-                      return Center(
-                        child: Text(
-                          'no_airlines_found'.tr,
-                          style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
-                        ),
-                      );
-                    }
-                    return SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: controller.activeAirlines.map((flight) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 12),
-                            child: _buildAirlineLogo(flight.airlineImage, flight.airlineName),
-                          );
-                        }).toList(),
-                      ),
-                    );
-                  }),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Routes and Transit Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'routes_and_transit'.tr,
-                style: AppTextStyles.headingSmall.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Routes List
-            Obx(() {
-              if (controller.isLoadingRoutes.value) {
-                return const Center(child: CircularProgressIndicator(color: Color(0xFF4169E1)));
-              }
-              if (controller.routes.isEmpty) {
-                return Center(
-                  child: Text(
-                    'no_routes_found'.tr,
-                    style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
-                  ),
-                );
-              }
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+  
+              // Biman Section
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: controller.routes.length,
-                itemBuilder: (context, index) {
-                  final route = controller.routes[index];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF5F5F5),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Text(
-                          route.from,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
+                        const Icon(
+                          Icons.flight,
+                          color: Color(0xFF4169E1),
+                          size: 24,
                         ),
                         const SizedBox(width: 8),
-                        const Icon(Icons.arrow_forward, size: 16, color: Colors.grey),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            route.via.join(' - '),
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF4169E1),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.arrow_forward, size: 16, color: Colors.grey),
-                        const SizedBox(width: 8),
                         Text(
-                          route.to,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            fontWeight: FontWeight.w600,
+                          'active_airlines'.tr,
+                          style: AppTextStyles.headingSmall.copyWith(
+                            fontWeight: FontWeight.w700,
                             color: Colors.black,
                           ),
                         ),
                       ],
                     ),
-                  );
-                },
-              );
-            }),
-            const SizedBox(height: 24),
-
-            // Bus Service Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.directions_bus,
-                    color: Color(0xFFFFD700),
-                    size: 24,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'bus_service'.tr,
-                    style: AppTextStyles.headingSmall.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Bus Service Cards
-            Obx(() {
-              if (controller.isLoadingBus.value) {
-                return const Center(child: CircularProgressIndicator(color: AppColors.primary));
-              }
-              if (controller.busServices.isEmpty) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Text('no_bus_services_found'.tr, style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
-                  ),
-                );
-              }
-              return SizedBox(
-                height: 180,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: controller.busServices.length,
-                  itemBuilder: (context, index) {
-                    final bus = controller.busServices[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Get.to(
-                          () => const BusDetailsView(),
-                          arguments: {
-                            'name': bus.busName,
-                            'seats': '${bus.busSitNo} ${'seats'.tr}',
-                            'image': bus.busImage,
-                            'rentalDetails': bus.rentalDetails,
-                            'note': bus.note,
-                            'about': bus.aboutBusServices,
-                            'contact': bus.contactNumber,
-                          },
-                        );
-                      },
-                    child: Container(
-                      width: 140,
-                      margin: const EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.08),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+                    const SizedBox(height: 8),
+                    Text(
+                      'airline_subtitle'.tr,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: Colors.grey[600],
+                        height: 1.4,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Bus Image with Seats Badge
-                          Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(12),
-                                  topRight: Radius.circular(12),
-                                ),
-                                child: bus.busImage.isNotEmpty
-                                    ? Image.network(
-                                        bus.busImage,
-                                        width: 140,
-                                        height: 120,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Container(
-                                            width: 140,
-                                            height: 120,
-                                            color: Colors.grey[300],
-                                            child: const Icon(
-                                              Icons.directions_bus,
-                                              size: 40,
-                                              color: Colors.grey,
-                                            ),
-                                          );
-                                        },
-                                      )
-                                    : Container(
-                                        width: 140,
-                                        height: 120,
-                                        color: Colors.grey[300],
-                                        child: const Icon(
-                                          Icons.directions_bus,
-                                          size: 40,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                              ),
-                              Positioned(
-                                top: 8,
-                                right: 8,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF4169E1),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                    child: Text(
-                                      '${bus.busSitNo} ${'seats'.tr}',
-                                      style: AppTextStyles.bodySmall.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                ),
-                              ),
-                            ],
+                    ),
+                    const SizedBox(height: 16),
+  
+                    // Airline Logos
+                    Obx(() {
+                      if (controller.isLoadingFlights.value) {
+                        return const Center(child: CircularProgressIndicator(color: Color(0xFF4169E1)));
+                      }
+                      if (controller.activeAirlines.isEmpty) {
+                        return Center(
+                          child: Text(
+                            'no_airlines_found'.tr,
+                            style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
                           ),
-                          // Bus Name
-                          Padding(
-                            padding: const EdgeInsets.all(12),
+                        );
+                      }
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: controller.activeAirlines.map((flight) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 12),
+                              child: _buildAirlineLogo(flight.airlineImage, flight.airlineName),
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+  
+              // Routes and Transit Section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'routes_and_transit'.tr,
+                  style: AppTextStyles.headingSmall.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+  
+              // Routes List
+              Obx(() {
+                if (controller.isLoadingRoutes.value) {
+                  return const Center(child: CircularProgressIndicator(color: Color(0xFF4169E1)));
+                }
+                if (controller.routes.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'no_routes_found'.tr,
+                      style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: controller.routes.length,
+                  itemBuilder: (context, index) {
+                    final route = controller.routes[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF5F5F5),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            route.from,
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.arrow_forward, size: 16, color: Colors.grey),
+                          const SizedBox(width: 8),
+                          Expanded(
                             child: Text(
-                              bus.busName,
+                              route.via.join(' - '),
+                              textAlign: TextAlign.center,
                               style: AppTextStyles.bodyMedium.copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black,
+                                color: const Color(0xFF4169E1),
                               ),
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.arrow_forward, size: 16, color: Colors.grey),
+                          const SizedBox(width: 8),
+                          Text(
+                            route.to,
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
                             ),
                           ),
                         ],
                       ),
+                    );
+                  },
+                );
+              }),
+              const SizedBox(height: 24),
+  
+              // Bus Service Section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.directions_bus,
+                      color: Color(0xFFFFD700),
+                      size: 24,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'bus_service'.tr,
+                      style: AppTextStyles.headingSmall.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+  
+              // Bus Service Cards
+              Obx(() {
+                if (controller.isLoadingBus.value) {
+                  return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+                }
+                if (controller.busServices.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Text('no_bus_services_found'.tr, style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
                     ),
                   );
-                },
-              ),
-            );
-          }),
-            const SizedBox(height: 24),
-
-            // About Our Service Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'about_our_service'.tr,
-                    style: AppTextStyles.headingSmall.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
+                }
+                return SizedBox(
+                  height: 180,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: controller.busServices.length,
+                    itemBuilder: (context, index) {
+                      final bus = controller.busServices[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(
+                            () => const BusDetailsView(),
+                            arguments: {
+                              'name': bus.busName,
+                              'seats': '${bus.busSitNo} ${'seats'.tr}',
+                              'image': bus.busImage,
+                              'rentalDetails': bus.rentalDetails,
+                              'note': bus.note,
+                              'about': bus.aboutBusServices,
+                              'contact': bus.contactNumber,
+                            },
+                          );
+                        },
+                      child: Container(
+                        width: 140,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.08),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Bus Image with Seats Badge
+                            Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(12),
+                                    topRight: Radius.circular(12),
+                                  ),
+                                  child: bus.busImage.isNotEmpty
+                                      ? Image.network(
+                                          bus.busImage,
+                                          width: 140,
+                                          height: 120,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Container(
+                                              width: 140,
+                                              height: 120,
+                                              color: Colors.grey[300],
+                                              child: const Icon(
+                                                Icons.directions_bus,
+                                                size: 40,
+                                                color: Colors.grey,
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      : Container(
+                                          width: 140,
+                                          height: 120,
+                                          color: Colors.grey[300],
+                                          child: const Icon(
+                                            Icons.directions_bus,
+                                            size: 40,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                ),
+                                Positioned(
+                                  top: 8,
+                                  right: 8,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF4169E1),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                      child: Text(
+                                        '${bus.busSitNo} ${'seats'.tr}',
+                                        style: AppTextStyles.bodySmall.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            // Bus Name
+                            Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Text(
+                                  bus.busName,
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'about_service_desc'.tr,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: Colors.grey[700],
-                      height: 1.6,
+                );
+              }),
+              const SizedBox(height: 24),
+  
+              // About Our Service Section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'about_our_service'.tr,
+                      style: AppTextStyles.headingSmall.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 12),
+                    Text(
+                      'about_service_desc'.tr,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: Colors.grey[700],
+                        height: 1.6,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 32),
-          ],
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );

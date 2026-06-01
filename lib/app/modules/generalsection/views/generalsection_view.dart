@@ -38,109 +38,111 @@ class GeneralSectionView extends GetView<GeneralSectionController> {
           ),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 16),
-          
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              onChanged: (val) => controller.searchQuery.value = val,
-              decoration: InputDecoration(
-                hintText: '${'search'.tr} ${controller.slug.tr}...',
-                hintStyle: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.grey[500],
-                  fontSize: 15,
-                ),
-                prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
-                filled: true,
-                fillColor: Colors.grey[100],
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5),
-                ),
-              ),
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: const Color(0xFF2C2C2C),
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
-              cursorColor: const Color(0xFF1E63FF),
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Heading
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              '${'all'.tr.capitalizeFirst} ${controller.slug.tr}',
-              style: AppTextStyles.headingSmall.copyWith(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Grid
-          Expanded(
-            child: Obx(
-              () {
-                if (controller.isLoading.value && controller.items.isEmpty) {
-                  return const Center(child: CircularProgressIndicator(color: AppColors.primary));
-                }
-
-                if (controller.filteredItems.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.search_off_rounded, size: 60, color: Colors.grey[300]),
-                        const SizedBox(height: 16),
-                        Text(
-                          'no_entries_found'.tr,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            fontSize: 15,
-                            color: Colors.grey[500],
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                return GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio: 0.85,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 16),
+            
+            // Search Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                onChanged: (val) => controller.searchQuery.value = val,
+                decoration: InputDecoration(
+                  hintText: '${'search'.tr} ${controller.slug.tr}...',
+                  hintStyle: AppTextStyles.bodyMedium.copyWith(
+                    color: Colors.grey[500],
+                    fontSize: 15,
                   ),
-                  itemCount: controller.filteredItems.length,
-                  itemBuilder: (context, index) {
-                    final item = controller.filteredItems[index];
-                    return _buildSectionItemCard(item);
-                  },
-                );
-              },
+                  prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5),
+                  ),
+                ),
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: const Color(0xFF2C2C2C),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+                cursorColor: const Color(0xFF1E63FF),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 24),
+  
+            // Heading
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                '${'all'.tr.capitalizeFirst} ${controller.slug.tr}',
+                style: AppTextStyles.headingSmall.copyWith(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+  
+            // Grid
+            Expanded(
+              child: Obx(
+                () {
+                  if (controller.isLoading.value && controller.items.isEmpty) {
+                    return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+                  }
+  
+                  if (controller.filteredItems.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.search_off_rounded, size: 60, color: Colors.grey[300]),
+                          const SizedBox(height: 16),
+                          Text(
+                            'no_entries_found'.tr,
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              fontSize: 15,
+                              color: Colors.grey[500],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+  
+                  return GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: 0.85,
+                    ),
+                    itemCount: controller.filteredItems.length,
+                    itemBuilder: (context, index) {
+                      final item = controller.filteredItems[index];
+                      return _buildSectionItemCard(item);
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

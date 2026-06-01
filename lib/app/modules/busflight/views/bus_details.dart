@@ -39,45 +39,176 @@ class BusDetailsView extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-
-            // Bus Info Card
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+  
+              // Bus Info Card
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                0xFFFFD700,
+                              ).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Icon(
+                              Icons.directions_bus,
+                              color: Color(0xFFFFD700),
+                              size: 28,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  busName,
+                                  style: AppTextStyles.headingSmall.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'ডিজাইনিং এবং বুক সার্ভিসিং',
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    fontSize: 13,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+  
+                      // Bus Image
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: image.isNotEmpty
+                            ? Image.network(
+                                image,
+                                width: double.infinity,
+                                height: 180,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    width: double.infinity,
+                                    height: 180,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Icon(
+                                      Icons.directions_bus,
+                                      size: 60,
+                                      color: Colors.grey,
+                                    ),
+                                  );
+                                },
+                              )
+                            : Container(
+                                width: double.infinity,
+                                height: 180,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.directions_bus,
+                                  size: 60,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+              ),
+              const SizedBox(height: 20),
+  
+              // Rent Details Section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'Rent Details',
+                  style: AppTextStyles.subHeadingLarge.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+  
+              // Rent Details Cards
+              if (rentalDetails.isNotEmpty)
+                ...rentalDetails.map(
+                  (detail) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 6,
+                    ),
+                    child: _buildRentDetailCard(
+                      Icons.check_circle_outline,
+                      detail,
+                      const Color(0xFF00C853),
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 20),
+  
+              // Note Section
+              if (note.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFF3E0),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: const Color(0xFFFFD700).withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: const Color(
-                              0xFFFFD700,
-                            ).withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
+                            color: const Color(0xFFFFD700).withValues(alpha: 0.2),
+                            shape: BoxShape.circle,
                           ),
                           child: const Icon(
-                            Icons.directions_bus,
+                            Icons.info_outline,
                             color: Color(0xFFFFD700),
-                            size: 28,
+                            size: 20,
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -86,18 +217,19 @@ class BusDetailsView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                busName,
-                                style: AppTextStyles.headingSmall.copyWith(
+                                'নোট:',
+                                style: AppTextStyles.subHeadingMedium.copyWith(
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.black,
+                                  color: const Color(0xFFFFD700),
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'ডিজাইনিং এবং বুক সার্ভিসিং',
-                                style: AppTextStyles.bodySmall.copyWith(
+                                note,
+                                style: AppTextStyles.bodyMedium.copyWith(
                                   fontSize: 13,
-                                  color: Colors.grey[600],
+                                  color: Colors.black87,
+                                  height: 1.4,
                                 ),
                               ),
                             ],
@@ -105,247 +237,117 @@ class BusDetailsView extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-
-                    // Bus Image
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: image.isNotEmpty
-                          ? Image.network(
-                              image,
-                              width: double.infinity,
-                              height: 180,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  width: double.infinity,
-                                  height: 180,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Icon(
-                                    Icons.directions_bus,
-                                    size: 60,
-                                    color: Colors.grey,
-                                  ),
-                                );
-                              },
-                            )
-                          : Container(
-                              width: double.infinity,
-                              height: 180,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Icon(
-                                Icons.directions_bus,
-                                size: 60,
-                                color: Colors.grey,
-                              ),
-                            ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Rent Details Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'Rent Details',
-                style: AppTextStyles.subHeadingLarge.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Rent Details Cards
-            if (rentalDetails.isNotEmpty)
-              ...rentalDetails.map(
-                (detail) => Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 6,
-                  ),
-                  child: _buildRentDetailCard(
-                    Icons.check_circle_outline,
-                    detail,
-                    const Color(0xFF00C853),
                   ),
                 ),
-              ),
-            const SizedBox(height: 20),
-
-            // Note Section
-            if (note.isNotEmpty)
+              const SizedBox(height: 20),
+  
+              // About Bus Service Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFF3E0),
+                    color: const Color(0xFFE8EAF6),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: const Color(0xFFFFD700).withValues(alpha: 0.3),
-                    ),
                   ),
-                  child: Row(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFFD700).withValues(alpha: 0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.info_outline,
-                          color: Color(0xFFFFD700),
-                          size: 20,
+                      Text(
+                        'About Bus Service',
+                        style: AppTextStyles.subHeadingLarge.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'নোট:',
-                              style: AppTextStyles.subHeadingMedium.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFFFFD700),
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              note,
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                fontSize: 13,
-                                color: Colors.black87,
-                                height: 1.4,
-                              ),
-                            ),
-                          ],
+                      const SizedBox(height: 12),
+                      Text(
+                        about,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: Colors.grey[700],
+                          height: 1.6,
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-            const SizedBox(height: 20),
-
-            // About Bus Service Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE8EAF6),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'About Bus Service',
-                      style: AppTextStyles.subHeadingLarge.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      about,
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        color: Colors.grey[700],
-                        height: 1.6,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Book This Bus Now Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (contact.isNotEmpty) {
-                      final cleanPhone = contact.replaceAll(
-                        RegExp(r'[^\d+]'),
-                        '',
-                      );
-                      final formattedPhone = cleanPhone.replaceAll('+', '');
-                      final message =
-                          "Hello, I am interested in booking this service:\n\n*Service Name:* $busName\n*Seat Capacity:* $seats\n*Details:* ${rentalDetails.join(', ')}\n\nPlease let me know the process.";
-                      final encodedMessage = Uri.encodeComponent(message);
-                      final uri = Uri.parse(
-                        "https://wa.me/$formattedPhone?text=$encodedMessage",
-                      );
-                      try {
-                        await launchUrl(
-                          uri,
-                          mode: LaunchMode.externalApplication,
+              const SizedBox(height: 24),
+  
+              // Book This Bus Now Button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (contact.isNotEmpty) {
+                        final cleanPhone = contact.replaceAll(
+                          RegExp(r'[^\d+]'),
+                          '',
                         );
-                      } catch (e) {
+                        final formattedPhone = cleanPhone.replaceAll('+', '');
+                        final message =
+                            "Hello, I am interested in booking this service:\n\n*Service Name:* $busName\n*Seat Capacity:* $seats\n*Details:* ${rentalDetails.join(', ')}\n\nPlease let me know the process.";
+                        final encodedMessage = Uri.encodeComponent(message);
+                        final uri = Uri.parse(
+                          "https://wa.me/$formattedPhone?text=$encodedMessage",
+                        );
+                        try {
+                          await launchUrl(
+                            uri,
+                            mode: LaunchMode.externalApplication,
+                          );
+                        } catch (e) {
+                          Get.snackbar(
+                            'Error',
+                            'Could not open WhatsApp',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red.withValues(alpha: 0.1),
+                            colorText: Colors.red,
+                          );
+                        }
+                      } else {
                         Get.snackbar(
-                          'Error',
-                          'Could not open WhatsApp',
+                          'Booking',
+                          'Bus booking feature coming soon.',
                           snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.red.withValues(alpha: 0.1),
-                          colorText: Colors.red,
+                          backgroundColor: AppColors.primary.withValues(
+                            alpha: 0.1,
+                          ),
+                          colorText: AppColors.primary,
                         );
                       }
-                    } else {
-                      Get.snackbar(
-                        'Booking',
-                        'Bus booking feature coming soon.',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: AppColors.primary.withValues(
-                          alpha: 0.1,
-                        ),
-                        colorText: AppColors.primary,
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF25D366),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF25D366),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
                     ),
-                    elevation: 0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/WhatsApp.svg',
-                        width: 24,
-                        height: 24,
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        contact.isNotEmpty ? contact : 'Book This Bus Now',
-                        style: AppTextStyles.button,
-                      ),
-                    ],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/WhatsApp.svg',
+                          width: 24,
+                          height: 24,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          contact.isNotEmpty ? contact : 'Book This Bus Now',
+                          style: AppTextStyles.button,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 32),
-          ],
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );

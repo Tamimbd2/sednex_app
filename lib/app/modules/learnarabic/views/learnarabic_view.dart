@@ -26,104 +26,106 @@ class LearnarabicView extends GetView<LearnarabicController> {
         ),
         centerTitle: true,
       ),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(
-            child: CircularProgressIndicator(color: AppColors.primary),
-          );
-        }
-
-        if (controller.categories.isEmpty) {
-          return Center(
-            child: Text(
-              'no_categories_found'.tr,
-              style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
-            ),
-          );
-        }
-
-        return Column(
-          children: [
-            const SizedBox(height: 16),
-            // Search Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                onChanged: controller.onSearchChanged,
-                decoration: InputDecoration(
-                  hintText: 'search_arabic_placeholder'.tr,
-                  hintStyle: AppTextStyles.bodyMedium.copyWith(
-                    color: Colors.grey[500],
-                  ),
-                  prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
-                  filled: true,
-                  fillColor: Colors.grey[100], // Minimalist soft grey background
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none, // No borders initially for a clean look
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
-                  ),
-                ),
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: const Color(0xFF2C2C2C),
-                  fontWeight: FontWeight.w500,
-                ),
-                cursorColor: const Color(0xFF1E63FF),
+      body: SafeArea(
+        child: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            );
+          }
+  
+          if (controller.categories.isEmpty) {
+            return Center(
+              child: Text(
+                'no_categories_found'.tr,
+                style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
               ),
-            ),
-            const SizedBox(height: 24),
-            // Category Tabs
-            SizedBox(
-              height: 40,
-              child: ListView.builder(
+            );
+          }
+  
+          return Column(
+            children: [
+              const SizedBox(height: 16),
+              // Search Bar
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                scrollDirection: Axis.horizontal,
-                itemCount: controller.categories.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == 0) {
+                child: TextField(
+                  onChanged: controller.onSearchChanged,
+                  decoration: InputDecoration(
+                    hintText: 'search_arabic_placeholder'.tr,
+                    hintStyle: AppTextStyles.bodyMedium.copyWith(
+                      color: Colors.grey[500],
+                    ),
+                    prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[500], size: 22),
+                    filled: true,
+                    fillColor: Colors.grey[100], // Minimalist soft grey background
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none, // No borders initially for a clean look
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Subtle focus border
+                    ),
+                  ),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: const Color(0xFF2C2C2C),
+                    fontWeight: FontWeight.w500,
+                  ),
+                  cursorColor: const Color(0xFF1E63FF),
+                ),
+              ),
+              const SizedBox(height: 24),
+              // Category Tabs
+              SizedBox(
+                height: 40,
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.categories.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: _buildTab('view_all'.tr, -1),
+                      );
+                    }
+                    final category = controller.categories[index - 1];
                     return Padding(
                       padding: const EdgeInsets.only(right: 8),
-                      child: _buildTab('view_all'.tr, -1),
+                      child: _buildTab(category.name, index - 1),
                     );
-                  }
-                  final category = controller.categories[index - 1];
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: _buildTab(category.name, index - 1),
-                  );
-                },
+                  },
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            // Word Cards
-            Expanded(
-              child: controller.currentWords.isEmpty
-                  ? Center(
-                      child: Text(
-                        'no_words_found'.tr,
-                        style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
+              const SizedBox(height: 16),
+              // Word Cards
+              Expanded(
+                child: controller.currentWords.isEmpty
+                    ? Center(
+                        child: Text(
+                          'no_words_found'.tr,
+                          style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: controller.currentWords.length,
+                        itemBuilder: (context, index) {
+                          final word = controller.currentWords[index];
+                          return _buildWordCard(word);
+                        },
                       ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: controller.currentWords.length,
-                      itemBuilder: (context, index) {
-                        final word = controller.currentWords[index];
-                        return _buildWordCard(word);
-                      },
-                    ),
-            ),
-          ],
-        );
-      }),
+              ),
+            ],
+          );
+        }),
+      ),
     );
   }
 

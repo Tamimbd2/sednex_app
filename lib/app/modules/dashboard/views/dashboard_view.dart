@@ -820,6 +820,26 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
+  void _scrollToTop(int index) {
+    if (index == 0) {
+      if (controller.homeScrollController.hasClients) {
+        controller.homeScrollController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    } else if (index == 1) {
+      if (CommunityFeedView.scrollController.hasClients) {
+        CommunityFeedView.scrollController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    }
+  }
+
   Widget _buildNavItem({
     required String iconPath,
     required String label,
@@ -827,7 +847,16 @@ class DashboardView extends GetView<DashboardController> {
     required bool isActive,
   }) {
     return GestureDetector(
-      onTap: () => controller.changePage(index),
+      onTap: () {
+        if (isActive) {
+          _scrollToTop(index);
+        } else {
+          controller.changePage(index);
+        }
+      },
+      onDoubleTap: () {
+        _scrollToTop(index);
+      },
       behavior: HitTestBehavior.opaque,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),

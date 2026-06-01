@@ -16,14 +16,14 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
     this.showFAB = true,
   });
 
-  static final ScrollController _scrollController = ScrollController();
+  static final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     // Set up scroll listener for pagination
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 200) {
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 200) {
         controller.loadMorePosts();
       }
     });
@@ -63,7 +63,7 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
           color: const Color(0xFF1E63FF),
           onRefresh: () => controller.refreshPosts(),
           child: CustomScrollView(
-            controller: _scrollController,
+            controller: scrollController,
             slivers: [
               // Filter Chips (Always Visible)
               SliverToBoxAdapter(

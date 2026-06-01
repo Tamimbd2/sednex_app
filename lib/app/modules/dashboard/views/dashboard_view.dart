@@ -434,47 +434,50 @@ class DashboardView extends GetView<DashboardController> {
               );
             }
 
-            return ListTile(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 4,
-              ),
-              leading: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: _buildItemImage(item),
-              ),
-              title: Text(
-                item['title'] ??
-                    item['name'] ??
-                    (item['author'] is Map ? item['author']['name'] : null) ??
-                    'No Title',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w500,
+            return Material(
+              color: Colors.transparent,
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
                 ),
-              ),
-              subtitle: Text(
-                _stripHtml(
-                  item['description'] ??
-                      item['content'] ??
-                      item['category'] ??
-                      '',
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: _buildItemImage(item),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: Colors.grey[500],
+                title: Text(
+                  item['title'] ??
+                      item['name'] ??
+                      (item['author'] is Map ? item['author']['name'] : null) ??
+                      'No Title',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
+                subtitle: Text(
+                  _stripHtml(
+                    item['description'] ??
+                        item['content'] ??
+                        item['category'] ??
+                        '',
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: Colors.grey[500],
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 12,
+                  color: Colors.grey,
+                ),
+                onTap: () {
+                  _navigateToDetail(title, item);
+                },
               ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 12,
-                color: Colors.grey,
-              ),
-              onTap: () {
-                _navigateToDetail(title, item);
-              },
             );
           },
         ),

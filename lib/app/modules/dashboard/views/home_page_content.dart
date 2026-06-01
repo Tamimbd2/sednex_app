@@ -168,30 +168,39 @@ class HomePageContent extends StatelessWidget {
                             bottom: 10,
                             left: 0,
                             right: 0,
-                            child: Obx(
-                              () => Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: List.generate(banners.length, (index) {
-                                  final isActive =
-                                      (controller.currentBannerIndex.value %
-                                          banners.length) ==
-                                      index;
-                                  return AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 4,
-                                    ),
-                                    width: isActive ? 20 : 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      color: isActive
-                                          ? Colors.white
-                                          : Colors.white.withValues(alpha: 0.5),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                  );
-                                }),
-                              ),
+                            child: AnimatedBuilder(
+                              animation: controller.bannerPageController,
+                              builder: (context, _) {
+                                double page = 5000.0;
+                                if (controller.bannerPageController.position.haveDimensions) {
+                                  page = controller.bannerPageController.page ?? 5000.0;
+                                }
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(banners.length, (index) {
+                                    final double currentPage = page % banners.length;
+                                    double diff = (currentPage - index).abs();
+                                    if (diff > banners.length / 2) {
+                                      diff = banners.length - diff;
+                                    }
+                                    final double activeFactor = (1.0 - diff).clamp(0.0, 1.0);
+                                    final double width = 8.0 + (12.0 * activeFactor);
+                                    final double opacity = 0.5 + (0.5 * activeFactor);
+
+                                    return Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 4,
+                                      ),
+                                      width: width,
+                                      height: 8,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(alpha: opacity),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    );
+                                  }),
+                                );
+                              },
                             ),
                           ),
                       ],

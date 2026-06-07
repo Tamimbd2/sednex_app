@@ -105,7 +105,7 @@ class CommunityFeedController extends GetxController {
         String category = selectedFilter.value.toLowerCase();
         if (category == "buy & sells") category = "buy_sell";
         if (category == "home rents") category = "rentals";
-        if (category == "job posts") category = "job";
+        if (category == "job posts") category = "jobs";
         if (category == "questions") category = "question";
         if (category == "help request") category = "help";
         if (category == "updates") category = "update";

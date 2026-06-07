@@ -92,6 +92,7 @@ flutter:
     - assets/appicon/
     - assets/homeicon/
     - "assets/Service Icon svg/"
+    - "assets/Svg Icon/"
 
 flutter_launcher_icons:
   android: "launcher_icon"

@@ -28,6 +28,9 @@ class DashboardController extends GetxController {
   var userProfileImage = RxnString(); // Observable profile image
   var isLovedProductsLoading = false.obs;
 
+  var jobPostsList = <Map<String, dynamic>>[].obs;
+  var isJobsLoading = false.obs;
+
   // Global Search State
   var isSearchLoading = false.obs;
   var searchResults = <String, List<dynamic>>{}.obs; // Section -> List of items
@@ -65,6 +68,7 @@ class DashboardController extends GetxController {
     fetchBanner();
     fetchServices();
     fetchLovedProducts();
+    fetchJobPosts();
 
     // Setup refresh timers
     _marqueeTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
@@ -150,6 +154,35 @@ class DashboardController extends GetxController {
       debugPrint('Error fetching services: $e');
     } finally {
       debugPrint('fetchServices completed');
+    }
+  }
+
+  void fetchJobPosts() async {
+    isJobsLoading.value = true;
+    try {
+      final response = await apiService.getData('api/post/category/jobs?page=1&limit=6');
+      if (response.statusCode == 200) {
+        var body = response.body;
+        if (body is String) body = jsonDecode(body);
+        if (body is Map) {
+          final List rawPosts = body['posts'] ?? [];
+          final List<Map<String, dynamic>> mapped = rawPosts.map<Map<String, dynamic>>((post) {
+            final author = post['author'] ?? {};
+            return {
+              '_id': post['_id'] ?? '',
+              'name': author['name'] ?? 'Unknown',
+              'content': post['description'] ?? '',
+              'avatar': author['profileImage'] ??
+                  'https://ui-avatars.com/api/?name=${Uri.encodeComponent(author['name'] ?? 'U')}&background=1E63FF&color=fff&size=80',
+            };
+          }).toList();
+          jobPostsList.assignAll(mapped);
+        }
+      }
+    } catch (e) {
+      debugPrint("Error fetching job posts on dashboard: $e");
+    } finally {
+      isJobsLoading.value = false;
     }
   }
 

@@ -33,6 +33,8 @@ class DashboardController extends GetxController {
 
   // Global Search State
   var isSearchLoading = false.obs;
+  var searchError = ''.obs;
+  String? _activeSearchQuery;
   var searchResults = <String, List<dynamic>>{}.obs; // Section -> List of items
 
   // Community Post interactions in search
@@ -84,6 +86,7 @@ class DashboardController extends GetxController {
         performGlobalSearch(query);
       } else {
         searchResults.clear();
+        searchError.value = '';
       }
     }, time: const Duration(milliseconds: 500));
 
@@ -294,17 +297,23 @@ class DashboardController extends GetxController {
     if (query.isEmpty) {
       searchResults.clear();
       expandedPosts.clear();
+      searchError.value = '';
       return;
     }
 
+    _activeSearchQuery = query;
     expandedPosts.clear(); // Reset expands on new search
     isSearchLoading.value = true;
+    searchError.value = '';
     final results = <String, List<dynamic>>{};
 
     try {
       // Use the unified search API provided
       final response = await apiService.getData('api/search', query: {'q': query});
       
+      // If a newer search has started, discard this result
+      if (_activeSearchQuery != query) return;
+
       if (response.statusCode == 200) {
         final body = response.body;
         
@@ -317,10 +326,12 @@ class DashboardController extends GetxController {
           'restaurents': 'Restaurants',
           'organization': 'Organizations',
           'embassy': 'Embassies',
-          'tours': 'Sednex Travel',
+          'tours': 'Lebanon Tour',
         };
 
         if (body is Map) {
+          final dataMap = (body['data'] is Map) ? body['data'] : body;
+
           // 1. Identify the list of items from various possible structures
           dynamic itemsList;
           if (body['items'] is List) {
@@ -329,6 +340,8 @@ class DashboardController extends GetxController {
             itemsList = body['data'];
           } else if (body['data'] is Map && body['data']['items'] is List) {
             itemsList = body['data']['items'];
+          } else if (body['items'] is Map && body['items']['items'] is List) {
+            itemsList = body['items']['items'];
           }
 
           // 2. Process the flat list if found (New Unified API)
@@ -336,6 +349,15 @@ class DashboardController extends GetxController {
             for (var item in itemsList) {
               if (item is Map) {
                 final model = item['model']?.toString().toLowerCase() ?? '';
+                
+                // Ignore structural/administrative/system models from general search results
+                if (model == 'homepageslider' ||
+                    model == 'slider' ||
+                    model == 'marquee' ||
+                    model == 'banner' ||
+                    model == 'notification') {
+                  continue;
+                }
                 
                 // Use mapping for known models to match existing UI titles
                 final sectionMapping = {
@@ -348,11 +370,14 @@ class DashboardController extends GetxController {
                   'restaurent': 'Restaurants',
                   'organization': 'Organizations',
                   'embassy': 'Embassies',
-                  'tour': 'Sednex Travel',
-                  'localtour': 'Sednex Travel',
+                  'tour': 'Lebanon Tour',
+                  'localtour': 'Lebanon Tour',
                   'touristspot': 'Tourist Spots',
                   'spot': 'Tourist Spots',
                   'user': 'Users',
+                  'flightroute': 'Flight Routes',
+                  'route': 'Flight Routes',
+                  'busservice': 'Bus Services',
                   'texi-driver': 'Drivers',
                   'texi_driver': 'Drivers',
                   'taxi-driver': 'Drivers',
@@ -382,8 +407,14 @@ class DashboardController extends GetxController {
                   'ngo': 'NGO',
                 };
 
-                String section = sectionMapping[model] ?? 
-                                (model.isNotEmpty ? model.capitalizeFirst! : 'Search Results');
+                String section = 'Search Results';
+                if (model == 'section' && item.containsKey('slug')) {
+                  final slug = item['slug']?.toString() ?? '';
+                  section = sectionMapping[slug] ?? slug.capitalizeFirst!;
+                } else {
+                  section = sectionMapping[model] ?? 
+                                  (model.isNotEmpty ? model.capitalizeFirst! : 'Search Results');
+                }
                 
                 // Special check for users if model is missing but role exists
                 if ((model.isEmpty || section == 'Search Results') && item.containsKey('role')) {
@@ -401,7 +432,7 @@ class DashboardController extends GetxController {
 
           // Fallback: Check for grouped keys if 'items' is empty or not present
           sectionMap.forEach((apiKey, displayTitle) {
-            var items = body[apiKey];
+            var items = dataMap[apiKey];
             
             // Handle nested data structure if present
             if (items is Map && items['items'] is List) {
@@ -413,15 +444,22 @@ class DashboardController extends GetxController {
             if (items is List && items.isNotEmpty) {
               // Only add if not already present from the 'items' loop to avoid duplicates
               for (var item in items) {
-                results.putIfAbsent(displayTitle, () => []).add({
-                  ...Map<String, dynamic>.from(item),
-                  '_search_section': displayTitle,
-                  'commentsList': <Map<String, dynamic>>[].obs,
-                });
+                final alreadyAdded = results[displayTitle]?.any((existing) => 
+                    existing['_id'] == item['_id'] || existing['id'] == item['id']) ?? false;
+                
+                if (!alreadyAdded) {
+                  results.putIfAbsent(displayTitle, () => []).add({
+                    ...Map<String, dynamic>.from(item),
+                    '_search_section': displayTitle,
+                    'commentsList': <Map<String, dynamic>>[].obs,
+                  });
+                }
               }
             }
           });
         }
+      } else {
+        searchError.value = 'Failed to fetch search results. Server returned status ${response.statusCode}';
       }
       
       // Search in Services (locally available as they are fetched on init)
@@ -439,11 +477,18 @@ class DashboardController extends GetxController {
         }).toList();
       }
 
-      searchResults.assignAll(results);
+      if (_activeSearchQuery == query) {
+        searchResults.assignAll(results);
+      }
     } catch (e) {
       debugPrint("Global Search error: $e");
+      if (_activeSearchQuery == query) {
+        searchError.value = 'An error occurred while searching: $e';
+      }
     } finally {
-      isSearchLoading.value = false;
+      if (_activeSearchQuery == query) {
+        isSearchLoading.value = false;
+      }
     }
   }
 
@@ -899,6 +944,8 @@ class DashboardController extends GetxController {
       debugPrint('Error toggling favorite: $e');
     }
   }
+
+
 
   @override
   void onClose() {

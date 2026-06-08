@@ -284,8 +284,16 @@ class DashboardView extends GetView<DashboardController> {
                 return _buildSearchPlaceholder();
               }
 
+              if (controller.searchQuery.value.length < 2) {
+                return _buildSearchPlaceholder(isTooShort: true);
+              }
+
               if (controller.isSearchLoading.value) {
                 return _buildSearchSkeleton();
+              }
+
+              if (controller.searchError.value.isNotEmpty) {
+                return _buildSearchErrorState();
               }
 
               if (controller.searchResults.isEmpty) {
@@ -310,36 +318,185 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
-  Widget _buildSearchPlaceholder() {
-    return Center(
+  Widget _buildSearchPlaceholder({bool isTooShort = false}) {
+    return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(height: 60),
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: const Color(0xFF1E63FF).withValues(alpha: 0.05),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.search_rounded,
+            child: Icon(
+              isTooShort ? Icons.keyboard_alt_outlined : Icons.search_rounded,
               size: 48,
-              color: Color(0xFF1E63FF),
+              color: const Color(0xFF1E63FF),
             ),
           ),
           const SizedBox(height: 24),
           Text(
-            'search_anything'.tr,
+            isTooShort ? 'Keep typing...' : 'search_anything'.tr,
             style: AppTextStyles.headingSmall.copyWith(
               color: const Color(0xFF2C2C2C),
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Find posts, products, articles and more',
+            isTooShort
+                ? 'Type at least 2 characters to search'
+                : 'Find posts, products, articles and more',
             style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey[600]),
           ),
+          if (!isTooShort) ...[
+            const SizedBox(height: 48),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Explore Categories',
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF2C2C2C),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 3,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 0.9,
+                children: [
+                  _buildSuggestionCard(
+                    icon: Icons.article_rounded,
+                    label: 'Articles',
+                    color: const Color(0xFF3B82F6),
+                    onTap: () => Get.toNamed(Routes.ARTICLES),
+                  ),
+                  _buildSuggestionCard(
+                    icon: Icons.shopping_bag_rounded,
+                    label: 'Daily Goods',
+                    color: const Color(0xFF10B981),
+                    onTap: () => Get.toNamed(Routes.BASICGOODS),
+                  ),
+                  _buildSuggestionCard(
+                    icon: Icons.forum_rounded,
+                    label: 'Posts',
+                    color: const Color(0xFFF59E0B),
+                    onTap: () => controller.currentIndex.value = 1,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
         ],
+      ),
+    );
+  }
+
+  Widget _buildSuggestionCard({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: color.withValues(alpha: 0.15),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: 24,
+                color: color,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.bodyMedium.copyWith(
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF2C2C2C),
+                fontSize: 13,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+  Widget _buildSearchErrorState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.error_outline_rounded,
+              size: 64,
+              color: Colors.redAccent,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Search Failed',
+              style: AppTextStyles.headingSmall.copyWith(
+                color: const Color(0xFF2C2C2C),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              controller.searchError.value,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1E63FF),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+              onPressed: () => controller.performGlobalSearch(controller.searchQuery.value),
+              icon: const Icon(Icons.refresh_rounded, color: Colors.white),
+              label: const Text(
+                'Retry',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -439,6 +596,7 @@ class DashboardView extends GetView<DashboardController> {
               );
             }
 
+            final hasImage = _hasImage(item);
             return Material(
               color: Colors.transparent,
               child: ListTile(
@@ -446,15 +604,37 @@ class DashboardView extends GetView<DashboardController> {
                   horizontal: 16,
                   vertical: 4,
                 ),
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: _buildItemImage(item),
-                ),
+                leading: hasImage
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: _buildItemImage(item),
+                      )
+                    : null,
                 title: Text(
-                  item['title'] ??
-                      item['name'] ??
-                      (item['author'] is Map ? item['author']['name'] : null) ??
-                      'No Title',
+                  (item['model']?.toString().toLowerCase() == 'section' && item.containsKey('slug'))
+                      ? ({
+                          'texi-driver': 'Drivers',
+                          'sports-team': 'Sports Team',
+                          'pharmacy': 'Pharmacy',
+                          'grocery-store': 'Grocery Store',
+                          'jewellery-shop': 'Jewellery Shop',
+                          'influencer': 'Influencer',
+                          'clothing-shop': 'Clothing Shop',
+                          'maker': 'Maker',
+                          'local-market': 'Local Market',
+                          'local-business': 'Local Business',
+                          'businessman': 'Businessman',
+                          'ngo': 'NGO',
+                        }[item['slug']] ?? item['name'] ?? 'Section')
+                      : (item['title'] ??
+                          item['name'] ??
+                          (item['from'] != null && item['to'] != null
+                              ? '${item['from']} ➔ ${item['to']}'
+                              : null) ??
+                          item['airlineName'] ??
+                          item['busName'] ??
+                          (item['author'] is Map ? item['author']['name'] : null) ??
+                          'No Title'),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.bodyMedium.copyWith(
@@ -466,6 +646,10 @@ class DashboardView extends GetView<DashboardController> {
                     item['description'] ??
                         item['content'] ??
                         item['category'] ??
+                        (item['via'] is List && (item['via'] as List).isNotEmpty
+                            ? 'Via: ${(item['via'] as List).join(", ")}'
+                            : null) ??
+                        item['aboutBusServices'] ??
                         '',
                   ),
                   maxLines: 1,
@@ -509,6 +693,31 @@ class DashboardView extends GetView<DashboardController> {
 
   void _navigateToDetail(String section, dynamic item) {
     if (item is! Map) return;
+
+    final isSectionModel = item['model']?.toString().toLowerCase() == 'section';
+    if (isSectionModel) {
+      final slug = item['slug']?.toString() ?? '';
+      final slugMapping = {
+        'texi-driver': 'Drivers',
+        'sports-team': 'Sports Team',
+        'pharmacy': 'Pharmacy',
+        'grocery-store': 'Grocery Store',
+        'jewellery-shop': 'Jewellery Shop',
+        'influencer': 'Influencer',
+        'clothing-shop': 'Clothing Shop',
+        'maker': 'Maker',
+        'local-market': 'Local Market',
+        'local-business': 'Local Business',
+        'businessman': 'Businessman',
+        'ngo': 'NGO',
+      };
+      final title = slugMapping[slug] ?? slug.replaceAll('-', ' ').capitalizeFirst!;
+      Get.toNamed(Routes.GENERAL_SECTION, arguments: {
+        'slug': slug,
+        'title': title,
+      });
+      return;
+    }
 
     switch (section) {
       case 'Articles':
@@ -573,7 +782,7 @@ class DashboardView extends GetView<DashboardController> {
           },
         );
         break;
-      case 'Sednex Travel':
+      case 'Lebanon Tour':
         Get.to(
           () => const LocalTourDetailsView(),
           arguments: {
@@ -603,8 +812,17 @@ class DashboardView extends GetView<DashboardController> {
         // Navigate to full view for specific service
         Get.toNamed(Routes.ESSENTIAL_SERVICE);
         break;
+      case 'Daily Goods':
+        Get.toNamed(Routes.BASICGOODS);
+        break;
       case 'Users':
         Get.to(() => CommunityProfileDetailsView(member: item));
+        break;
+      case 'Flight Routes':
+        Get.toNamed(Routes.BUSFLIGHT, arguments: {'type': 'flight'});
+        break;
+      case 'Bus Services':
+        Get.toNamed(Routes.BUSFLIGHT, arguments: {'type': 'bus'});
         break;
       case 'Tourist Spots':
         Get.to(
@@ -727,11 +945,17 @@ class DashboardView extends GetView<DashboardController> {
       case 'Embassies':
         Get.toNamed(Routes.EMBASSY);
         break;
-      case 'Sednex Travel':
+      case 'Lebanon Tour':
         Get.toNamed(Routes.LOCALTOUR);
         break;
       case 'Services':
         Get.toNamed(Routes.ESSENTIAL_SERVICE);
+        break;
+      case 'Flight Routes':
+        Get.toNamed(Routes.BUSFLIGHT, arguments: {'type': 'flight'});
+        break;
+      case 'Bus Services':
+        Get.toNamed(Routes.BUSFLIGHT, arguments: {'type': 'bus'});
         break;
     }
   }
@@ -803,6 +1027,28 @@ class DashboardView extends GetView<DashboardController> {
         color: Colors.grey,
       ),
     );
+  }
+
+  bool _hasImage(dynamic item) {
+    if (item is! Map) return false;
+    String? imageUrl;
+    if (item['image'] != null && item['image'].toString().isNotEmpty) {
+      imageUrl = item['image'].toString();
+    } else if (item['imageUrl'] != null &&
+        item['imageUrl'].toString().isNotEmpty) {
+      imageUrl = item['imageUrl'].toString();
+    } else if (item['images'] is List && (item['images'] as List).isNotEmpty) {
+      imageUrl = item['images'][0].toString();
+    } else if (item['icon'] != null && item['icon'].toString().isNotEmpty) {
+      imageUrl = item['icon'].toString();
+    } else if (item['logoPath'] != null &&
+        item['logoPath'].toString().isNotEmpty) {
+      imageUrl = item['logoPath'].toString();
+    } else if (item['profileImage'] != null &&
+        item['profileImage'].toString().isNotEmpty) {
+      imageUrl = item['profileImage'].toString();
+    }
+    return imageUrl != null && imageUrl.isNotEmpty;
   }
 
   Widget _buildProfilePage() {

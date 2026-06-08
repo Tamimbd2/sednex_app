@@ -64,13 +64,13 @@ class NamajView extends GetView<NamajController> {
                   children: [
                     const Icon(Icons.location_on_rounded, size: 14, color: Color(0xFF6F6F6F)),
                     const SizedBox(width: 6),
-                    Text(
-                      'Beirut, Lebanon',
+                    Obx(() => Text(
+                      controller.userLocation.value,
                       style: AppTextStyles.bodySmall.copyWith(
                         color: const Color(0xFF6F6F6F),
                         fontWeight: FontWeight.w500,
                       ),
-                    ),
+                    )),
                   ],
                 ),
               ),

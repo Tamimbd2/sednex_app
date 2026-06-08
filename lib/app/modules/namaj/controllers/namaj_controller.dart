@@ -17,15 +17,19 @@ class NamajController extends GetxController with WidgetsBindingObserver {
     ]
   }.obs;
 
-  RxInt currentPrayerIndex = (-1).obs;
+   RxInt currentPrayerIndex = (-1).obs;
   Timer? _timer;
+  
+  var userLocation = 'Beirut, Lebanon'.obs;
+  double? _lat;
+  double? _lon;
 
   @override
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
     _updateScheduleDate();
-    fetchPrayerTimes();
+    _fetchLocationAndPrayerTimes();
     _startTimer();
   }
 
@@ -46,7 +50,7 @@ class NamajController extends GetxController with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _updateScheduleDate();
-      fetchPrayerTimes();
+      _fetchLocationAndPrayerTimes();
       _checkCurrentPrayer();
     }
   }
@@ -57,13 +61,74 @@ class NamajController extends GetxController with WidgetsBindingObserver {
     schedule['lastUpdate'] = 'today';
   }
 
+  void _fetchLocationAndPrayerTimes() async {
+    await _detectLocation();
+    fetchPrayerTimes();
+  }
+
+  Future<void> _detectLocation() async {
+    final connect = GetConnect();
+    // Try ipapi.co first
+    try {
+      final response = await connect.get('https://ipapi.co/json/').timeout(const Duration(seconds: 4));
+      debugPrint('detectLocation: ipapi.co status = ${response.statusCode}, body = ${response.body}');
+      if (response.statusCode == 200 && response.body != null) {
+        final data = response.body;
+        final city = data['city']?.toString() ?? '';
+        final country = data['country_name']?.toString() ?? '';
+        if (city.isNotEmpty) {
+          userLocation.value = country.isNotEmpty ? '$city, $country' : city;
+          _lat = double.tryParse(data['latitude']?.toString() ?? '');
+          _lon = double.tryParse(data['longitude']?.toString() ?? '');
+          debugPrint('detectLocation: successfully set location to ${userLocation.value} from ipapi.co');
+          return;
+        }
+      }
+    } catch (e) {
+      debugPrint('detectLocation: ipapi.co failed: $e');
+    }
+
+    // Fallback to ipinfo.io
+    try {
+      final response = await connect.get('https://ipinfo.io/json').timeout(const Duration(seconds: 4));
+      debugPrint('detectLocation: ipinfo.io status = ${response.statusCode}, body = ${response.body}');
+      if (response.statusCode == 200 && response.body != null) {
+        final data = response.body;
+        final city = data['city']?.toString() ?? '';
+        final countryCode = data['country']?.toString() ?? '';
+        final country = countryCode == 'BD' ? 'Bangladesh' : countryCode;
+        if (city.isNotEmpty) {
+          userLocation.value = country.isNotEmpty ? '$city, $country' : city;
+          
+          final loc = data['loc']?.toString() ?? '';
+          if (loc.contains(',')) {
+            final coords = loc.split(',');
+            _lat = double.tryParse(coords[0].trim());
+            _lon = double.tryParse(coords[1].trim());
+          }
+          debugPrint('detectLocation: successfully set location to ${userLocation.value} from ipinfo.io');
+          return;
+        }
+      }
+    } catch (e) {
+      debugPrint('detectLocation: ipinfo.io failed: $e');
+    }
+  }
+
   void fetchPrayerTimes() async {
     final connect = GetConnect();
     final now = DateTime.now();
     final dateStr = '${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}';
     
-    // Fixed location: Beirut, Lebanon
-    final url = 'https://api.aladhan.com/v1/timingsByCity/$dateStr?city=Beirut&country=Lebanon&method=3&school=1';
+    String url;
+    if (_lat != null && _lon != null) {
+      url = 'https://api.aladhan.com/v1/timings/$dateStr?latitude=$_lat&longitude=$_lon&method=3&school=1';
+    } else {
+      final parts = userLocation.value.split(',');
+      final city = parts[0].trim();
+      final country = parts.length > 1 ? parts[1].trim() : 'Lebanon';
+      url = 'https://api.aladhan.com/v1/timingsByCity/$dateStr?city=$city&country=$country&method=3&school=1';
+    }
     
     try {
       final response = await connect.get(url);

@@ -467,26 +467,26 @@ class HomePageContent extends StatelessWidget {
               children: [
                 _buildQuickAccessCard(
                   title: 'probashi_guide'.tr,
-                  imagePath: 'assets/Service Icon svg/Articels.svg',
+                  imagePath: 'assets/Svg Icon/book-2-svgrepo-com.svg',
                   cardColor: const Color(0xFF1E63FF),
                   onTap: () => Get.toNamed('/articles'),
                 ),
                 _buildQuickAccessCard(
                   title: 'learn_local_arabic'.tr,
-                  imagePath: 'assets/Service Icon svg/Learn Arobic.svg',
+                  imagePath: 'assets/Svg Icon/speaking-head-svgrepo-com.svg',
                   cardColor: const Color(0xFF00C853),
                   onTap: () => Get.toNamed('/learnarabic'),
                 ),
                 _buildQuickAccessCard(
                   title: 'daily_goods_prices'.tr,
-                  imagePath: 'assets/Service Icon svg/Basic goods.svg',
-                  cardColor: const Color(0xFF9C27B0),
+                  imagePath: 'assets/Svg Icon/basket-svgrepo-com.svg',
+                  cardColor: const Color(0xFF8B5CF6),
                   onTap: () => Get.toNamed('/basicgoods'),
                 ),
                 _buildQuickAccessCard(
                   title: 'users_directory'.tr,
-                  imagePath: 'assets/Service Icon svg/Users.svg',
-                  cardColor: const Color(0xFFFF7043),
+                  imagePath: 'assets/Svg Icon/users-svgrepo-com.svg',
+                  cardColor: const Color(0xFFFF9100),
                   onTap: () => Get.toNamed('/community'),
                 ),
               ],

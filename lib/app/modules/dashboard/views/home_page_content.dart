@@ -234,7 +234,7 @@ class HomePageContent extends StatelessWidget {
           Column(
             children: [
               SizedBox(
-                height: 125,
+                height: 110,
                 child: Obx(() {
                   final dController = Get.find<DashboardController>();
                   final services = dController.servicesList;
@@ -264,7 +264,7 @@ class HomePageContent extends StatelessWidget {
                           subtitle: nextPrayer['name']!,
                           infoText: 'today'.tr,
                           pillText: nextPrayer['time']!.trNum,
-                          imagePath: 'assets/Svg Icon/mosque-svgrepo-com 2.svg',
+                          imagePath: 'assets/Svg Icon/mosque-svgrepo-com.svg',
                           bgColor: const Color(0xFFE8F0FE),
                           pillColor: const Color(0xFF1E63FF),
                           isSvg: true,
@@ -390,7 +390,7 @@ class HomePageContent extends StatelessWidget {
                                   subtitle: 'Gold',
                                   infoText: '22k Gr',
                                   pillText: goldPillText.trNum,
-                                  imagePath: 'assets/Svg Icon/coin-svgrepo-com 2.svg',
+                                  imagePath: 'assets/Svg Icon/coin-svgrepo-com.svg',
                                   bgColor: const Color(0xFFFFF4E0),
                                   pillColor: const Color(0xFFE28B12),
                                   isSvg: true,
@@ -1598,7 +1598,7 @@ class HomePageContent extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 125,
+        height: 140,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
         decoration: BoxDecoration(
           color: bgColor,
@@ -1615,8 +1615,8 @@ class HomePageContent extends StatelessWidget {
                 if (isSvg)
                   SvgPicture.asset(
                     imagePath,
-                    width: 18,
-                    height: 18,
+                    width: 24,
+                    height: 24,
                     fit: BoxFit.contain,
                     colorFilter: iconColor != null
                         ? ColorFilter.mode(iconColor, BlendMode.srcIn)
@@ -1625,19 +1625,19 @@ class HomePageContent extends StatelessWidget {
                 else
                   Image.asset(
                     imagePath,
-                    width: 18,
-                    height: 18,
+                    width: 24,
+                    height: 24,
                     fit: BoxFit.contain,
                   ),
-                const SizedBox(width: 4),
+                const SizedBox(width: 6),
                 Flexible(
                   child: Text(
                     infoText,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.bodySmall.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
                       color: const Color(0xFF666666),
                     ),
                   ),

@@ -13,7 +13,7 @@ class CommunityFeedView extends GetView<CommunityFeedController> {
   const CommunityFeedView({
     super.key,
     this.showAppBar = true,
-    this.showFAB = true,
+    this.showFAB = false,
   });
 
   static final ScrollController scrollController = ScrollController();

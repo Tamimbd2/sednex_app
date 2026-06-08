@@ -68,24 +68,24 @@ class NamajController extends GetxController with WidgetsBindingObserver {
 
   Future<void> _detectLocation() async {
     final connect = GetConnect();
-    // Try ipapi.co first
+    // Try freeipapi.com (Fully Free, Open-Source & HTTPS)
     try {
-      final response = await connect.get('https://ipapi.co/json/').timeout(const Duration(seconds: 4));
-      debugPrint('detectLocation: ipapi.co status = ${response.statusCode}, body = ${response.body}');
+      final response = await connect.get('https://freeipapi.com/api/json').timeout(const Duration(seconds: 4));
+      debugPrint('detectLocation: freeipapi.com status = ${response.statusCode}, body = ${response.body}');
       if (response.statusCode == 200 && response.body != null) {
         final data = response.body;
-        final city = data['city']?.toString() ?? '';
-        final country = data['country_name']?.toString() ?? '';
+        final city = data['cityName']?.toString() ?? '';
+        final country = data['countryName']?.toString() ?? '';
         if (city.isNotEmpty) {
           userLocation.value = country.isNotEmpty ? '$city, $country' : city;
           _lat = double.tryParse(data['latitude']?.toString() ?? '');
           _lon = double.tryParse(data['longitude']?.toString() ?? '');
-          debugPrint('detectLocation: successfully set location to ${userLocation.value} from ipapi.co');
+          debugPrint('detectLocation: successfully set location to ${userLocation.value} from freeipapi.com');
           return;
         }
       }
     } catch (e) {
-      debugPrint('detectLocation: ipapi.co failed: $e');
+      debugPrint('detectLocation: freeipapi.com failed: $e');
     }
 
     // Fallback to ipinfo.io
@@ -120,14 +120,36 @@ class NamajController extends GetxController with WidgetsBindingObserver {
     final now = DateTime.now();
     final dateStr = '${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}';
     
+    // Determine the calculation method and school based on user location country
+    int method = 3; // Default: Muslim World League (MWL)
+    int school = 0; // Default: Shafi'i, Maliki, Hanbali (Standard school)
+    
+    final locLower = userLocation.value.toLowerCase();
+    if (locLower.contains('bangladesh') || locLower.contains('pakistan') || locLower.contains('india')) {
+      method = 1; // University of Islamic Sciences, Karachi (standard for South Asia)
+      school = 1; // Hanafi (standard school for South Asia)
+    } else if (locLower.contains('saudi arabia') || locLower.contains('makkah') || locLower.contains('madinah')) {
+      method = 4; // Umm Al-Qura University, Makkah
+    } else if (locLower.contains('united arab emirates') || locLower.contains('uae') || locLower.contains('dubai') || locLower.contains('gulf')) {
+      method = 8; // Gulf Region
+    } else if (locLower.contains('egypt')) {
+      method = 5; // Egyptian General Authority of Survey
+    } else if (locLower.contains('turkey')) {
+      method = 13; // Diyanet İşleri Başkanlığı, Turkey
+    } else if (locLower.contains('singapore')) {
+      method = 11; // Majlis Ugama Islam Singapura, Singapore
+    } else if (locLower.contains('malaysia')) {
+      method = 11; // JAKIM, Malaysia
+    }
+    
     String url;
     if (_lat != null && _lon != null) {
-      url = 'https://api.aladhan.com/v1/timings/$dateStr?latitude=$_lat&longitude=$_lon&method=3&school=1';
+      url = 'https://api.aladhan.com/v1/timings/$dateStr?latitude=$_lat&longitude=$_lon&method=$method&school=$school';
     } else {
       final parts = userLocation.value.split(',');
       final city = parts[0].trim();
       final country = parts.length > 1 ? parts[1].trim() : 'Lebanon';
-      url = 'https://api.aladhan.com/v1/timingsByCity/$dateStr?city=$city&country=$country&method=3&school=1';
+      url = 'https://api.aladhan.com/v1/timingsByCity/$dateStr?city=$city&country=$country&method=$method&school=$school';
     }
     
     try {

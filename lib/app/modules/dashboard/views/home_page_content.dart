@@ -533,21 +533,21 @@ class HomePageContent extends StatelessWidget {
                 ),
                 _buildHorizontalEssentialCard(
                   title: 'lebanon_tour'.tr,
-                  imagePath: 'assets/newessential/Location-Pin-3--Streamline-Core-Gradient.svg',
+                  imagePath: 'assets/Svg Icon/map-pin.svg',
                   themeColor: const Color(0xFF4CAF50),
                   bgColor: const Color(0xFFE8F5E9),
                   onTap: () => Get.toNamed('/localtour'),
                 ),
                 _buildHorizontalEssentialCard(
                   title: 'bus_booking'.tr,
-                  imagePath: 'assets/newessential/Bus--Streamline-Core-Gradient.svg',
+                  imagePath: 'assets/Svg Icon/bus-svgrepo-com 2.svg',
                   themeColor: const Color(0xFF00ACC1),
                   bgColor: const Color(0xFFE0F7FA),
                   onTap: () => Get.toNamed('/busflight', arguments: {'type': 'bus'}),
                 ),
                 _buildHorizontalEssentialCard(
                   title: 'tourist_spots'.tr,
-                  imagePath: 'assets/Service Icon svg/Tourist spots.svg',
+                  imagePath: 'assets/Svg Icon/eiffel-tower-svgrepo-com.svg',
                   themeColor: const Color(0xFFFFB300),
                   bgColor: const Color(0xFFFFF8E1),
                   onTap: () => Get.toNamed('/tourist-spot'),
@@ -779,14 +779,14 @@ class HomePageContent extends StatelessWidget {
               children: [
                 _buildHorizontalEssentialCard(
                   title: 'Restaurants and Cafes',
-                  imagePath: 'assets/newessential/Fork-Knife--Streamline-Core-Gradient.svg',
+                  imagePath: 'assets/Svg Icon/restaurant-svgrepo-com.svg',
                   themeColor: const Color(0xFFEF5350),
                   bgColor: const Color(0xFFFFEBEE),
                   onTap: () => Get.toNamed('/restaurents'),
                 ),
                 _buildHorizontalEssentialCard(
                   title: 'Clothing Shops',
-                  imagePath: 'assets/newessential/Shopping-Bag-Hand-Bag-2--Streamline-Core-Gradient.svg',
+                  imagePath: 'assets/Svg Icon/tshirt.svg',
                   themeColor: const Color(0xFFAB47BC),
                   bgColor: const Color(0xFFF3E5F5),
                   onTap: () => Get.toNamed(
@@ -799,7 +799,7 @@ class HomePageContent extends StatelessWidget {
                 ),
                 _buildHorizontalEssentialCard(
                   title: 'Jewellery Shops',
-                  imagePath: 'assets/newessential/Gift-2--Streamline-Core-Gradient.svg',
+                  imagePath: 'assets/Svg Icon/crown-svgrepo-com 2.svg',
                   themeColor: const Color(0xFFFFB300),
                   bgColor: const Color(0xFFFFF8E1),
                   onTap: () => Get.toNamed(
@@ -812,7 +812,7 @@ class HomePageContent extends StatelessWidget {
                 ),
                 _buildHorizontalEssentialCard(
                   title: 'Groceries Stores',
-                  imagePath: 'assets/newessential/Store-1--Streamline-Core-Gradient.svg',
+                  imagePath: 'assets/Svg Icon/basket-svgrepo-com 2.svg',
                   themeColor: const Color(0xFF26A69A),
                   bgColor: const Color(0xFFE0F2F1),
                   onTap: () => Get.toNamed(
@@ -922,11 +922,15 @@ class HomePageContent extends StatelessWidget {
                                 color: Colors.white,
                                 shape: BoxShape.circle,
                               ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.storefront_rounded,
-                                  color: Color(0xFF1E63FF),
-                                  size: 28,
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/Svg Icon/shop-2-svgrepo-com.svg',
+                                  width: 28,
+                                  height: 28,
+                                  colorFilter: const ColorFilter.mode(
+                                    Color(0xFF1E63FF),
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                               ),
                             ),
@@ -973,7 +977,7 @@ class HomePageContent extends StatelessWidget {
               children: [
                 _buildEssentialServiceItem(
                   'Embassys',
-                  'assets/Svg Icon/embassy-svgrepo-com.svg',
+                  'assets/Svg Icon/building-svgrepo-com 2.svg',
                   const Color(0xFFE0F7FA), // Soft cyan
                   () => Get.toNamed('/embassy'),
                   iconColor: const Color(0xFF009688), // Match green-cyan tone
@@ -987,7 +991,7 @@ class HomePageContent extends StatelessWidget {
                 ),
                 _buildEssentialServiceItem(
                   'Lowers',
-                  'assets/Svg Icon/scales-justice-lawyer-svgrepo-com.svg',
+                  'assets/Svg Icon/lawyer-svgrepo-com.svg',
                   const Color(0xFFFFF3E0), // Soft orange/brown
                   () => Get.toNamed(
                     '/general-section',
@@ -1066,7 +1070,7 @@ class HomePageContent extends StatelessWidget {
                 ),
                 _buildEssentialServiceItem(
                   'Mechanics',
-                  'assets/Svg Icon/wrench.svg',
+                  'assets/Svg Icon/mechanic-tools-svgrepo-com.svg',
                   const Color(0xFFF3E5F5), // Light purple
                   () => Get.toNamed(
                     '/general-section',
@@ -1079,7 +1083,7 @@ class HomePageContent extends StatelessWidget {
                 ),
                 _buildEssentialServiceItem(
                   'Sports Teams',
-                  'assets/Svg Icon/ball-basket-basketball-svgrepo-com.svg',
+                  'assets/Svg Icon/sports-basketball-svgrepo-com.svg',
                   const Color(0xFFFFF8E1), // Light amber
                   () => Get.toNamed(
                     '/general-section',
@@ -1092,7 +1096,7 @@ class HomePageContent extends StatelessWidget {
                 ),
                 _buildEssentialServiceItem(
                   'Influencers',
-                  'assets/Svg Icon/clapperboard.svg',
+                  'assets/Svg Icon/video-play.svg',
                   const Color(0xFFFCE4EC), // Light pink
                   () => Get.toNamed(
                     '/general-section',
@@ -1102,7 +1106,7 @@ class HomePageContent extends StatelessWidget {
                 ),
                 _buildEssentialServiceItem(
                   'Vehicles',
-                  'assets/Svg Icon/car-front.svg',
+                  'assets/Svg Icon/vehicle-cab-svgrepo-com.svg',
                   const Color(0xFFFFEBEE), // Light red
                   () => Get.toNamed(
                     '/general-section',
@@ -1125,7 +1129,7 @@ class HomePageContent extends StatelessWidget {
                 ),
                 _buildEssentialServiceItem(
                   'Organizations',
-                  'assets/Svg Icon/pie-chart-svgrepo-com.svg',
+                  'assets/Svg Icon/system-svgrepo-com.svg',
                   const Color(0xFFFFF3E0), // Light orange
                   () => Get.toNamed('/organization'),
                   iconColor: const Color(0xFFFF9800),

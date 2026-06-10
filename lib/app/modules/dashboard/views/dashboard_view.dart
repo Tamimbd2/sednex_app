@@ -545,16 +545,7 @@ class DashboardView extends GetView<DashboardController> {
                   ),
                 ),
                 subtitle: Text(
-                  _stripHtml(
-                    item['description'] ??
-                        item['content'] ??
-                        item['category'] ??
-                        (item['via'] is List && (item['via'] as List).isNotEmpty
-                            ? 'Via: ${(item['via'] as List).join(", ")}'
-                            : null) ??
-                        item['aboutBusServices'] ??
-                        '',
-                  ),
+                  _stripHtml(_getSubtitleText(item)),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.bodySmall.copyWith(
@@ -1281,6 +1272,40 @@ class DashboardView extends GetView<DashboardController> {
           ),
         ) ??
         false;
+  }
+
+  String _getSubtitleText(dynamic item) {
+    if (item is! Map) return '';
+    
+    if (item['description'] != null && item['description'].toString().isNotEmpty) {
+      return item['description'].toString();
+    }
+    
+    // If content is a List (like in articles), extract the first paragraph text
+    final content = item['content'];
+    if (content is List) {
+      for (var block in content) {
+        if (block is Map && block['type'] == 'paragraph' && block['data'] != null) {
+          return block['data'].toString();
+        }
+      }
+    } else if (content != null) {
+      return content.toString();
+    }
+    
+    if (item['category'] != null) {
+      return item['category'].toString();
+    }
+    
+    if (item['via'] is List && (item['via'] as List).isNotEmpty) {
+      return 'Via: ${(item['via'] as List).join(", ")}';
+    }
+    
+    if (item['aboutBusServices'] != null) {
+      return item['aboutBusServices'].toString();
+    }
+    
+    return '';
   }
 
   String _stripHtml(String htmlString) {

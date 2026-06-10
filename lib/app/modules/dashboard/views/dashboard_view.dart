@@ -350,104 +350,7 @@ class DashboardView extends GetView<DashboardController> {
                 : 'Find posts, products, articles and more',
             style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey[600]),
           ),
-          if (!isTooShort) ...[
-            const SizedBox(height: 48),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Explore Categories',
-                  style: AppTextStyles.bodyLarge.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF2C2C2C),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 3,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.9,
-                children: [
-                  _buildSuggestionCard(
-                    icon: Icons.article_rounded,
-                    label: 'Articles',
-                    color: const Color(0xFF3B82F6),
-                    onTap: () => Get.toNamed(Routes.ARTICLES),
-                  ),
-                  _buildSuggestionCard(
-                    icon: Icons.shopping_bag_rounded,
-                    label: 'Daily Goods',
-                    color: const Color(0xFF10B981),
-                    onTap: () => Get.toNamed(Routes.BASICGOODS),
-                  ),
-                  _buildSuggestionCard(
-                    icon: Icons.forum_rounded,
-                    label: 'Posts',
-                    color: const Color(0xFFF59E0B),
-                    onTap: () => controller.currentIndex.value = 1,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-          ],
         ],
-      ),
-    );
-  }
-
-  Widget _buildSuggestionCard({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: color.withValues(alpha: 0.15),
-            width: 1,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                icon,
-                size: 24,
-                color: color,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium.copyWith(
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF2C2C2C),
-                fontSize: 13,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -694,7 +597,8 @@ class DashboardView extends GetView<DashboardController> {
   void _navigateToDetail(String section, dynamic item) {
     if (item is! Map) return;
 
-    final isSectionModel = item['model']?.toString().toLowerCase() == 'section';
+    final model = item['model']?.toString().toLowerCase() ?? '';
+    final isSectionModel = model == 'section';
     if (isSectionModel) {
       final slug = item['slug']?.toString() ?? '';
       final slugMapping = {
@@ -719,7 +623,82 @@ class DashboardView extends GetView<DashboardController> {
       return;
     }
 
-    switch (section) {
+    String currentSection = section;
+    if (model == 'sectionitem' || model == 'sectionItem') {
+      String? resolvedSlug;
+      if (item['section'] is Map) {
+        resolvedSlug = item['section']['slug']?.toString();
+      } else if (item['section'] is String) {
+        resolvedSlug = item['section'].toString();
+      }
+      
+      if (resolvedSlug == null || resolvedSlug.isEmpty || resolvedSlug.length > 20) {
+        if (item['category'] is Map) {
+          resolvedSlug = item['category']['slug']?.toString() ?? item['category']['name']?.toString();
+        } else if (item['category'] is String) {
+          resolvedSlug = item['category'].toString();
+        }
+      }
+      
+      if (resolvedSlug == null || resolvedSlug.isEmpty || resolvedSlug.length > 20) {
+        final name = (item['name'] ?? item['title'] ?? '').toString().toLowerCase();
+        if (name.contains('embassy') || name.contains('embassies')) {
+          resolvedSlug = 'embassy';
+        } else if (name.contains('hospital') || name.contains('hospitals') || name.contains('clinic')) {
+          resolvedSlug = 'hospital';
+        } else if (name.contains('restaurant') || name.contains('restaurants') || name.contains('restaurent') || name.contains('food') || name.contains('cafe')) {
+          resolvedSlug = 'restaurent';
+        } else if (name.contains('organization') || name.contains('organizations') || name.contains('association')) {
+          resolvedSlug = 'organization';
+        }
+      }
+      
+      if (resolvedSlug != null) {
+        resolvedSlug = resolvedSlug.toLowerCase().trim();
+        if (resolvedSlug == 'embassy' || resolvedSlug == 'embassies') {
+          currentSection = 'Embassies';
+        } else if (resolvedSlug == 'hospital' || resolvedSlug == 'hospitals') {
+          currentSection = 'Hospitals';
+        } else if (resolvedSlug == 'restaurant' || resolvedSlug == 'restaurants' || resolvedSlug == 'restaurent' || resolvedSlug == 'restaurents') {
+          currentSection = 'Restaurants';
+        } else if (resolvedSlug == 'organization' || resolvedSlug == 'organizations') {
+          currentSection = 'Organizations';
+        } else {
+          final slugMapping = {
+            'texi-driver': 'Drivers',
+            'texi_driver': 'Drivers',
+            'taxi-driver': 'Drivers',
+            'taxidriver': 'Drivers',
+            'sports-team': 'Sports Team',
+            'sports_team': 'Sports Team',
+            'sportsteam': 'Sports Team',
+            'pharmacy': 'Pharmacy',
+            'grocery-store': 'Grocery Store',
+            'grocery_store': 'Grocery Store',
+            'grocerystore': 'Grocery Store',
+            'jewellery-shop': 'Jewellery Shop',
+            'jewellery_shop': 'Jewellery Shop',
+            'jewelleryshop': 'Jewellery Shop',
+            'influencer': 'Influencer',
+            'clothing-shop': 'Clothing Shop',
+            'clothing_shop': 'Clothing Shop',
+            'clothingshop': 'Clothing Shop',
+            'maker': 'Maker',
+            'local-market': 'Local Market',
+            'local_market': 'Local Market',
+            'localmarket': 'Local Market',
+            'local-business': 'Local Business',
+            'local_business': 'Local Business',
+            'localbusiness': 'Local Business',
+            'businessman': 'Businessman',
+            'ngo': 'NGO',
+          };
+          currentSection = slugMapping[resolvedSlug] ?? resolvedSlug.replaceAll('-', ' ').capitalizeFirst!;
+        }
+      }
+    }
+
+    switch (currentSection) {
       case 'Articles':
         Get.to(
           () => const ArticleDetailsView(),
@@ -746,9 +725,9 @@ class DashboardView extends GetView<DashboardController> {
         Get.to(
           () => const HospitalDetailsView(),
           arguments: {
-            'id': item['_id'],
+            'id': item['_id'] ?? item['id'],
             'name': item['name'],
-            'logoPath': item['image'],
+            'logoPath': item['image'] ?? item['logoPath'] ?? item['icon'],
           },
         );
         break;
@@ -756,9 +735,9 @@ class DashboardView extends GetView<DashboardController> {
         Get.to(
           () => const RestaurantDetailsView(),
           arguments: {
-            'id': item['_id'],
+            'id': item['_id'] ?? item['id'],
             'name': item['name'],
-            'logoPath': item['image'],
+            'logoPath': item['image'] ?? item['logoPath'] ?? item['icon'],
           },
         );
         break;
@@ -766,9 +745,9 @@ class DashboardView extends GetView<DashboardController> {
         Get.to(
           () => const OrganizationDetailsView(),
           arguments: {
-            'id': item['_id'],
+            'id': item['_id'] ?? item['id'],
             'name': item['name'],
-            'logoPath': item['image'],
+            'logoPath': item['image'] ?? item['logoPath'] ?? item['icon'],
           },
         );
         break;
@@ -776,9 +755,9 @@ class DashboardView extends GetView<DashboardController> {
         Get.to(
           () => const EmbassyDetailsView(),
           arguments: {
-            'id': item['_id'],
+            'id': item['_id'] ?? item['id'],
             'name': item['name'],
-            'logoPath': item['image'],
+            'logoPath': item['image'] ?? item['logoPath'] ?? item['icon'],
           },
         );
         break;
@@ -882,11 +861,29 @@ class DashboardView extends GetView<DashboardController> {
           'influencer', 'clothing-shop', 'clothing_shop', 'clothingshop',
           'maker', 'local-market', 'local_market', 'localmarket',
           'local-business', 'local_business', 'localbusiness',
-          'businessman', 'ngo'
+          'businessman', 'ngo', 'sectionitem', 'sectionItem'
         ].contains(model) || item.containsKey('contact');
 
         if (isGeneralSection) {
-          final slug = model.isNotEmpty ? model.replaceAll('_', '-') : section.toLowerCase().replaceAll(' ', '-');
+          String slug = model.isNotEmpty ? model.replaceAll('_', '-') : section.toLowerCase().replaceAll(' ', '-');
+          if (slug == 'sectionitem' || slug == 'section-item') {
+            String? resolvedSlug;
+            if (item['section'] is Map) {
+              resolvedSlug = item['section']['slug']?.toString();
+            } else if (item['section'] is String) {
+              resolvedSlug = item['section'].toString();
+            }
+            if (resolvedSlug == null || resolvedSlug.isEmpty) {
+              if (item['category'] is Map) {
+                resolvedSlug = item['category']['slug']?.toString() ?? item['category']['name']?.toString();
+              } else if (item['category'] is String) {
+                resolvedSlug = item['category'].toString();
+              }
+            }
+            if (resolvedSlug != null && resolvedSlug.isNotEmpty) {
+              slug = resolvedSlug.toLowerCase().trim();
+            }
+          }
           Get.to(
             () => const GeneralSectionDetailsView(),
             arguments: {
@@ -897,8 +894,10 @@ class DashboardView extends GetView<DashboardController> {
               'title': section,
             },
           );
-        } else if (section.toLowerCase().contains('product') || 
-            section.toLowerCase().contains('item')) {
+        } else if ((section.toLowerCase().contains('product') || 
+            section.toLowerCase().contains('item')) && 
+            section.toLowerCase() != 'sectionitem' && 
+            section.toLowerCase() != 'sectionitems') {
           Get.toNamed(Routes.PRODUCT_DETAILS, arguments: item);
         } else if (section.toLowerCase().contains('article')) {
           Get.to(

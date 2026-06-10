@@ -355,7 +355,9 @@ class DashboardController extends GetxController {
                     model == 'slider' ||
                     model == 'marquee' ||
                     model == 'banner' ||
-                    model == 'notification') {
+                    model == 'notification' ||
+                    model == 'sectionitemdetail' ||
+                    model == 'sectionitemdetails') {
                   continue;
                 }
                 
@@ -411,6 +413,47 @@ class DashboardController extends GetxController {
                 if (model == 'section' && item.containsKey('slug')) {
                   final slug = item['slug']?.toString() ?? '';
                   section = sectionMapping[slug] ?? slug.capitalizeFirst!;
+                } else if (model == 'sectionitem' || model == 'sectionItem') {
+                  String? slug;
+                  if (item['section'] is Map) {
+                    slug = item['section']['slug']?.toString();
+                  } else if (item['section'] is String) {
+                    slug = item['section'].toString();
+                  }
+                  
+                  if (slug == null || slug.isEmpty || slug.length > 20) {
+                    if (item['category'] is Map) {
+                      slug = item['category']['slug']?.toString() ?? item['category']['name']?.toString();
+                    } else if (item['category'] is String) {
+                      slug = item['category'].toString();
+                    }
+                  }
+                  
+                  if (slug == null || slug.isEmpty || slug.length > 20) {
+                    final name = (item['name'] ?? item['title'] ?? '').toString().toLowerCase();
+                    if (name.contains('embassy') || name.contains('embassies')) {
+                      slug = 'embassy';
+                    } else if (name.contains('hospital') || name.contains('hospitals') || name.contains('clinic')) {
+                      slug = 'hospital';
+                    } else if (name.contains('restaurant') || name.contains('restaurants') || name.contains('restaurent') || name.contains('food') || name.contains('cafe')) {
+                      slug = 'restaurent';
+                    } else if (name.contains('organization') || name.contains('organizations') || name.contains('association')) {
+                      slug = 'organization';
+                    }
+                  }
+                  
+                  if (slug != null && slug.isNotEmpty) {
+                    slug = slug.toLowerCase().trim();
+                    if (slug == 'embassy' || slug == 'embassies') slug = 'embassy';
+                    if (slug == 'hospital' || slug == 'hospitals') slug = 'hospital';
+                    if (slug == 'restaurant' || slug == 'restaurants' || slug == 'restaurent' || slug == 'restaurents') slug = 'restaurent';
+                    if (slug == 'organization' || slug == 'organizations') slug = 'organization';
+                    
+                    section = sectionMapping[slug] ?? slug.capitalizeFirst!;
+                  } else {
+                    section = sectionMapping[model] ?? 
+                                    (model.isNotEmpty ? model.capitalizeFirst! : 'Search Results');
+                  }
                 } else {
                   section = sectionMapping[model] ?? 
                                   (model.isNotEmpty ? model.capitalizeFirst! : 'Search Results');
@@ -475,6 +518,41 @@ class DashboardController extends GetxController {
           ...Map<String, dynamic>.from(s),
           '_search_section': 'Services',
         }).toList();
+      }
+
+      // Local Product Search Fallback
+      try {
+        final shopController = Get.find<ShopController>();
+        final queryLower = query.toLowerCase();
+        
+        final localMatchedProducts = shopController.products.where((p) {
+          final name = (p['name'] ?? '').toString().toLowerCase();
+          final desc = (p['description'] ?? '').toString().toLowerCase();
+          final category = (p['category'] ?? '').toString().toLowerCase();
+          return name.contains(queryLower) || 
+                 desc.contains(queryLower) || 
+                 category.contains(queryLower);
+        }).toList();
+
+        if (localMatchedProducts.isNotEmpty) {
+          final displayTitle = 'Products';
+          final listToExtend = results.putIfAbsent(displayTitle, () => []);
+          
+          for (var item in localMatchedProducts) {
+            final alreadyAdded = listToExtend.any((existing) => 
+                existing['_id'] == item['_id'] || existing['id'] == item['id']);
+            
+            if (!alreadyAdded) {
+              listToExtend.add({
+                ...Map<String, dynamic>.from(item),
+                '_search_section': displayTitle,
+                'commentsList': <Map<String, dynamic>>[].obs,
+              });
+            }
+          }
+        }
+      } catch (e) {
+        debugPrint("Local product search fallback error: $e");
       }
 
       if (_activeSearchQuery == query) {
